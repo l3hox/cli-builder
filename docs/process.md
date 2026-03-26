@@ -38,12 +38,12 @@ End-to-end validation against real SDKs (OpenAI, Stripe). Integration tests with
 ## Documentation structure
 
 ```
-cli-builder-spec.md        ← What (interfaces, models, requirements, scope)
+docs/cli-builder-spec.md   ← What (interfaces, models, requirements, scope)
 docs/ADR.md                ← Why (architectural decisions with rationale)
 docs/design-notes.md       ← How edge cases behave (council findings, behavioral rules)
 docs/internal/             ← Agent build plans (step-by-step implementation instructions)
 docs/process.md            ← This file — how we work
-FUTURE.md                  ← Parking lot for deferred ideas
+docs/FUTURE.md             ← Parking lot for deferred ideas
 AGENTS.md                  ← Quick-start for agents and contributors
 README.md                  ← Public-facing overview
 ```

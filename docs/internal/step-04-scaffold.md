@@ -8,7 +8,7 @@
 ## Context
 
 Read before implementing:
-- [cli-builder-spec.md](../../cli-builder-spec.md) — interface signatures (lines 114-157), metadata model (lines 159-197)
+- [cli-builder-spec.md](../cli-builder-spec.md) — interface signatures (lines 114-157), metadata model (lines 159-197)
 - [docs/ADR.md](../ADR.md) — ADR-002 (.NET 8), ADR-004 (monolith), ADR-005 (SdkMetadata contract), ADR-009 (TDD), ADR-010 (Scriban), ADR-012 (System.CommandLine), ADR-015 (diagnostics)
 - [docs/design-notes.md](../design-notes.md) — identifier validation rules, diagnostic code assignments
 
@@ -35,7 +35,7 @@ cli-builder/
 │   └── CliBuilder.TestSdk/             # Purpose-built test SDK assembly (class library)
 │       └── CliBuilder.TestSdk.csproj
 ├── templates/                           # Scriban templates (embedded in generator)
-├── cli-builder-spec.md
+├── docs/cli-builder-spec.md
 ├── docs/
 ├── AGENTS.md
 ├── README.md

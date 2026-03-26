@@ -10,7 +10,7 @@ Split into 4 phases with checkpoints between each.
 ## Context
 
 Read before implementing:
-- [cli-builder-spec.md](../../cli-builder-spec.md) — discovery strategy (lines 187-230), metadata model (lines 159-197)
+- [cli-builder-spec.md](../cli-builder-spec.md) — discovery strategy (lines 187-230), metadata model (lines 159-197)
 - [docs/design-notes.md](../design-notes.md) — naming conventions, verb collision rules, flattening ordering, operationPattern semantics, identifier validation, diagnostic codes, test SDK manifest
 - [docs/ADR.md](../ADR.md) — ADR-001 (reflection), ADR-003 (MetadataLoadContext only), ADR-008 (naming), ADR-013 (package artifacts), ADR-015 (diagnostics)
 

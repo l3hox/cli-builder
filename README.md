@@ -38,10 +38,10 @@ openai-cli model list --help          # lists all parameters
 
 | Document | Contents |
 |----------|----------|
-| [cli-builder-spec.md](cli-builder-spec.md) | Full specification — interfaces, metadata model, config schema, test strategy, scope |
+| [docs/cli-builder-spec.md](docs/cli-builder-spec.md) | Full specification — interfaces, metadata model, config schema, test strategy, scope |
 | [docs/ADR.md](docs/ADR.md) | Architecture Decision Records (ADR-001 through ADR-015) |
 | [docs/design-notes.md](docs/design-notes.md) | Edge-case policies, behavioral rules, diagnostic codes, test SDK manifest |
-| [FUTURE.md](FUTURE.md) | Out-of-scope ideas and deferred features |
+| [docs/FUTURE.md](docs/FUTURE.md) | Out-of-scope ideas and deferred features |
 | [AGENTS.md](AGENTS.md) | Quick-start context for AI agents and contributors |
 | [docs/process.md](docs/process.md) | Development methodology — how this project is built |
 | `docs/internal/` | Agent implementation plans (step-by-step build instructions) |

@@ -24,12 +24,12 @@ Each piece of information exists in exactly one place:
 
 | Document | Level | Contains |
 |----------|-------|----------|
-| [cli-builder-spec.md](cli-builder-spec.md) | **Spec** | Interfaces, metadata model, config schema, requirements, scope, test strategy |
+| [docs/cli-builder-spec.md](docs/cli-builder-spec.md) | **Spec** | Interfaces, metadata model, config schema, requirements, scope, test strategy |
 | [docs/ADR.md](docs/ADR.md) | **Decisions** | 15 architecture decision records — the "why" behind each choice |
 | [docs/design-notes.md](docs/design-notes.md) | **Design** | Edge-case policies, behavioral rules, diagnostic codes, test SDK manifest |
 | [docs/process.md](docs/process.md) | **Process** | Development methodology (7-phase agent-orchestrated workflow) |
 | `docs/internal/` | **Plans** | Agent implementation plans — step-by-step build instructions |
-| [FUTURE.md](FUTURE.md) | **Deferred** | Out-of-scope ideas and deferred features |
+| [docs/FUTURE.md](docs/FUTURE.md) | **Deferred** | Out-of-scope ideas and deferred features |
 
 **When looking for something:** check the spec first (contracts and requirements), then design notes (behavioral details and edge cases), then ADRs (rationale for a decision).
 
@@ -42,8 +42,8 @@ Each piece of information exists in exactly one place:
 - **Generated CLI wraps the original SDK** — depends on SDK + System.CommandLine, not on cli-builder ([ADR-006](docs/ADR.md#adr-006-generated-cli-wrapper-over-the-original-sdk))
 - **No silent failures** — every skipped type, renamed parameter, or discarded overload produces a `Diagnostic` ([ADR-015](docs/ADR.md#adr-015-diagnostics-collection-pattern-for-error-handling))
 - **Package artifacts only** — compiled assemblies/packages, never raw source code ([ADR-013](docs/ADR.md#adr-013-package-artifacts-over-raw-source-code--per-language-native-metadata))
-- **Sanitize all metadata strings** before emitting into generated C# source ([spec](cli-builder-spec.md#generated-code-safety))
+- **Sanitize all metadata strings** before emitting into generated C# source ([spec](docs/cli-builder-spec.md#generated-code-safety))
 
 ## Start here
 
-[First Actions](cli-builder-spec.md#first-actions) — steps 1-4 complete, step 5 (first spike: OpenAI .NET SDK) is next.
+[First Actions](docs/cli-builder-spec.md#first-actions) — steps 1-4 complete, step 5 (first spike: OpenAI .NET SDK) is next.
