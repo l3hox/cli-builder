@@ -24,6 +24,11 @@ Ideas and features intentionally deferred. Not prioritized — this is a parking
 - Package publishing (NuGet tool, Homebrew, etc.)
 - Test generation for generated CLIs
 
+## Usage model analysis
+- How is cli-builder used in practice? One-off generation, recurring CI/CD pipeline step, agentic workflow component?
+- Implications for: idempotency (same input → same output?), caching/incremental regen, change detection (diff previous output?), non-interactive mode, stdout/stderr contracts, logging verbosity
+- Should inform versioning policy, breaking change definitions, and output stability guarantees
+
 ## Distribution
 - GUI / web interface
 - VS Code / JetBrains plugin for in-IDE generation

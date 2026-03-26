@@ -1,10 +1,10 @@
 # AGENTS.md — cli-builder
 
-Quick-start context for AI agents and contributors working on this codebase.
+Quick-start orientation for AI agents and contributors.
 
 ## What is cli-builder?
 
-A tool that generates agent-ready CLIs from .NET SDK assemblies via reflection. Input: a DLL. Output: a standalone, compilable C# CLI project.
+A tool that generates agent-ready CLIs from .NET SDK assemblies via reflection. Input: a DLL. Output: a compilable C# CLI project that wraps the original SDK.
 
 ## Tech stack
 
@@ -16,66 +16,34 @@ A tool that generates agent-ready CLIs from .NET SDK assemblies via reflection. 
 
 ## Architecture (one paragraph)
 
-`ISdkAdapter` extracts `SdkMetadata` from an SDK assembly via `MetadataLoadContext` (read-only, no code execution). An optional `IMetadataEnricher` improves descriptions via a pluggable LLM. `ICliGenerator` takes `SdkMetadata` and emits a standalone C# CLI project using Scriban templates. `SdkMetadata` is the JSON-serializable contract between all stages. All operations return results + `List<Diagnostic>` (never throw for SDK analysis issues — exceptions are reserved for environment failures).
+`ISdkAdapter` extracts `SdkMetadata` from an SDK assembly via `MetadataLoadContext` (read-only, no code execution). An optional `IMetadataEnricher` (future) improves descriptions via a pluggable LLM. `ICliGenerator` takes `SdkMetadata` and emits a C# CLI project that wraps the original SDK using Scriban templates. `SdkMetadata` is the JSON-serializable contract between all stages. All operations return results + `List<Diagnostic>` — exceptions are reserved for environment failures only.
 
-## Key files
+## Documentation hierarchy
 
-| File | Purpose |
-|------|---------|
-| `cli-builder-spec.md` | Full specification — metadata model, interfaces, config schema, test strategy, scope |
-| `docs/ADR.md` | All 15 architecture decision records with rationale |
-| `docs/design-notes.md` | Edge-case policies, behavioral rules, diagnostic codes, test SDK manifest |
-| `FUTURE.md` | Out-of-scope ideas and deferred features |
-| `docs/internal/` | Agent implementation plans (step-by-step build instructions) |
-| `README.md` | Project overview |
+Each piece of information exists in exactly one place:
 
-**Start here:** [First Actions](cli-builder-spec.md#first-actions) — steps 1-3 complete, step 4 is next.
+| Document | Level | Contains |
+|----------|-------|----------|
+| [cli-builder-spec.md](cli-builder-spec.md) | **Spec** | Interfaces, metadata model, config schema, requirements, scope, test strategy |
+| [docs/ADR.md](docs/ADR.md) | **Decisions** | 15 architecture decision records — the "why" behind each choice |
+| [docs/design-notes.md](docs/design-notes.md) | **Design** | Edge-case policies, behavioral rules, diagnostic codes, test SDK manifest |
+| [docs/process.md](docs/process.md) | **Process** | Development methodology (7-phase agent-orchestrated workflow) |
+| `docs/internal/` | **Plans** | Agent implementation plans — step-by-step build instructions |
+| [FUTURE.md](FUTURE.md) | **Deferred** | Out-of-scope ideas and deferred features |
+
+**When looking for something:** check the spec first (contracts and requirements), then design notes (behavioral details and edge cases), then ADRs (rationale for a decision).
+
+**When changing documentation:** every change must be checked for duplication and proper placement across all levels — this file, the spec, ADRs, design notes, and agent execution plans. Information must exist in exactly one place at the correct granularity level. If a change introduces duplication or puts detail at the wrong level, fix the placement before committing.
 
 ## Architectural constraints (must not violate)
 
-- **`MetadataLoadContext` only** — never use `AssemblyLoadContext` to load SDK assemblies (arbitrary code execution risk)
-- **Cross-platform** — Windows, Linux, macOS. No hardcoded paths, no platform-specific APIs. Target `net8.0` only.
-- **Generated CLI wraps the original SDK** — depends on the SDK (NuGet) and System.CommandLine, but not on cli-builder. All business logic stays in the SDK.
-- **No silent failures** — every skipped type, renamed parameter, or discarded overload produces a `Diagnostic`
-- **Package artifacts only** — operate on compiled assemblies/packages, never raw source code
-- **Sanitize all metadata strings** before emitting into generated C# source (identifier validation, string escaping)
+- **`MetadataLoadContext` only** — never use `AssemblyLoadContext` ([ADR-003](docs/ADR.md#adr-003-metaloadcontext-only--no-code-execution-during-analysis))
+- **Cross-platform** — Windows, Linux, macOS. No hardcoded paths, no platform-specific APIs. `net8.0` only. ([ADR-011](docs/ADR.md#adr-011-cross-platform-support--windows-linux-macos))
+- **Generated CLI wraps the original SDK** — depends on SDK + System.CommandLine, not on cli-builder ([ADR-006](docs/ADR.md#adr-006-generated-cli-wrapper-over-the-original-sdk))
+- **No silent failures** — every skipped type, renamed parameter, or discarded overload produces a `Diagnostic` ([ADR-015](docs/ADR.md#adr-015-diagnostics-collection-pattern-for-error-handling))
+- **Package artifacts only** — compiled assemblies/packages, never raw source code ([ADR-013](docs/ADR.md#adr-013-package-artifacts-over-raw-source-code--per-language-native-metadata))
+- **Sanitize all metadata strings** before emitting into generated C# source ([spec](cli-builder-spec.md#generated-code-safety))
 
-## Pipeline
+## Start here
 
-```
-ISdkAdapter ──▶ SdkMetadata ──▶ [IMetadataEnricher] ──▶ SdkMetadata ──▶ ICliGenerator ──▶ CLI Project
-                                  (optional, --enrich)
-```
-
-## Naming conventions
-
-- Resources: PascalCase class name → kebab-case, suffix stripped (`PaymentIntentService` → `payment-intent`)
-- Operations: method name → kebab-case, `Async` stripped (`CreateAsync` → `create`)
-- Collisions: hard error, require config override. No silent last-wins.
-
-## Error handling
-
-- SDK analysis issues → `Diagnostic` (severity: Info/Warning/Error, code: `CB0xx`–`CB5xx`)
-- Environment failures → exceptions (file not found, corrupted assembly, disk full)
-- CLI exit codes: 0 = success/warnings, 1 = error diagnostics, 2 = environment exception
-
-## Config overrides
-
-`cli-builder.json` — resource/operation patterns, excludes, parameter renames, flatten threshold, auth config. See spec for full schema.
-
-## Testing approach
-
-TDD. Purpose-built test SDK assembly for deterministic tests. Golden-file/snapshot tests for generator output. Fuzz tests for metadata string sanitization. CI on Windows + Linux.
-
-## v1 scope
-
-- .NET reflection adapter + C# / System.CommandLine generator
-- Two reference SDKs: OpenAI .NET SDK, Stripe.net
-- Agent-readiness: `--json`, `--help` at all levels, semantic exit codes, structured errors, pipe-friendly
-
-## Out of v1 scope
-
-- Python/Kotlin/OpenAPI source adapters
-- Python/Rust/Kotlin target generators
-- Agent-assisted enrichment (`--enrich`)
-- Runtime wrapper mode, GUI, package publishing
+[First Actions](cli-builder-spec.md#first-actions) — steps 1-3 complete, step 4 (scaffold) is next.

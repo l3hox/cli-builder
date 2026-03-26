@@ -221,7 +221,7 @@ AuthPattern
 
 All SDK metadata strings (type names, method names, parameter names, XML doc descriptions) flow into generated C# source code. To prevent code injection:
 
-- **Identifier validation:** All generated C# identifiers (class names, method names, variable names) are validated against `[a-zA-Z_][a-zA-Z0-9_]*`. Any metadata string that fails this check is sanitized (non-matching characters replaced with `_`) and a diagnostic is emitted.
+- **Identifier validation:** All generated C# identifiers must match `[a-zA-Z_][a-zA-Z0-9_]*` and must not be C# reserved keywords. Violations emit diagnostic `CB004`. See [docs/design-notes.md](docs/design-notes.md#identifier-validation--complete-rules) for the full keyword denylist and rename strategies.
 - **String content escaping:** XML doc descriptions and any user-visible strings are emitted using C# verbatim string literals (`@"..."`) or escaped via `SecurityElement.Escape()`. Never use raw string interpolation of metadata into generated source.
 - **No credential echo:** Generated error messages and `--json` error output must never include credential values. Auth parameters are masked in all diagnostic output.
 
@@ -308,6 +308,8 @@ stripe-cli/
                                # cache location: <AppData>/<cli-name>/ (cross-platform)
 ```
 
+**Generated `AuthHandler.cs`:** See [docs/design-notes.md](docs/design-notes.md#auth-generation-contract) for the generation contract (credential resolution, precedence, masking, config override rules).
+
 Generated CLI usage:
 
 ```bash
@@ -338,10 +340,31 @@ Every generated CLI must satisfy:
 | Human-readable default | Table/text format when `--json` absent |
 | Discoverable commands | `--help` at root, noun, and verb levels |
 | Noun-verb structure | `<tool> <resource> <action> [--params]` |
-| Semantic exit codes | 0=success, 1=user error, 2=auth error, 3+=app-specific |
+| Semantic exit codes | 0=success, 1=user error, 2=auth error, 3+=app-specific (see exit code reference below) |
 | Structured errors | JSON error object to stderr with code + message |
 | Non-interactive auth | Env var (preferred), config file, or `--api-key` flag (last resort — leaks to `ps`/shell history). No browser popups. |
 | Pipe-friendly | No color/spinners when stdout is not a TTY (detect via `Console.IsOutputRedirected`) |
+
+### Exit Code Reference
+
+Two separate binaries, two separate contracts:
+
+**cli-builder tool** (the generator itself):
+
+| Code | Meaning |
+|------|---------|
+| 0 | Success (possibly with warnings) |
+| 1 | Partial failure (any Error-severity diagnostic) |
+| 2 | Environment failure (exception: file not found, corrupted assembly) |
+
+**Generated CLI** (the output tool):
+
+| Code | Meaning |
+|------|---------|
+| 0 | Success |
+| 1 | User error (missing required param, invalid argument) |
+| 2 | Auth error (no credential, credential rejected) |
+| 3+ | App-specific (resource not found, rate limited, SDK errors) |
 
 ---
 
@@ -441,6 +464,20 @@ cli-builder v0.1 is done when:
 - Both generated CLIs pass agent-readiness requirements (table above)
 - Adapter interface is documented and a second adapter could be built without touching core
 - Architecture is explained in README with visible judgment calls (ADRs)
+
+---
+
+## Versioning
+
+SemVer (`MAJOR.MINOR.PATCH`). Starting at `0.1.0`.
+
+| Bump | Trigger |
+|------|---------|
+| **MAJOR** | Generated CLI structure changes incompatibly (different command names, removed flags, changed exit codes) |
+| **MINOR** | New features (new SDK patterns supported, new config options, new diagnostic codes) |
+| **PATCH** | Bug fixes, template corrections — regenerated CLIs are functionally identical |
+
+Move to `1.0.0` when success criteria above are met.
 
 ---
 
