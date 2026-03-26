@@ -46,4 +46,4 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-[First Actions](cli-builder-spec.md#first-actions) — steps 1-3 complete, step 4 (scaffold) is next.
+[First Actions](cli-builder-spec.md#first-actions) — steps 1-4 complete, step 5 (first spike: OpenAI .NET SDK) is next.

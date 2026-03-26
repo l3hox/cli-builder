@@ -48,7 +48,7 @@ openai-cli model list --help          # lists all parameters
 
 ## Status
 
-Early development — spec and architectural decisions complete, implementation starting. See [First Actions](cli-builder-spec.md#first-actions) in the spec.
+Early development — solution scaffolded (models, interfaces, 8 contract tests passing). See [First Actions](cli-builder-spec.md#first-actions) in the spec.
 
 ## License
 
