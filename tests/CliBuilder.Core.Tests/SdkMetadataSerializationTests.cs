@@ -1,15 +1,12 @@
 using System.Text.Json;
+using CliBuilder.Core.Json;
 using CliBuilder.Core.Models;
 
 namespace CliBuilder.Core.Tests;
 
 public class SdkMetadataSerializationTests
 {
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        WriteIndented = true
-    };
+    private static readonly JsonSerializerOptions JsonOptions = SdkMetadataJson.Options;
 
     [Fact]
     public void SdkMetadata_RoundTrips_ThroughJson()
