@@ -181,35 +181,63 @@ A well-defined, serializable contract enables:
 
 ---
 
-## ADR-006: Generated source code, not a runtime wrapper
+## ADR-006: Generated CLI wrapper over the original SDK
 
 **Date:** 2026-03-25
-**Status:** Accepted
+**Status:** Accepted (clarified 2026-03-26)
 
 ### Context
 
-cli-builder could produce CLIs in two ways:
+cli-builder could produce CLIs in three ways:
 
-1. **Code generation** — emit a compilable C# project that users build and distribute independently
-2. **Runtime wrapper** — ship a generic CLI binary that loads the SDK at runtime and dynamically invokes methods
+1. **CLI wrapper via code generation** — emit a compilable C# project that references the original SDK as a NuGet dependency and calls its methods. The generated code handles CLI parsing, calls SDK methods, and formats output. The SDK does the actual work.
+2. **Standalone reimplementation** — emit a C# project with no SDK dependency that reimplements the SDK's HTTP calls, auth, serialization, pagination, and error handling from scratch.
+3. **Runtime wrapper** — ship a generic CLI binary that loads the SDK at runtime and dynamically invokes methods via reflection.
 
 ### Decision
 
-cli-builder generates **standalone source code**. The output is a compilable C# project with no dependency on cli-builder itself.
+cli-builder generates a **CLI wrapper** (option 1). The generated project:
+- **Depends on the original SDK** as a NuGet package reference (e.g., `Stripe.net`)
+- **Depends on System.CommandLine** for CLI parsing
+- **Does not depend on cli-builder** — the tool is not needed at runtime
+
+The generated code is a thin CLI shell: parse flags → call SDK method → format output. All business logic stays in the original SDK.
 
 ### Rationale
 
-- **No runtime dependency.** Generated CLIs can be built, published, and distributed without cli-builder installed. Users own the output.
+**Why wrap the SDK, not reimplement it:**
+
+SDKs encode critical business logic that is invisible to reflection — retry policies, pagination cursors, rate limiting, idempotency keys, error mapping, webhook signature verification, OAuth flows, API versioning headers. Reimplementing this from reflection metadata alone would lose all of it. The generated CLI would look correct but behave incorrectly in production.
+
+Wrapping the SDK preserves correctness by construction: the CLI calls the exact same code path the SDK provides. No drift between "what the CLI does" and "what the SDK does."
+
+SDK updates are also trivial: bump the NuGet version in the generated `.csproj`, regenerate, done. With a reimplementation, every SDK update requires reverse-engineering the changes.
+
+**Why generate code, not a runtime wrapper:**
+
+- **No runtime dependency on cli-builder.** Generated CLIs can be built, published, and distributed without cli-builder installed. Users own the output.
 - **Debuggable.** Generated code is readable C# — users can modify, extend, or fix it.
 - **Auditable.** The generated project can be reviewed for security before deployment. A runtime wrapper hides the invocation logic.
 - **Distributable.** Generated projects can be published as `dotnet tool` packages, standalone binaries, or Docker images using standard .NET tooling.
 
+### Generated project dependency graph
+
+```
+Generated CLI (.csproj)
+├── Original SDK (NuGet)     ← e.g., Stripe.net, OpenAI
+├── System.CommandLine        ← CLI framework
+└── System.Text.Json          ← --json output formatting
+    (no reference to cli-builder)
+```
+
 ### Consequences
 
+- **Positive:** Business logic, auth, pagination, retries — all inherited from the SDK. Correctness by construction.
 - **Positive:** Zero runtime dependency on cli-builder. Users can modify generated code. Standard .NET build/publish workflow.
-- **Negative:** SDK version bumps require regeneration. No incremental updates — the entire project is regenerated.
-- **Negative:** Generated code safety is a concern — SDK metadata strings flow into source code and must be sanitized (identifier validation, string escaping, no credential echo).
-- **Mitigated by:** Regeneration is a single `cli-builder generate` command. Generated code safety rules are specified in the spec and enforced by the generator.
+- **Positive:** SDK updates are a version bump + regeneration.
+- **Negative:** Generated CLI inherits the SDK's transitive dependencies (could be large).
+- **Negative:** Generated code safety is a concern — SDK metadata strings flow into source code and must be sanitized.
+- **Mitigated by:** Transitive dependencies are managed by NuGet (standard .NET). Sanitization rules are specified in the spec and enforced by the generator.
 
 ---
 

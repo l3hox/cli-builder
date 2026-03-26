@@ -31,7 +31,7 @@ The generated CLI follows agent-friendly patterns:
 - **Language-agnostic design, .NET-first implementation.** The core architecture assumes nothing about the source language. An adapter interface defines how SDK metadata is extracted. v1 ships only the .NET adapter.
 - **Reflection-based discovery.** The .NET adapter uses runtime reflection to discover public types, methods, parameters, and return types from SDK assemblies.
 - **Convention + configuration.** Sensible defaults from reflection (public service classes → nouns, public methods → verbs), overridable via a config file for edge cases.
-- **Generated, not interpreted.** cli-builder generates source code for a standalone CLI, not a runtime wrapper. The output is a compilable project with no dependency on cli-builder itself.
+- **Generated CLI wrapper.** cli-builder generates a CLI shell that wraps the original SDK — not a reimplementation. The generated project depends on the original SDK (NuGet) and System.CommandLine, but has no dependency on cli-builder itself. All business logic (auth, retries, pagination) stays in the SDK.
 - **SdkMetadata as the contract.** The metadata model is the boundary between source adapters and target generators. It is serializable to JSON from day one, even though v1 only uses it in-memory. This makes it trivial to introduce process boundaries later without refactoring.
 - **Cross-platform from day one.** Both cli-builder and generated CLIs run on Windows, Linux, and macOS. No platform-specific code without an abstraction. Target `net8.0` (not platform-specific TFMs). CI tests on Windows and Linux at minimum.
 
@@ -294,7 +294,7 @@ For input SDK "Stripe", generates a project:
 
 ```
 stripe-cli/
-├── stripe-cli.csproj          # standalone, no cli-builder dependency
+├── stripe-cli.csproj          # references Stripe.net + System.CommandLine (no cli-builder dep)
 ├── Program.cs                 # entry point, command registration
 ├── Commands/
 │   ├── CustomerCommands.cs    # customer list|get|create|update|delete
@@ -357,9 +357,9 @@ Every generated CLI must satisfy:
   - **Stripe.net** — scale proof (340M+ downloads, huge typed surface)
 - README with architecture explanation and judgment calls
 - ADR for the core design decision (reflection vs static analysis vs schema)
-- FUTURE.md listing out-of-scope ideas
+- [FUTURE.md](FUTURE.md) listing out-of-scope ideas
 
-### Out of scope (FUTURE.md)
+### Out of scope (see [FUTURE.md](FUTURE.md))
 - **Source adapters:** Python (AST/inspect), Kotlin (reflection), OpenAPI spec (would overlap with existing tools — intentionally deferred)
 - **Target language emitters:** Python (click-based), Rust (clap-based), Kotlin (clikt-based) — v1 emits C#/System.CommandLine only
 - Runtime wrapper mode (interpret SDK at runtime instead of generating code)
@@ -470,4 +470,4 @@ cli-builder v0.1 is done when:
 
 ---
 
-*This spec is the canonical reference for cli-builder behavior — interfaces, models, config schema, test strategy, and scope. Architectural decisions and their rationale live in [docs/ADR.md](docs/ADR.md). Each piece of information should exist in exactly one place.*
+*This spec is the canonical reference for cli-builder behavior — interfaces, models, config schema, test strategy, and scope. Architectural decisions and their rationale live in [docs/ADR.md](docs/ADR.md). Edge-case policies and behavioral details live in [docs/design-notes.md](docs/design-notes.md). Implementation plans for agents live in `docs/internal/`. Each piece of information should exist in exactly one place.*

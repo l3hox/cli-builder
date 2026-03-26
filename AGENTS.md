@@ -24,13 +24,18 @@ A tool that generates agent-ready CLIs from .NET SDK assemblies via reflection. 
 |------|---------|
 | `cli-builder-spec.md` | Full specification — metadata model, interfaces, config schema, test strategy, scope |
 | `docs/ADR.md` | All 15 architecture decision records with rationale |
+| `docs/design-notes.md` | Edge-case policies, behavioral rules, diagnostic codes, test SDK manifest |
+| `FUTURE.md` | Out-of-scope ideas and deferred features |
+| `docs/internal/` | Agent implementation plans (step-by-step build instructions) |
 | `README.md` | Project overview |
+
+**Start here:** [First Actions](cli-builder-spec.md#first-actions) — steps 1-3 complete, step 4 is next.
 
 ## Architectural constraints (must not violate)
 
 - **`MetadataLoadContext` only** — never use `AssemblyLoadContext` to load SDK assemblies (arbitrary code execution risk)
 - **Cross-platform** — Windows, Linux, macOS. No hardcoded paths, no platform-specific APIs. Target `net8.0` only.
-- **Generated code is standalone** — no runtime dependency on cli-builder
+- **Generated CLI wraps the original SDK** — depends on the SDK (NuGet) and System.CommandLine, but not on cli-builder. All business logic stays in the SDK.
 - **No silent failures** — every skipped type, renamed parameter, or discarded overload produces a `Diagnostic`
 - **Package artifacts only** — operate on compiled assemblies/packages, never raw source code
 - **Sanitize all metadata strings** before emitting into generated C# source (identifier validation, string escaping)
