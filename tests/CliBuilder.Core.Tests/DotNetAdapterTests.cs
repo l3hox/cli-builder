@@ -304,6 +304,89 @@ public class DotNetAdapterTests
     }
 
     // -------------------------------------------------------
+    // Streaming marker
+    // -------------------------------------------------------
+
+    [Fact]
+    public void StreamAsync_IsMarkedAsStreaming()
+    {
+        var result = ExtractTestSdk();
+        var customer = result.Metadata.Resources.First(r => r.Name == "customer");
+        var stream = customer.Operations.First(o => o.Name == "stream");
+        Assert.True(stream.IsStreaming);
+    }
+
+    [Fact]
+    public void CreateAsync_IsNotStreaming()
+    {
+        var result = ExtractTestSdk();
+        var customer = result.Metadata.Resources.First(r => r.Name == "customer");
+        var create = customer.Operations.First(o => o.Name == "create");
+        Assert.False(create.IsStreaming);
+    }
+
+    // -------------------------------------------------------
+    // Parameter.Required
+    // -------------------------------------------------------
+
+    [Fact]
+    public void RequiredParameter_IsMarkedRequired()
+    {
+        var result = ExtractTestSdk();
+        var customer = result.Metadata.Resources.First(r => r.Name == "customer");
+        var get = customer.Operations.First(o => o.Name == "get");
+        var id = get.Parameters.First(p => p.Name == "id");
+        Assert.True(id.Required);
+    }
+
+    [Fact]
+    public void OptionalParameter_IsNotRequired()
+    {
+        var result = ExtractTestSdk();
+        var customer = result.Metadata.Resources.First(r => r.Name == "customer");
+        var list = customer.Operations.First(o => o.Name == "list");
+        var limit = list.Parameters.First(p => p.Name == "limit");
+        Assert.False(limit.Required);
+    }
+
+    // -------------------------------------------------------
+    // SanitizationOptions keyword properties
+    // -------------------------------------------------------
+
+    [Fact]
+    public void SanitizationOptions_KeywordProperties_AreExtracted()
+    {
+        var result = ExtractTestSdk();
+        var order = result.Metadata.Resources.First(r => r.Name == "order");
+        var process = order.Operations.First(o => o.Name == "process");
+        var optionsParam = process.Parameters.FirstOrDefault(p => p.Type.Kind == TypeKind.Class);
+        Assert.NotNull(optionsParam);
+        Assert.NotNull(optionsParam.Type.Properties);
+        // Reflection strips the @ prefix — properties appear as "class" and "event"
+        Assert.Contains(optionsParam.Type.Properties, p => p.Name == "class");
+        Assert.Contains(optionsParam.Type.Properties, p => p.Name == "event");
+    }
+
+    // -------------------------------------------------------
+    // NestedOptions
+    // -------------------------------------------------------
+
+    [Fact]
+    public void NestedOptions_ShippingAddress_IsExtractedAsClass()
+    {
+        var result = ExtractTestSdk();
+        var order = result.Metadata.Resources.First(r => r.Name == "order");
+        var update = order.Operations.First(o => o.Name == "update");
+        var optionsParam = update.Parameters.FirstOrDefault(p => p.Type.Kind == TypeKind.Class);
+        Assert.NotNull(optionsParam);
+        Assert.NotNull(optionsParam.Type.Properties);
+        var address = optionsParam.Type.Properties.FirstOrDefault(p => p.Name == "ShippingAddress");
+        Assert.NotNull(address);
+        Assert.Equal(TypeKind.Class, address.Type.Kind);
+        Assert.Equal("Address", address.Type.Name);
+    }
+
+    // -------------------------------------------------------
     // Negative diagnostic tests
     // -------------------------------------------------------
 

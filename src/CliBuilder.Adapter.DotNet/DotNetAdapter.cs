@@ -9,6 +9,8 @@ namespace CliBuilder.Adapter.DotNet;
 
 public class DotNetAdapter : ISdkAdapter
 {
+    private const int MaxTypeRecursionDepth = 10;
+
     private static readonly string[] DefaultSuffixes = ["Service", "Client", "Api"];
     private static readonly string[] AsyncSuffixes = ["Async"];
 
@@ -55,7 +57,7 @@ public class DotNetAdapter : ISdkAdapter
         var sdkName = assemblyName.Name ?? Path.GetFileNameWithoutExtension(assemblyPath);
         var sdkVersion = assemblyName.Version?.ToString() ?? "0.0.0";
 
-        // Discover service classes
+        // Discover service classes (with ReflectionTypeLoadException guard)
         var serviceClasses = DiscoverServiceClasses(assembly, diagnostics);
 
         // Build resources from discovered classes
@@ -92,16 +94,38 @@ public class DotNetAdapter : ISdkAdapter
 
     private List<(string Noun, Type Type)> DiscoverServiceClasses(Assembly assembly, List<Diagnostic> diagnostics)
     {
+        // Guard against missing transitive dependencies
+        Type[] exportedTypes;
+        try
+        {
+            exportedTypes = assembly.GetExportedTypes();
+        }
+        catch (ReflectionTypeLoadException ex)
+        {
+            // Use whatever types did load; emit diagnostics for failures
+            exportedTypes = ex.Types.Where(t => t != null).ToArray()!;
+            foreach (var loaderEx in ex.LoaderExceptions.Where(e => e != null))
+            {
+                diagnostics.Add(new Diagnostic(
+                    DiagnosticSeverity.Warning,
+                    "CB101",
+                    $"Type skipped due to load failure: {loaderEx!.Message}"));
+            }
+        }
+
         var candidates = new Dictionary<string, List<Type>>();
 
-        foreach (var type in assembly.GetExportedTypes())
+        foreach (var type in exportedTypes)
         {
             var noun = TryExtractNoun(type.Name);
             if (noun == null) continue;
 
-            if (!candidates.ContainsKey(noun))
-                candidates[noun] = new List<Type>();
-            candidates[noun].Add(type);
+            if (!candidates.TryGetValue(noun, out var list))
+            {
+                list = new List<Type>();
+                candidates[noun] = list;
+            }
+            list.Add(type);
         }
 
         var result = new List<(string, Type)>();
@@ -148,9 +172,12 @@ public class DotNetAdapter : ISdkAdapter
             if (method.IsSpecialName) continue; // skip property accessors, etc.
 
             var verb = ExtractVerbName(method.Name);
-            if (!verbGroups.ContainsKey(verb))
-                verbGroups[verb] = new List<MethodInfo>();
-            verbGroups[verb].Add(method);
+            if (!verbGroups.TryGetValue(verb, out var list))
+            {
+                list = new List<MethodInfo>();
+                verbGroups[verb] = list;
+            }
+            list.Add(method);
         }
 
         var operations = new List<Operation>();
@@ -171,14 +198,22 @@ public class DotNetAdapter : ISdkAdapter
             if (group.Count > 1)
             {
                 // Among methods with the same name, pick richest parameter set
-                var overloads = group.GroupBy(m => m.Name)
-                    .SelectMany<IGrouping<string, MethodInfo>, MethodInfo>(g => g.Count() > 1
-                        ? new[] { SelectRichestOverload(g.ToList(), verb, serviceType, diagnostics) }
-                        : g.ToArray())
-                    .ToList();
+                var resolved = new List<MethodInfo>();
+                foreach (var nameGroup in group.GroupBy(m => m.Name))
+                {
+                    var overloadList = nameGroup.ToList();
+                    if (overloadList.Count > 1)
+                    {
+                        resolved.Add(SelectRichestOverload(overloadList, verb, serviceType, diagnostics));
+                    }
+                    else
+                    {
+                        resolved.Add(overloadList[0]);
+                    }
+                }
 
                 // If we still have multiple (from different method names), pick the async one
-                selected = overloads.FirstOrDefault(m => m.Name.EndsWith("Async")) ?? overloads[0];
+                selected = resolved.FirstOrDefault(m => m.Name.EndsWith("Async")) ?? resolved[0];
             }
             else
             {
@@ -186,9 +221,9 @@ public class DotNetAdapter : ISdkAdapter
             }
 
             var parameters = ExtractParameters(selected);
-            var returnType = ExtractReturnType(selected);
+            var (returnType, isStreaming) = ExtractReturnType(selected);
 
-            operations.Add(new Operation(verb, null, parameters, returnType));
+            operations.Add(new Operation(verb, null, parameters, returnType, isStreaming));
         }
 
         return operations;
@@ -199,13 +234,10 @@ public class DotNetAdapter : ISdkAdapter
         var sorted = overloads.OrderByDescending(m =>
             m.GetParameters().Count(p => p.ParameterType.FullName != "System.Threading.CancellationToken")).ToList();
 
-        if (sorted.Count > 1)
-        {
-            diagnostics.Add(new Diagnostic(
-                DiagnosticSeverity.Info,
-                "CB203",
-                $"Overload disambiguated: '{sorted[0].Name}' on {serviceType.Name} has {sorted.Count} overloads for verb '{verb}'. Using the variant with {sorted[0].GetParameters().Length} parameters."));
-        }
+        diagnostics.Add(new Diagnostic(
+            DiagnosticSeverity.Info,
+            "CB203",
+            $"Overload disambiguated: '{sorted[0].Name}' on {serviceType.Name} has {sorted.Count} overloads for verb '{verb}'. Using the variant with {sorted[0].GetParameters().Length} parameters."));
 
         return sorted[0];
     }
@@ -266,62 +298,60 @@ public class DotNetAdapter : ISdkAdapter
         return props;
     }
 
-    private TypeRef ExtractReturnType(MethodInfo method)
+    private (TypeRef Type, bool IsStreaming) ExtractReturnType(MethodInfo method)
     {
         return UnwrapAndBuild(method.ReturnType);
     }
 
-    private TypeRef UnwrapAndBuild(Type type)
+    private (TypeRef Type, bool IsStreaming) UnwrapAndBuild(Type type, bool isStreaming = false, int depth = 0)
     {
+        if (depth > MaxTypeRecursionDepth)
+            return (new TypeRef(TypeKind.Class, type.Name), isStreaming);
+
         // Unwrap Task<T>, ValueTask<T>, ClientResult<T>, IAsyncEnumerable<T>
         if (type.IsGenericType)
         {
-            var genericName = type.Name;
-            // Strip arity suffix (e.g., "Task`1" → "Task")
-            var backtickIndex = genericName.IndexOf('`');
-            if (backtickIndex > 0)
-                genericName = genericName[..backtickIndex];
-
+            var genericName = StripArityFromName(type.Name);
             var args = type.GetGenericArguments();
 
             if (UnwrapTypes.Contains(genericName) && args.Length == 1)
-                return UnwrapAndBuild(args[0]);
+                return UnwrapAndBuild(args[0], isStreaming, depth + 1);
 
             if (StreamingUnwrapTypes.Contains(genericName) && args.Length == 1)
-                return UnwrapAndBuild(args[0]);
+                return UnwrapAndBuild(args[0], isStreaming: true, depth + 1);
 
             // Dictionary special case
             if (genericName == "Dictionary" && args.Length == 2)
-                return new TypeRef(TypeKind.Dictionary, "Dictionary");
+                return (new TypeRef(TypeKind.Dictionary, "Dictionary"), isStreaming);
 
             // Nullable<T> (value type nullable)
             if (genericName == "Nullable" && args.Length == 1)
             {
-                var inner = BuildTypeRef(args[0]);
-                return inner with { IsNullable = true };
+                var inner = BuildTypeRef(args[0], depth + 1);
+                return (inner with { IsNullable = true }, isStreaming);
             }
 
             // Generic type (List<T>, etc.)
-            var genericArgs = args.Select(BuildTypeRef).ToList();
-            return new TypeRef(TypeKind.Generic, genericName, GenericArguments: genericArgs);
+            var genericArgs = args.Select(a => BuildTypeRef(a, depth + 1)).ToList();
+            return (new TypeRef(TypeKind.Generic, genericName, GenericArguments: genericArgs), isStreaming);
         }
 
-        return BuildTypeRef(type);
+        return (BuildTypeRef(type, depth), isStreaming);
     }
 
-    private TypeRef BuildTypeRef(Type type)
+    private TypeRef BuildTypeRef(Type type, int depth = 0)
     {
+        if (depth > MaxTypeRecursionDepth)
+            return new TypeRef(TypeKind.Class, type.Name);
+
         // Handle Nullable<T> for value types
         if (type.IsGenericType)
         {
-            var genericName = type.Name;
-            var backtickIndex = genericName.IndexOf('`');
-            if (backtickIndex > 0)
-                genericName = genericName[..backtickIndex];
+            var genericName = StripArityFromName(type.Name);
 
             if (genericName == "Nullable")
             {
-                var inner = BuildTypeRef(type.GetGenericArguments()[0]);
+                var inner = BuildTypeRef(type.GetGenericArguments()[0], depth + 1);
                 return inner with { IsNullable = true };
             }
 
@@ -331,7 +361,7 @@ public class DotNetAdapter : ISdkAdapter
                 return new TypeRef(TypeKind.Dictionary, "Dictionary");
 
             // Other generics
-            var genericArgs = args.Select(BuildTypeRef).ToList();
+            var genericArgs = args.Select(a => BuildTypeRef(a, depth + 1)).ToList();
             return new TypeRef(TypeKind.Generic, genericName, GenericArguments: genericArgs);
         }
 
@@ -345,7 +375,7 @@ public class DotNetAdapter : ISdkAdapter
         // Array
         if (type.IsArray)
         {
-            var elementType = BuildTypeRef(type.GetElementType()!);
+            var elementType = BuildTypeRef(type.GetElementType()!, depth + 1);
             return new TypeRef(TypeKind.Array, type.Name, ElementType: elementType);
         }
 
@@ -358,6 +388,12 @@ public class DotNetAdapter : ISdkAdapter
 
         // Class
         return new TypeRef(TypeKind.Class, type.Name);
+    }
+
+    private static string StripArityFromName(string typeName)
+    {
+        var backtickIndex = typeName.IndexOf('`');
+        return backtickIndex > 0 ? typeName[..backtickIndex] : typeName;
     }
 
     private bool IsPrimitiveType(Type type)
@@ -373,7 +409,7 @@ public class DotNetAdapter : ISdkAdapter
             return true;
 
         // Check for nullable reference types via custom attributes
-        // NullableAttribute with byte value 2 means nullable
+        // NullableAttribute: byte constructor → single value; byte[] constructor → per-type-arg
         var nullableAttr = param.CustomAttributes
             .FirstOrDefault(a => a.AttributeType.FullName == "System.Runtime.CompilerServices.NullableAttribute");
         if (nullableAttr != null)
@@ -381,12 +417,20 @@ public class DotNetAdapter : ISdkAdapter
             var args = nullableAttr.ConstructorArguments;
             if (args.Count > 0)
             {
+                // Single byte form
                 if (args[0].Value is byte b && b == 2)
                     return true;
+                // Array form — first element is the top-level nullability
+                if (args[0].Value is IReadOnlyCollection<CustomAttributeTypedArgument> arr)
+                {
+                    var first = arr.FirstOrDefault();
+                    if (first.Value is byte fb && fb == 2)
+                        return true;
+                }
             }
         }
 
-        // Check the parameter's NullableContextAttribute
+        // Check the method/type NullableContextAttribute for default context
         var contextAttr = param.Member.CustomAttributes
             .FirstOrDefault(a => a.AttributeType.FullName == "System.Runtime.CompilerServices.NullableContextAttribute");
         if (contextAttr != null)
@@ -394,7 +438,7 @@ public class DotNetAdapter : ISdkAdapter
             var args = contextAttr.ConstructorArguments;
             if (args.Count > 0 && args[0].Value is byte ctx && ctx == 2)
             {
-                // Default context is nullable — check if parameter overrides
+                // Default context is nullable — if no per-parameter override, it's nullable
                 if (nullableAttr == null)
                     return true;
             }
@@ -417,17 +461,18 @@ public class DotNetAdapter : ISdkAdapter
                     var key = $"{param.ParameterType.Name}:{param.Name}";
                     if (seen.Contains(key)) continue;
 
-                    if (IsApiKeyParameter(param))
-                    {
-                        seen.Add(key);
-                        var envVar = GenerateEnvVarName(assembly, param.Name!);
-                        patterns.Add(new AuthPattern(AuthType.ApiKey, envVar, param.Name!));
-                    }
-                    else if (IsCredentialParameter(param))
+                    // Check credential types first (more specific)
+                    if (IsCredentialParameter(param))
                     {
                         seen.Add(key);
                         var envVar = GenerateEnvVarName(assembly, "token");
                         patterns.Add(new AuthPattern(AuthType.BearerToken, envVar, param.Name!));
+                    }
+                    else if (IsApiKeyParameter(param))
+                    {
+                        seen.Add(key);
+                        var envVar = GenerateEnvVarName(assembly, param.Name!);
+                        patterns.Add(new AuthPattern(AuthType.ApiKey, envVar, param.Name!));
                     }
                 }
             }
@@ -440,7 +485,8 @@ public class DotNetAdapter : ISdkAdapter
     {
         if (param.ParameterType.FullName != "System.String") return false;
         var name = param.Name?.ToLowerInvariant() ?? "";
-        return name.Contains("key") || name.Contains("apikey") || name.Contains("token") || name.Contains("secret");
+        // Fix: "token" removed — token-style auth is BearerToken via IsCredentialParameter
+        return name.Contains("key") || name.Contains("apikey") || name.Contains("secret");
     }
 
     private bool IsCredentialParameter(ParameterInfo param)
@@ -456,6 +502,11 @@ public class DotNetAdapter : ISdkAdapter
         return $"{name.ToUpperInvariant().Replace(".", "_")}_{suffix.ToUpperInvariant()}";
     }
 
+    /// <summary>
+    /// Converts PascalCase to kebab-case, with acronym handling.
+    /// Consecutive uppercase letters are treated as an acronym:
+    /// "OpenAI" → "open-ai", "GetHTTPStatus" → "get-http-status"
+    /// </summary>
     private static string PascalToKebabCase(string input)
     {
         if (string.IsNullOrEmpty(input)) return input;
@@ -466,7 +517,19 @@ public class DotNetAdapter : ISdkAdapter
             var c = input[i];
             if (char.IsUpper(c))
             {
-                if (i > 0) sb.Append('-');
+                if (i > 0)
+                {
+                    var prevIsUpper = char.IsUpper(input[i - 1]);
+                    var nextIsLower = i + 1 < input.Length && char.IsLower(input[i + 1]);
+
+                    // Insert hyphen before:
+                    // - a capital that follows a lowercase (standard boundary: "getStatus" → "get-Status")
+                    // - a capital that is the start of a new word after an acronym ("HTTPStatus" → "HTTP-Status")
+                    if (!prevIsUpper || nextIsLower)
+                    {
+                        sb.Append('-');
+                    }
+                }
                 sb.Append(char.ToLowerInvariant(c));
             }
             else
