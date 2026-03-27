@@ -33,13 +33,13 @@ public class DotNetAdapter : ISdkAdapter
     // Types that are unwrapped to their first generic argument
     private static readonly HashSet<string> UnwrapTypes = new(StringComparer.Ordinal)
     {
-        "Task", "ValueTask", "ClientResult"
+        "Task", "ValueTask", "ClientResult", "CollectionResult"
     };
 
     // Types that are unwrapped and mark the operation as streaming
     private static readonly HashSet<string> StreamingUnwrapTypes = new(StringComparer.Ordinal)
     {
-        "IAsyncEnumerable"
+        "IAsyncEnumerable", "AsyncCollectionResult"
     };
 
     public AdapterResult Extract(AdapterOptions options)
@@ -512,8 +512,14 @@ public class DotNetAdapter : ISdkAdapter
                     var key = $"{param.ParameterType.Name}:{param.Name}";
                     if (seen.Contains(key)) continue;
 
-                    // Check credential types first (more specific)
-                    if (IsCredentialParameter(param))
+                    // Check credential types first (most specific → least specific)
+                    if (IsApiKeyCredentialParameter(param))
+                    {
+                        seen.Add(key);
+                        var envVar = GenerateEnvVarName(assembly, "api_key");
+                        patterns.Add(new AuthPattern(AuthType.ApiKey, envVar, param.Name!));
+                    }
+                    else if (IsCredentialParameter(param))
                     {
                         seen.Add(key);
                         var envVar = GenerateEnvVarName(assembly, "token");
@@ -542,6 +548,12 @@ public class DotNetAdapter : ISdkAdapter
     private bool IsCredentialParameter(ParameterInfo param)
     {
         return param.ParameterType.Name.EndsWith("Credential", StringComparison.Ordinal);
+    }
+
+    private bool IsApiKeyCredentialParameter(ParameterInfo param)
+    {
+        var name = param.ParameterType.Name;
+        return name == "ApiKeyCredential" || name.StartsWith("ApiKey", StringComparison.Ordinal) && name.EndsWith("Credential", StringComparison.Ordinal);
     }
 
     private string GenerateEnvVarName(Assembly assembly, string suffix)

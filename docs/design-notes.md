@@ -13,9 +13,11 @@ The adapter unwraps async and wrapper types to expose the "real" return type to 
 1. **`Task<T>`** → unwrap to `T`
 2. **`ValueTask<T>`** → unwrap to `T`
 3. **`IAsyncEnumerable<T>`** → unwrap to `T` (mark operation as streaming)
-4. **`ClientResult<T>`** → unwrap to `T` (SDK-specific wrapper, single `Value` property of type `T`)
+4. **`AsyncCollectionResult<T>`** → unwrap to `T` (mark operation as streaming — OpenAI SDK pattern for streaming responses)
+5. **`ClientResult<T>`** → unwrap to `T` (SDK-specific wrapper)
+6. **`CollectionResult<T>`** → unwrap to `T` (sync paginated results — OpenAI SDK pattern)
 
-Rule 4 applies to any generic type named `ClientResult` with exactly one type argument. This handles the OpenAI .NET SDK pattern where methods return `Task<ClientResult<ChatCompletion>>` — after rules 1 + 4, the generator sees `ChatCompletion`.
+Rules 4-6 handle the OpenAI .NET SDK where methods return `Task<ClientResult<ChatCompletion>>` (rules 1 + 5 → `ChatCompletion`) and `AsyncCollectionResult<StreamingChatCompletionUpdate>` (rule 4 → `StreamingChatCompletionUpdate`, marked streaming).
 
 If a wrapper type is not in this list, it is not unwrapped — it appears as `TypeRef(Generic, "WrapperName", [T])` in the metadata.
 
