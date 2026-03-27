@@ -179,11 +179,11 @@ public class SdkMetadataSerializationTests
     }
 
     [Fact]
-    public void SkeletonAdapter_ImplementsInterface()
+    public void Adapter_ImplementsInterface_AndThrowsOnMissingFile()
     {
         CliBuilder.Core.Adapters.ISdkAdapter adapter = new CliBuilder.Adapter.DotNet.DotNetAdapter();
-        Assert.Throws<NotImplementedException>(() =>
-            adapter.Extract(new AdapterOptions("test.dll")));
+        Assert.Throws<FileNotFoundException>(() =>
+            adapter.Extract(new AdapterOptions("nonexistent.dll")));
     }
 
     [Fact]

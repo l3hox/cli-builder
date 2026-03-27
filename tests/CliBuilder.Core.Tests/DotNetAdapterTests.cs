@@ -58,13 +58,15 @@ public class DotNetAdapterTests
     }
 
     [Fact]
-    public void Emits_NounCollision_Error_ForCustomerApiService()
+    public void Emits_NounCollision_Error_ForShippingClasses()
     {
         var result = ExtractTestSdk();
         var collision = result.Diagnostics.FirstOrDefault(d => d.Code == "CB202");
         Assert.NotNull(collision);
         Assert.Equal(DiagnosticSeverity.Error, collision.Severity);
-        Assert.Contains("customer", collision.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("shipping", collision.Message, StringComparison.OrdinalIgnoreCase);
+        // Colliding resources are excluded entirely
+        Assert.DoesNotContain(result.Metadata.Resources, r => r.Name == "shipping");
     }
 
     // -------------------------------------------------------
