@@ -4,9 +4,19 @@ using {{ root_namespace }}.Commands;
 {{ end }}
 
 var rootCommand = new RootCommand({{ cli_description | escape_csharp }});
+
+// Global --json option available on all commands
+var jsonOption = new Option<bool>("--json", "Output as JSON instead of table format");
+rootCommand.AddGlobalOption(jsonOption);
+{{ if auth }}
+
+// Global --api-key option (last-resort auth, prefer env var)
+var apiKeyOption = new Option<string?>("--api-key", "API key (prefer {{ auth.env_var }} env var instead)");
+rootCommand.AddGlobalOption(apiKeyOption);
+{{ end }}
 {{ for resource in resources }}
 
-rootCommand.AddCommand({{ resource.class_name }}Commands.Build());
+rootCommand.AddCommand({{ resource.class_name }}Commands.Build(jsonOption{{ if auth }}, apiKeyOption{{ end }}));
 {{ end }}
 
 return await rootCommand.InvokeAsync(args);

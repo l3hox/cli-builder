@@ -189,6 +189,7 @@ public static partial class ModelMapper
         "DateTime" => "string",
         "DateTimeOffset" => "string",
         "Guid" => "string",
+        "void" or "Void" => "void",
         _ => "string"  // safe default for unknown types
     };
 

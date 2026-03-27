@@ -1,0 +1,85 @@
+using System.Text.Json;
+
+namespace {{ root_namespace }}.Auth;
+
+public static class AuthHandler
+{
+    private static readonly string ConfigDir = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "{{ cli_name }}");
+
+    private static readonly string ConfigPath = Path.Combine(ConfigDir, "config.json");
+
+    /// <summary>
+    /// Resolve credential with strict precedence:
+    /// 1. Environment variable ({{ env_var }})
+    /// 2. Config file ({AppData}/{{ cli_name }}/config.json)
+    /// 3. --api-key flag (last resort — warns to stderr)
+    /// </summary>
+    public static string Resolve(string? flagValue = null)
+    {
+        // 1. Environment variable — preferred
+        var envValue = Environment.GetEnvironmentVariable("{{ env_var }}");
+        if (!string.IsNullOrEmpty(envValue))
+            return envValue;
+
+        // 2. Config file — checked second
+        if (File.Exists(ConfigPath))
+        {
+            try
+            {
+                var json = File.ReadAllText(ConfigPath);
+                using var doc = JsonDocument.Parse(json);
+                if (doc.RootElement.TryGetProperty("{{ parameter_name }}", out var prop))
+                {
+                    var configValue = prop.GetString();
+                    if (!string.IsNullOrEmpty(configValue))
+                        return configValue;
+                }
+            }
+            catch
+            {
+                // Config file corrupt — fall through to flag
+            }
+        }
+
+        // 3. --api-key flag — last resort with warning
+        if (!string.IsNullOrEmpty(flagValue))
+        {
+            Console.Error.WriteLine(
+                "WARNING: Using --api-key flag. Credential may be visible in shell history and process list. " +
+                "Set {{ env_var }} environment variable or run 'login' instead.");
+            return flagValue;
+        }
+
+        throw new InvalidOperationException(
+            $"No credential found. Set the {{ env_var }} environment variable, " +
+            $"or configure via {ConfigPath}, " +
+            $"or pass --api-key (not recommended).");
+    }
+
+    /// <summary>
+    /// Save credential to config file for future use.
+    /// </summary>
+    public static void SaveCredential(string credential)
+    {
+        Directory.CreateDirectory(ConfigDir);
+        var config = new Dictionary<string, string> { ["{{ parameter_name }}"] = credential };
+        var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(ConfigPath, json);
+    }
+
+    /// <summary>
+    /// Mask credential values in error messages to prevent leaks.
+    /// </summary>
+    public static string SanitizeMessage(string message)
+    {
+        if (string.IsNullOrEmpty(message)) return message;
+
+        // Mask common credential patterns (sk-xxx, Bearer xxx, api_key=xxx)
+        message = System.Text.RegularExpressions.Regex.Replace(
+            message, @"(sk-|Bearer |api[_-]?key[=:]\s*)\S+", "$1***");
+
+        return message;
+    }
+}

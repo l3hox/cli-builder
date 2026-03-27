@@ -46,5 +46,17 @@ public record AuthModel(
 
 public record CommandFileModel(
     string RootNamespace,
-    ResourceModel Resource
+    ResourceModel Resource,
+    bool HasAuth
+);
+
+public record AuthFileModel(
+    string RootNamespace,
+    string CliName,
+    string EnvVar,
+    string ParameterName
+);
+
+public record OutputFileModel(
+    string RootNamespace
 );

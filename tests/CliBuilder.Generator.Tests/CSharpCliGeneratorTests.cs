@@ -224,11 +224,13 @@ public class CSharpCliGeneratorTests : IDisposable
     }
 
     [Fact]
-    public void Generate_GeneratedFileCount_MatchesExpected()
+    public void Generate_HasCommandFiles()
     {
         var result = Generate();
-        // .csproj + Program.cs + 3 command files = 5
-        Assert.Equal(5, result.GeneratedFiles.Count);
+        // 3 resources = 3 command files
+        var commandFiles = result.GeneratedFiles.Where(f =>
+            f.Contains("Commands") && f.EndsWith(".cs")).ToList();
+        Assert.Equal(3, commandFiles.Count);
     }
 
     [Fact]
@@ -337,5 +339,198 @@ public class CSharpCliGeneratorTests : IDisposable
             var content = File.ReadAllText(file);
             Assert.DoesNotContain("\r\n", content);
         }
+    }
+
+    // -----------------------------------------------------------
+    // Phase 6C: Output formatters, auth handler, handler wiring
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void Generate_CreatesJsonFormatterCs()
+    {
+        var result = Generate();
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("JsonFormatter.cs"));
+    }
+
+    [Fact]
+    public void Generate_CreatesTableFormatterCs()
+    {
+        var result = Generate();
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("TableFormatter.cs"));
+    }
+
+    [Fact]
+    public void Generate_CreatesAuthHandlerCs()
+    {
+        var result = Generate();
+        // TestSdk has auth patterns → AuthHandler should be generated
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("AuthHandler.cs"));
+    }
+
+    [Fact]
+    public void Generate_WithNoAuth_SkipsAuthHandler()
+    {
+        var noAuthMetadata = new SdkMetadata("NoAuth", "1.0",
+            new List<Resource> { new("test", null, new List<Operation>()) },
+            new List<AuthPattern>());
+        var generator = new CSharpCliGenerator();
+        var result = generator.Generate(noAuthMetadata, new GeneratorOptions(_outputDir, "noauth-cli"));
+
+        Assert.DoesNotContain(result.GeneratedFiles, f => f.EndsWith("AuthHandler.cs"));
+        Assert.False(Directory.Exists(Path.Combine(result.ProjectDirectory, "Auth")));
+    }
+
+    [Fact]
+    public void Generate_AuthHandlerReadsEnvVar()
+    {
+        var result = Generate();
+        var authHandler = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("AuthHandler.cs")));
+
+        // TestSdk fixture has EnvVar = "TESTSDK_APIKEY"
+        Assert.Contains("TESTSDK_APIKEY", authHandler);
+    }
+
+    [Fact]
+    public void Generate_AuthHandlerHasPrecedenceChain()
+    {
+        var result = Generate();
+        var authHandler = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("AuthHandler.cs")));
+
+        // Find the Resolve method body to check ordering within it
+        var resolveStart = authHandler.IndexOf("public static string Resolve");
+        Assert.True(resolveStart >= 0, "AuthHandler should have Resolve method");
+        var resolveBody = authHandler[resolveStart..];
+
+        // Env var check must appear BEFORE config file read BEFORE flag check
+        var envVarPos = resolveBody.IndexOf("GetEnvironmentVariable");
+        var configPos = resolveBody.IndexOf("File.Exists(ConfigPath)");
+        var flagPos = resolveBody.IndexOf("IsNullOrEmpty(flagValue)");
+
+        Assert.True(envVarPos >= 0, "Resolve should check env var");
+        Assert.True(configPos >= 0, "Resolve should check config file");
+        Assert.True(flagPos >= 0, "Resolve should check flag value");
+        Assert.True(envVarPos < configPos, "Env var must be checked before config file");
+        Assert.True(configPos < flagPos, "Config file must be checked before flag");
+    }
+
+    [Fact]
+    public void Generate_AuthHandlerWarnsOnFlagUsage()
+    {
+        var result = Generate();
+        var authHandler = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("AuthHandler.cs")));
+
+        Assert.Contains("Console.Error", authHandler);
+        Assert.Contains("--api-key", authHandler);
+    }
+
+    [Fact]
+    public void Generate_ProgramHasJsonGlobalOption()
+    {
+        var result = Generate();
+        var program = File.ReadAllText(Path.Combine(result.ProjectDirectory, "Program.cs"));
+
+        Assert.Contains("--json", program);
+        Assert.Contains("AddGlobalOption", program);
+    }
+
+    [Fact]
+    public void Generate_HandlerFormatsOutput()
+    {
+        var result = Generate();
+        var customerCmd = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("CustomerCommands.cs")));
+
+        Assert.Contains("JsonFormatter", customerCmd);
+        Assert.Contains("TableFormatter", customerCmd);
+    }
+
+    [Fact]
+    public void Generate_HandlerSetsExitCodes()
+    {
+        var result = Generate();
+        var customerCmd = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("CustomerCommands.cs")));
+
+        Assert.Contains("ExitCode = 0", customerCmd);  // success
+        Assert.Contains("ExitCode = 2", customerCmd);  // auth error
+        Assert.Contains("ExitCode = 3", customerCmd);  // SDK error
+    }
+
+    [Fact]
+    public void Generate_HandlerHasAuthErrorHandler()
+    {
+        var result = Generate();
+        var customerCmd = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("CustomerCommands.cs")));
+
+        // Auth failure should be caught separately with code "auth_error"
+        Assert.Contains("auth_error", customerCmd);
+        Assert.Contains("ExitCode = 2", customerCmd);
+    }
+
+    [Fact]
+    public void Generate_ErrorHandlerSanitizesExceptionMessage()
+    {
+        var result = Generate();
+        var customerCmd = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("CustomerCommands.cs")));
+
+        // Should have credential masking, not raw exception.Message
+        Assert.Contains("SanitizeMessage", customerCmd);
+    }
+
+    [Fact]
+    public void Generate_OutputDisablesColorWhenRedirected()
+    {
+        var result = Generate();
+        var tableFormatter = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("TableFormatter.cs")));
+
+        Assert.Contains("IsOutputRedirected", tableFormatter);
+    }
+
+    [Fact]
+    public void Generate_VoidReturnOp_DoesNotCallFormatter()
+    {
+        // Create metadata with a void-returning operation
+        var voidOp = new Operation("delete", "Delete item", new List<Parameter>
+        {
+            new("id", new TypeRef(TypeKind.Primitive, "string"), true)
+        }, new TypeRef(TypeKind.Primitive, "void"));
+
+        var resource = new Resource("item", null, new[] { voidOp });
+        var metadata = new SdkMetadata("VoidTest", "1.0",
+            new[] { resource }, new List<AuthPattern>());
+
+        var generator = new CSharpCliGenerator();
+        var result = generator.Generate(metadata, new GeneratorOptions(_outputDir, "void-cli"));
+
+        var itemCmd = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("ItemCommands.cs")));
+
+        // Void return should NOT call formatters
+        Assert.DoesNotContain("JsonFormatter.Write", itemCmd);
+        Assert.DoesNotContain("TableFormatter.Write", itemCmd);
+        // Should still have success output
+        Assert.Contains("ExitCode = 0", itemCmd);
+    }
+
+    [Fact]
+    public void Generate_AllExpectedFilesExist()
+    {
+        var result = Generate();
+
+        // Verify each expected file exists by name
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith(".csproj"));
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("Program.cs"));
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("CustomerCommands.cs"));
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("OrderCommands.cs"));
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("ProductCommands.cs"));
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("JsonFormatter.cs"));
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("TableFormatter.cs"));
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("AuthHandler.cs"));
     }
 }

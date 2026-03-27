@@ -1,11 +1,16 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.Text.Json;
+using {{ root_namespace }}.Output;
+{{- if has_auth }}
+using {{ root_namespace }}.Auth;
+{{- end }}
 
 namespace {{ root_namespace }}.Commands;
 
 public static class {{ resource.class_name }}Commands
 {
-    public static Command Build()
+    public static Command Build(Option<bool> jsonOption{{ if has_auth }}, Option<string?> apiKeyOption{{ end }})
     {
         var command = new Command("{{ resource.name }}", {{ resource.description | escape_csharp }});
 {{ for op in resource.operations }}
@@ -22,17 +27,89 @@ public static class {{ resource.class_name }}Commands
             {{ param.cli_flag | to_var_name }}Option.SetDefaultValue({{ param.default_value_literal }});
 {{ end }}
 {{ if param.enum_values }}
-            {{ param.cli_flag | to_var_name }}Option.AcceptOnlyFromAmong({{ for val in param.enum_values }}{{ if !for.first }}, {{ end }}"{{ val }}"{{ end }});
+            {{ param.cli_flag | to_var_name }}Option.FromAmong({{ for val in param.enum_values }}{{ if !for.first }}, {{ end }}"{{ val }}"{{ end }});
 {{ end }}
             cmd.AddOption({{ param.cli_flag | to_var_name }}Option);
 {{ end }}
 {{ if op.needs_json_input }}
-            var jsonInputOption = new Option<string>("--json-input", "Full input as JSON. Flat flags override individual properties.");
+            var jsonInputOption = new Option<string?>("--json-input", "Full input as JSON. Flat flags override individual properties.");
             cmd.AddOption(jsonInputOption);
 {{ end }}
             cmd.SetHandler(async (InvocationContext ctx) =>
             {
-                // TODO(6C): Wire SDK call, output formatting, error handling
+                try
+                {
+{{ if has_auth }}
+                    // Resolve credential (exit code 2 on auth failure)
+                    string credential;
+                    try
+                    {
+                        credential = AuthHandler.Resolve(ctx.ParseResult.GetValueForOption(apiKeyOption));
+                    }
+                    catch (InvalidOperationException authEx)
+                    {
+                        var authError = new { error = new { code = "auth_error", message = authEx.Message } };
+                        Console.Error.WriteLine(JsonSerializer.Serialize(authError));
+                        ctx.ExitCode = 2;
+                        return;
+                    }
+
+{{ end }}
+                    // Read parameter values
+                    var parameters = new Dictionary<string, object?>();
+{{ for param in op.parameters }}
+                    parameters["{{ param.property_name }}"] = ctx.ParseResult.GetValueForOption({{ param.cli_flag | to_var_name }}Option);
+{{ end }}
+{{ if op.needs_json_input }}
+
+                    // Flat flags take precedence; --json-input fills remaining nulls
+                    var jsonInputValue = ctx.ParseResult.GetValueForOption(jsonInputOption);
+                    if (!string.IsNullOrEmpty(jsonInputValue))
+                    {
+                        var jsonParams = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(jsonInputValue);
+                        if (jsonParams != null)
+                        {
+                            foreach (var kvp in jsonParams)
+                            {
+                                if (!parameters.ContainsKey(kvp.Key) || parameters[kvp.Key] is null)
+                                    parameters[kvp.Key] = kvp.Value.ToString();
+                            }
+                        }
+                    }
+{{ end }}
+
+                    // TODO: Instantiate SDK client and call {{ op.method_name }}
+                    // This is where the generated CLI calls the actual SDK method.
+                    // For now, output the resolved parameters.
+                    var result = new Dictionary<string, object?>
+                    {
+                        ["command"] = "{{ resource.name }} {{ op.name }}",
+                        ["parameters"] = parameters{{ if has_auth }},
+                        ["authenticated"] = true{{ end }}
+                    };
+{{ if op.return_type_name == "void" }}
+
+                    // Void return — no output to format
+                    Console.WriteLine("OK");
+{{ else }}
+
+                    // Format output
+                    var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
+                    if (useJson)
+                        JsonFormatter.Write(result);
+                    else
+                        TableFormatter.Write(result);
+{{ end }}
+
+                    ctx.ExitCode = 0;
+                }
+                catch (Exception ex)
+                {
+                    var errorMessage = {{ if has_auth }}AuthHandler.SanitizeMessage(ex.Message){{ else }}ex.Message{{ end }};
+                    var error = new { error = new { code = "sdk_error", message = errorMessage } };
+                    Console.Error.WriteLine(JsonSerializer.Serialize(error));
+                    ctx.ExitCode = 3;
+                }
             });
             command.AddCommand(cmd);
         }

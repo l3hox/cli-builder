@@ -10,6 +10,7 @@ public class CSharpCliGenerator : ICliGenerator
         // 1. Map + sanitize
         var (model, mapDiagnostics) = ModelMapper.Build(metadata, options);
         var diagnostics = new List<Diagnostic>(mapDiagnostics);
+        var hasAuth = model.Auth != null;
 
         // 2. Create output directory
         var projectDir = Path.Combine(options.OutputDirectory, model.CliName);
@@ -30,13 +31,33 @@ public class CSharpCliGenerator : ICliGenerator
 
             foreach (var resource in model.Resources)
             {
-                var commandModel = new CommandFileModel(model.RootNamespace, resource);
+                var commandModel = new CommandFileModel(model.RootNamespace, resource, hasAuth);
                 files.Add(renderer.RenderToFile(
                     "ResourceCommands.sbn",
                     commandsDir,
                     $"{resource.ClassName}Commands.cs",
                     commandModel));
             }
+        }
+
+        // 5. Output formatters
+        var outputDir = Path.Combine(projectDir, "Output");
+        Directory.CreateDirectory(outputDir);
+        var outputModel = new OutputFileModel(model.RootNamespace);
+        files.Add(renderer.RenderToFile("JsonFormatter.sbn", outputDir, "JsonFormatter.cs", outputModel));
+        files.Add(renderer.RenderToFile("TableFormatter.sbn", outputDir, "TableFormatter.cs", outputModel));
+
+        // 6. Auth handler — only when auth patterns exist
+        if (hasAuth)
+        {
+            var authDir = Path.Combine(projectDir, "Auth");
+            Directory.CreateDirectory(authDir);
+            var authModel = new AuthFileModel(
+                model.RootNamespace,
+                model.CliName,
+                model.Auth!.EnvVar,
+                model.Auth.ParameterName);
+            files.Add(renderer.RenderToFile("AuthHandler.sbn", authDir, "AuthHandler.cs", authModel));
         }
 
         return new GeneratorResult(projectDir, files, diagnostics);
