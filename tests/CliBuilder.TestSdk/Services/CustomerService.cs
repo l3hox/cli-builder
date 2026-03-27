@@ -15,7 +15,19 @@ public class CustomerService
     public Task<List<Customer>> ListAsync(int limit = 10, string? cursor = null, CancellationToken cancellationToken = default)
         => throw new NotImplementedException();
 
-    public Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
+    // Second overload — adapter should pick richest parameter set, emit CB203
+    public Task<Customer> CreateAsync(CreateCustomerOptions options, RequestOptions requestOptions, CancellationToken cancellationToken = default)
+        => throw new NotImplementedException();
+
+    public ValueTask<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
+        => throw new NotImplementedException();
+
+    // Streaming return type
+    public IAsyncEnumerable<Customer> StreamAsync(CancellationToken cancellationToken = default)
+        => throw new NotImplementedException();
+
+    // Dictionary return type
+    public Task<Dictionary<string, object>> GetMetadataAsync(string id, CancellationToken cancellationToken = default)
         => throw new NotImplementedException();
 
     // Non-async overload — collides with GetAsync after Async stripping

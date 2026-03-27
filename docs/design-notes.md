@@ -6,6 +6,23 @@ Sourced from developer council review (2026-03-26).
 
 ---
 
+## Return type unwrapping rules
+
+The adapter unwraps async and wrapper types to expose the "real" return type to the generator. Unwrapping is applied in order until no more rules match:
+
+1. **`Task<T>`** → unwrap to `T`
+2. **`ValueTask<T>`** → unwrap to `T`
+3. **`IAsyncEnumerable<T>`** → unwrap to `T` (mark operation as streaming)
+4. **`ClientResult<T>`** → unwrap to `T` (SDK-specific wrapper, single `Value` property of type `T`)
+
+Rule 4 applies to any generic type named `ClientResult` with exactly one type argument. This handles the OpenAI .NET SDK pattern where methods return `Task<ClientResult<ChatCompletion>>` — after rules 1 + 4, the generator sees `ChatCompletion`.
+
+If a wrapper type is not in this list, it is not unwrapped — it appears as `TypeRef(Generic, "WrapperName", [T])` in the metadata.
+
+**Dictionary special case:** `Dictionary<TKey, TValue>` is not unwrapped. It maps to `TypeRef(Dictionary, "Dictionary")`.
+
+---
+
 ## Auth generation contract
 
 The spec names `Auth/AuthHandler.cs` in the generated output but does not define its behavior. This section specifies what the generator must produce.

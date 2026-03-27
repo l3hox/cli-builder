@@ -34,3 +34,18 @@ public class CreateOrderOptions
     public bool GiftWrap { get; set; }
     public string? GiftMessage { get; set; }
 }
+
+// Contains a nested object property — always routes to --json-input
+public class NestedOptions
+{
+    public string Name { get; set; } = "";
+    public Address? ShippingAddress { get; set; }
+}
+
+// Sanitization edge cases — parameter names that are C# keywords
+public class SanitizationOptions
+{
+    public string @class { get; set; } = "";
+    public string @event { get; set; } = "";
+    public string NormalParam { get; set; } = "";
+}
