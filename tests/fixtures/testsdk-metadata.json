@@ -1,0 +1,897 @@
+{
+  "metadata": {
+    "name": "CliBuilder.TestSdk",
+    "version": "1.0.0.0",
+    "resources": [
+      {
+        "name": "customer",
+        "description": null,
+        "operations": [
+          {
+            "name": "create",
+            "description": null,
+            "parameters": [
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "CreateCustomerOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "Email",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": true,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Name",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Phone",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Description",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Currency",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "TaxId",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Locale",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "PreferredContact",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "CreditLimit",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "int",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "InitialStatus",
+                      "type": {
+                        "kind": "enum",
+                        "name": "CustomerStatus",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Active",
+                          "Inactive",
+                          "Suspended"
+                        ],
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "requestOptions",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "IdempotencyKey",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Timeout",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "TimeSpan",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "class",
+              "name": "Customer",
+              "isNullable": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null
+            },
+            "isStreaming": false
+          },
+          {
+            "name": "get",
+            "description": null,
+            "parameters": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "primitive",
+                  "name": "string",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": null,
+                  "elementType": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "class",
+              "name": "Customer",
+              "isNullable": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null
+            },
+            "isStreaming": false
+          },
+          {
+            "name": "list",
+            "description": null,
+            "parameters": [
+              {
+                "name": "limit",
+                "type": {
+                  "kind": "primitive",
+                  "name": "int",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": null,
+                  "elementType": null
+                },
+                "required": false,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "cursor",
+                "type": {
+                  "kind": "primitive",
+                  "name": "string",
+                  "isNullable": true,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": null,
+                  "elementType": null
+                },
+                "required": false,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "generic",
+              "name": "List",
+              "isNullable": false,
+              "genericArguments": [
+                {
+                  "kind": "class",
+                  "name": "Customer",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": null,
+                  "elementType": null
+                }
+              ],
+              "enumValues": null,
+              "properties": null,
+              "elementType": null
+            },
+            "isStreaming": false
+          },
+          {
+            "name": "delete",
+            "description": null,
+            "parameters": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "primitive",
+                  "name": "string",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": null,
+                  "elementType": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "primitive",
+              "name": "bool",
+              "isNullable": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null
+            },
+            "isStreaming": false
+          },
+          {
+            "name": "stream",
+            "description": null,
+            "parameters": [],
+            "returnType": {
+              "kind": "class",
+              "name": "Customer",
+              "isNullable": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null
+            },
+            "isStreaming": true
+          },
+          {
+            "name": "get-metadata",
+            "description": null,
+            "parameters": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "primitive",
+                  "name": "string",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": null,
+                  "elementType": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "dictionary",
+              "name": "Dictionary",
+              "isNullable": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null
+            },
+            "isStreaming": false
+          }
+        ]
+      },
+      {
+        "name": "order",
+        "description": null,
+        "operations": [
+          {
+            "name": "create",
+            "description": null,
+            "parameters": [
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "CreateOrderOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "CustomerId",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": true,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "ProductId",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": true,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Amount",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "decimal",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Currency",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": true,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Description",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Reference",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Notes",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "IsPriority",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Quantity",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "int",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "CouponCode",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "ShippingMethod",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "TaxRate",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "decimal",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Region",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "GiftWrap",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "GiftMessage",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "class",
+              "name": "Order",
+              "isNullable": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null
+            },
+            "isStreaming": false
+          },
+          {
+            "name": "get",
+            "description": null,
+            "parameters": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "primitive",
+                  "name": "string",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": null,
+                  "elementType": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "class",
+              "name": "Order",
+              "isNullable": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null
+            },
+            "isStreaming": false
+          },
+          {
+            "name": "update",
+            "description": null,
+            "parameters": [
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "NestedOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "Name",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": true,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "ShippingAddress",
+                      "type": {
+                        "kind": "class",
+                        "name": "Address",
+                        "isNullable": true,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "class",
+              "name": "Order",
+              "isNullable": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null
+            },
+            "isStreaming": false
+          },
+          {
+            "name": "process",
+            "description": null,
+            "parameters": [
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "SanitizationOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "class",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": true,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "event",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": true,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "NormalParam",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null
+                      },
+                      "required": true,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "class",
+              "name": "Order",
+              "isNullable": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null
+            },
+            "isStreaming": false
+          }
+        ]
+      },
+      {
+        "name": "product",
+        "description": null,
+        "operations": [
+          {
+            "name": "list",
+            "description": null,
+            "parameters": [],
+            "returnType": {
+              "kind": "class",
+              "name": "Product",
+              "isNullable": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null
+            },
+            "isStreaming": false
+          }
+        ]
+      }
+    ],
+    "authPatterns": [
+      {
+        "type": "apiKey",
+        "envVar": "TESTSDK_APIKEY",
+        "parameterName": "apiKey",
+        "headerName": null,
+        "description": null
+      },
+      {
+        "type": "bearerToken",
+        "envVar": "TESTSDK_TOKEN",
+        "parameterName": "credential",
+        "headerName": null,
+        "description": null
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "severity": "error",
+      "code": "CB202",
+      "message": "Noun collision: classes ShippingService, ShippingClient all map to resource \u0027shipping\u0027. Add an override in cli-builder.json to disambiguate."
+    },
+    {
+      "severity": "info",
+      "code": "CB203",
+      "message": "Overload disambiguated: \u0027CreateAsync\u0027 on CustomerService has 2 overloads for verb \u0027create\u0027. Using the variant with 3 parameters."
+    },
+    {
+      "severity": "error",
+      "code": "CB201",
+      "message": "Verb collision: methods \u0027GetAsync\u0027, \u0027Get\u0027 on CustomerService all map to verb \u0027get\u0027. Add an override in cli-builder.json to disambiguate."
+    }
+  ]
+}
