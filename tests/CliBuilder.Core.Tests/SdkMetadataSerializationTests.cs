@@ -187,11 +187,21 @@ public class SdkMetadataSerializationTests
     }
 
     [Fact]
-    public void SkeletonGenerator_ImplementsInterface()
+    public void Generator_ImplementsInterface_AndProducesOutput()
     {
         CliBuilder.Core.Generators.ICliGenerator generator = new CliBuilder.Generator.CSharp.CSharpCliGenerator();
         var metadata = new SdkMetadata("Test", "1.0", new List<Resource>(), new List<AuthPattern>());
-        Assert.Throws<NotImplementedException>(() =>
-            generator.Generate(metadata, new GeneratorOptions("/tmp")));
+        var outputDir = Path.Combine(Path.GetTempPath(), "cli-builder-scaffold-test", Guid.NewGuid().ToString());
+        try
+        {
+            var result = generator.Generate(metadata, new GeneratorOptions(outputDir, "test-cli"));
+            Assert.NotNull(result);
+            Assert.True(Directory.Exists(result.ProjectDirectory));
+        }
+        finally
+        {
+            if (Directory.Exists(outputDir))
+                Directory.Delete(outputDir, recursive: true);
+        }
     }
 }

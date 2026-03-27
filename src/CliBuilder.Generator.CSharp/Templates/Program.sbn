@@ -1,0 +1,12 @@
+using System.CommandLine;
+{{ if resources.size > 0 }}
+using {{ root_namespace }}.Commands;
+{{ end }}
+
+var rootCommand = new RootCommand({{ cli_description | escape_csharp }});
+{{ for resource in resources }}
+
+rootCommand.AddCommand({{ resource.class_name }}Commands.Build());
+{{ end }}
+
+return await rootCommand.InvokeAsync(args);

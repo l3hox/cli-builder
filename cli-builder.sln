@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CliBuilder.TestSdk", "tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CliBuilder.Integration.Tests", "tests\CliBuilder.Integration.Tests\CliBuilder.Integration.Tests.csproj", "{E8692B07-463D-4A12-9E24-34D6673A7904}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CliBuilder.Generator.Tests", "tests\CliBuilder.Generator.Tests\CliBuilder.Generator.Tests.csproj", "{7BADD480-00BC-4F29-8312-8C009AC7DCD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{E8692B07-463D-4A12-9E24-34D6673A7904}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8692B07-463D-4A12-9E24-34D6673A7904}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8692B07-463D-4A12-9E24-34D6673A7904}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BADD480-00BC-4F29-8312-8C009AC7DCD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BADD480-00BC-4F29-8312-8C009AC7DCD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BADD480-00BC-4F29-8312-8C009AC7DCD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BADD480-00BC-4F29-8312-8C009AC7DCD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6EA46CBA-811A-4D40-BCEA-18BD01BCC2FF} = {1DED1F35-9E63-4402-B62F-1DB084315850}
@@ -67,5 +73,6 @@ Global
 		{592AE282-ECA6-49BB-A6FF-2FDF6F334C8F} = {A5DBE8F5-C057-45A2-A9CD-A8ACD8111D1D}
 		{0B951898-D840-425C-8F5B-08B888C6F8AC} = {A5DBE8F5-C057-45A2-A9CD-A8ACD8111D1D}
 		{E8692B07-463D-4A12-9E24-34D6673A7904} = {A5DBE8F5-C057-45A2-A9CD-A8ACD8111D1D}
+		{7BADD480-00BC-4F29-8312-8C009AC7DCD7} = {A5DBE8F5-C057-45A2-A9CD-A8ACD8111D1D}
 	EndGlobalSection
 EndGlobal

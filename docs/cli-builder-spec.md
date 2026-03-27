@@ -449,9 +449,9 @@ Optional/later:
 2. ~~Create repo, README with problem statement and v1 scope~~
 3. ~~ADRs for all architectural decisions~~ ← [docs/ADR.md](docs/ADR.md)
 4. ~~Scaffold: adapter interface, .NET adapter, metadata model~~
-5. First spike: OpenAI .NET SDK → `SdkMetadata` → inspect what comes out
-   - **Acceptance criteria:** adapter extracts resources with correct names, operations with correct verbs, parameters with resolved `TypeRef` (no opaque `object` types for known SDK types). Output `SdkMetadata` as JSON, commit as a reference fixture.
-6. CLI generator: metadata → compilable C# project
+5. ~~First spike: OpenAI .NET SDK → `SdkMetadata` → inspect what comes out~~
+   - ~~**Acceptance criteria:** adapter extracts resources with correct names, operations with correct verbs, parameters with resolved `TypeRef` (no opaque `object` types for known SDK types). Output `SdkMetadata` as JSON, commit as a reference fixture.~~
+6. CLI generator: metadata → compilable C# project ← **next**
 7. Validate: does the generated CLI actually work against Stripe test mode?
 
 ---
