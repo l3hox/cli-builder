@@ -200,4 +200,142 @@ public class CSharpCliGeneratorTests : IDisposable
             Assert.DoesNotContain("\r\n", content);
         }
     }
+
+    // -----------------------------------------------------------
+    // Phase 6B: Command file generation
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void Generate_CreatesCommandFilePerResource()
+    {
+        var result = Generate();
+        // TestSdk has 3 resources: customer, order, product
+        var commandFiles = result.GeneratedFiles.Where(f => f.Contains("Commands")).ToList();
+        Assert.Equal(3, commandFiles.Count);
+    }
+
+    [Fact]
+    public void Generate_CommandFileNaming()
+    {
+        var result = Generate();
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("CustomerCommands.cs"));
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("OrderCommands.cs"));
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("ProductCommands.cs"));
+    }
+
+    [Fact]
+    public void Generate_GeneratedFileCount_MatchesExpected()
+    {
+        var result = Generate();
+        // .csproj + Program.cs + 3 command files = 5
+        Assert.Equal(5, result.GeneratedFiles.Count);
+    }
+
+    [Fact]
+    public void Generate_CommandFileContainsResourceVerbs()
+    {
+        var result = Generate();
+        var customerCmd = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("CustomerCommands.cs")));
+
+        // Customer has: create, get, list, delete, stream, get-metadata
+        Assert.Contains("\"create\"", customerCmd);
+        Assert.Contains("\"get\"", customerCmd);
+        Assert.Contains("\"list\"", customerCmd);
+        Assert.Contains("\"delete\"", customerCmd);
+        Assert.Contains("\"stream\"", customerCmd);
+        Assert.Contains("\"get-metadata\"", customerCmd);
+    }
+
+    [Fact]
+    public void Generate_PrimitiveParamsMapToOptions()
+    {
+        var result = Generate();
+        var customerCmd = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("CustomerCommands.cs")));
+
+        // "get" operation has a string "id" param → --id option
+        Assert.Contains("\"--id\"", customerCmd);
+        Assert.Contains("Option<string>", customerCmd);
+    }
+
+    [Fact]
+    public void Generate_NullableParamIsNotRequired()
+    {
+        var result = Generate();
+        var customerCmd = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("CustomerCommands.cs")));
+
+        // "list" has nullable "cursor" param → IsRequired = false
+        Assert.Contains("\"--cursor\"", customerCmd);
+    }
+
+    [Fact]
+    public void Generate_LargeOptionsClass_HasJsonInput()
+    {
+        var result = Generate();
+        var orderCmd = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("OrderCommands.cs")));
+
+        // CreateOrderOptions has 15 props → 10 flat + --json-input
+        Assert.Contains("\"--json-input\"", orderCmd);
+    }
+
+    [Fact]
+    public void Generate_SimpleOperation_NoJsonInput()
+    {
+        var result = Generate();
+        var productCmd = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("ProductCommands.cs")));
+
+        // product "list" has zero parameters → definitely no --json-input
+        Assert.Contains("\"list\"", productCmd);
+        Assert.DoesNotContain("--json-input", productCmd);
+    }
+
+    [Fact]
+    public void Generate_NestedObject_AddsJsonInput()
+    {
+        var result = Generate();
+        var orderCmd = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("OrderCommands.cs")));
+
+        // "update" uses NestedOptions with Address sub-object → --json-input
+        Assert.Contains("\"--json-input\"", orderCmd);
+    }
+
+    [Fact]
+    public void Generate_EnumParam_GeneratesChoices()
+    {
+        var result = Generate();
+        var customerCmd = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("CustomerCommands.cs")));
+
+        // CustomerStatus enum: Active, Inactive, Suspended
+        Assert.Contains("Active", customerCmd);
+        Assert.Contains("Inactive", customerCmd);
+        Assert.Contains("Suspended", customerCmd);
+    }
+
+    [Fact]
+    public void Generate_StreamingOp_MarkedInHelpText()
+    {
+        var result = Generate();
+        var customerCmd = File.ReadAllText(
+            result.GeneratedFiles.First(f => f.EndsWith("CustomerCommands.cs")));
+
+        // "stream" operation is streaming → "[streaming]" in help text
+        Assert.Contains("[streaming]", customerCmd);
+    }
+
+    [Fact]
+    public void Generate_CommandFilesUseLfLineEndings()
+    {
+        var result = Generate();
+        foreach (var file in result.GeneratedFiles.Where(f => f.Contains("Commands")))
+        {
+            var content = File.ReadAllText(file);
+            Assert.DoesNotContain("\r\n", content);
+        }
+    }
 }

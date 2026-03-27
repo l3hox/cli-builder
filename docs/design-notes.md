@@ -213,6 +213,20 @@ The purpose-built test SDK assembly must contain:
 
 ---
 
+## Generator sanitization surfaces
+
+The generator converts metadata strings into three distinct output formats, each requiring its own sanitization:
+
+1. **C# source code** — descriptions, identifiers flow into `.cs` files. Defense: `SanitizeString` (Scriban syntax neutralization) + `escape_csharp` (verbatim string literals) + `IdentifierValidator` (keyword denylist, path safety).
+2. **XML (`.csproj`)** — `SdkName`, `SdkVersion`, `SdkPackageName` flow into `PackageReference` attributes. Defense: `SanitizeXmlValue` (escapes `<`, `>`, `"`, `&`, `'`). Without this, a crafted SDK name achieves arbitrary code execution via MSBuild injection during `dotnet build`.
+3. **Scriban templates** — all metadata strings pass through the template engine before reaching output. Defense: `SanitizeString` neutralizes `{{`, `}}`, `{%`, `%}` at the model mapping layer, before strings reach the template engine. The `escape_csharp` filter in templates is defense-in-depth only.
+
+**`DefaultValue` numeric validation:** `JsonElement.GetRawText()` output for numbers is validated against `^-?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?$` before emitting into C# source. This is defense-in-depth — `System.Text.Json` constrains the format, but the assumption is unverified without the regex check.
+
+**Template model contract:** All Scriban template models must use typed records (e.g., `GeneratorModel`, `CommandFileModel`), not anonymous types. Scriban's `ScriptObject.Import` applies a custom `MemberRenamer` (PascalCase → snake_case) only to the top-level object. Anonymous types work by naming coincidence but break if the renamer diverges. Typed records make the template contract explicit and testable.
+
+---
+
 ## Platform-specific notes
 
 **Golden files:** Shared across platforms (not per-platform). Generated output must be byte-identical on Windows and Linux. Enforce by:

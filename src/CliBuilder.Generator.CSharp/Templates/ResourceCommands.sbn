@@ -1,0 +1,43 @@
+using System.CommandLine;
+using System.CommandLine.Invocation;
+
+namespace {{ root_namespace }}.Commands;
+
+public static class {{ resource.class_name }}Commands
+{
+    public static Command Build()
+    {
+        var command = new Command("{{ resource.name }}", {{ resource.description | escape_csharp }});
+{{ for op in resource.operations }}
+
+        // {{ op.name }}{{ if op.is_streaming }} [streaming]{{ end }}
+        {
+            var cmd = new Command("{{ op.name }}", {{ op.description | escape_csharp }});
+{{ for param in op.parameters }}
+            var {{ param.cli_flag | to_var_name }}Option = new Option<{{ param.csharp_type }}>(
+                "--{{ param.cli_flag }}",
+                {{ param.description | escape_csharp }})
+            { IsRequired = {{ if param.is_required }}true{{ else }}false{{ end }} };
+{{ if param.default_value_literal }}
+            {{ param.cli_flag | to_var_name }}Option.SetDefaultValue({{ param.default_value_literal }});
+{{ end }}
+{{ if param.enum_values }}
+            {{ param.cli_flag | to_var_name }}Option.AcceptOnlyFromAmong({{ for val in param.enum_values }}{{ if !for.first }}, {{ end }}"{{ val }}"{{ end }});
+{{ end }}
+            cmd.AddOption({{ param.cli_flag | to_var_name }}Option);
+{{ end }}
+{{ if op.needs_json_input }}
+            var jsonInputOption = new Option<string>("--json-input", "Full input as JSON. Flat flags override individual properties.");
+            cmd.AddOption(jsonInputOption);
+{{ end }}
+            cmd.SetHandler(async (InvocationContext ctx) =>
+            {
+                // TODO(6C): Wire SDK call, output formatting, error handling
+            });
+            command.AddCommand(cmd);
+        }
+{{ end }}
+
+        return command;
+    }
+}

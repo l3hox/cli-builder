@@ -22,11 +22,21 @@ public class CSharpCliGenerator : ICliGenerator
         files.Add(renderer.RenderToFile("csproj.sbn", projectDir, $"{model.CliName}.csproj", model));
         files.Add(renderer.RenderToFile("Program.sbn", projectDir, "Program.cs", model));
 
-        // Commands/ directory — only when resources exist (6B will add ResourceCommands.sbn)
+        // 4. One command file per resource
         if (model.Resources.Count > 0)
         {
             var commandsDir = Path.Combine(projectDir, "Commands");
             Directory.CreateDirectory(commandsDir);
+
+            foreach (var resource in model.Resources)
+            {
+                var commandModel = new CommandFileModel(model.RootNamespace, resource);
+                files.Add(renderer.RenderToFile(
+                    "ResourceCommands.sbn",
+                    commandsDir,
+                    $"{resource.ClassName}Commands.cs",
+                    commandModel));
+            }
         }
 
         return new GeneratorResult(projectDir, files, diagnostics);

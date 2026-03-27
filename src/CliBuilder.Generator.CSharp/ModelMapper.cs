@@ -74,50 +74,15 @@ public static partial class ModelMapper
         var description = SanitizeString(operation.Description);
         var returnTypeName = MapTypeName(operation.ReturnType);
 
-        // Basic parameter mapping for 6A — full flattening comes in 6B
-        var parameters = new List<FlatParameter>();
-        foreach (var param in operation.Parameters)
-        {
-            if (param.Type.Kind == TypeKind.Class && param.Type.Properties != null)
-            {
-                // Options class — for now, map scalar properties directly (6B adds ParameterFlattener)
-                foreach (var prop in param.Type.Properties)
-                {
-                    var (csharpName, cliFlag, diag) = IdentifierValidator.SanitizeParameter(prop.Name);
-                    if (diag != null) diagnostics.Add(diag);
-
-                    parameters.Add(new FlatParameter(
-                        CliFlag: cliFlag,
-                        PropertyName: csharpName,
-                        CSharpType: MapTypeName(prop.Type),
-                        IsRequired: prop.Required,
-                        DefaultValueLiteral: SanitizeDefaultValue(prop.DefaultValue, prop.Type, diagnostics),
-                        Description: SanitizeString(prop.Description),
-                        EnumValues: prop.Type.EnumValues));
-                }
-            }
-            else
-            {
-                var (csharpName, cliFlag, diag) = IdentifierValidator.SanitizeParameter(param.Name);
-                if (diag != null) diagnostics.Add(diag);
-
-                parameters.Add(new FlatParameter(
-                    CliFlag: cliFlag,
-                    PropertyName: csharpName,
-                    CSharpType: MapTypeName(param.Type),
-                    IsRequired: param.Required,
-                    DefaultValueLiteral: SanitizeDefaultValue(param.DefaultValue, param.Type, diagnostics),
-                    Description: SanitizeString(param.Description),
-                    EnumValues: param.Type.EnumValues));
-            }
-        }
+        var flattenResult = ParameterFlattener.Flatten(operation.Parameters);
+        diagnostics.AddRange(flattenResult.Diagnostics);
 
         return new OperationModel(
             Name: operation.Name,
             MethodName: methodName,
             Description: description,
-            Parameters: parameters,
-            NeedsJsonInput: false, // ParameterFlattener handles this in 6B
+            Parameters: flattenResult.Parameters,
+            NeedsJsonInput: flattenResult.NeedsJsonInput,
             ReturnTypeName: returnTypeName,
             IsStreaming: operation.IsStreaming);
     }

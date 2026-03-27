@@ -1,0 +1,239 @@
+using CliBuilder.Core.Models;
+using CliBuilder.Generator.CSharp;
+
+namespace CliBuilder.Generator.Tests;
+
+public class ParameterFlattenerTests
+{
+    private static Parameter MakePrimitive(string name, string typeName, bool required = true, bool nullable = false)
+        => new(name, new TypeRef(TypeKind.Primitive, typeName, IsNullable: nullable), required);
+
+    private static Parameter MakeEnum(string name, string enumName, string[] values, bool required = false)
+        => new(name, new TypeRef(TypeKind.Enum, enumName, EnumValues: values), required);
+
+    private static Parameter MakeOptionsClass(string name, IReadOnlyList<Parameter> properties, bool required = true)
+        => new(name, new TypeRef(TypeKind.Class, name, Properties: properties), required);
+
+    private static Parameter MakeNestedClass(string name, IReadOnlyList<Parameter> properties)
+        => new(name, new TypeRef(TypeKind.Class, name, Properties: properties), Required: false);
+
+    private static IReadOnlyList<Parameter> MakeScalarProps(int count, int requiredCount = 0)
+    {
+        var props = new List<Parameter>();
+        for (int i = 0; i < count; i++)
+        {
+            var name = $"Prop{(char)('A' + i)}";
+            props.Add(MakePrimitive(name, "string", required: i < requiredCount, nullable: i >= requiredCount));
+        }
+        return props;
+    }
+
+    // -----------------------------------------------------------
+    // Empty / single param
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void Flatten_EmptyParameters_ReturnsEmpty()
+    {
+        var result = ParameterFlattener.Flatten(new List<Parameter>());
+        Assert.Empty(result.Parameters);
+        Assert.False(result.NeedsJsonInput);
+        Assert.Empty(result.Diagnostics);
+    }
+
+    [Fact]
+    public void Flatten_SinglePrimitive_ReturnsFlatParam()
+    {
+        var parameters = new List<Parameter> { MakePrimitive("id", "string") };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.Single(result.Parameters);
+        Assert.Equal("id", result.Parameters[0].CliFlag);
+        Assert.Equal("string", result.Parameters[0].CSharpType);
+        Assert.True(result.Parameters[0].IsRequired);
+        Assert.False(result.NeedsJsonInput);
+    }
+
+    // -----------------------------------------------------------
+    // Options class — at threshold boundary
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void Flatten_OptionsClassExactlyAtThreshold_FlattensAll()
+    {
+        var props = MakeScalarProps(10);
+        var parameters = new List<Parameter> { MakeOptionsClass("Opts", props) };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.Equal(10, result.Parameters.Count);
+        Assert.False(result.NeedsJsonInput);
+    }
+
+    [Fact]
+    public void Flatten_OptionsClassAboveThreshold_FlattensFirstTenPlusJsonInput()
+    {
+        var props = MakeScalarProps(15, requiredCount: 3);
+        var parameters = new List<Parameter> { MakeOptionsClass("Opts", props) };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.Equal(10, result.Parameters.Count);
+        Assert.True(result.NeedsJsonInput);
+    }
+
+    [Fact]
+    public void Flatten_OptionsClassAtThresholdPlusOne_FlattensFirstTenPlusJsonInput()
+    {
+        // Boundary: exactly 11 props (threshold + 1), 1 required
+        var props = MakeScalarProps(11, requiredCount: 1);
+        var parameters = new List<Parameter> { MakeOptionsClass("Opts", props) };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.Equal(10, result.Parameters.Count);
+        Assert.True(result.NeedsJsonInput);
+        // The 1 required prop should be in the first 10 (sorted first)
+        Assert.True(result.Parameters[0].IsRequired);
+        // No CB301 since the hidden prop (11th) is optional
+        Assert.DoesNotContain(result.Diagnostics, d => d.Code == "CB301");
+    }
+
+    // -----------------------------------------------------------
+    // Options class — with nested objects
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void Flatten_OptionsClassWithNested_FlattensAllScalarsPlusJsonInput()
+    {
+        var scalarProps = MakeScalarProps(5, requiredCount: 2);
+        var nestedProp = MakeNestedClass("Address", MakeScalarProps(3));
+        var allProps = scalarProps.Append(nestedProp).ToList();
+
+        var parameters = new List<Parameter> { MakeOptionsClass("Opts", allProps) };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        // All 5 scalar props flattened (nested path: flatten ALL scalars, not truncated)
+        Assert.Equal(5, result.Parameters.Count);
+        Assert.True(result.NeedsJsonInput);
+    }
+
+    [Fact]
+    public void Flatten_OptionsClassWithZeroScalarProps_OnlyJsonInput()
+    {
+        var nestedProp = MakeNestedClass("Address", MakeScalarProps(3));
+        var parameters = new List<Parameter> { MakeOptionsClass("Opts", new[] { nestedProp }) };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.Empty(result.Parameters);
+        Assert.True(result.NeedsJsonInput);
+    }
+
+    // -----------------------------------------------------------
+    // CB301 diagnostic
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void Flatten_AllRequiredBeyondThreshold_EmitsCB301()
+    {
+        // 12 required scalar props → first 10 flat, CB301 for props 11-12
+        var props = MakeScalarProps(12, requiredCount: 12);
+        var parameters = new List<Parameter> { MakeOptionsClass("Opts", props) };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.Equal(10, result.Parameters.Count);
+        Assert.True(result.NeedsJsonInput);
+        // Two required params are hidden behind --json-input
+        var cb301 = result.Diagnostics.Where(d => d.Code == "CB301").ToList();
+        Assert.Equal(2, cb301.Count);
+    }
+
+    [Fact]
+    public void Flatten_OptionalBeyondThreshold_NoCB301()
+    {
+        // 15 props, 3 required → all required fit in first 10, no CB301
+        var props = MakeScalarProps(15, requiredCount: 3);
+        var parameters = new List<Parameter> { MakeOptionsClass("Opts", props) };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.DoesNotContain(result.Diagnostics, d => d.Code == "CB301");
+    }
+
+    // -----------------------------------------------------------
+    // Sort order: required first, then alphabetical
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void Flatten_SortOrder_RequiredFirst_ThenAlphabetical()
+    {
+        var props = new List<Parameter>
+        {
+            MakePrimitive("Zebra", "string", required: false, nullable: true),
+            MakePrimitive("Alpha", "string", required: false, nullable: true),
+            MakePrimitive("Required2", "string", required: true),
+            MakePrimitive("Required1", "string", required: true),
+        };
+        var parameters = new List<Parameter> { MakeOptionsClass("Opts", props) };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        var names = result.Parameters.Select(p => p.PropertyName).ToList();
+        // Required first (alphabetical), then optional (alphabetical)
+        Assert.Equal(new[] { "Required1", "Required2", "Alpha", "Zebra" }, names);
+    }
+
+    // -----------------------------------------------------------
+    // Multiple options classes on same operation
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void Flatten_TwoOptionsClasses_CombinedFlattening()
+    {
+        var props1 = MakeScalarProps(3, requiredCount: 1);
+        var props2 = new List<Parameter>
+        {
+            MakePrimitive("IdempotencyKey", "string", required: false, nullable: true),
+            MakePrimitive("Timeout", "string", required: false, nullable: true),
+        };
+
+        var parameters = new List<Parameter>
+        {
+            MakeOptionsClass("CreateOpts", props1),
+            MakeOptionsClass("RequestOpts", props2),
+        };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        // 3 + 2 = 5 flat params, all within threshold
+        Assert.Equal(5, result.Parameters.Count);
+        Assert.False(result.NeedsJsonInput);
+    }
+
+    // -----------------------------------------------------------
+    // Enum parameters
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void Flatten_EnumParam_PreservesEnumValues()
+    {
+        var parameters = new List<Parameter>
+        {
+            MakeEnum("Status", "OrderStatus", new[] { "Pending", "Shipped", "Delivered" })
+        };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.Single(result.Parameters);
+        Assert.NotNull(result.Parameters[0].EnumValues);
+        Assert.Equal(3, result.Parameters[0].EnumValues!.Count);
+    }
+
+    // -----------------------------------------------------------
+    // Custom threshold
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void Flatten_CustomThreshold_Respected()
+    {
+        var props = MakeScalarProps(6, requiredCount: 2);
+        var parameters = new List<Parameter> { MakeOptionsClass("Opts", props) };
+        var result = ParameterFlattener.Flatten(parameters, threshold: 4);
+
+        Assert.Equal(4, result.Parameters.Count);
+        Assert.True(result.NeedsJsonInput);
+    }
+}

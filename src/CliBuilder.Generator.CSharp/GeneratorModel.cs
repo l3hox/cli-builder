@@ -43,3 +43,8 @@ public record AuthModel(
     string EnvVar,
     string ParameterName
 );
+
+public record CommandFileModel(
+    string RootNamespace,
+    ResourceModel Resource
+);

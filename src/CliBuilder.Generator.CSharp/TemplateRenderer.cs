@@ -42,12 +42,20 @@ public class TemplateRenderer
     public string Render(string templateName, object model)
     {
         var templateText = LoadTemplate(templateName);
-        var template = Template.Parse(templateText, templateName);
+        return RenderInline(templateText, model);
+    }
+
+    /// <summary>
+    /// Render an inline template string with the standard context (custom functions, renamer).
+    /// </summary>
+    internal string RenderInline(string templateText, object model)
+    {
+        var template = Template.Parse(templateText);
 
         if (template.HasErrors)
         {
             var errors = string.Join("\n", template.Messages.Select(m => m.ToString()));
-            throw new InvalidOperationException($"Template '{templateName}' has errors:\n{errors}");
+            throw new InvalidOperationException($"Template has errors:\n{errors}");
         }
 
         var context = CreateContext(model);
@@ -70,6 +78,7 @@ public class TemplateRenderer
         // Register custom functions
         var functions = new ScriptObject();
         functions.Import("escape_csharp", new Func<string?, string>(EscapeCSharp));
+        functions.Import("to_var_name", new Func<string?, string>(ToVarName));
         context.PushGlobal(functions);
 
         return context;
@@ -127,5 +136,19 @@ public class TemplateRenderer
         // C# verbatim string: @"..." with doubled quotes
         var escaped = value.Replace("\"", "\"\"");
         return $"@\"{escaped}\"";
+    }
+
+    /// <summary>
+    /// Convert a kebab-case CLI flag to a valid camelCase C# variable name.
+    /// "email" → "email", "class-value" → "classValue", "credit-limit" → "creditLimit"
+    /// </summary>
+    private static string ToVarName(string? value)
+    {
+        if (string.IsNullOrEmpty(value)) return "_param";
+        var parts = value.Split('-', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0) return "_param";
+        // First part lowercase, rest capitalized
+        return parts[0] + string.Concat(parts.Skip(1).Select(
+            p => char.ToUpperInvariant(p[0]) + p[1..]));
     }
 }
