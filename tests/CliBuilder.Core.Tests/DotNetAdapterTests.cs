@@ -384,6 +384,72 @@ public class DotNetAdapterTests
         Assert.NotNull(address);
         Assert.Equal(TypeKind.Class, address.Type.Kind);
         Assert.Equal("Address", address.Type.Name);
+        // ShippingAddress is Address? (nullable) — must be detected
+        Assert.True(address.Type.IsNullable);
+    }
+
+    // -------------------------------------------------------
+    // Property-level nullability and Required
+    // -------------------------------------------------------
+
+    [Fact]
+    public void CreateCustomerOptions_NullableProperty_IsMarkedNullable()
+    {
+        var result = ExtractTestSdk();
+        var customer = result.Metadata.Resources.First(r => r.Name == "customer");
+        var create = customer.Operations.First(o => o.Name == "create");
+        var optionsParam = create.Parameters.FirstOrDefault(p => p.Type.Kind == TypeKind.Class);
+        Assert.NotNull(optionsParam);
+        Assert.NotNull(optionsParam.Type.Properties);
+        // Name is string? — nullable
+        var name = optionsParam.Type.Properties.FirstOrDefault(p => p.Name == "Name");
+        Assert.NotNull(name);
+        Assert.True(name.Type.IsNullable);
+    }
+
+    [Fact]
+    public void CreateCustomerOptions_NonNullableProperty_IsNotNullable()
+    {
+        var result = ExtractTestSdk();
+        var customer = result.Metadata.Resources.First(r => r.Name == "customer");
+        var create = customer.Operations.First(o => o.Name == "create");
+        var optionsParam = create.Parameters.FirstOrDefault(p => p.Type.Kind == TypeKind.Class);
+        Assert.NotNull(optionsParam);
+        Assert.NotNull(optionsParam.Type.Properties);
+        // Email is string (non-nullable)
+        var email = optionsParam.Type.Properties.FirstOrDefault(p => p.Name == "Email");
+        Assert.NotNull(email);
+        Assert.False(email.Type.IsNullable);
+    }
+
+    [Fact]
+    public void CreateCustomerOptions_NonNullableProperty_IsRequired()
+    {
+        var result = ExtractTestSdk();
+        var customer = result.Metadata.Resources.First(r => r.Name == "customer");
+        var create = customer.Operations.First(o => o.Name == "create");
+        var optionsParam = create.Parameters.FirstOrDefault(p => p.Type.Kind == TypeKind.Class);
+        Assert.NotNull(optionsParam);
+        Assert.NotNull(optionsParam.Type.Properties);
+        // Email is string (non-nullable, no default) → required
+        var email = optionsParam.Type.Properties.FirstOrDefault(p => p.Name == "Email");
+        Assert.NotNull(email);
+        Assert.True(email.Required);
+    }
+
+    [Fact]
+    public void CreateCustomerOptions_NullableProperty_IsNotRequired()
+    {
+        var result = ExtractTestSdk();
+        var customer = result.Metadata.Resources.First(r => r.Name == "customer");
+        var create = customer.Operations.First(o => o.Name == "create");
+        var optionsParam = create.Parameters.FirstOrDefault(p => p.Type.Kind == TypeKind.Class);
+        Assert.NotNull(optionsParam);
+        Assert.NotNull(optionsParam.Type.Properties);
+        // Name is string? (nullable) → not required
+        var name = optionsParam.Type.Properties.FirstOrDefault(p => p.Name == "Name");
+        Assert.NotNull(name);
+        Assert.False(name.Required);
     }
 
     // -------------------------------------------------------

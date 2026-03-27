@@ -270,7 +270,7 @@ public class DotNetAdapter : ISdkAdapter
             // Check if the parameter type is a class with properties (options object)
             if (typeRef.Kind == TypeKind.Class && !IsPrimitiveType(param.ParameterType))
             {
-                var properties = ExtractClassProperties(param.ParameterType);
+                var properties = ExtractClassProperties(param.ParameterType, depth: 0);
                 typeRef = typeRef with { Properties = properties };
             }
 
@@ -287,15 +287,66 @@ public class DotNetAdapter : ISdkAdapter
         return parameters;
     }
 
-    private IReadOnlyList<Parameter> ExtractClassProperties(Type type)
+    private IReadOnlyList<Parameter> ExtractClassProperties(Type type, int depth = 0)
     {
         var props = new List<Parameter>();
         foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
-            var typeRef = BuildTypeRef(prop.PropertyType);
-            props.Add(new Parameter(prop.Name, typeRef, false));
+            var typeRef = BuildTypeRef(prop.PropertyType, depth + 1);
+
+            // Check nullability on properties (mirrors IsNullableParameter logic)
+            var isNullable = IsNullableProperty(prop);
+            if (isNullable && !typeRef.IsNullable)
+                typeRef = typeRef with { IsNullable = true };
+
+            // Required = non-nullable reference type (no default on properties)
+            var isRequired = !isNullable && !typeRef.IsNullable;
+
+            props.Add(new Parameter(prop.Name, typeRef, isRequired));
         }
         return props;
+    }
+
+    private bool IsNullableProperty(PropertyInfo prop)
+    {
+        // Check for Nullable<T> (value types)
+        if (prop.PropertyType.IsGenericType &&
+            prop.PropertyType.GetGenericTypeDefinition().FullName == "System.Nullable`1")
+            return true;
+
+        // Check NullableAttribute on the property
+        var nullableAttr = prop.CustomAttributes
+            .FirstOrDefault(a => a.AttributeType.FullName == "System.Runtime.CompilerServices.NullableAttribute");
+        if (nullableAttr != null)
+        {
+            var args = nullableAttr.ConstructorArguments;
+            if (args.Count > 0)
+            {
+                if (args[0].Value is byte b && b == 2)
+                    return true;
+                if (args[0].Value is IReadOnlyCollection<CustomAttributeTypedArgument> arr)
+                {
+                    var first = arr.FirstOrDefault();
+                    if (first.Value is byte fb && fb == 2)
+                        return true;
+                }
+            }
+        }
+
+        // Check NullableContextAttribute on the declaring type for default context
+        var contextAttr = prop.DeclaringType?.CustomAttributes
+            .FirstOrDefault(a => a.AttributeType.FullName == "System.Runtime.CompilerServices.NullableContextAttribute");
+        if (contextAttr != null)
+        {
+            var args = contextAttr.ConstructorArguments;
+            if (args.Count > 0 && args[0].Value is byte ctx && ctx == 2)
+            {
+                if (nullableAttr == null)
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     private (TypeRef Type, bool IsStreaming) ExtractReturnType(MethodInfo method)
@@ -336,7 +387,7 @@ public class DotNetAdapter : ISdkAdapter
             return (new TypeRef(TypeKind.Generic, genericName, GenericArguments: genericArgs), isStreaming);
         }
 
-        return (BuildTypeRef(type, depth), isStreaming);
+        return (BuildTypeRef(type, depth + 1), isStreaming);
     }
 
     private TypeRef BuildTypeRef(Type type, int depth = 0)
@@ -485,8 +536,7 @@ public class DotNetAdapter : ISdkAdapter
     {
         if (param.ParameterType.FullName != "System.String") return false;
         var name = param.Name?.ToLowerInvariant() ?? "";
-        // Fix: "token" removed — token-style auth is BearerToken via IsCredentialParameter
-        return name.Contains("key") || name.Contains("apikey") || name.Contains("secret");
+        return name.Contains("key") || name.Contains("secret");
     }
 
     private bool IsCredentialParameter(ParameterInfo param)
