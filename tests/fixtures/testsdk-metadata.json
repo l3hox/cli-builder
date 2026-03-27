@@ -887,11 +887,6 @@
       "severity": "info",
       "code": "CB203",
       "message": "Overload disambiguated: \u0027CreateAsync\u0027 on CustomerService has 2 overloads for verb \u0027create\u0027. Using the variant with 3 parameters."
-    },
-    {
-      "severity": "error",
-      "code": "CB201",
-      "message": "Verb collision: methods \u0027GetAsync\u0027, \u0027Get\u0027 on CustomerService all map to verb \u0027get\u0027. Add an override in cli-builder.json to disambiguate."
     }
   ]
 }

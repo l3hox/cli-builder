@@ -184,8 +184,14 @@ public class DotNetAdapter : ISdkAdapter
         foreach (var (verb, group) in verbGroups)
         {
             // Check for non-overload collision (different method names → same verb)
+            // Sync+async pairs (Foo + FooAsync) are expected — not a collision, prefer async
             var distinctMethodNames = group.Select(m => m.Name).Distinct().ToList();
-            if (distinctMethodNames.Count > 1)
+            var isSyncAsyncPair = distinctMethodNames.Count == 2 &&
+                distinctMethodNames.Any(n => n.EndsWith("Async")) &&
+                distinctMethodNames.Any(n => !n.EndsWith("Async")) &&
+                distinctMethodNames.Select(n => n.EndsWith("Async") ? n[..^5] : n).Distinct().Count() == 1;
+
+            if (distinctMethodNames.Count > 1 && !isSyncAsyncPair)
             {
                 diagnostics.Add(new Diagnostic(
                     DiagnosticSeverity.Error,
@@ -358,6 +364,14 @@ public class DotNetAdapter : ISdkAdapter
     {
         if (depth > MaxTypeRecursionDepth)
             return (new TypeRef(TypeKind.Class, type.Name), isStreaming);
+
+        // Handle non-generic Task/ValueTask (async void) — return type is "void"
+        if (!type.IsGenericType)
+        {
+            var name = type.Name;
+            if (name == "Task" || name == "ValueTask")
+                return (new TypeRef(TypeKind.Primitive, "void"), isStreaming);
+        }
 
         // Unwrap Task<T>, ValueTask<T>, ClientResult<T>, IAsyncEnumerable<T>
         if (type.IsGenericType)

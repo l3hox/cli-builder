@@ -122,13 +122,12 @@ public class DotNetAdapterTests
     }
 
     [Fact]
-    public void Emits_VerbCollision_Error_ForGetAndGetAsync()
+    public void SyncAsyncPair_DoesNotEmit_VerbCollision()
     {
+        // Get + GetAsync is a sync+async pair — should be handled silently, not CB201
         var result = ExtractTestSdk();
-        var collision = result.Diagnostics.FirstOrDefault(d => d.Code == "CB201");
-        Assert.NotNull(collision);
-        Assert.Equal(DiagnosticSeverity.Error, collision.Severity);
-        Assert.Contains("get", collision.Message, StringComparison.OrdinalIgnoreCase);
+        var collisions = result.Diagnostics.Where(d => d.Code == "CB201").ToList();
+        Assert.Empty(collisions);
     }
 
     [Fact]
