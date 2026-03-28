@@ -237,7 +237,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateAsync"
           },
           {
             "name": "get",
@@ -268,7 +269,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetAsync"
           },
           {
             "name": "list",
@@ -324,7 +326,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ListAsync"
           },
           {
             "name": "delete",
@@ -355,7 +358,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteAsync"
           },
           {
             "name": "stream",
@@ -370,7 +374,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": true
+            "isStreaming": true,
+            "sourceMethodName": "StreamAsync"
           },
           {
             "name": "get-metadata",
@@ -401,9 +406,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetMetadataAsync"
           }
-        ]
+        ],
+        "sourceClassName": "CustomerService",
+        "sourceNamespace": "CliBuilder.TestSdk.Services"
       },
       {
         "name": "order",
@@ -664,7 +672,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateAsync"
           },
           {
             "name": "get",
@@ -695,7 +704,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetAsync"
           },
           {
             "name": "update",
@@ -757,7 +767,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "UpdateAsync"
           },
           {
             "name": "process",
@@ -834,9 +845,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ProcessAsync"
           }
-        ]
+        ],
+        "sourceClassName": "OrderClient",
+        "sourceNamespace": "CliBuilder.TestSdk.Services"
       },
       {
         "name": "product",
@@ -855,9 +869,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ListAsync"
           }
-        ]
+        ],
+        "sourceClassName": "ProductApi",
+        "sourceNamespace": "CliBuilder.TestSdk.Services"
       }
     ],
     "authPatterns": [

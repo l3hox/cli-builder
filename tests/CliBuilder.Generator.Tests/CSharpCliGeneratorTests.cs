@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using CliBuilder.Core.Json;
 using CliBuilder.Core.Models;
@@ -532,5 +533,133 @@ public class CSharpCliGeneratorTests : IDisposable
         Assert.Contains(result.GeneratedFiles, f => f.EndsWith("JsonFormatter.cs"));
         Assert.Contains(result.GeneratedFiles, f => f.EndsWith("TableFormatter.cs"));
         Assert.Contains(result.GeneratedFiles, f => f.EndsWith("AuthHandler.cs"));
+    }
+
+    // -----------------------------------------------------------
+    // Phase 6D: Compile verification
+    // -----------------------------------------------------------
+
+    private static string RepoRoot
+    {
+        get
+        {
+            var testDir = Path.GetDirectoryName(typeof(CSharpCliGeneratorTests).Assembly.Location)!;
+            return Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", ".."));
+        }
+    }
+
+    [Fact]
+    public async Task Generate_TestSdk_CompilesWithDotnetBuild()
+    {
+        var testSdkCsproj = Path.Combine(RepoRoot, "tests", "CliBuilder.TestSdk", "CliBuilder.TestSdk.csproj");
+        var generator = new CSharpCliGenerator();
+        var options = new GeneratorOptions(_outputDir, "testsdk-cli", SdkProjectPath: testSdkCsproj);
+        var result = generator.Generate(_testSdkMetadata, options);
+
+        // dotnet build → exit code 0
+        // Read stdout/stderr async before WaitForExit to avoid pipe buffer deadlock
+        var psi = new ProcessStartInfo("dotnet", $"build \"{result.ProjectDirectory}\"")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false
+        };
+
+        Process process;
+        try
+        {
+            process = Process.Start(psi)!;
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail($"Could not start 'dotnet build' — is dotnet on PATH? {ex.Message}");
+            return;
+        }
+
+        using (process)
+        {
+            var stdoutTask = process.StandardOutput.ReadToEndAsync();
+            var stderrTask = process.StandardError.ReadToEndAsync();
+            await process.WaitForExitAsync();
+            var stdout = await stdoutTask;
+            var stderr = await stderrTask;
+
+            Assert.True(process.ExitCode == 0,
+                $"dotnet build failed (exit {process.ExitCode}):\n{stdout}\n{stderr}");
+        }
+    }
+
+    [Fact]
+    public void Generate_WithSdkProjectPath_EmitsProjectReference()
+    {
+        var generator = new CSharpCliGenerator();
+        var options = new GeneratorOptions(_outputDir, "ref-test",
+            SdkProjectPath: "/some/path/to/Sdk.csproj");
+        var result = generator.Generate(_testSdkMetadata, options);
+
+        var csproj = File.ReadAllText(Path.Combine(result.ProjectDirectory, "ref-test.csproj"));
+        Assert.Contains("ProjectReference", csproj);
+        Assert.Contains("/some/path/to/Sdk.csproj", csproj);
+        Assert.DoesNotContain("PackageReference Include=\"CliBuilder.TestSdk\"", csproj);
+    }
+
+    [Fact]
+    public void Generate_WithoutSdkProjectPath_EmitsPackageReference()
+    {
+        var result = Generate();
+        var csproj = File.ReadAllText(Path.Combine(result.ProjectDirectory, "testsdk-cli.csproj"));
+        Assert.Contains("PackageReference", csproj);
+        Assert.DoesNotContain("ProjectReference", csproj);
+    }
+
+    // -----------------------------------------------------------
+    // Phase 6D: Golden file comparison
+    // -----------------------------------------------------------
+
+    private static readonly string[] GoldenFiles = new[]
+    {
+        "testsdk-cli.csproj",
+        "Program.cs",
+        "Commands/CustomerCommands.cs",
+        "Commands/OrderCommands.cs",
+        "Commands/ProductCommands.cs",
+        "Output/JsonFormatter.cs",
+        "Output/TableFormatter.cs",
+        "Auth/AuthHandler.cs"
+    };
+
+    [Theory]
+    [MemberData(nameof(GetGoldenFileNames))]
+    public void Generate_TestSdk_MatchesGoldenFile(string relativePath)
+    {
+        var result = Generate();
+        var generatedPath = Path.Combine(result.ProjectDirectory, relativePath);
+        var goldenPath = Path.Combine(RepoRoot, "tests", "golden", "testsdk-cli", relativePath);
+
+        // UPDATE_GOLDEN=1 → write/overwrite golden files instead of comparing
+        if (Environment.GetEnvironmentVariable("UPDATE_GOLDEN") == "1")
+        {
+            var dir = Path.GetDirectoryName(goldenPath)!;
+            Directory.CreateDirectory(dir);
+            File.Copy(generatedPath, goldenPath, overwrite: true);
+            return;
+        }
+
+        Assert.True(File.Exists(goldenPath),
+            $"Golden file not found: {goldenPath}. Run with UPDATE_GOLDEN=1 to create.");
+
+        var generated = File.ReadAllText(generatedPath);
+        var golden = File.ReadAllText(goldenPath);
+        Assert.Equal(golden, generated);
+    }
+
+    public static IEnumerable<object[]> GetGoldenFileNames()
+        => GoldenFiles.Select(f => new object[] { f });
+
+    [Fact]
+    public void Generate_TestSdk_GoldenFileCount_MatchesGeneratedFileCount()
+    {
+        var result = Generate();
+        Assert.Equal(GoldenFiles.Length, result.GeneratedFiles.Count);
     }
 }

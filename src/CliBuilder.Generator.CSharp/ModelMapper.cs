@@ -27,6 +27,11 @@ public static partial class ModelMapper
         var sdkVersion = SanitizeXmlValue(metadata.Version);
         var sdkPackageName = SanitizeXmlValue(metadata.Name);
 
+        // SdkProjectPath flows into csproj XML — sanitize if present
+        var sdkProjectPath = options.SdkProjectPath != null
+            ? SanitizeXmlValue(options.SdkProjectPath)
+            : null;
+
         var model = new GeneratorModel(
             CliName: cliName,
             SdkName: sdkName,
@@ -35,7 +40,8 @@ public static partial class ModelMapper
             RootNamespace: DeriveNamespace(cliName),
             CliDescription: SanitizeString($"{cliName} — CLI for {sdkName}") ?? "",
             Resources: resources,
-            Auth: auth);
+            Auth: auth,
+            SdkProjectPath: sdkProjectPath);
 
         return (model, diagnostics);
     }
@@ -65,7 +71,9 @@ public static partial class ModelMapper
         var operations = resource.Operations.Select(op =>
             MapOperation(op, diagnostics)).ToList();
 
-        return new ResourceModel(resource.Name, className, description, operations);
+        return new ResourceModel(resource.Name, className, description, operations,
+            SourceClassName: SanitizeString(resource.SourceClassName),
+            SourceNamespace: SanitizeString(resource.SourceNamespace));
     }
 
     private static OperationModel MapOperation(Operation operation, List<Diagnostic> diagnostics)
@@ -77,6 +85,12 @@ public static partial class ModelMapper
         var flattenResult = ParameterFlattener.Flatten(operation.Parameters);
         diagnostics.AddRange(flattenResult.Diagnostics);
 
+        // Find the options class name (first class-typed parameter) for handler wiring.
+        // Operations with multiple class-typed params (e.g., options + requestContext)
+        // use only the first — the second is accessible via --json-input.
+        var optionsParam = operation.Parameters
+            .FirstOrDefault(p => p.Type.Kind == TypeKind.Class && p.Type.Properties != null);
+
         return new OperationModel(
             Name: operation.Name,
             MethodName: methodName,
@@ -84,7 +98,9 @@ public static partial class ModelMapper
             Parameters: flattenResult.Parameters,
             NeedsJsonInput: flattenResult.NeedsJsonInput,
             ReturnTypeName: returnTypeName,
-            IsStreaming: operation.IsStreaming);
+            IsStreaming: operation.IsStreaming,
+            SourceMethodName: SanitizeString(operation.SourceMethodName),
+            OptionsClassName: SanitizeString(optionsParam?.Type.Name));
     }
 
     private static AuthModel MapAuth(AuthPattern pattern) =>

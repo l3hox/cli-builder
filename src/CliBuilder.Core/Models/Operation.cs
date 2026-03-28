@@ -5,5 +5,6 @@ public record Operation(
     string? Description,
     IReadOnlyList<Parameter> Parameters,
     TypeRef ReturnType,
-    bool IsStreaming = false
+    bool IsStreaming = false,
+    string? SourceMethodName = null
 );

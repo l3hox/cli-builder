@@ -20,7 +20,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetAssistantClient"
           },
           {
             "name": "get-audio-client",
@@ -51,7 +52,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetAudioClient"
           },
           {
             "name": "get-batch-client",
@@ -66,7 +68,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetBatchClient"
           },
           {
             "name": "get-chat-client",
@@ -97,7 +100,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetChatClient"
           },
           {
             "name": "get-container-client",
@@ -112,7 +116,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetContainerClient"
           },
           {
             "name": "get-conversation-client",
@@ -127,7 +132,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetConversationClient"
           },
           {
             "name": "get-embedding-client",
@@ -158,7 +164,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetEmbeddingClient"
           },
           {
             "name": "get-evaluation-client",
@@ -173,7 +180,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetEvaluationClient"
           },
           {
             "name": "get-open-ai-file-client",
@@ -188,7 +196,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetOpenAIFileClient"
           },
           {
             "name": "get-fine-tuning-client",
@@ -203,7 +212,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetFineTuningClient"
           },
           {
             "name": "get-grader-client",
@@ -218,7 +228,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetGraderClient"
           },
           {
             "name": "get-image-client",
@@ -249,7 +260,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetImageClient"
           },
           {
             "name": "get-open-ai-model-client",
@@ -264,7 +276,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetOpenAIModelClient"
           },
           {
             "name": "get-moderation-client",
@@ -295,7 +308,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetModerationClient"
           },
           {
             "name": "get-realtime-client",
@@ -310,7 +324,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetRealtimeClient"
           },
           {
             "name": "get-responses-client",
@@ -325,7 +340,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetResponsesClient"
           },
           {
             "name": "get-vector-store-client",
@@ -340,7 +356,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetVectorStoreClient"
           },
           {
             "name": "get-video-client",
@@ -355,9 +372,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetVideoClient"
           }
-        ]
+        ],
+        "sourceClassName": "OpenAIClient",
+        "sourceNamespace": "OpenAI"
       },
       {
         "name": "video",
@@ -486,7 +506,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetVideosAsync"
           },
           {
             "name": "create-video",
@@ -612,7 +633,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateVideoAsync"
           },
           {
             "name": "delete-video",
@@ -707,7 +729,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteVideoAsync"
           },
           {
             "name": "get-video",
@@ -802,7 +825,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetVideoAsync"
           },
           {
             "name": "download-video",
@@ -912,7 +936,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DownloadVideoAsync"
           },
           {
             "name": "create-video-remix",
@@ -1053,9 +1078,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateVideoRemixAsync"
           }
-        ]
+        ],
+        "sourceClassName": "VideoClient",
+        "sourceNamespace": "OpenAI.Videos"
       },
       {
         "name": "vector-store",
@@ -1170,7 +1198,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateVectorStoreAsync"
           },
           {
             "name": "get-vector-store",
@@ -1265,7 +1294,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetVectorStoreAsync"
           },
           {
             "name": "modify-vector-store",
@@ -1391,7 +1421,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ModifyVectorStoreAsync"
           },
           {
             "name": "delete-vector-store",
@@ -1486,7 +1517,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteVectorStoreAsync"
           },
           {
             "name": "add-file-to-vector-store",
@@ -1612,7 +1644,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "AddFileToVectorStoreAsync"
           },
           {
             "name": "update-vector-store-file-attributes",
@@ -1753,7 +1786,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "UpdateVectorStoreFileAttributesAsync"
           },
           {
             "name": "get-vector-store-file",
@@ -1863,7 +1897,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetVectorStoreFileAsync"
           },
           {
             "name": "remove-file-from-vector-store",
@@ -1973,7 +2008,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "RemoveFileFromVectorStoreAsync"
           },
           {
             "name": "add-file-batch-to-vector-store",
@@ -2099,7 +2135,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "AddFileBatchToVectorStoreAsync"
           },
           {
             "name": "get-vector-store-file-batch",
@@ -2209,7 +2246,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetVectorStoreFileBatchAsync"
           },
           {
             "name": "cancel-vector-store-file-batch",
@@ -2319,7 +2357,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CancelVectorStoreFileBatchAsync"
           },
           {
             "name": "get-vector-stores",
@@ -2459,7 +2498,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetVectorStoresAsync"
           },
           {
             "name": "get-vector-store-files-in-batch",
@@ -2644,7 +2684,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetVectorStoreFilesInBatchAsync"
           },
           {
             "name": "get-vector-store-files",
@@ -2814,7 +2855,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetVectorStoreFilesAsync"
           },
           {
             "name": "retrieve-vector-store-file-content",
@@ -2924,7 +2966,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "RetrieveVectorStoreFileContentAsync"
           },
           {
             "name": "search-vector-store",
@@ -3050,9 +3093,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "SearchVectorStoreAsync"
           }
-        ]
+        ],
+        "sourceClassName": "VectorStoreClient",
+        "sourceNamespace": "OpenAI.VectorStores"
       },
       {
         "name": "responses",
@@ -3127,7 +3173,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateResponseAsync"
           },
           {
             "name": "create-response-streaming",
@@ -3198,7 +3245,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": true
+            "isStreaming": true,
+            "sourceMethodName": "CreateResponseStreamingAsync"
           },
           {
             "name": "get-response",
@@ -3363,7 +3411,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetResponseAsync"
           },
           {
             "name": "get-response-streaming",
@@ -3495,7 +3544,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": true
+            "isStreaming": true,
+            "sourceMethodName": "GetResponseStreamingAsync"
           },
           {
             "name": "get-response-input-item-collection-page",
@@ -3650,7 +3700,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetResponseInputItemCollectionPageAsync"
           },
           {
             "name": "get-response-input-items",
@@ -3757,7 +3808,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": true
+            "isStreaming": true,
+            "sourceMethodName": "GetResponseInputItemsAsync"
           },
           {
             "name": "delete-response",
@@ -3852,7 +3904,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteResponseAsync"
           },
           {
             "name": "cancel-response",
@@ -3947,7 +4000,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CancelResponseAsync"
           },
           {
             "name": "get-input-token-count",
@@ -4073,7 +4127,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetInputTokenCountAsync"
           },
           {
             "name": "compact-response",
@@ -4199,9 +4254,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CompactResponseAsync"
           }
-        ]
+        ],
+        "sourceClassName": "ResponsesClient",
+        "sourceNamespace": "OpenAI.Responses"
       },
       {
         "name": "realtime",
@@ -4316,7 +4374,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "StartConversationSessionAsync"
           },
           {
             "name": "start-transcription-session",
@@ -4412,7 +4471,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "StartTranscriptionSessionAsync"
           },
           {
             "name": "start-session",
@@ -4538,7 +4598,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "StartSessionAsync"
           },
           {
             "name": "create-realtime-client-secret",
@@ -4649,9 +4710,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateRealtimeClientSecretAsync"
           }
-        ]
+        ],
+        "sourceClassName": "RealtimeClient",
+        "sourceNamespace": "OpenAI.Realtime"
       },
       {
         "name": "realtime-session",
@@ -4670,7 +4734,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "Dispose"
           },
           {
             "name": "send-input-audio",
@@ -4822,7 +4887,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "SendInputAudioAsync"
           },
           {
             "name": "clear-input-audio",
@@ -4837,7 +4903,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ClearInputAudioAsync"
           },
           {
             "name": "configure-conversation-session",
@@ -5064,7 +5131,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ConfigureConversationSessionAsync"
           },
           {
             "name": "configure-transcription-session",
@@ -5151,7 +5219,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ConfigureTranscriptionSessionAsync"
           },
           {
             "name": "add-item",
@@ -5213,7 +5282,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "AddItemAsync"
           },
           {
             "name": "request-item-retrieval",
@@ -5244,7 +5314,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "RequestItemRetrievalAsync"
           },
           {
             "name": "delete-item",
@@ -5275,7 +5346,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteItemAsync"
           },
           {
             "name": "truncate-item",
@@ -5336,7 +5408,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "TruncateItemAsync"
           },
           {
             "name": "commit-pending-audio",
@@ -5351,7 +5424,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CommitPendingAudioAsync"
           },
           {
             "name": "start-response",
@@ -5582,7 +5656,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "StartResponseAsync"
           },
           {
             "name": "cancel-response",
@@ -5597,7 +5672,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CancelResponseAsync"
           },
           {
             "name": "receive-updates",
@@ -5677,7 +5753,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": true
+            "isStreaming": true,
+            "sourceMethodName": "ReceiveUpdatesAsync"
           },
           {
             "name": "send-command",
@@ -5818,9 +5895,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "SendCommandAsync"
           }
-        ]
+        ],
+        "sourceClassName": "RealtimeSessionClient",
+        "sourceNamespace": "OpenAI.Realtime"
       },
       {
         "name": "moderation",
@@ -5935,7 +6015,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ClassifyTextAsync"
           },
           {
             "name": "classify-inputs",
@@ -6046,9 +6127,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ClassifyInputsAsync"
           }
-        ]
+        ],
+        "sourceClassName": "ModerationClient",
+        "sourceNamespace": "OpenAI.Moderations"
       },
       {
         "name": "open-ai-model",
@@ -6132,7 +6216,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetModelsAsync"
           },
           {
             "name": "get-model",
@@ -6227,7 +6312,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetModelAsync"
           },
           {
             "name": "delete-model",
@@ -6322,9 +6408,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteModelAsync"
           }
-        ]
+        ],
+        "sourceClassName": "OpenAIModelClient",
+        "sourceNamespace": "OpenAI.Models"
       },
       {
         "name": "image",
@@ -6510,7 +6599,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GenerateImageAsync"
           },
           {
             "name": "generate-images",
@@ -6707,7 +6797,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GenerateImagesAsync"
           },
           {
             "name": "generate-image-edit",
@@ -7176,7 +7267,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GenerateImageEditAsync"
           },
           {
             "name": "generate-image-edits",
@@ -7660,7 +7752,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GenerateImageEditsAsync"
           },
           {
             "name": "generate-image-variation",
@@ -7888,7 +7981,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GenerateImageVariationAsync"
           },
           {
             "name": "generate-image-variations",
@@ -8131,9 +8225,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GenerateImageVariationsAsync"
           }
-        ]
+        ],
+        "sourceClassName": "ImageClient",
+        "sourceNamespace": "OpenAI.Images"
       },
       {
         "name": "grader",
@@ -8248,7 +8345,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "RunGraderAsync"
           },
           {
             "name": "validate-grader",
@@ -8359,9 +8457,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ValidateGraderAsync"
           }
-        ]
+        ],
+        "sourceClassName": "GraderClient",
+        "sourceNamespace": "OpenAI.Graders"
       },
       {
         "name": "fine-tuning",
@@ -8561,7 +8662,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "FineTuneAsync"
           },
           {
             "name": "get-job",
@@ -8592,7 +8694,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetJobAsync"
           },
           {
             "name": "get-jobs",
@@ -8654,7 +8757,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": true
+            "isStreaming": true,
+            "sourceMethodName": "GetJobsAsync"
           },
           {
             "name": "get-fine-tuning-checkpoint-permissions",
@@ -8809,7 +8913,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetFineTuningCheckpointPermissionsAsync"
           },
           {
             "name": "create-fine-tuning-checkpoint-permission",
@@ -8935,7 +9040,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateFineTuningCheckpointPermissionAsync"
           },
           {
             "name": "delete-fine-tuning-checkpoint-permission",
@@ -9045,7 +9151,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteFineTuningCheckpointPermissionAsync"
           },
           {
             "name": "pause-fine-tuning-job",
@@ -9140,7 +9247,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "PauseFineTuningJobAsync"
           },
           {
             "name": "resume-fine-tuning-job",
@@ -9235,9 +9343,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ResumeFineTuningJobAsync"
           }
-        ]
+        ],
+        "sourceClassName": "FineTuningClient",
+        "sourceNamespace": "OpenAI.FineTuning"
       },
       {
         "name": "open-ai-file",
@@ -9423,7 +9534,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "UploadFileAsync"
           },
           {
             "name": "get-files",
@@ -9563,7 +9675,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetFilesAsync"
           },
           {
             "name": "get-file",
@@ -9658,7 +9771,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetFileAsync"
           },
           {
             "name": "delete-file",
@@ -9753,7 +9867,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteFileAsync"
           },
           {
             "name": "download-file",
@@ -9848,7 +9963,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DownloadFileAsync"
           },
           {
             "name": "create-upload",
@@ -9959,7 +10075,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateUploadAsync"
           },
           {
             "name": "add-upload-part",
@@ -10100,7 +10217,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "AddUploadPartAsync"
           },
           {
             "name": "complete-upload",
@@ -10226,7 +10344,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CompleteUploadAsync"
           },
           {
             "name": "cancel-upload",
@@ -10321,9 +10440,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CancelUploadAsync"
           }
-        ]
+        ],
+        "sourceClassName": "OpenAIFileClient",
+        "sourceNamespace": "OpenAI.Files"
       },
       {
         "name": "evaluation",
@@ -10467,7 +10589,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetEvaluationsAsync"
           },
           {
             "name": "create-evaluation",
@@ -10578,7 +10701,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateEvaluationAsync"
           },
           {
             "name": "get-evaluation",
@@ -10673,7 +10797,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetEvaluationAsync"
           },
           {
             "name": "update-evaluation",
@@ -10799,7 +10924,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "UpdateEvaluationAsync"
           },
           {
             "name": "delete-evaluation",
@@ -10894,7 +11020,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteEvaluationAsync"
           },
           {
             "name": "get-evaluation-runs",
@@ -11049,7 +11176,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetEvaluationRunsAsync"
           },
           {
             "name": "create-evaluation-run",
@@ -11175,7 +11303,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateEvaluationRunAsync"
           },
           {
             "name": "get-evaluation-run",
@@ -11285,7 +11414,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetEvaluationRunAsync"
           },
           {
             "name": "cancel-evaluation-run",
@@ -11395,7 +11525,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CancelEvaluationRunAsync"
           },
           {
             "name": "delete-evaluation-run",
@@ -11505,7 +11636,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteEvaluationRunAsync"
           },
           {
             "name": "get-evaluation-run-output-items",
@@ -11675,7 +11807,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetEvaluationRunOutputItemsAsync"
           },
           {
             "name": "get-evaluation-run-output-item",
@@ -11800,9 +11933,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetEvaluationRunOutputItemAsync"
           }
-        ]
+        ],
+        "sourceClassName": "EvaluationClient",
+        "sourceNamespace": "OpenAI.Evals"
       },
       {
         "name": "embedding",
@@ -11898,7 +12034,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GenerateEmbeddingAsync"
           },
           {
             "name": "generate-embeddings",
@@ -12000,9 +12137,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GenerateEmbeddingsAsync"
           }
-        ]
+        ],
+        "sourceClassName": "EmbeddingClient",
+        "sourceNamespace": "OpenAI.Embeddings"
       },
       {
         "name": "conversation",
@@ -12171,7 +12311,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetConversationItemsAsync"
           },
           {
             "name": "create-conversation-items",
@@ -12322,7 +12463,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateConversationItemsAsync"
           },
           {
             "name": "delete-conversation-item",
@@ -12432,7 +12574,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteConversationItemAsync"
           },
           {
             "name": "get-conversation-item",
@@ -12567,7 +12710,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetConversationItemAsync"
           },
           {
             "name": "create-conversation",
@@ -12678,7 +12822,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateConversationAsync"
           },
           {
             "name": "delete-conversation",
@@ -12773,7 +12918,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteConversationAsync"
           },
           {
             "name": "get-conversation",
@@ -12868,7 +13014,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetConversationAsync"
           },
           {
             "name": "update-conversation",
@@ -12994,9 +13141,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "UpdateConversationAsync"
           }
-        ]
+        ],
+        "sourceClassName": "ConversationClient",
+        "sourceNamespace": "OpenAI.Conversations"
       },
       {
         "name": "container",
@@ -13125,7 +13275,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetContainersAsync"
           },
           {
             "name": "create-container",
@@ -13236,7 +13387,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateContainerAsync"
           },
           {
             "name": "get-container",
@@ -13331,7 +13483,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetContainerAsync"
           },
           {
             "name": "delete-container",
@@ -13426,7 +13579,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteContainerAsync"
           },
           {
             "name": "create-container-file",
@@ -13567,7 +13721,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateContainerFileAsync"
           },
           {
             "name": "get-container-files",
@@ -13707,7 +13862,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetContainerFilesAsync"
           },
           {
             "name": "get-container-file",
@@ -13817,7 +13973,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetContainerFileAsync"
           },
           {
             "name": "delete-container-file",
@@ -13927,7 +14084,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteContainerFileAsync"
           },
           {
             "name": "download-container-file",
@@ -14037,9 +14195,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DownloadContainerFileAsync"
           }
-        ]
+        ],
+        "sourceClassName": "ContainerClient",
+        "sourceNamespace": "OpenAI.Containers"
       },
       {
         "name": "chat",
@@ -14577,7 +14738,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CompleteChatAsync"
           },
           {
             "name": "complete-chat-streaming",
@@ -15111,7 +15273,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": true
+            "isStreaming": true,
+            "sourceMethodName": "CompleteChatStreamingAsync"
           },
           {
             "name": "get-chat-completion",
@@ -15206,7 +15369,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetChatCompletionAsync"
           },
           {
             "name": "update-chat-completion",
@@ -15332,7 +15496,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "UpdateChatCompletionAsync"
           },
           {
             "name": "delete-chat-completion",
@@ -15427,7 +15592,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteChatCompletionAsync"
           },
           {
             "name": "get-chat-completions",
@@ -15601,7 +15767,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetChatCompletionsAsync"
           },
           {
             "name": "get-chat-completion-messages",
@@ -15741,9 +15908,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetChatCompletionMessagesAsync"
           }
-        ]
+        ],
+        "sourceClassName": "ChatClient",
+        "sourceNamespace": "OpenAI.Chat"
       },
       {
         "name": "batch",
@@ -15873,7 +16043,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateBatchAsync"
           },
           {
             "name": "get-batches",
@@ -15983,7 +16154,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetBatchesAsync"
           },
           {
             "name": "get-batch",
@@ -16078,9 +16250,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetBatchAsync"
           }
-        ]
+        ],
+        "sourceClassName": "BatchClient",
+        "sourceNamespace": "OpenAI.Batch"
       },
       {
         "name": "audio",
@@ -16191,7 +16366,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GenerateSpeechAsync"
           },
           {
             "name": "transcribe-audio",
@@ -16471,7 +16647,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "TranscribeAudioAsync"
           },
           {
             "name": "transcribe-audio-streaming",
@@ -16751,7 +16928,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": true
+            "isStreaming": true,
+            "sourceMethodName": "TranscribeAudioStreamingAsync"
           },
           {
             "name": "translate-audio",
@@ -16979,9 +17157,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "TranslateAudioAsync"
           }
-        ]
+        ],
+        "sourceClassName": "AudioClient",
+        "sourceNamespace": "OpenAI.Audio"
       },
       {
         "name": "assistant",
@@ -17196,7 +17377,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateAssistantAsync"
           },
           {
             "name": "get-assistant",
@@ -17291,7 +17473,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetAssistantAsync"
           },
           {
             "name": "modify-assistant",
@@ -17417,7 +17600,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ModifyAssistantAsync"
           },
           {
             "name": "delete-assistant",
@@ -17512,7 +17696,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteAssistantAsync"
           },
           {
             "name": "create-thread",
@@ -17623,7 +17808,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateThreadAsync"
           },
           {
             "name": "get-thread",
@@ -17718,7 +17904,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetThreadAsync"
           },
           {
             "name": "modify-thread",
@@ -17844,7 +18031,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ModifyThreadAsync"
           },
           {
             "name": "delete-thread",
@@ -17939,7 +18127,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteThreadAsync"
           },
           {
             "name": "create-message",
@@ -18088,7 +18277,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateMessageAsync"
           },
           {
             "name": "get-messages",
@@ -18243,7 +18433,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetMessagesAsync"
           },
           {
             "name": "get-message",
@@ -18353,7 +18544,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetMessageAsync"
           },
           {
             "name": "modify-message",
@@ -18494,7 +18686,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ModifyMessageAsync"
           },
           {
             "name": "delete-message",
@@ -18604,7 +18797,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "DeleteMessageAsync"
           },
           {
             "name": "create-run",
@@ -18915,7 +19109,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateRunAsync"
           },
           {
             "name": "create-run-streaming",
@@ -19226,7 +19421,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": true
+            "isStreaming": true,
+            "sourceMethodName": "CreateRunStreamingAsync"
           },
           {
             "name": "create-thread-and-run",
@@ -19612,7 +19808,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CreateThreadAndRunAsync"
           },
           {
             "name": "create-thread-and-run-streaming",
@@ -19998,7 +20195,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": true
+            "isStreaming": true,
+            "sourceMethodName": "CreateThreadAndRunStreamingAsync"
           },
           {
             "name": "get-runs",
@@ -20153,7 +20351,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetRunsAsync"
           },
           {
             "name": "get-run",
@@ -20263,7 +20462,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetRunAsync"
           },
           {
             "name": "submit-tool-outputs-to-run",
@@ -20404,7 +20604,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "SubmitToolOutputsToRunAsync"
           },
           {
             "name": "submit-tool-outputs-to-run-streaming",
@@ -20475,7 +20676,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": true
+            "isStreaming": true,
+            "sourceMethodName": "SubmitToolOutputsToRunStreamingAsync"
           },
           {
             "name": "cancel-run",
@@ -20585,7 +20787,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "CancelRunAsync"
           },
           {
             "name": "get-run-steps",
@@ -20755,7 +20958,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetRunStepsAsync"
           },
           {
             "name": "get-run-step",
@@ -20880,7 +21084,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetRunStepAsync"
           },
           {
             "name": "modify-run",
@@ -21021,7 +21226,8 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "ModifyRunAsync"
           },
           {
             "name": "get-assistants",
@@ -21161,9 +21367,12 @@
               "properties": null,
               "elementType": null
             },
-            "isStreaming": false
+            "isStreaming": false,
+            "sourceMethodName": "GetAssistantsAsync"
           }
-        ]
+        ],
+        "sourceClassName": "AssistantClient",
+        "sourceNamespace": "OpenAI.Assistants"
       }
     ],
     "authPatterns": [

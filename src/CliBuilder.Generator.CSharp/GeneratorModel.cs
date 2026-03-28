@@ -8,14 +8,17 @@ public record GeneratorModel(
     string RootNamespace,
     string CliDescription,
     IReadOnlyList<ResourceModel> Resources,
-    AuthModel? Auth
+    AuthModel? Auth,
+    string? SdkProjectPath = null
 );
 
 public record ResourceModel(
     string Name,
     string ClassName,
     string? Description,
-    IReadOnlyList<OperationModel> Operations
+    IReadOnlyList<OperationModel> Operations,
+    string? SourceClassName = null,
+    string? SourceNamespace = null
 );
 
 public record OperationModel(
@@ -25,7 +28,9 @@ public record OperationModel(
     IReadOnlyList<FlatParameter> Parameters,
     bool NeedsJsonInput,
     string ReturnTypeName,
-    bool IsStreaming
+    bool IsStreaming,
+    string? SourceMethodName = null,
+    string? OptionsClassName = null
 );
 
 public record FlatParameter(

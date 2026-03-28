@@ -65,7 +65,8 @@ public class DotNetAdapter : ISdkAdapter
         foreach (var (noun, type) in serviceClasses)
         {
             var operations = ExtractOperations(type, diagnostics);
-            resources.Add(new Resource(noun, null, operations));
+            resources.Add(new Resource(noun, null, operations,
+                SourceClassName: type.Name, SourceNamespace: type.Namespace));
         }
 
         // Detect auth patterns
@@ -229,7 +230,8 @@ public class DotNetAdapter : ISdkAdapter
             var parameters = ExtractParameters(selected);
             var (returnType, isStreaming) = ExtractReturnType(selected);
 
-            operations.Add(new Operation(verb, null, parameters, returnType, isStreaming));
+            operations.Add(new Operation(verb, null, parameters, returnType, isStreaming,
+                SourceMethodName: selected.Name));
         }
 
         return operations;

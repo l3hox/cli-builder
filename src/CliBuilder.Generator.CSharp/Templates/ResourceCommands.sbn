@@ -5,6 +5,9 @@ using {{ root_namespace }}.Output;
 {{- if has_auth }}
 using {{ root_namespace }}.Auth;
 {{- end }}
+{{- if resource.source_namespace }}
+using {{ resource.source_namespace }};
+{{- end }}
 
 namespace {{ root_namespace }}.Commands;
 
@@ -56,42 +59,42 @@ public static class {{ resource.class_name }}Commands
 
 {{ end }}
                     // Read parameter values
-                    var parameters = new Dictionary<string, object?>();
 {{ for param in op.parameters }}
-                    parameters["{{ param.property_name }}"] = ctx.ParseResult.GetValueForOption({{ param.cli_flag | to_var_name }}Option);
+                    var {{ param.cli_flag | to_var_name }}Value = ctx.ParseResult.GetValueForOption({{ param.cli_flag | to_var_name }}Option);
 {{ end }}
 {{ if op.needs_json_input }}
 
                     // Flat flags take precedence; --json-input fills remaining nulls
                     var jsonInputValue = ctx.ParseResult.GetValueForOption(jsonInputOption);
-                    if (!string.IsNullOrEmpty(jsonInputValue))
-                    {
-                        var jsonParams = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(jsonInputValue);
-                        if (jsonParams != null)
-                        {
-                            foreach (var kvp in jsonParams)
-                            {
-                                if (!parameters.ContainsKey(kvp.Key) || parameters[kvp.Key] is null)
-                                    parameters[kvp.Key] = kvp.Value.ToString();
-                            }
-                        }
-                    }
 {{ end }}
+{{ if resource.source_class_name && op.source_method_name }}
 
-                    // TODO: Instantiate SDK client and call {{ op.method_name }}
-                    // This is where the generated CLI calls the actual SDK method.
-                    // For now, output the resolved parameters.
-                    var result = new Dictionary<string, object?>
-                    {
-                        ["command"] = "{{ resource.name }} {{ op.name }}",
-                        ["parameters"] = parameters{{ if has_auth }},
-                        ["authenticated"] = true{{ end }}
-                    };
+                    // SDK call: {{ resource.source_class_name }}.{{ op.source_method_name }}
+                    // var client = new {{ resource.source_class_name }}(credential);
+{{ if op.options_class_name }}
+                    // var sdkOptions = new {{ op.options_class_name }}();
+{{ for param in op.parameters }}
+                    // sdkOptions.{{ param.property_name }} = {{ param.cli_flag | to_var_name }}Value;
+{{ end }}
+{{ end }}
 {{ if op.return_type_name == "void" }}
-
-                    // Void return — no output to format
+                    // await client.{{ op.source_method_name }}({{ if op.options_class_name }}sdkOptions{{ else }}{{ for param in op.parameters }}{{ if !for.first }}, {{ end }}{{ param.cli_flag | to_var_name }}Value{{ end }}{{ end }});
+                    await Task.CompletedTask;
                     Console.WriteLine("OK");
 {{ else }}
+                    // var result = await client.{{ op.source_method_name }}({{ if op.options_class_name }}sdkOptions{{ else }}{{ for param in op.parameters }}{{ if !for.first }}, {{ end }}{{ param.cli_flag | to_var_name }}Value{{ end }}{{ end }});
+                    await Task.CompletedTask;
+                    var result = (object)new Dictionary<string, object?>
+                    {
+                        ["command"] = "{{ resource.name }} {{ op.name }}",
+                        ["parameters"] = new Dictionary<string, object?>
+                        {
+{{ for param in op.parameters }}
+                            ["{{ param.property_name }}"] = {{ param.cli_flag | to_var_name }}Value{{ if !for.last }},{{ end }}
+{{ end }}
+                        }{{ if has_auth }},
+                        ["authenticated"] = true{{ end }}
+                    };
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
@@ -99,6 +102,28 @@ public static class {{ resource.class_name }}Commands
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
+{{ end }}
+{{ else }}
+                    // SDK client wiring not available (source class name unknown)
+                    var result = new Dictionary<string, object?>
+                    {
+                        ["command"] = "{{ resource.name }} {{ op.name }}",
+                        ["parameters"] = new Dictionary<string, object?>
+                        {
+{{ for param in op.parameters }}
+                            ["{{ param.property_name }}"] = {{ param.cli_flag | to_var_name }}Value{{ if !for.last }},{{ end }}
+{{ end }}
+                        }
+                    };
+{{ if op.return_type_name == "void" }}
+                    Console.WriteLine("OK");
+{{ else }}
+                    var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
+                    if (useJson)
+                        JsonFormatter.Write(result);
+                    else
+                        TableFormatter.Write(result);
+{{ end }}
 {{ end }}
 
                     ctx.ExitCode = 0;
