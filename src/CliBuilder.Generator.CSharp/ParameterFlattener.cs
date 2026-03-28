@@ -29,7 +29,26 @@ public static class ParameterFlattener
             }
         }
 
-        return new FlattenResult(flatParams, needsJsonInput, diagnostics);
+        // Deduplicate — multiple options classes on the same operation may share
+        // property names (e.g., Stream.Position on two different Stream params).
+        // Keep the first occurrence, emit CB303 for dropped required params.
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var deduped = new List<FlatParameter>();
+        foreach (var fp in flatParams)
+        {
+            if (seen.Add(fp.CliFlag))
+            {
+                deduped.Add(fp);
+            }
+            else if (fp.IsRequired)
+            {
+                diagnostics.Add(new Diagnostic(DiagnosticSeverity.Warning, "CB303",
+                    $"Required parameter '--{fp.CliFlag}' duplicated across options classes — " +
+                    "only the first occurrence is used."));
+            }
+        }
+
+        return new FlattenResult(deduped, needsJsonInput, diagnostics);
     }
 
     private static void FlattenOptionsClass(
@@ -83,7 +102,7 @@ public static class ParameterFlattener
         return new FlatParameter(
             CliFlag: cliFlag,
             PropertyName: csharpName,
-            CSharpType: ModelMapper.MapTypeName(param.Type),
+            CSharpType: ModelMapper.MapTypeName(param.Type, forCliParam: true),
             IsRequired: param.Required,
             DefaultValueLiteral: ModelMapper.SanitizeDefaultValue(param.DefaultValue, param.Type, diagnostics),
             Description: ModelMapper.SanitizeString(param.Description),

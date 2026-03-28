@@ -236,4 +236,61 @@ public class ParameterFlattenerTests
         Assert.Equal(4, result.Parameters.Count);
         Assert.True(result.NeedsJsonInput);
     }
+
+    // -----------------------------------------------------------
+    // Deduplication
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void Flatten_DuplicatePropertyNames_Deduplicated()
+    {
+        // Two options classes sharing "Position" and "Length" property names
+        var props1 = new List<Parameter>
+        {
+            MakePrimitive("Name", "string", required: true),
+            MakePrimitive("Position", "long", required: false, nullable: true),
+            MakePrimitive("Length", "long", required: false, nullable: true),
+        };
+        var props2 = new List<Parameter>
+        {
+            MakePrimitive("Format", "string", required: false, nullable: true),
+            MakePrimitive("Position", "long", required: false, nullable: true),
+            MakePrimitive("Length", "long", required: false, nullable: true),
+        };
+
+        var parameters = new List<Parameter>
+        {
+            MakeOptionsClass("ImageOpts", props1),
+            MakeOptionsClass("StreamOpts", props2),
+        };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        // 3 + 3 = 6 total, but 2 duplicates → 4 unique
+        Assert.Equal(4, result.Parameters.Count);
+        Assert.Single(result.Parameters.Where(p => p.CliFlag == "position"));
+        Assert.Single(result.Parameters.Where(p => p.CliFlag == "length"));
+    }
+
+    [Fact]
+    public void Flatten_DuplicateRequiredParam_EmitsCB303()
+    {
+        var props1 = new List<Parameter>
+        {
+            MakePrimitive("Id", "string", required: true),
+        };
+        var props2 = new List<Parameter>
+        {
+            MakePrimitive("Id", "string", required: true),
+        };
+
+        var parameters = new List<Parameter>
+        {
+            MakeOptionsClass("Opts1", props1),
+            MakeOptionsClass("Opts2", props2),
+        };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.Single(result.Parameters);
+        Assert.Contains(result.Diagnostics, d => d.Code == "CB303");
+    }
 }

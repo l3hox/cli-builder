@@ -209,6 +209,42 @@ public class ModelMapperTests
     }
 
     // -----------------------------------------------------------
+    // MapTypeName — forCliParam
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void MapTypeName_ClassType_ForCliParam_ReturnsString()
+    {
+        var type = new TypeRef(TypeKind.Class, "ChatCompletionOptions");
+        Assert.Equal("string", ModelMapper.MapTypeName(type, forCliParam: true));
+    }
+
+    [Fact]
+    public void MapTypeName_ClassType_ForReturn_PreservesSdkName()
+    {
+        var type = new TypeRef(TypeKind.Class, "ChatCompletionOptions");
+        Assert.Equal("ChatCompletionOptions", ModelMapper.MapTypeName(type, forCliParam: false));
+    }
+
+    [Fact]
+    public void MapTypeName_GenericType_ForCliParam_ReturnsString()
+    {
+        var inner = new TypeRef(TypeKind.Class, "ResponseItem");
+        var type = new TypeRef(TypeKind.Generic, "IEnumerable",
+            GenericArguments: new[] { inner });
+        Assert.Equal("string", ModelMapper.MapTypeName(type, forCliParam: true));
+    }
+
+    [Fact]
+    public void MapTypeName_GenericType_ForReturn_PreservesFullType()
+    {
+        var inner = new TypeRef(TypeKind.Class, "ResponseItem");
+        var type = new TypeRef(TypeKind.Generic, "IEnumerable",
+            GenericArguments: new[] { inner });
+        Assert.Equal("IEnumerable<ResponseItem>", ModelMapper.MapTypeName(type, forCliParam: false));
+    }
+
+    // -----------------------------------------------------------
     // SanitizeDefaultValue — all branches
     // -----------------------------------------------------------
 

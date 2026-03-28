@@ -167,17 +167,26 @@ public static partial class ModelMapper
     // Type mapping
     // -----------------------------------------------------------
 
-    internal static string MapTypeName(TypeRef type)
+    /// <summary>
+    /// Map a TypeRef to a C# type name.
+    /// When forCliParam is true, complex types (Class, Generic, Array) map to "string"
+    /// because CLI options can only accept primitive types — complex values come via --json-input.
+    /// When forCliParam is false (return types, comments), the original SDK type name is preserved.
+    /// </summary>
+    internal static string MapTypeName(TypeRef type, bool forCliParam = false)
     {
         var baseName = type.Kind switch
         {
             TypeKind.Primitive => MapPrimitiveType(type.Name),
             TypeKind.Enum => "string",
-            TypeKind.Class => type.Name,
-            TypeKind.Array => type.ElementType != null ? $"{MapTypeName(type.ElementType)}[]" : "object[]",
-            TypeKind.Dictionary => "string",  // CLI: accept as JSON string
+            TypeKind.Class when forCliParam => "string",     // CLI: accept as JSON string
+            TypeKind.Class => type.Name,                      // return types: preserve SDK name
+            TypeKind.Array when forCliParam => "string",
+            TypeKind.Array => type.ElementType != null ? $"{MapTypeName(type.ElementType, forCliParam)}[]" : "object[]",
+            TypeKind.Dictionary => "string",
+            TypeKind.Generic when forCliParam => "string",
             TypeKind.Generic => type.GenericArguments?.Count > 0
-                ? $"{type.Name}<{string.Join(", ", type.GenericArguments.Select(MapTypeName))}>"
+                ? $"{type.Name}<{string.Join(", ", type.GenericArguments.Select(t => MapTypeName(t)))}>"
                 : type.Name,
             _ => "object"
         };

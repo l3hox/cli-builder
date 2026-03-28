@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\CliBuilder.Core\CliBuilder.Core.csproj" />
     <ProjectReference Include="..\..\src\CliBuilder.Adapter.DotNet\CliBuilder.Adapter.DotNet.csproj" />
+    <ProjectReference Include="..\..\src\CliBuilder.Generator.CSharp\CliBuilder.Generator.CSharp.csproj" />
   </ItemGroup>
 
 </Project>
