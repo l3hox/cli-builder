@@ -11,44 +11,110 @@ cli-builder eliminates the manual step: point it at an SDK assembly, get a fully
 ## How it works
 
 ```
-SDK Assembly (.dll)  ──▶  cli-builder  ──▶  Standalone CLI Project
+SDK Assembly (.dll)  ──>  cli-builder  ──>  Standalone CLI Project
 ```
+
+1. **Extract** — The .NET reflection adapter reads the SDK assembly via `MetadataLoadContext` (no code execution) and produces structured `SdkMetadata`: resources, operations, parameters, auth patterns.
+
+2. **Generate** — The C# generator takes `SdkMetadata` and emits a complete CLI project using Scriban templates and System.CommandLine. The output is a standalone project with no cli-builder dependency.
+
+3. **Run** — The generated CLI compiles with `dotnet build` and runs immediately.
+
+## Demo
+
+Validated against the **OpenAI .NET SDK 2.9.1** — 20 resources, 169 operations:
 
 ```bash
-# Generate a CLI from the OpenAI .NET SDK
-cli-builder generate --assembly OpenAI.dll
+# Generated CLI output
+$ openai-cli --help
+Description:
+  openai-cli -- CLI for OpenAI
 
-# The output is a compilable C# project — no cli-builder dependency
-cd openai-cli/
-dotnet build
-./openai-cli model list --json
+Commands:
+  chat            audio           assistant       batch
+  embedding       evaluation      fine-tuning     image
+  moderation      open-ai-model   vector-store    ...
+
+$ openai-cli chat complete-chat --help
+Options:
+  --messages <messages> (REQUIRED)
+  --response-modalities <Audio|Default|Text> (REQUIRED)
+  --frequency-penalty <frequency-penalty>
+  --temperature <temperature>
+  --json-input <json-input>    Full input as JSON
+  --json                       Output as JSON instead of table format
+  --api-key <api-key>          API key (prefer OPENAI_APIKEY env var)
+
+$ export OPENAI_APIKEY=sk-...
+$ openai-cli chat complete-chat --messages "hello" --json
+{
+  "command": "chat complete-chat",
+  "parameters": { "messages": "hello", ... },
+  "authenticated": true
+}
 ```
 
-The generated CLI follows agent-friendly patterns:
+## Agent-readiness
 
-```bash
-openai-cli model list --json          # structured output
-openai-cli model list                 # human-readable table
-openai-cli --help                     # lists all resources
-openai-cli model --help               # lists all operations
-openai-cli model list --help          # lists all parameters
+Every generated CLI satisfies:
+
+| Requirement | Implementation |
+|-------------|---------------|
+| Structured output | `--json` flag on every command |
+| Human-readable default | Table format when `--json` absent |
+| Discoverable commands | `--help` at root, noun, and verb levels |
+| Noun-verb structure | `<tool> <resource> <action> [--params]` |
+| Semantic exit codes | 0=success, 1=user error, 2=auth error, 3+=SDK error |
+| Structured errors | JSON error object to stderr |
+| Non-interactive auth | Env var > config file > `--api-key` flag |
+| Pipe-friendly | No color when stdout is redirected |
+
+## Generated project structure
+
 ```
+openai-cli/
++-- openai-cli.csproj          # references OpenAI NuGet + System.CommandLine
++-- Program.cs                 # entry point, --json/--api-key global options
++-- Commands/
+|   +-- ChatCommands.cs        # chat complete-chat|get|update|delete|list
+|   +-- AssistantCommands.cs   # 26 operations
+|   +-- ...                    # one file per resource
++-- Output/
+|   +-- JsonFormatter.cs       # --json serialization
+|   +-- TableFormatter.cs      # human-readable table
++-- Auth/
+    +-- AuthHandler.cs         # env var > config file > flag, credential masking
+```
+
+## Test suite
+
+227 tests across 3 projects:
+
+| Project | Tests | Covers |
+|---------|-------|--------|
+| Generator Tests | 170 | Template rendering, parameter flattening, model mapping, sanitization, golden files, compile verification |
+| Core Tests | 43 | Adapter extraction, metadata serialization, type resolution |
+| Integration Tests | 14 | OpenAI SDK extraction, OpenAI CLI compilation |
+
+Code coverage: **80.6% line, 95.3% method**. Run `./scripts/coverage.sh` for a full report.
 
 ## Documentation
 
 | Document | Contents |
 |----------|----------|
-| [docs/cli-builder-spec.md](docs/cli-builder-spec.md) | Full specification — interfaces, metadata model, config schema, test strategy, scope |
+| [docs/cli-builder-spec.md](docs/cli-builder-spec.md) | Full specification -- interfaces, metadata model, config schema, test strategy, scope |
 | [docs/ADR.md](docs/ADR.md) | Architecture Decision Records (ADR-001 through ADR-015) |
-| [docs/design-notes.md](docs/design-notes.md) | Edge-case policies, behavioral rules, diagnostic codes, test SDK manifest |
+| [docs/design-notes.md](docs/design-notes.md) | Edge-case policies, behavioral rules, diagnostic codes |
 | [docs/FUTURE.md](docs/FUTURE.md) | Out-of-scope ideas and deferred features |
 | [AGENTS.md](AGENTS.md) | Quick-start context for AI agents and contributors |
-| [docs/process.md](docs/process.md) | Development methodology — how this project is built |
+| [docs/process.md](docs/process.md) | Development methodology |
 | `docs/internal/` | Agent implementation plans (step-by-step build instructions) |
 
 ## Status
 
-Early development — solution scaffolded (models, interfaces, 8 contract tests passing). See [First Actions](cli-builder-spec.md#first-actions) in the spec.
+Steps 1-6 complete. The generator produces compilable, runnable CLIs from .NET SDK assemblies. Validated against the OpenAI .NET SDK at scale (20 resources, 169 operations).
+
+**Remaining:** Step 7 — wire real SDK method calls in generated handlers (currently stubbed with parameter echo). See [First Actions](docs/cli-builder-spec.md#first-actions) in the spec.
 
 ## License
 

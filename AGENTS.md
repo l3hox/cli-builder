@@ -46,4 +46,8 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-[First Actions](docs/cli-builder-spec.md#first-actions) — steps 1-5 complete, step 6 (CLI generator) is next. See [docs/internal/step-06-generator.md](docs/internal/step-06-generator.md).
+[First Actions](docs/cli-builder-spec.md#first-actions) — steps 1-6 complete, step 7 (end-to-end validation with real SDK calls) is next.
+
+**What's done:** The adapter extracts `SdkMetadata` from .NET assemblies. The generator produces compilable CLI projects (validated against OpenAI SDK: 20 resources, 169 ops, zero errors). 227 tests, 80.6% coverage.
+
+**What's next:** Wire real SDK method calls in generated handlers (currently stubbed). See [docs/internal/step-06-generator.md](docs/internal/step-06-generator.md) for generator internals.

@@ -451,8 +451,9 @@ Optional/later:
 4. ~~Scaffold: adapter interface, .NET adapter, metadata model~~
 5. ~~First spike: OpenAI .NET SDK → `SdkMetadata` → inspect what comes out~~
    - ~~**Acceptance criteria:** adapter extracts resources with correct names, operations with correct verbs, parameters with resolved `TypeRef` (no opaque `object` types for known SDK types). Output `SdkMetadata` as JSON, commit as a reference fixture.~~
-6. CLI generator: metadata → compilable C# project ← **next**
-7. Validate: does the generated CLI actually work against Stripe test mode?
+6. ~~CLI generator: metadata → compilable C# project~~
+   - ~~**Phases 6A-6E:** Template infrastructure, command generation, parameter flattening, output formatters, auth handler, compile verification, golden files, OpenAI scale validation (20 resources, 169 ops). 227 tests, 80.6% coverage.~~
+7. Validate: does the generated CLI actually work against Stripe test mode? ← **next**
 
 ---
 
