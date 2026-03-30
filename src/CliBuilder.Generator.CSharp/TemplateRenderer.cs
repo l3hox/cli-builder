@@ -138,17 +138,6 @@ public class TemplateRenderer
         return $"@\"{escaped}\"";
     }
 
-    /// <summary>
-    /// Convert a kebab-case CLI flag to a valid camelCase C# variable name.
-    /// "email" → "email", "class-value" → "classValue", "credit-limit" → "creditLimit"
-    /// </summary>
-    private static string ToVarName(string? value)
-    {
-        if (string.IsNullOrEmpty(value)) return "_param";
-        var parts = value.Split('-', StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length == 0) return "_param";
-        // First part lowercase, rest capitalized
-        return parts[0] + string.Concat(parts.Skip(1).Select(
-            p => char.ToUpperInvariant(p[0]) + p[1..]));
-    }
+    private static string ToVarName(string? value) =>
+        IdentifierValidator.KebabToCamelCase(value ?? "");
 }

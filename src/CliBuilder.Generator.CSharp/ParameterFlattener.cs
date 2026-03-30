@@ -19,13 +19,13 @@ public static class ParameterFlattener
         {
             if (param.Type.Kind == TypeKind.Class && param.Type.Properties != null)
             {
-                FlattenOptionsClass(param.Type.Properties, threshold,
+                FlattenOptionsClass(param.Type, threshold,
                     flatParams, ref needsJsonInput, diagnostics);
             }
             else
             {
                 // Primitive / enum param — always flat
-                flatParams.Add(MapParameter(param, diagnostics));
+                flatParams.Add(MapParameter(param, diagnostics, sourceOptionsClassName: null));
             }
         }
 
@@ -52,12 +52,15 @@ public static class ParameterFlattener
     }
 
     private static void FlattenOptionsClass(
-        IReadOnlyList<Parameter> properties,
+        TypeRef classType,
         int threshold,
         List<FlatParameter> flatParams,
         ref bool needsJsonInput,
         List<Diagnostic> diagnostics)
     {
+        var properties = classType.Properties!;
+        var className = classType.Name;
+
         var scalarProps = properties
             .Where(p => IsScalar(p.Type))
             .OrderBy(p => !p.Required)   // required first
@@ -71,13 +74,13 @@ public static class ParameterFlattener
             // Nested objects present → always add --json-input,
             // but still flatten ALL scalar props (no threshold truncation)
             needsJsonInput = true;
-            flatParams.AddRange(scalarProps.Select(p => MapParameter(p, diagnostics)));
+            flatParams.AddRange(scalarProps.Select(p => MapParameter(p, diagnostics, className)));
         }
         else if (scalarProps.Count > threshold)
         {
             // Too many scalars → flatten first {threshold}, add --json-input
             needsJsonInput = true;
-            flatParams.AddRange(scalarProps.Take(threshold).Select(p => MapParameter(p, diagnostics)));
+            flatParams.AddRange(scalarProps.Take(threshold).Select(p => MapParameter(p, diagnostics, className)));
 
             // Emit CB301 for required props beyond threshold
             foreach (var hidden in scalarProps.Skip(threshold).Where(p => p.Required))
@@ -90,11 +93,12 @@ public static class ParameterFlattener
         else
         {
             // All scalar, within threshold → flatten all
-            flatParams.AddRange(scalarProps.Select(p => MapParameter(p, diagnostics)));
+            flatParams.AddRange(scalarProps.Select(p => MapParameter(p, diagnostics, className)));
         }
     }
 
-    private static FlatParameter MapParameter(Parameter param, List<Diagnostic> diagnostics)
+    private static FlatParameter MapParameter(Parameter param, List<Diagnostic> diagnostics,
+        string? sourceOptionsClassName)
     {
         var (csharpName, cliFlag, diag) = IdentifierValidator.SanitizeParameter(param.Name);
         if (diag != null) diagnostics.Add(diag);
@@ -106,7 +110,52 @@ public static class ParameterFlattener
             IsRequired: param.Required,
             DefaultValueLiteral: ModelMapper.SanitizeDefaultValue(param.DefaultValue, param.Type, diagnostics),
             Description: ModelMapper.SanitizeString(param.Description),
-            EnumValues: param.Type.EnumValues);
+            EnumValues: param.Type.EnumValues,
+            SdkTypeName: param.Type.Name,
+            SdkTypeKind: param.Type.Kind,
+            SdkTypeIsNullable: param.Type.IsNullable,
+            ConversionExpression: ComputeConversion(param.Type),
+            SourceOptionsClassName: sourceOptionsClassName);
+    }
+
+    /// <summary>
+    /// Compute a conversion expression for assigning a CLI param value to an SDK property.
+    /// Returns a format string with {0} as the value placeholder, or null for identity (no conversion).
+    /// </summary>
+    internal static string? ComputeConversion(TypeRef sdkType)
+    {
+        if (sdkType.Kind == TypeKind.Enum)
+        {
+            var enumName = ModelMapper.SanitizeString(sdkType.Name) ?? sdkType.Name;
+            if (!IdentifierValidator.IsValidIdentifier(enumName))
+                return null; // Invalid enum name — fall back to identity (no conversion)
+            return sdkType.IsNullable
+                ? $"{{0}} is not null ? Enum.Parse<{enumName}>({{0}}) : ({enumName}?)null"
+                : $"Enum.Parse<{enumName}>({{0}})";
+        }
+
+        if (sdkType.Kind == TypeKind.Primitive)
+        {
+            // Types that map to "string" in CLI but need parsing for SDK
+            return sdkType.Name switch
+            {
+                "TimeSpan" => sdkType.IsNullable
+                    ? "{0} is not null ? TimeSpan.Parse({0}) : (TimeSpan?)null"
+                    : "TimeSpan.Parse({0})",
+                "DateTime" => sdkType.IsNullable
+                    ? "{0} is not null ? DateTime.Parse({0}) : (DateTime?)null"
+                    : "DateTime.Parse({0})",
+                "DateTimeOffset" => sdkType.IsNullable
+                    ? "{0} is not null ? DateTimeOffset.Parse({0}) : (DateTimeOffset?)null"
+                    : "DateTimeOffset.Parse({0})",
+                "Guid" => sdkType.IsNullable
+                    ? "{0} is not null ? Guid.Parse({0}) : (Guid?)null"
+                    : "Guid.Parse({0})",
+                _ => null  // CLI type matches SDK type — no conversion
+            };
+        }
+
+        return null;
     }
 
     private static bool IsScalar(TypeRef type) =>

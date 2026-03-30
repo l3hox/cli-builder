@@ -18,6 +18,14 @@ public static class OrderCommands
         {
             var cmd = new Command("create", null);
 
+            var amountOption = new Option<decimal>(
+                "--amount",
+                null)
+            { IsRequired = true };
+
+
+            cmd.AddOption(amountOption);
+
             var currencyOption = new Option<string>(
                 "--currency",
                 null)
@@ -34,6 +42,22 @@ public static class OrderCommands
 
             cmd.AddOption(customerIdOption);
 
+            var giftWrapOption = new Option<bool>(
+                "--gift-wrap",
+                null)
+            { IsRequired = true };
+
+
+            cmd.AddOption(giftWrapOption);
+
+            var isPriorityOption = new Option<bool>(
+                "--is-priority",
+                null)
+            { IsRequired = true };
+
+
+            cmd.AddOption(isPriorityOption);
+
             var productIdOption = new Option<string>(
                 "--product-id",
                 null)
@@ -42,13 +66,13 @@ public static class OrderCommands
 
             cmd.AddOption(productIdOption);
 
-            var amountOption = new Option<decimal?>(
-                "--amount",
+            var quantityOption = new Option<int>(
+                "--quantity",
                 null)
-            { IsRequired = false };
+            { IsRequired = true };
 
 
-            cmd.AddOption(amountOption);
+            cmd.AddOption(quantityOption);
 
             var couponCodeOption = new Option<string>(
                 "--coupon-code",
@@ -73,30 +97,6 @@ public static class OrderCommands
 
 
             cmd.AddOption(giftMessageOption);
-
-            var giftWrapOption = new Option<bool?>(
-                "--gift-wrap",
-                null)
-            { IsRequired = false };
-
-
-            cmd.AddOption(giftWrapOption);
-
-            var isPriorityOption = new Option<bool?>(
-                "--is-priority",
-                null)
-            { IsRequired = false };
-
-
-            cmd.AddOption(isPriorityOption);
-
-            var notesOption = new Option<string>(
-                "--notes",
-                null)
-            { IsRequired = false };
-
-
-            cmd.AddOption(notesOption);
 
 
             var jsonInputOption = new Option<string?>("--json-input", "Full input as JSON. Flat flags override individual properties.");
@@ -124,25 +124,25 @@ public static class OrderCommands
 
                     // Read parameter values
 
+                    var amountValue = ctx.ParseResult.GetValueForOption(amountOption);
+
                     var currencyValue = ctx.ParseResult.GetValueForOption(currencyOption);
 
                     var customerIdValue = ctx.ParseResult.GetValueForOption(customerIdOption);
 
+                    var giftWrapValue = ctx.ParseResult.GetValueForOption(giftWrapOption);
+
+                    var isPriorityValue = ctx.ParseResult.GetValueForOption(isPriorityOption);
+
                     var productIdValue = ctx.ParseResult.GetValueForOption(productIdOption);
 
-                    var amountValue = ctx.ParseResult.GetValueForOption(amountOption);
+                    var quantityValue = ctx.ParseResult.GetValueForOption(quantityOption);
 
                     var couponCodeValue = ctx.ParseResult.GetValueForOption(couponCodeOption);
 
                     var descriptionValue = ctx.ParseResult.GetValueForOption(descriptionOption);
 
                     var giftMessageValue = ctx.ParseResult.GetValueForOption(giftMessageOption);
-
-                    var giftWrapValue = ctx.ParseResult.GetValueForOption(giftWrapOption);
-
-                    var isPriorityValue = ctx.ParseResult.GetValueForOption(isPriorityOption);
-
-                    var notesValue = ctx.ParseResult.GetValueForOption(notesOption);
 
 
 
@@ -156,25 +156,25 @@ public static class OrderCommands
 
                     // var sdkOptions = new CreateOrderOptions();
 
+                    // sdkOptions.Amount = amountValue;
+
                     // sdkOptions.Currency = currencyValue;
 
                     // sdkOptions.CustomerId = customerIdValue;
 
+                    // sdkOptions.GiftWrap = giftWrapValue;
+
+                    // sdkOptions.IsPriority = isPriorityValue;
+
                     // sdkOptions.ProductId = productIdValue;
 
-                    // sdkOptions.Amount = amountValue;
+                    // sdkOptions.Quantity = quantityValue;
 
                     // sdkOptions.CouponCode = couponCodeValue;
 
                     // sdkOptions.Description = descriptionValue;
 
                     // sdkOptions.GiftMessage = giftMessageValue;
-
-                    // sdkOptions.GiftWrap = giftWrapValue;
-
-                    // sdkOptions.IsPriority = isPriorityValue;
-
-                    // sdkOptions.Notes = notesValue;
 
 
 
@@ -186,25 +186,25 @@ public static class OrderCommands
                         ["parameters"] = new Dictionary<string, object?>
                         {
 
+                            ["Amount"] = amountValue,
+
                             ["Currency"] = currencyValue,
 
                             ["CustomerId"] = customerIdValue,
-
-                            ["ProductId"] = productIdValue,
-
-                            ["Amount"] = amountValue,
-
-                            ["CouponCode"] = couponCodeValue,
-
-                            ["Description"] = descriptionValue,
-
-                            ["GiftMessage"] = giftMessageValue,
 
                             ["GiftWrap"] = giftWrapValue,
 
                             ["IsPriority"] = isPriorityValue,
 
-                            ["Notes"] = notesValue
+                            ["ProductId"] = productIdValue,
+
+                            ["Quantity"] = quantityValue,
+
+                            ["CouponCode"] = couponCodeValue,
+
+                            ["Description"] = descriptionValue,
+
+                            ["GiftMessage"] = giftMessageValue
 
                         },
                         ["authenticated"] = true

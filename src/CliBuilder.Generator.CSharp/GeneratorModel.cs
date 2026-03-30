@@ -1,3 +1,5 @@
+using CliBuilder.Core.Models;
+
 namespace CliBuilder.Generator.CSharp;
 
 public record GeneratorModel(
@@ -18,7 +20,9 @@ public record ResourceModel(
     string? Description,
     IReadOnlyList<OperationModel> Operations,
     string? SourceClassName = null,
-    string? SourceNamespace = null
+    string? SourceNamespace = null,
+    string? ConstructorAuthExpression = null,
+    IReadOnlyList<string>? RequiredNamespaces = null
 );
 
 public record OperationModel(
@@ -30,7 +34,8 @@ public record OperationModel(
     string ReturnTypeName,
     bool IsStreaming,
     string? SourceMethodName = null,
-    string? OptionsClassName = null
+    string? OptionsClassName = null,
+    IReadOnlyList<MethodParamModel>? MethodParams = null
 );
 
 public record FlatParameter(
@@ -40,7 +45,26 @@ public record FlatParameter(
     bool IsRequired,
     string? DefaultValueLiteral,
     string? Description,
-    IReadOnlyList<string>? EnumValues
+    IReadOnlyList<string>? EnumValues,
+    string? SdkTypeName = null,
+    TypeKind? SdkTypeKind = null,
+    bool SdkTypeIsNullable = false,
+    /// <summary>
+    /// C# expression for converting a CLI param value to the SDK property type.
+    /// Format string with {0} as the variable name placeholder.
+    /// Examples: "Enum.Parse&lt;Status&gt;({0})", "TimeSpan.Parse({0})".
+    /// Null means identity — no conversion needed (CLI type matches SDK type).
+    /// The template's apply_conversion function substitutes {0} with "{varName}Value".
+    /// </summary>
+    string? ConversionExpression = null,
+    string? SourceOptionsClassName = null
+);
+
+public record MethodParamModel(
+    string ArgExpression,
+    string? TypeName,
+    string? Namespace,
+    bool IsOptionsClass
 );
 
 public record AuthModel(

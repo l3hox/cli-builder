@@ -71,9 +71,47 @@ public static partial class ModelMapper
         var operations = resource.Operations.Select(op =>
             MapOperation(op, diagnostics)).ToList();
 
+        // Compute constructor auth expression.
+        // Validate type name is a valid identifier (defense-in-depth — adapter produces valid CLR names).
+        var ctorAuthExpr = resource.ConstructorAuthTypeName switch
+        {
+            null or "string" => "credential",
+            var typeName when IdentifierValidator.IsValidIdentifier(typeName)
+                => $"new {SanitizeString(typeName)}(credential)",
+            var typeName => throw new InvalidOperationException(
+                $"ConstructorAuthTypeName '{typeName}' is not a valid C# identifier")
+        };
+
+        // Collect all namespaces needed by this resource's generated code
+        var namespaces = new HashSet<string>();
+        if (resource.SourceNamespace != null)
+            namespaces.Add(resource.SourceNamespace);
+        if (resource.ConstructorAuthTypeNamespace != null)
+            namespaces.Add(resource.ConstructorAuthTypeNamespace);
+        foreach (var op in operations)
+        {
+            if (op.MethodParams != null)
+            {
+                foreach (var mp in op.MethodParams)
+                {
+                    if (mp.Namespace != null)
+                        namespaces.Add(mp.Namespace);
+                }
+            }
+        }
+        var requiredNamespaces = namespaces
+            .Where(ns => IdentifierValidator.IsValidNamespace(ns))
+            .Select(ns => SanitizeString(ns)!)
+            .Where(ns => ns != null)
+            .Distinct()
+            .OrderBy(ns => ns)
+            .ToList();
+
         return new ResourceModel(resource.Name, className, description, operations,
             SourceClassName: SanitizeString(resource.SourceClassName),
-            SourceNamespace: SanitizeString(resource.SourceNamespace));
+            SourceNamespace: SanitizeString(resource.SourceNamespace),
+            ConstructorAuthExpression: ctorAuthExpr,
+            RequiredNamespaces: requiredNamespaces);
     }
 
     private static OperationModel MapOperation(Operation operation, List<Diagnostic> diagnostics)
@@ -91,6 +129,9 @@ public static partial class ModelMapper
         var optionsParam = operation.Parameters
             .FirstOrDefault(p => p.Type.Kind == TypeKind.Class && p.Type.Properties != null);
 
+        // Build ordered method parameter models for SDK call reconstruction
+        var methodParams = BuildMethodParams(operation.Parameters);
+
         return new OperationModel(
             Name: operation.Name,
             MethodName: methodName,
@@ -100,7 +141,35 @@ public static partial class ModelMapper
             ReturnTypeName: returnTypeName,
             IsStreaming: operation.IsStreaming,
             SourceMethodName: SanitizeString(operation.SourceMethodName),
-            OptionsClassName: SanitizeString(optionsParam?.Type.Name));
+            OptionsClassName: SanitizeString(optionsParam?.Type.Name),
+            MethodParams: methodParams);
+    }
+
+    private static IReadOnlyList<MethodParamModel> BuildMethodParams(IReadOnlyList<Parameter> parameters)
+    {
+        var methodParams = new List<MethodParamModel>();
+        foreach (var p in parameters)
+        {
+            if (p.Type.Kind == TypeKind.Class && p.Type.Properties != null)
+            {
+                var typeName = SanitizeString(p.Type.Name) ?? p.Type.Name;
+                methodParams.Add(new MethodParamModel(
+                    ArgExpression: PascalToCamelCase(typeName),
+                    TypeName: typeName,
+                    Namespace: SanitizeString(p.Type.Namespace),
+                    IsOptionsClass: true));
+            }
+            else
+            {
+                var (_, cliFlag, _) = IdentifierValidator.SanitizeParameter(p.Name);
+                methodParams.Add(new MethodParamModel(
+                    ArgExpression: KebabToCamelCase(cliFlag) + "Value",
+                    TypeName: null,
+                    Namespace: null,
+                    IsOptionsClass: false));
+            }
+        }
+        return methodParams;
     }
 
     private static AuthModel MapAuth(AuthPattern pattern) =>
@@ -274,6 +343,23 @@ public static partial class ModelMapper
 
     internal static string EscapeVerbatimString(string value) =>
         value.Replace("\"", "\"\"");
+
+    /// <summary>
+    /// Convert PascalCase to camelCase (lowercase first character).
+    /// "CreateCustomerOptions" → "createCustomerOptions"
+    /// </summary>
+    internal static string PascalToCamelCase(string value)
+    {
+        if (string.IsNullOrEmpty(value)) return value;
+        return char.ToLowerInvariant(value[0]) + value[1..];
+    }
+
+    /// <summary>
+    /// Convert kebab-case to camelCase. Delegates to the shared implementation
+    /// in IdentifierValidator to stay in sync with TemplateRenderer.ToVarName.
+    /// </summary>
+    internal static string KebabToCamelCase(string value) =>
+        IdentifierValidator.KebabToCamelCase(value);
 
     private static string SanitizeToSafeName(string name)
     {

@@ -463,4 +463,69 @@ public class DotNetAdapterTests
         Assert.DoesNotContain(result.Diagnostics,
             d => d.Message.Contains("ProductApi", StringComparison.OrdinalIgnoreCase));
     }
+
+    // -------------------------------------------------------
+    // TypeRef.Namespace (step 7A)
+    // -------------------------------------------------------
+
+    [Fact]
+    public void ClassTypeRef_HasNamespace()
+    {
+        var result = ExtractTestSdk();
+        var customer = result.Metadata.Resources.First(r => r.Name == "customer");
+        var create = customer.Operations.First(o => o.Name == "create");
+        var optionsParam = create.Parameters.First(p => p.Type.Kind == TypeKind.Class);
+        Assert.Equal("CliBuilder.TestSdk.Models", optionsParam.Type.Namespace);
+    }
+
+    [Fact]
+    public void EnumTypeRef_HasNamespace()
+    {
+        var result = ExtractTestSdk();
+        var customer = result.Metadata.Resources.First(r => r.Name == "customer");
+        var create = customer.Operations.First(o => o.Name == "create");
+        var optionsParam = create.Parameters.First(p => p.Type.Kind == TypeKind.Class);
+        var statusProp = optionsParam.Type.Properties!.First(p => p.Name == "InitialStatus");
+        Assert.Equal("CliBuilder.TestSdk.Models", statusProp.Type.Namespace);
+    }
+
+    [Fact]
+    public void ReturnTypeRef_HasNamespace()
+    {
+        var result = ExtractTestSdk();
+        var customer = result.Metadata.Resources.First(r => r.Name == "customer");
+        var create = customer.Operations.First(o => o.Name == "create");
+        Assert.Equal("CliBuilder.TestSdk.Models", create.ReturnType.Namespace);
+    }
+
+    // -------------------------------------------------------
+    // Constructor auth type (step 7A)
+    // -------------------------------------------------------
+
+    [Fact]
+    public void CustomerService_ConstructorAuthType_IsString()
+    {
+        var result = ExtractTestSdk();
+        var customer = result.Metadata.Resources.First(r => r.Name == "customer");
+        Assert.Equal("string", customer.ConstructorAuthTypeName);
+        Assert.Null(customer.ConstructorAuthTypeNamespace);
+    }
+
+    [Fact]
+    public void ProductApi_ConstructorAuthType_IsTokenCredential()
+    {
+        var result = ExtractTestSdk();
+        var product = result.Metadata.Resources.First(r => r.Name == "product");
+        Assert.Equal("TokenCredential", product.ConstructorAuthTypeName);
+        Assert.Equal("CliBuilder.TestSdk.Models", product.ConstructorAuthTypeNamespace);
+    }
+
+    [Fact]
+    public void OrderClient_ConstructorAuthType_IsString()
+    {
+        var result = ExtractTestSdk();
+        var order = result.Metadata.Resources.First(r => r.Name == "order");
+        Assert.Equal("string", order.ConstructorAuthTypeName);
+        Assert.Null(order.ConstructorAuthTypeNamespace);
+    }
 }

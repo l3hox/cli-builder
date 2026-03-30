@@ -130,6 +130,37 @@ public static partial class IdentifierValidator
                  .Select(part => char.ToUpperInvariant(part[0]) + part[1..]));
     }
 
+    /// <summary>
+    /// Convert kebab-case to camelCase.
+    /// "credit-limit" → "creditLimit", "id" → "id", "" → "_param"
+    /// </summary>
+    public static string KebabToCamelCase(string value)
+    {
+        if (string.IsNullOrEmpty(value)) return "_param";
+        var parts = value.Split('-', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0) return "_param";
+        return parts[0] + string.Concat(parts.Skip(1).Select(
+            p => char.ToUpperInvariant(p[0]) + p[1..]));
+    }
+
+    /// <summary>
+    /// Returns true if the value is a valid C# identifier (letters/digits/underscore, starts with letter or _).
+    /// </summary>
+    public static bool IsValidIdentifier(string? value)
+    {
+        if (string.IsNullOrEmpty(value)) return false;
+        return ValidIdentifier.IsMatch(value);
+    }
+
+    /// <summary>
+    /// Returns true if the value is a valid dotted namespace (e.g., "System.Collections.Generic").
+    /// </summary>
+    public static bool IsValidNamespace(string? value)
+    {
+        if (string.IsNullOrEmpty(value)) return false;
+        return value.Split('.').All(part => ValidIdentifier.IsMatch(part));
+    }
+
     private static string SanitizeToIdentifier(string name)
     {
         var result = new System.Text.StringBuilder();

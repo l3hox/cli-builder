@@ -662,4 +662,16 @@ public class CSharpCliGeneratorTests : IDisposable
         var result = Generate();
         Assert.Equal(GoldenFiles.Length, result.GeneratedFiles.Count);
     }
+
+    [Fact]
+    public void Generate_CSharpKeywordProperty_HasAtPrefix()
+    {
+        // SanitizationOptions has @class and @event properties (C# keywords).
+        // The generated code must use @class/@event in property assignments, not bare keywords.
+        var result = Generate();
+        var orderCommands = File.ReadAllText(
+            Path.Combine(result.ProjectDirectory, "Commands", "OrderCommands.cs"));
+        Assert.Contains("@class", orderCommands);
+        Assert.Contains("@event", orderCommands);
+    }
 }

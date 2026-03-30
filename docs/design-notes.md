@@ -213,11 +213,51 @@ The purpose-built test SDK assembly must contain:
 
 ---
 
+## SDK call wiring rules (step 7)
+
+### Constructor auth dispatch
+
+Each resource's constructor may take a different auth parameter type. The adapter extracts `ConstructorAuthTypeName` per resource. The ModelMapper computes `ConstructorAuthExpression`:
+
+- `string` or null → `"credential"` (pass the resolved string directly)
+- Any `*Credential` type → `"new {TypeName}(credential)"` (wrap the string in the SDK's credential type)
+
+The type name is validated via `IdentifierValidator.IsValidIdentifier` before interpolation into the expression (defense-in-depth — adapter inputs are already valid CLR identifiers).
+
+### Type conversion expressions
+
+`FlatParameter.ConversionExpression` is a C# expression format string with `{0}` as the variable placeholder. Null means identity (no conversion needed). Computed by `ParameterFlattener.ComputeConversion`:
+
+| SDK Type | Nullable | ConversionExpression |
+|----------|----------|---------------------|
+| string, int, bool, decimal, etc. | any | `null` (CLI type matches) |
+| Enum (e.g., CustomerStatus) | no | `Enum.Parse<CustomerStatus>({0})` |
+| Enum | yes | `{0} is not null ? Enum.Parse<CustomerStatus>({0}) : (CustomerStatus?)null` |
+| TimeSpan, DateTime, DateTimeOffset, Guid | no | `TimeSpan.Parse({0})` (etc.) |
+| TimeSpan, DateTime, DateTimeOffset, Guid | yes | `{0} is not null ? TimeSpan.Parse({0}) : (TimeSpan?)null` |
+| Class, Array, Generic, Dictionary | any | `null` (handled via --json-input, deferred) |
+
+Enum names are validated via `IdentifierValidator.IsValidIdentifier` before interpolation into `Enum.Parse<>`. Invalid names fall back to null (identity).
+
+### Value type nullability rule
+
+`NullableContextAttribute` on a declaring class only affects reference types. Value types (`bool`, `int`, `decimal`, etc.) are nullable only when explicitly declared as `Nullable<T>` (i.e., `bool?`). The adapter's `IsNullableProperty` and `IsNullableParameter` enforce this with a `!IsValueType` guard before checking context attributes.
+
+### Multi-options-class parameter tracking
+
+When an SDK method takes multiple class-typed parameters (e.g., `CreateAsync(CreateOptions opts, RequestOptions reqOpts)`), the `ParameterFlattener` merges all scalar properties into one flat list but tracks which options class each property came from via `FlatParameter.SourceOptionsClassName`. The template uses this to group property assignments by options class when constructing SDK calls.
+
+### Required namespaces
+
+Options classes, auth credential types, and service classes may live in different namespaces. `ResourceModel.RequiredNamespaces` collects all distinct namespaces needed by a resource's generated code — from `SourceNamespace`, `ConstructorAuthTypeNamespace`, and all `MethodParamModel.Namespace` values. Entries are validated as dotted identifiers, deduplicated, and sorted alphabetically for deterministic golden file output.
+
+---
+
 ## Generator sanitization surfaces
 
 The generator converts metadata strings into three distinct output formats, each requiring its own sanitization:
 
-1. **C# source code** — descriptions, identifiers flow into `.cs` files. Defense: `SanitizeString` (Scriban syntax neutralization) + `escape_csharp` (verbatim string literals) + `IdentifierValidator` (keyword denylist, path safety).
+1. **C# source code** — descriptions, identifiers flow into `.cs` files. Defense: `SanitizeString` (Scriban syntax neutralization) + `escape_csharp` (verbatim string literals) + `IdentifierValidator` (keyword denylist, path safety, `IsValidIdentifier`/`IsValidNamespace` for type names and namespaces that flow into `new T()` expressions and `using` directives).
 2. **XML (`.csproj`)** — `SdkName`, `SdkVersion`, `SdkPackageName` flow into `PackageReference` attributes. Defense: `SanitizeXmlValue` (escapes `<`, `>`, `"`, `&`, `'`). Without this, a crafted SDK name achieves arbitrary code execution via MSBuild injection during `dotnet build`.
 3. **Scriban templates** — all metadata strings pass through the template engine before reaching output. Defense: `SanitizeString` neutralizes `{{`, `}}`, `{%`, `%}` at the model mapping layer, before strings reach the template engine. The `escape_csharp` filter in templates is defense-in-depth only.
 

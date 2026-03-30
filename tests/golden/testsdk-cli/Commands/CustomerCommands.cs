@@ -26,6 +26,14 @@ public static class CustomerCommands
 
             cmd.AddOption(emailOption);
 
+            var preferredContactOption = new Option<bool>(
+                "--preferred-contact",
+                null)
+            { IsRequired = true };
+
+
+            cmd.AddOption(preferredContactOption);
+
             var creditLimitOption = new Option<int?>(
                 "--credit-limit",
                 null)
@@ -84,14 +92,6 @@ public static class CustomerCommands
 
             cmd.AddOption(phoneOption);
 
-            var preferredContactOption = new Option<bool?>(
-                "--preferred-contact",
-                null)
-            { IsRequired = false };
-
-
-            cmd.AddOption(preferredContactOption);
-
             var taxIdOption = new Option<string>(
                 "--tax-id",
                 null)
@@ -141,6 +141,8 @@ public static class CustomerCommands
 
                     var emailValue = ctx.ParseResult.GetValueForOption(emailOption);
 
+                    var preferredContactValue = ctx.ParseResult.GetValueForOption(preferredContactOption);
+
                     var creditLimitValue = ctx.ParseResult.GetValueForOption(creditLimitOption);
 
                     var currencyValue = ctx.ParseResult.GetValueForOption(currencyOption);
@@ -154,8 +156,6 @@ public static class CustomerCommands
                     var nameValue = ctx.ParseResult.GetValueForOption(nameOption);
 
                     var phoneValue = ctx.ParseResult.GetValueForOption(phoneOption);
-
-                    var preferredContactValue = ctx.ParseResult.GetValueForOption(preferredContactOption);
 
                     var taxIdValue = ctx.ParseResult.GetValueForOption(taxIdOption);
 
@@ -173,6 +173,8 @@ public static class CustomerCommands
 
                     // sdkOptions.Email = emailValue;
 
+                    // sdkOptions.PreferredContact = preferredContactValue;
+
                     // sdkOptions.CreditLimit = creditLimitValue;
 
                     // sdkOptions.Currency = currencyValue;
@@ -186,8 +188,6 @@ public static class CustomerCommands
                     // sdkOptions.Name = nameValue;
 
                     // sdkOptions.Phone = phoneValue;
-
-                    // sdkOptions.PreferredContact = preferredContactValue;
 
                     // sdkOptions.TaxId = taxIdValue;
 
@@ -207,6 +207,8 @@ public static class CustomerCommands
 
                             ["Email"] = emailValue,
 
+                            ["PreferredContact"] = preferredContactValue,
+
                             ["CreditLimit"] = creditLimitValue,
 
                             ["Currency"] = currencyValue,
@@ -220,8 +222,6 @@ public static class CustomerCommands
                             ["Name"] = nameValue,
 
                             ["Phone"] = phoneValue,
-
-                            ["PreferredContact"] = preferredContactValue,
 
                             ["TaxId"] = taxIdValue,
 

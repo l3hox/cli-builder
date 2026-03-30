@@ -5,5 +5,7 @@ public record Resource(
     string? Description,
     IReadOnlyList<Operation> Operations,
     string? SourceClassName = null,
-    string? SourceNamespace = null
+    string? SourceNamespace = null,
+    string? ConstructorAuthTypeName = null,
+    string? ConstructorAuthTypeNamespace = null
 );

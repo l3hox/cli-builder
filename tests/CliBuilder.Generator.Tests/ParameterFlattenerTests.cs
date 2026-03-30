@@ -293,4 +293,214 @@ public class ParameterFlattenerTests
         Assert.Single(result.Parameters);
         Assert.Contains(result.Diagnostics, d => d.Code == "CB303");
     }
+
+    // -------------------------------------------------------
+    // SourceOptionsClassName tracking (step 7A)
+    // -------------------------------------------------------
+
+    [Fact]
+    public void OptionsClassParams_HaveSourceOptionsClassName()
+    {
+        var props = new List<Parameter>
+        {
+            MakePrimitive("Email", "string"),
+            MakePrimitive("Name", "string", required: false, nullable: true),
+        };
+        var parameters = new List<Parameter>
+        {
+            new("options", new TypeRef(TypeKind.Class, "CreateCustomerOptions",
+                Properties: props, Namespace: "TestNs"), true),
+        };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.All(result.Parameters, fp =>
+            Assert.Equal("CreateCustomerOptions", fp.SourceOptionsClassName));
+    }
+
+    [Fact]
+    public void DirectParams_HaveNullSourceOptionsClassName()
+    {
+        var parameters = new List<Parameter>
+        {
+            MakePrimitive("id", "string"),
+        };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.Single(result.Parameters);
+        Assert.Null(result.Parameters[0].SourceOptionsClassName);
+    }
+
+    [Fact]
+    public void MultipleOptionsClasses_TrackSeparateClassNames()
+    {
+        var props1 = new List<Parameter> { MakePrimitive("Email", "string") };
+        var props2 = new List<Parameter> { MakePrimitive("Key", "string", required: false, nullable: true) };
+        var parameters = new List<Parameter>
+        {
+            new("options", new TypeRef(TypeKind.Class, "MainOptions", Properties: props1), true),
+            new("extra", new TypeRef(TypeKind.Class, "ExtraOptions", Properties: props2), false),
+        };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.Equal(2, result.Parameters.Count);
+        Assert.Equal("MainOptions", result.Parameters.First(p => p.CliFlag == "email").SourceOptionsClassName);
+        Assert.Equal("ExtraOptions", result.Parameters.First(p => p.CliFlag == "key").SourceOptionsClassName);
+    }
+
+    // -------------------------------------------------------
+    // SDK type info threading (step 7A)
+    // -------------------------------------------------------
+
+    [Fact]
+    public void SdkTypeName_ThreadedThrough_ForPrimitives()
+    {
+        var parameters = new List<Parameter> { MakePrimitive("id", "string") };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.Equal("string", result.Parameters[0].SdkTypeName);
+        Assert.Equal(TypeKind.Primitive, result.Parameters[0].SdkTypeKind);
+    }
+
+    [Fact]
+    public void SdkTypeName_ThreadedThrough_ForEnums()
+    {
+        var parameters = new List<Parameter>
+        {
+            MakeEnum("status", "CustomerStatus", ["Active", "Inactive"]),
+        };
+        var result = ParameterFlattener.Flatten(parameters);
+
+        Assert.Equal("CustomerStatus", result.Parameters[0].SdkTypeName);
+        Assert.Equal(TypeKind.Enum, result.Parameters[0].SdkTypeKind);
+    }
+
+    // -------------------------------------------------------
+    // ComputeConversion (step 7A)
+    // -------------------------------------------------------
+
+    [Fact]
+    public void ComputeConversion_String_ReturnsNull()
+    {
+        var type = new TypeRef(TypeKind.Primitive, "string");
+        Assert.Null(ParameterFlattener.ComputeConversion(type));
+    }
+
+    [Fact]
+    public void ComputeConversion_Int_ReturnsNull()
+    {
+        var type = new TypeRef(TypeKind.Primitive, "int");
+        Assert.Null(ParameterFlattener.ComputeConversion(type));
+    }
+
+    [Fact]
+    public void ComputeConversion_Enum_ReturnsEnumParse()
+    {
+        var type = new TypeRef(TypeKind.Enum, "CustomerStatus", EnumValues: ["Active"]);
+        var expr = ParameterFlattener.ComputeConversion(type);
+        Assert.NotNull(expr);
+        Assert.Contains("Enum.Parse<CustomerStatus>", expr);
+    }
+
+    [Fact]
+    public void ComputeConversion_NullableEnum_IncludesNullCheck()
+    {
+        var type = new TypeRef(TypeKind.Enum, "CustomerStatus", IsNullable: true, EnumValues: ["Active"]);
+        var expr = ParameterFlattener.ComputeConversion(type);
+        Assert.NotNull(expr);
+        Assert.Contains("is not null", expr);
+        Assert.Contains("(CustomerStatus?)null", expr);
+    }
+
+    [Fact]
+    public void ComputeConversion_TimeSpan_ReturnsParse()
+    {
+        var type = new TypeRef(TypeKind.Primitive, "TimeSpan");
+        var expr = ParameterFlattener.ComputeConversion(type);
+        Assert.NotNull(expr);
+        Assert.Contains("TimeSpan.Parse", expr);
+    }
+
+    [Fact]
+    public void ComputeConversion_NullableTimeSpan_IncludesNullCheck()
+    {
+        var type = new TypeRef(TypeKind.Primitive, "TimeSpan", IsNullable: true);
+        var expr = ParameterFlattener.ComputeConversion(type);
+        Assert.NotNull(expr);
+        Assert.Contains("is not null", expr);
+    }
+
+    [Fact]
+    public void ComputeConversion_Guid_ReturnsParse()
+    {
+        var type = new TypeRef(TypeKind.Primitive, "Guid");
+        var expr = ParameterFlattener.ComputeConversion(type);
+        Assert.NotNull(expr);
+        Assert.Contains("Guid.Parse", expr);
+    }
+
+    [Fact]
+    public void ComputeConversion_Bool_ReturnsNull()
+    {
+        var type = new TypeRef(TypeKind.Primitive, "bool");
+        Assert.Null(ParameterFlattener.ComputeConversion(type));
+    }
+
+    [Fact]
+    public void ComputeConversion_NullableGuid_IncludesNullCheck()
+    {
+        var type = new TypeRef(TypeKind.Primitive, "Guid", IsNullable: true);
+        var expr = ParameterFlattener.ComputeConversion(type);
+        Assert.NotNull(expr);
+        Assert.Contains("is not null", expr);
+        Assert.Contains("(Guid?)null", expr);
+    }
+
+    [Fact]
+    public void ComputeConversion_NullableDateTime_ReturnsParse()
+    {
+        var type = new TypeRef(TypeKind.Primitive, "DateTime", IsNullable: true);
+        var expr = ParameterFlattener.ComputeConversion(type);
+        Assert.NotNull(expr);
+        Assert.Contains("DateTime.Parse", expr);
+        Assert.Contains("is not null", expr);
+    }
+
+    [Fact]
+    public void ComputeConversion_DateTimeOffset_ReturnsParse()
+    {
+        var type = new TypeRef(TypeKind.Primitive, "DateTimeOffset");
+        var expr = ParameterFlattener.ComputeConversion(type);
+        Assert.NotNull(expr);
+        Assert.Contains("DateTimeOffset.Parse", expr);
+    }
+
+    [Fact]
+    public void ComputeConversion_NullableDateTimeOffset_IncludesNullCheck()
+    {
+        var type = new TypeRef(TypeKind.Primitive, "DateTimeOffset", IsNullable: true);
+        var expr = ParameterFlattener.ComputeConversion(type);
+        Assert.NotNull(expr);
+        Assert.Contains("is not null", expr);
+    }
+
+    [Fact]
+    public void ComputeConversion_Class_ReturnsNull()
+    {
+        var type = new TypeRef(TypeKind.Class, "SomeClass");
+        Assert.Null(ParameterFlattener.ComputeConversion(type));
+    }
+
+    [Fact]
+    public void ComputeConversion_Array_ReturnsNull()
+    {
+        var type = new TypeRef(TypeKind.Array, "string[]");
+        Assert.Null(ParameterFlattener.ComputeConversion(type));
+    }
+
+    [Fact]
+    public void ComputeConversion_Dictionary_ReturnsNull()
+    {
+        var type = new TypeRef(TypeKind.Dictionary, "Dictionary");
+        Assert.Null(ParameterFlattener.ComputeConversion(type));
+    }
 }

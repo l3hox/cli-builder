@@ -29,7 +29,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": true,
                       "defaultValue": null,
@@ -44,7 +45,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -59,7 +61,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -74,7 +77,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -89,7 +93,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -104,7 +109,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -119,7 +125,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -130,13 +137,14 @@
                       "type": {
                         "kind": "primitive",
                         "name": "bool",
-                        "isNullable": true,
+                        "isNullable": false,
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
-                      "required": false,
+                      "required": true,
                       "defaultValue": null,
                       "description": null
                     },
@@ -149,7 +157,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -168,14 +177,16 @@
                           "Suspended"
                         ],
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": "CliBuilder.TestSdk.Models"
                       },
                       "required": false,
                       "defaultValue": null,
                       "description": null
                     }
                   ],
-                  "elementType": null
+                  "elementType": null,
+                  "namespace": "CliBuilder.TestSdk.Models"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -199,7 +210,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -214,14 +226,16 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
                       "description": null
                     }
                   ],
-                  "elementType": null
+                  "elementType": null,
+                  "namespace": "CliBuilder.TestSdk.Models"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -235,7 +249,8 @@
               "genericArguments": null,
               "enumValues": null,
               "properties": null,
-              "elementType": null
+              "elementType": null,
+              "namespace": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "CreateAsync"
@@ -253,7 +268,8 @@
                   "genericArguments": null,
                   "enumValues": null,
                   "properties": null,
-                  "elementType": null
+                  "elementType": null,
+                  "namespace": null
                 },
                 "required": true,
                 "defaultValue": null,
@@ -267,7 +283,8 @@
               "genericArguments": null,
               "enumValues": null,
               "properties": null,
-              "elementType": null
+              "elementType": null,
+              "namespace": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "GetAsync"
@@ -285,7 +302,8 @@
                   "genericArguments": null,
                   "enumValues": null,
                   "properties": null,
-                  "elementType": null
+                  "elementType": null,
+                  "namespace": null
                 },
                 "required": false,
                 "defaultValue": null,
@@ -300,7 +318,8 @@
                   "genericArguments": null,
                   "enumValues": null,
                   "properties": null,
-                  "elementType": null
+                  "elementType": null,
+                  "namespace": null
                 },
                 "required": false,
                 "defaultValue": null,
@@ -319,12 +338,14 @@
                   "genericArguments": null,
                   "enumValues": null,
                   "properties": null,
-                  "elementType": null
+                  "elementType": null,
+                  "namespace": "CliBuilder.TestSdk.Models"
                 }
               ],
               "enumValues": null,
               "properties": null,
-              "elementType": null
+              "elementType": null,
+              "namespace": null
             },
             "isStreaming": false,
             "sourceMethodName": "ListAsync"
@@ -342,7 +363,8 @@
                   "genericArguments": null,
                   "enumValues": null,
                   "properties": null,
-                  "elementType": null
+                  "elementType": null,
+                  "namespace": null
                 },
                 "required": true,
                 "defaultValue": null,
@@ -356,7 +378,8 @@
               "genericArguments": null,
               "enumValues": null,
               "properties": null,
-              "elementType": null
+              "elementType": null,
+              "namespace": null
             },
             "isStreaming": false,
             "sourceMethodName": "DeleteAsync"
@@ -372,7 +395,8 @@
               "genericArguments": null,
               "enumValues": null,
               "properties": null,
-              "elementType": null
+              "elementType": null,
+              "namespace": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": true,
             "sourceMethodName": "StreamAsync"
@@ -390,7 +414,8 @@
                   "genericArguments": null,
                   "enumValues": null,
                   "properties": null,
-                  "elementType": null
+                  "elementType": null,
+                  "namespace": null
                 },
                 "required": true,
                 "defaultValue": null,
@@ -404,14 +429,17 @@
               "genericArguments": null,
               "enumValues": null,
               "properties": null,
-              "elementType": null
+              "elementType": null,
+              "namespace": null
             },
             "isStreaming": false,
             "sourceMethodName": "GetMetadataAsync"
           }
         ],
         "sourceClassName": "CustomerService",
-        "sourceNamespace": "CliBuilder.TestSdk.Services"
+        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "constructorAuthTypeName": "string",
+        "constructorAuthTypeNamespace": null
       },
       {
         "name": "order",
@@ -439,7 +467,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": true,
                       "defaultValue": null,
@@ -454,7 +483,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": true,
                       "defaultValue": null,
@@ -465,13 +495,14 @@
                       "type": {
                         "kind": "primitive",
                         "name": "decimal",
-                        "isNullable": true,
+                        "isNullable": false,
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
-                      "required": false,
+                      "required": true,
                       "defaultValue": null,
                       "description": null
                     },
@@ -484,7 +515,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": true,
                       "defaultValue": null,
@@ -499,7 +531,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -514,7 +547,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -529,7 +563,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -540,13 +575,14 @@
                       "type": {
                         "kind": "primitive",
                         "name": "bool",
-                        "isNullable": true,
+                        "isNullable": false,
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
-                      "required": false,
+                      "required": true,
                       "defaultValue": null,
                       "description": null
                     },
@@ -555,13 +591,14 @@
                       "type": {
                         "kind": "primitive",
                         "name": "int",
-                        "isNullable": true,
+                        "isNullable": false,
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
-                      "required": false,
+                      "required": true,
                       "defaultValue": null,
                       "description": null
                     },
@@ -574,7 +611,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -589,7 +627,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -604,7 +643,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -619,7 +659,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -630,13 +671,14 @@
                       "type": {
                         "kind": "primitive",
                         "name": "bool",
-                        "isNullable": true,
+                        "isNullable": false,
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
-                      "required": false,
+                      "required": true,
                       "defaultValue": null,
                       "description": null
                     },
@@ -649,14 +691,16 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
                       "description": null
                     }
                   ],
-                  "elementType": null
+                  "elementType": null,
+                  "namespace": "CliBuilder.TestSdk.Models"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -670,7 +714,8 @@
               "genericArguments": null,
               "enumValues": null,
               "properties": null,
-              "elementType": null
+              "elementType": null,
+              "namespace": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "CreateAsync"
@@ -688,7 +733,8 @@
                   "genericArguments": null,
                   "enumValues": null,
                   "properties": null,
-                  "elementType": null
+                  "elementType": null,
+                  "namespace": null
                 },
                 "required": true,
                 "defaultValue": null,
@@ -702,7 +748,8 @@
               "genericArguments": null,
               "enumValues": null,
               "properties": null,
-              "elementType": null
+              "elementType": null,
+              "namespace": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "GetAsync"
@@ -729,7 +776,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": true,
                       "defaultValue": null,
@@ -744,14 +792,16 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": "CliBuilder.TestSdk.Models"
                       },
                       "required": false,
                       "defaultValue": null,
                       "description": null
                     }
                   ],
-                  "elementType": null
+                  "elementType": null,
+                  "namespace": "CliBuilder.TestSdk.Models"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -765,7 +815,8 @@
               "genericArguments": null,
               "enumValues": null,
               "properties": null,
-              "elementType": null
+              "elementType": null,
+              "namespace": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "UpdateAsync"
@@ -792,7 +843,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": true,
                       "defaultValue": null,
@@ -807,7 +859,8 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": true,
                       "defaultValue": null,
@@ -822,14 +875,16 @@
                         "genericArguments": null,
                         "enumValues": null,
                         "properties": null,
-                        "elementType": null
+                        "elementType": null,
+                        "namespace": null
                       },
                       "required": true,
                       "defaultValue": null,
                       "description": null
                     }
                   ],
-                  "elementType": null
+                  "elementType": null,
+                  "namespace": "CliBuilder.TestSdk.Models"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -843,14 +898,17 @@
               "genericArguments": null,
               "enumValues": null,
               "properties": null,
-              "elementType": null
+              "elementType": null,
+              "namespace": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "ProcessAsync"
           }
         ],
         "sourceClassName": "OrderClient",
-        "sourceNamespace": "CliBuilder.TestSdk.Services"
+        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "constructorAuthTypeName": "string",
+        "constructorAuthTypeNamespace": null
       },
       {
         "name": "product",
@@ -867,14 +925,17 @@
               "genericArguments": null,
               "enumValues": null,
               "properties": null,
-              "elementType": null
+              "elementType": null,
+              "namespace": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "ListAsync"
           }
         ],
         "sourceClassName": "ProductApi",
-        "sourceNamespace": "CliBuilder.TestSdk.Services"
+        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "constructorAuthTypeName": "TokenCredential",
+        "constructorAuthTypeNamespace": "CliBuilder.TestSdk.Models"
       }
     ],
     "authPatterns": [

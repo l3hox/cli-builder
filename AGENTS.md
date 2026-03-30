@@ -46,8 +46,8 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-[First Actions](docs/cli-builder-spec.md#first-actions) — steps 1-6 complete, step 7 (end-to-end validation with real SDK calls) is next.
+[First Actions](docs/cli-builder-spec.md#first-actions) — steps 1-6 complete, step 7 in progress.
 
-**What's done:** The adapter extracts `SdkMetadata` from .NET assemblies. The generator produces compilable CLI projects (validated against OpenAI SDK: 20 resources, 169 ops, zero errors). 227 tests, 80.6% coverage.
+**What's done:** The adapter extracts `SdkMetadata` from .NET assemblies. The generator produces compilable CLI projects (validated against OpenAI SDK: 20 resources, 169 ops, zero errors). Step 7A (metadata enrichment for SDK call wiring) is complete — `TypeRef.Namespace`, per-resource constructor auth info, type conversion expressions, method call reconstruction models, value type nullability fix, identifier validation. 269 tests.
 
-**What's next:** Wire real SDK method calls in generated handlers (currently stubbed). See [docs/internal/step-06-generator.md](docs/internal/step-06-generator.md) for generator internals.
+**What's next:** Step 7B — rewrite `ResourceCommands.sbn` template to emit real SDK calls instead of echo stubs. See [docs/internal/step-07-wiring.md](docs/internal/step-07-wiring.md) for the full plan.

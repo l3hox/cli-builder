@@ -7,7 +7,8 @@ public record TypeRef(
     IReadOnlyList<TypeRef>? GenericArguments = null,
     IReadOnlyList<string>? EnumValues = null,
     IReadOnlyList<Parameter>? Properties = null,
-    TypeRef? ElementType = null
+    TypeRef? ElementType = null,
+    string? Namespace = null
 );
 
 public enum TypeKind

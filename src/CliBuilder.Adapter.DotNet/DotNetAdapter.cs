@@ -65,8 +65,10 @@ public class DotNetAdapter : ISdkAdapter
         foreach (var (noun, type) in serviceClasses)
         {
             var operations = ExtractOperations(type, diagnostics);
+            var (ctorAuthType, ctorAuthNs) = ExtractConstructorAuthType(type);
             resources.Add(new Resource(noun, null, operations,
-                SourceClassName: type.Name, SourceNamespace: type.Namespace));
+                SourceClassName: type.Name, SourceNamespace: type.Namespace,
+                ConstructorAuthTypeName: ctorAuthType, ConstructorAuthTypeNamespace: ctorAuthNs));
         }
 
         // Detect auth patterns
@@ -341,16 +343,20 @@ public class DotNetAdapter : ISdkAdapter
             }
         }
 
-        // Check NullableContextAttribute on the declaring type for default context
-        var contextAttr = prop.DeclaringType?.CustomAttributes
-            .FirstOrDefault(a => a.AttributeType.FullName == "System.Runtime.CompilerServices.NullableContextAttribute");
-        if (contextAttr != null)
+        // Check NullableContextAttribute on the declaring type for default context.
+        // Only applies to reference types — value types are only nullable via Nullable<T> (checked above).
+        if (!prop.PropertyType.IsValueType)
         {
-            var args = contextAttr.ConstructorArguments;
-            if (args.Count > 0 && args[0].Value is byte ctx && ctx == 2)
+            var contextAttr = prop.DeclaringType?.CustomAttributes
+                .FirstOrDefault(a => a.AttributeType.FullName == "System.Runtime.CompilerServices.NullableContextAttribute");
+            if (contextAttr != null)
             {
-                if (nullableAttr == null)
-                    return true;
+                var args = contextAttr.ConstructorArguments;
+                if (args.Count > 0 && args[0].Value is byte ctx && ctx == 2)
+                {
+                    if (nullableAttr == null)
+                        return true;
+                }
             }
         }
 
@@ -436,7 +442,7 @@ public class DotNetAdapter : ISdkAdapter
         if (type.IsEnum)
         {
             var values = type.GetEnumNames().ToList();
-            return new TypeRef(TypeKind.Enum, type.Name, EnumValues: values);
+            return new TypeRef(TypeKind.Enum, type.Name, EnumValues: values, Namespace: type.Namespace);
         }
 
         // Array
@@ -454,7 +460,7 @@ public class DotNetAdapter : ISdkAdapter
         }
 
         // Class
-        return new TypeRef(TypeKind.Class, type.Name);
+        return new TypeRef(TypeKind.Class, type.Name, Namespace: type.Namespace);
     }
 
     private static string StripArityFromName(string typeName)
@@ -497,17 +503,21 @@ public class DotNetAdapter : ISdkAdapter
             }
         }
 
-        // Check the method/type NullableContextAttribute for default context
-        var contextAttr = param.Member.CustomAttributes
-            .FirstOrDefault(a => a.AttributeType.FullName == "System.Runtime.CompilerServices.NullableContextAttribute");
-        if (contextAttr != null)
+        // Check the method/type NullableContextAttribute for default context.
+        // Only applies to reference types — value types are only nullable via Nullable<T>.
+        if (!param.ParameterType.IsValueType)
         {
-            var args = contextAttr.ConstructorArguments;
-            if (args.Count > 0 && args[0].Value is byte ctx && ctx == 2)
+            var contextAttr = param.Member.CustomAttributes
+                .FirstOrDefault(a => a.AttributeType.FullName == "System.Runtime.CompilerServices.NullableContextAttribute");
+            if (contextAttr != null)
             {
-                // Default context is nullable — if no per-parameter override, it's nullable
-                if (nullableAttr == null)
-                    return true;
+                var args = contextAttr.ConstructorArguments;
+                if (args.Count > 0 && args[0].Value is byte ctx && ctx == 2)
+                {
+                    // Default context is nullable — if no per-parameter override, it's nullable
+                    if (nullableAttr == null)
+                        return true;
+                }
             }
         }
 
@@ -552,6 +562,23 @@ public class DotNetAdapter : ISdkAdapter
         }
 
         return patterns;
+    }
+
+    private (string? TypeName, string? TypeNamespace) ExtractConstructorAuthType(Type type)
+    {
+        foreach (var ctor in type.GetConstructors(BindingFlags.Public | BindingFlags.Instance))
+        {
+            foreach (var param in ctor.GetParameters())
+            {
+                if (IsApiKeyCredentialParameter(param))
+                    return (param.ParameterType.Name, param.ParameterType.Namespace);
+                if (IsCredentialParameter(param))
+                    return (param.ParameterType.Name, param.ParameterType.Namespace);
+                if (IsApiKeyParameter(param))
+                    return ("string", null);
+            }
+        }
+        return (null, null);
     }
 
     private bool IsApiKeyParameter(ParameterInfo param)
