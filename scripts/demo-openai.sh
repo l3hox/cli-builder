@@ -47,19 +47,31 @@ cat > "$HELPER/cli-gen-openai-helper.csproj" << XMLEOF
 </Project>
 XMLEOF
 
-# Find the OpenAI SDK DLL (from integration test NuGet restore)
-OPENAI_DLL=$(find "$HOME/.nuget/packages/openai/2.9.1" -name "OpenAI.dll" -path "*/net8.0/*" 2>/dev/null | head -1)
-if [ -z "$OPENAI_DLL" ]; then
-    echo "OpenAI SDK DLL not found. Running dotnet restore to fetch it..."
-    dotnet restore "$REPO_ROOT/tests/CliBuilder.Integration.Tests" --verbosity quiet
-    OPENAI_DLL=$(find "$HOME/.nuget/packages/openai/2.9.1" -name "OpenAI.dll" -path "*/net8.0/*" 2>/dev/null | head -1)
-fi
+# Build a tiny project that references the OpenAI NuGet to get all DLLs in one directory.
+# MetadataLoadContext needs all dependencies as sibling DLLs — the NuGet cache doesn't have that.
+SDK_PROJ="/tmp/openai-sdk-deps"
+rm -rf "$SDK_PROJ"
+mkdir -p "$SDK_PROJ"
+cat > "$SDK_PROJ/openai-sdk-deps.csproj" << 'SDKEOF'
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="OpenAI" Version="2.9.1" />
+  </ItemGroup>
+</Project>
+SDKEOF
+echo "Resolving OpenAI SDK dependencies..."
+dotnet publish "$SDK_PROJ" -c Release --verbosity quiet -o "$SDK_PROJ/out"
+OPENAI_DLL="$SDK_PROJ/out/OpenAI.dll"
 
-if [ -z "$OPENAI_DLL" ]; then
-    echo "ERROR: Could not find OpenAI.dll. Ensure the OpenAI NuGet package is restored."
+if [ ! -f "$OPENAI_DLL" ]; then
+    echo "ERROR: Could not build OpenAI SDK dependency project."
     exit 1
 fi
-echo "Using OpenAI SDK: $OPENAI_DLL"
+echo "Using OpenAI SDK: $OPENAI_DLL (with all dependencies)"
 
 dotnet run --project "$HELPER" -- "$OPENAI_DLL" "$OUTDIR"
 
