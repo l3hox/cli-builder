@@ -554,24 +554,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -1027,24 +1010,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -1172,24 +1138,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -1409,24 +1358,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -1646,24 +1578,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -1797,24 +1712,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -2168,24 +2066,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -3187,24 +3068,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -3647,115 +3511,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "Patch",
-                      "type": {
-                        "kind": "class",
-                        "name": "JsonPatch\u0026",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.ClientModel.Primitives"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ResponseId",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "StartingAfter",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "IncludeObfuscation",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "IncludedProperties",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "IncludedResponseProperty",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Responses"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "StreamingEnabled",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "OpenAI.Responses"
                 },
@@ -3955,88 +3711,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "ResponseId",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "AfterId",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "BeforeId",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "PageSizeLimit",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Order",
-                      "type": {
-                        "kind": "class",
-                        "name": "ResponseItemCollectionOrder",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "OpenAI.Responses"
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "OpenAI.Responses"
                 },
@@ -4290,24 +3965,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -4425,24 +4083,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -4602,43 +4243,6 @@
                       "required": true,
                       "defaultValue": null,
                       "description": null
-                    },
-                    {
-                      "name": "Headers",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
                     }
                   ],
                   "elementType": null,
@@ -4698,43 +4302,6 @@
                         "name": "string",
                         "isNullable": false,
                         "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Headers",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
@@ -4842,43 +4409,6 @@
                       "required": true,
                       "defaultValue": null,
                       "description": null
-                    },
-                    {
-                      "name": "Headers",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
                     }
                   ],
                   "elementType": null,
@@ -4914,24 +4444,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -5060,136 +4573,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "CanRead",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanWrite",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanSeek",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Length",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Position",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ReadTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "WriteTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.IO"
                 },
@@ -5248,33 +4632,6 @@
                         "name": "string",
                         "isNullable": false,
                         "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "IncludedProperties",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "RealtimeIncludedProperty",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Realtime"
-                          }
-                        ],
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
@@ -5365,33 +4722,6 @@
                       "description": null
                     },
                     {
-                      "name": "OutputModalities",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "RealtimeOutputModality",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Realtime"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "Instructions",
                       "type": {
                         "kind": "primitive",
@@ -5402,49 +4732,6 @@
                         "properties": null,
                         "elementType": null,
                         "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Tools",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "RealtimeTool",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Realtime"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Patch",
-                      "type": {
-                        "kind": "class",
-                        "name": "JsonPatch\u0026",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.ClientModel.Primitives"
                       },
                       "required": true,
                       "defaultValue": null,
@@ -5486,33 +4773,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "IncludedProperties",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "RealtimeIncludedProperty",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Realtime"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "AudioOptions",
                       "type": {
                         "kind": "class",
@@ -5523,22 +4783,6 @@
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Realtime"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Patch",
-                      "type": {
-                        "kind": "class",
-                        "name": "JsonPatch\u0026",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.ClientModel.Primitives"
                       },
                       "required": true,
                       "defaultValue": null,
@@ -5578,24 +4822,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "Patch",
-                      "type": {
-                        "kind": "class",
-                        "name": "JsonPatch\u0026",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.ClientModel.Primitives"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "OpenAI.Realtime"
                 },
@@ -5846,33 +5073,6 @@
                       "description": null
                     },
                     {
-                      "name": "InputItems",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "RealtimeItem",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Realtime"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ToolChoice",
                       "type": {
                         "kind": "class",
@@ -5889,82 +5089,12 @@
                       "description": null
                     },
                     {
-                      "name": "Patch",
-                      "type": {
-                        "kind": "class",
-                        "name": "JsonPatch\u0026",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.ClientModel.Primitives"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "OutputModalities",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "RealtimeOutputModality",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Realtime"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "Instructions",
                       "type": {
                         "kind": "primitive",
                         "name": "string",
                         "isNullable": false,
                         "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Tools",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "RealtimeTool",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Realtime"
-                          }
-                        ],
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
@@ -6148,56 +5278,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "Length",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "IsEmpty",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System"
                 },
@@ -6309,24 +5390,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -6428,24 +5492,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -6538,7 +5585,7 @@
         ],
         "sourceClassName": "ModerationClient",
         "sourceNamespace": "OpenAI.Moderations",
-        "constructorAuthTypeName": "string",
+        "constructorAuthTypeName": null,
         "constructorAuthTypeNamespace": null
       },
       {
@@ -7263,136 +6310,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "CanRead",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanWrite",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanSeek",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Length",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Position",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ReadTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "WriteTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.IO"
                 },
@@ -7440,136 +6358,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "CanRead",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanWrite",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanSeek",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Length",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Position",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ReadTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "WriteTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.IO"
                 },
@@ -7764,136 +6553,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "CanRead",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanWrite",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanSeek",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Length",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Position",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ReadTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "WriteTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.IO"
                 },
@@ -7941,136 +6601,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "CanRead",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanWrite",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanSeek",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Length",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Position",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ReadTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "WriteTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.IO"
                 },
@@ -8281,136 +6812,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "CanRead",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanWrite",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanSeek",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Length",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Position",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ReadTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "WriteTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.IO"
                 },
@@ -8525,136 +6927,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "CanRead",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanWrite",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanSeek",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Length",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Position",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ReadTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "WriteTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.IO"
                 },
@@ -8776,7 +7049,7 @@
         ],
         "sourceClassName": "ImageClient",
         "sourceNamespace": "OpenAI.Images",
-        "constructorAuthTypeName": "string",
+        "constructorAuthTypeName": null,
         "constructorAuthTypeNamespace": null
       },
       {
@@ -8795,24 +7068,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -8914,24 +7170,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -9125,33 +7364,6 @@
                       "description": null
                     },
                     {
-                      "name": "Integrations",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "FineTuningIntegration",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.FineTuning"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "Seed",
                       "type": {
                         "kind": "primitive",
@@ -9178,43 +7390,6 @@
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.FineTuning"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Metadata",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
                       },
                       "required": true,
                       "defaultValue": null,
@@ -9537,24 +7712,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -9988,136 +8146,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "CanRead",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanWrite",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanSeek",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Length",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Position",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ReadTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "WriteTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.IO"
                 },
@@ -10149,7 +8178,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "OpenAI.Files"
                 },
@@ -10639,24 +8668,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -10774,24 +8786,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -10925,24 +8920,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -11306,24 +9284,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -11543,24 +9504,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -11946,24 +9890,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -12779,22 +10706,6 @@
                       "description": null
                     },
                     {
-                      "name": "Patch",
-                      "type": {
-                        "kind": "class",
-                        "name": "JsonPatch\u0026",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.ClientModel.Primitives"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "Dimensions",
                       "type": {
                         "kind": "primitive",
@@ -12889,22 +10800,6 @@
                       "description": null
                     },
                     {
-                      "name": "Patch",
-                      "type": {
-                        "kind": "class",
-                        "name": "JsonPatch\u0026",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.ClientModel.Primitives"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "Dimensions",
                       "type": {
                         "kind": "primitive",
@@ -12945,7 +10840,7 @@
         ],
         "sourceClassName": "EmbeddingClient",
         "sourceNamespace": "OpenAI.Embeddings",
-        "constructorAuthTypeName": "string",
+        "constructorAuthTypeName": null,
         "constructorAuthTypeNamespace": null
       },
       {
@@ -13157,24 +11052,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -13566,24 +11444,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -13905,24 +11766,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -14168,24 +12012,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -14507,24 +12334,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -15217,70 +13027,6 @@
                       "description": null
                     },
                     {
-                      "name": "StopSequences",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "LogitBiases",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "int",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "int",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ToolChoice",
                       "type": {
                         "kind": "class",
@@ -15357,70 +13103,6 @@
                         "namespace": null
                       },
                       "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Functions",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ChatFunction",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Chat"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Metadata",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
                       "defaultValue": null,
                       "description": null
                     },
@@ -15519,22 +13201,6 @@
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Patch",
-                      "type": {
-                        "kind": "class",
-                        "name": "JsonPatch\u0026",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.ClientModel.Primitives"
                       },
                       "required": true,
                       "defaultValue": null,
@@ -15665,33 +13331,6 @@
                         "namespace": null
                       },
                       "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Tools",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ChatTool",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Chat"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
                       "defaultValue": null,
                       "description": null
                     }
@@ -15790,70 +13429,6 @@
                       "description": null
                     },
                     {
-                      "name": "StopSequences",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "LogitBiases",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "int",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "int",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ToolChoice",
                       "type": {
                         "kind": "class",
@@ -15930,70 +13505,6 @@
                         "namespace": null
                       },
                       "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Functions",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ChatFunction",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Chat"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Metadata",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
                       "defaultValue": null,
                       "description": null
                     },
@@ -16092,22 +13603,6 @@
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Patch",
-                      "type": {
-                        "kind": "class",
-                        "name": "JsonPatch\u0026",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.ClientModel.Primitives"
                       },
                       "required": true,
                       "defaultValue": null,
@@ -16238,33 +13733,6 @@
                         "namespace": null
                       },
                       "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Tools",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ChatTool",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Chat"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
                       "defaultValue": null,
                       "description": null
                     }
@@ -16420,24 +13888,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -16969,7 +14420,7 @@
         ],
         "sourceClassName": "ChatClient",
         "sourceNamespace": "OpenAI.Chat",
-        "constructorAuthTypeName": "string",
+        "constructorAuthTypeName": null,
         "constructorAuthTypeNamespace": null
       },
       {
@@ -16988,24 +14439,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -17369,7 +14803,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "OpenAI.Audio"
                 },
@@ -17468,136 +14902,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "CanRead",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanWrite",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanSeek",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Length",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Position",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ReadTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "WriteTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.IO"
                 },
@@ -17767,136 +15072,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "CanRead",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanWrite",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanSeek",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Length",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Position",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ReadTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "WriteTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.IO"
                 },
@@ -18066,136 +15242,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "CanRead",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanWrite",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanSeek",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "CanTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "bool",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Length",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Position",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "long",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ReadTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "WriteTimeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "int",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.IO"
                 },
@@ -18301,7 +15348,7 @@
         ],
         "sourceClassName": "AudioClient",
         "sourceNamespace": "OpenAI.Audio",
-        "constructorAuthTypeName": "string",
+        "constructorAuthTypeName": null,
         "constructorAuthTypeNamespace": null
       },
       {
@@ -18337,33 +15384,6 @@
                   "genericArguments": null,
                   "enumValues": null,
                   "properties": [
-                    {
-                      "name": "Tools",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ToolDefinition",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Assistants"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
                     {
                       "name": "ToolResources",
                       "type": {
@@ -18451,43 +15471,6 @@
                         "name": "string",
                         "isNullable": false,
                         "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Metadata",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
@@ -18665,24 +15648,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -18886,24 +15852,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -19123,24 +16072,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -19423,43 +16355,6 @@
                             "properties": null,
                             "elementType": null,
                             "namespace": "OpenAI.Assistants"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Metadata",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
                           }
                         ],
                         "enumValues": null,
@@ -19821,24 +16716,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -20156,33 +17034,6 @@
                       "description": null
                     },
                     {
-                      "name": "AdditionalMessages",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ThreadInitializationMessage",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Assistants"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "AllowParallelToolCalls",
                       "type": {
                         "kind": "primitive",
@@ -20195,70 +17046,6 @@
                         "namespace": null
                       },
                       "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ToolsOverride",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ToolDefinition",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Assistants"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Metadata",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
                       "defaultValue": null,
                       "description": null
                     },
@@ -20490,33 +17277,6 @@
                       "description": null
                     },
                     {
-                      "name": "AdditionalMessages",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ThreadInitializationMessage",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Assistants"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "AllowParallelToolCalls",
                       "type": {
                         "kind": "primitive",
@@ -20529,70 +17289,6 @@
                         "namespace": null
                       },
                       "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ToolsOverride",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ToolDefinition",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Assistants"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Metadata",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
                       "defaultValue": null,
                       "description": null
                     },
@@ -20758,70 +17454,6 @@
                       "required": true,
                       "defaultValue": null,
                       "description": null
-                    },
-                    {
-                      "name": "InitialMessages",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ThreadInitializationMessage",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Assistants"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Metadata",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
                     }
                   ],
                   "elementType": null,
@@ -20905,33 +17537,6 @@
                       "description": null
                     },
                     {
-                      "name": "AdditionalMessages",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ThreadInitializationMessage",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Assistants"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "AllowParallelToolCalls",
                       "type": {
                         "kind": "primitive",
@@ -20944,70 +17549,6 @@
                         "namespace": null
                       },
                       "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ToolsOverride",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ToolDefinition",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Assistants"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Metadata",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
                       "defaultValue": null,
                       "description": null
                     },
@@ -21173,70 +17714,6 @@
                       "required": true,
                       "defaultValue": null,
                       "description": null
-                    },
-                    {
-                      "name": "InitialMessages",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ThreadInitializationMessage",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Assistants"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Metadata",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
                     }
                   ],
                   "elementType": null,
@@ -21320,33 +17797,6 @@
                       "description": null
                     },
                     {
-                      "name": "AdditionalMessages",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ThreadInitializationMessage",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Assistants"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "AllowParallelToolCalls",
                       "type": {
                         "kind": "primitive",
@@ -21359,70 +17809,6 @@
                         "namespace": null
                       },
                       "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "ToolsOverride",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IList",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "class",
-                            "name": "ToolDefinition",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": "OpenAI.Assistants"
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Metadata",
-                      "type": {
-                        "kind": "generic",
-                        "name": "IDictionary",
-                        "isNullable": false,
-                        "genericArguments": [
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          },
-                          {
-                            "kind": "primitive",
-                            "name": "string",
-                            "isNullable": false,
-                            "genericArguments": null,
-                            "enumValues": null,
-                            "properties": null,
-                            "elementType": null,
-                            "namespace": null
-                          }
-                        ],
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
                       "defaultValue": null,
                       "description": null
                     },
@@ -21872,24 +18258,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },
@@ -22534,24 +18903,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "MediaType",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "System.ClientModel"
                 },

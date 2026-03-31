@@ -67,7 +67,7 @@ public static class {{ resource.class_name }}Commands
                     // Flat flags take precedence; --json-input fills remaining nulls
                     var jsonInputValue = ctx.ParseResult.GetValueForOption(jsonInputOption);
 {{~ end ~}}
-{{~ if resource.source_class_name && op.source_method_name }}
+{{~ if resource.can_construct && op.source_method_name && op.can_wire_sdk_call }}
 
                     // SDK call: {{ resource.source_class_name }}.{{ op.source_method_name }}
                     var client = new {{ resource.source_class_name }}({{ resource.constructor_auth_expression }});
@@ -105,6 +105,7 @@ public static class {{ resource.class_name }}Commands
 {{~ end ~}}
 {{~ else }}
                     // SDK client wiring not available (source class name unknown)
+                    await Task.CompletedTask;
                     var result = new Dictionary<string, object?>
                     {
                         ["command"] = "{{ resource.name }} {{ op.name }}",

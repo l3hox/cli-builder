@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>{{ root_namespace }}</RootNamespace>
+    <NoWarn>CS1998;CS8604;CS8601;OPENAI001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

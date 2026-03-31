@@ -22,7 +22,8 @@ public record ResourceModel(
     string? SourceClassName = null,
     string? SourceNamespace = null,
     string? ConstructorAuthExpression = null,
-    IReadOnlyList<string>? RequiredNamespaces = null
+    IReadOnlyList<string>? RequiredNamespaces = null,
+    bool CanConstruct = false
 );
 
 public record OperationModel(
@@ -35,7 +36,8 @@ public record OperationModel(
     bool IsStreaming,
     string? SourceMethodName = null,
     string? OptionsClassName = null,
-    IReadOnlyList<MethodParamModel>? MethodParams = null
+    IReadOnlyList<MethodParamModel>? MethodParams = null,
+    bool CanWireSdkCall = true
 );
 
 public record FlatParameter(

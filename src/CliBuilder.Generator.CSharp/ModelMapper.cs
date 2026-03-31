@@ -116,7 +116,8 @@ public static partial class ModelMapper
             SourceClassName: SanitizeString(resource.SourceClassName),
             SourceNamespace: SanitizeString(resource.SourceNamespace),
             ConstructorAuthExpression: ctorAuthExpr,
-            RequiredNamespaces: requiredNamespaces);
+            RequiredNamespaces: requiredNamespaces,
+            CanConstruct: resource.ConstructorAuthTypeName != null);
     }
 
     private static OperationModel MapOperation(Operation operation, List<Diagnostic> diagnostics)
@@ -137,6 +138,10 @@ public static partial class ModelMapper
         // Build ordered method parameter models for SDK call reconstruction
         var methodParams = BuildMethodParams(operation.Parameters);
 
+        // Check if all direct (non-options-class) params can be converted from CLI types.
+        // Also check that the return type is awaitable (not a raw class like AsyncCollectionResult).
+        var canWire = CanWireOperation(operation, methodParams, diagnostics);
+
         return new OperationModel(
             Name: operation.Name,
             MethodName: methodName,
@@ -147,7 +152,49 @@ public static partial class ModelMapper
             IsStreaming: operation.IsStreaming,
             SourceMethodName: SanitizeString(operation.SourceMethodName),
             OptionsClassName: SanitizeString(optionsParam?.Type.Name),
-            MethodParams: methodParams);
+            MethodParams: methodParams,
+            CanWireSdkCall: canWire);
+    }
+
+    private static bool CanWireOperation(Operation operation,
+        IReadOnlyList<MethodParamModel> methodParams, List<Diagnostic> diagnostics)
+    {
+        // Check direct params: non-options-class params must be convertible from CLI string
+        for (int i = 0; i < operation.Parameters.Count; i++)
+        {
+            var p = operation.Parameters[i];
+            if (p.Type.Kind == TypeKind.Class && p.Type.Properties != null)
+                continue; // options class — handled by construction
+
+            // Direct param: CLI type is "string" for complex types.
+            // Convertible: Primitive (string, int, bool, etc.), Enum (via Enum.Parse)
+            // Unconvertible: Generic (IEnumerable<T>), Array, Dictionary, Class (without properties)
+            if (p.Type.Kind is TypeKind.Generic or TypeKind.Array or TypeKind.Dictionary
+                || (p.Type.Kind == TypeKind.Class && p.Type.Properties == null))
+            {
+                diagnostics.Add(new Diagnostic(DiagnosticSeverity.Info, "CB306",
+                    $"Operation '{operation.Name}' has unconvertible parameter " +
+                    $"'{p.Name}' ({p.Type.Name}) — falling back to echo stub"));
+                return false;
+            }
+        }
+
+        // Check return type: known non-awaitable types that slip through unwrapping.
+        // Normal class return types (Customer, Order) are fine — they came from Task<T> unwrapping.
+        // But non-generic collection types and sub-client factories are not awaitable.
+        if (operation.ReturnType.Kind == TypeKind.Class && !operation.IsStreaming)
+        {
+            var name = operation.ReturnType.Name;
+            if (name is "AsyncCollectionResult" or "CollectionResult"
+                || name.EndsWith("Client") || name.EndsWith("ClientSettings"))
+            {
+                diagnostics.Add(new Diagnostic(DiagnosticSeverity.Info, "CB306",
+                    $"Operation '{operation.Name}' returns non-awaitable type '{name}' — falling back to echo stub"));
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static IReadOnlyList<MethodParamModel> BuildMethodParams(IReadOnlyList<Parameter> parameters)

@@ -277,8 +277,12 @@ public class DotNetAdapter : ISdkAdapter
 
             var typeRef = BuildTypeRef(param.ParameterType);
 
-            // Check if the parameter type is a class with properties (options object)
-            if (typeRef.Kind == TypeKind.Class && !IsPrimitiveType(param.ParameterType))
+            // Check if the parameter type is a class with properties (options object).
+            // Skip abstract types and types without a public parameterless constructor —
+            // can't instantiate them in generated handlers. They become plain string CLI params.
+            if (typeRef.Kind == TypeKind.Class && !IsPrimitiveType(param.ParameterType)
+                && !param.ParameterType.IsAbstract
+                && HasPublicParameterlessCtor(param.ParameterType))
             {
                 var properties = ExtractClassProperties(param.ParameterType, depth: 0);
                 typeRef = typeRef with { Properties = properties };
@@ -302,6 +306,10 @@ public class DotNetAdapter : ISdkAdapter
         var props = new List<Parameter>();
         foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
+            // Skip properties without a public setter — can't assign in generated handler
+            if (!prop.CanWrite || prop.SetMethod?.IsPublic != true)
+                continue;
+
             var typeRef = BuildTypeRef(prop.PropertyType, depth + 1);
 
             // Check nullability on properties (mirrors IsNullableParameter logic)
@@ -469,6 +477,11 @@ public class DotNetAdapter : ISdkAdapter
         return backtickIndex > 0 ? typeName[..backtickIndex] : typeName;
     }
 
+    private static bool HasPublicParameterlessCtor(Type type)
+    {
+        return type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null) != null;
+    }
+
     private bool IsPrimitiveType(Type type)
     {
         return type.IsPrimitive || PrimitiveTypes.Contains(type.Name);
@@ -566,10 +579,28 @@ public class DotNetAdapter : ISdkAdapter
 
     private (string? TypeName, string? TypeNamespace) ExtractConstructorAuthType(Type type)
     {
-        foreach (var ctor in type.GetConstructors(BindingFlags.Public | BindingFlags.Instance))
+        // Prefer constructors with fewer parameters — simpler constructors are more
+        // likely to be the one-arg auth constructor (e.g., ChatClient(ApiKeyCredential)
+        // over ChatClient(string model, ApiKeyCredential credential)).
+        // Stable tiebreaker on parameter names for deterministic output.
+        var constructors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance)
+            .OrderBy(c => c.GetParameters().Length)
+            .ThenBy(c => string.Join(",", c.GetParameters().Select(p => p.Name)));
+
+        foreach (var ctor in constructors)
         {
-            foreach (var param in ctor.GetParameters())
+            var ctorParams = ctor.GetParameters();
+
+            // Count required (non-optional, non-CancellationToken) parameters
+            var requiredParams = ctorParams.Where(p =>
+                !p.HasDefaultValue && p.ParameterType.FullName != "System.Threading.CancellationToken").ToList();
+
+            foreach (var param in ctorParams)
             {
+                // Only match if this is the SOLE required param (the template passes exactly one arg).
+                // Multi-arg constructors like (string model, ApiKeyCredential cred) are skipped.
+                if (requiredParams.Count > 1) continue;
+
                 if (IsApiKeyCredentialParameter(param))
                     return (param.ParameterType.Name, param.ParameterType.Namespace);
                 if (IsCredentialParameter(param))
@@ -585,7 +616,8 @@ public class DotNetAdapter : ISdkAdapter
     {
         if (param.ParameterType.FullName != "System.String") return false;
         var name = param.Name?.ToLowerInvariant() ?? "";
-        return name.Contains("key") || name.Contains("secret");
+        // Exact-match allowlist — avoid false matches on encryptionKey, licenseKey, etc.
+        return name is "apikey" or "api_key" or "secretkey" or "secret" or "apisecret" or "api_secret";
     }
 
     private bool IsCredentialParameter(ParameterInfo param)
