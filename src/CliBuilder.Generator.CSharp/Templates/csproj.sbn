@@ -6,6 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>{{ root_namespace }}</RootNamespace>
+    <!-- Suppress warnings from generated handler code:
+         CS1998: async handler with no await (echo fallback operations)
+         CS8604/CS8601: nullable reference warnings from SDK call wiring
+         OPENAI001: OpenAI experimental API markers -->
     <NoWarn>CS1998;CS8604;CS8601;OPENAI001</NoWarn>
   </PropertyGroup>
 

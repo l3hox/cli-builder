@@ -605,4 +605,193 @@ public class ModelMapperTests
         Assert.Equal("createOptions", mp[0].ArgExpression);
         Assert.Equal("requestOptions", mp[1].ArgExpression);
     }
+
+    // -----------------------------------------------------------
+    // CanWireSdkCall (step 7D)
+    // -----------------------------------------------------------
+
+    private static OperationModel BuildOperationModel(
+        IReadOnlyList<Parameter> parameters,
+        TypeRef returnType,
+        bool isStreaming = false)
+    {
+        var op = new Operation("test-op", null, parameters, returnType,
+            isStreaming, SourceMethodName: "TestAsync");
+        var resource = new Resource("thing", null, new[] { op },
+            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            ConstructorAuthTypeName: "string");
+        var metadata = new SdkMetadata("TestSdk", "1.0.0",
+            new[] { resource }, new[] { new AuthPattern(AuthType.ApiKey, "TEST_KEY", "apiKey") });
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+        return model.Resources[0].Operations[0];
+    }
+
+    [Fact]
+    public void CanWireSdkCall_PrimitiveParams_ReturnsTrue()
+    {
+        var op = BuildOperationModel(
+            new[] { new Parameter("id", new TypeRef(TypeKind.Primitive, "string"), true) },
+            new TypeRef(TypeKind.Class, "Customer"));
+        Assert.True(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_EnumParam_ReturnsTrue()
+    {
+        var op = BuildOperationModel(
+            new[] { new Parameter("status", new TypeRef(TypeKind.Enum, "Status", EnumValues: new[] { "A" }), true) },
+            new TypeRef(TypeKind.Primitive, "void"));
+        Assert.True(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_OptionsClassParam_ReturnsTrue()
+    {
+        var optType = new TypeRef(TypeKind.Class, "Opts",
+            Properties: new[] { new Parameter("X", new TypeRef(TypeKind.Primitive, "string"), true) });
+        var op = BuildOperationModel(
+            new[] { new Parameter("opts", optType, true) },
+            new TypeRef(TypeKind.Primitive, "void"));
+        Assert.True(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_GenericDirectParam_ReturnsFalse()
+    {
+        var genericType = new TypeRef(TypeKind.Generic, "IEnumerable",
+            GenericArguments: new[] { new TypeRef(TypeKind.Class, "ChatMessage") });
+        var op = BuildOperationModel(
+            new[] { new Parameter("messages", genericType, true) },
+            new TypeRef(TypeKind.Primitive, "void"));
+        Assert.False(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_ArrayDirectParam_ReturnsFalse()
+    {
+        var arrayType = new TypeRef(TypeKind.Array, "string[]",
+            ElementType: new TypeRef(TypeKind.Primitive, "string"));
+        var op = BuildOperationModel(
+            new[] { new Parameter("items", arrayType, true) },
+            new TypeRef(TypeKind.Primitive, "void"));
+        Assert.False(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_DictionaryDirectParam_ReturnsFalse()
+    {
+        var dictType = new TypeRef(TypeKind.Dictionary, "Dictionary");
+        var op = BuildOperationModel(
+            new[] { new Parameter("meta", dictType, true) },
+            new TypeRef(TypeKind.Primitive, "void"));
+        Assert.False(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_BareClassDirectParam_ReturnsFalse()
+    {
+        // Class without properties = not an options class, becomes string CLI param
+        var classType = new TypeRef(TypeKind.Class, "BinaryContent");
+        var op = BuildOperationModel(
+            new[] { new Parameter("content", classType, true) },
+            new TypeRef(TypeKind.Primitive, "void"));
+        Assert.False(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_AsyncCollectionResultReturn_ReturnsFalse()
+    {
+        var op = BuildOperationModel(
+            Array.Empty<Parameter>(),
+            new TypeRef(TypeKind.Class, "AsyncCollectionResult"));
+        Assert.False(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_CollectionResultReturn_ReturnsFalse()
+    {
+        var op = BuildOperationModel(
+            Array.Empty<Parameter>(),
+            new TypeRef(TypeKind.Class, "CollectionResult"));
+        Assert.False(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_ClientReturn_ReturnsFalse()
+    {
+        var op = BuildOperationModel(
+            Array.Empty<Parameter>(),
+            new TypeRef(TypeKind.Class, "ChatClient"));
+        Assert.False(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_ClientSettingsReturn_ReturnsFalse()
+    {
+        var op = BuildOperationModel(
+            Array.Empty<Parameter>(),
+            new TypeRef(TypeKind.Class, "EmbeddingClientSettings"));
+        Assert.False(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_NormalClassReturn_ReturnsTrue()
+    {
+        // A regular domain class (Customer, Order) is fine — it came from Task<T> unwrapping
+        var op = BuildOperationModel(
+            Array.Empty<Parameter>(),
+            new TypeRef(TypeKind.Class, "Customer"));
+        Assert.True(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_StreamingReturn_ReturnsTrue()
+    {
+        // Streaming operations are handled by await foreach, not await
+        var op = BuildOperationModel(
+            Array.Empty<Parameter>(),
+            new TypeRef(TypeKind.Class, "Customer"),
+            isStreaming: true);
+        Assert.True(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_GenericParam_EmitsCB306()
+    {
+        var genericType = new TypeRef(TypeKind.Generic, "IEnumerable",
+            GenericArguments: new[] { new TypeRef(TypeKind.Class, "Item") });
+        var op = new Operation("test-op", null,
+            new[] { new Parameter("items", genericType, true) },
+            new TypeRef(TypeKind.Primitive, "void"),
+            SourceMethodName: "TestAsync");
+        var resource = new Resource("thing", null, new[] { op },
+            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            ConstructorAuthTypeName: "string");
+        var metadata = new SdkMetadata("TestSdk", "1.0.0",
+            new[] { resource }, new[] { new AuthPattern(AuthType.ApiKey, "TEST_KEY", "apiKey") });
+        var (_, diagnostics) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+        Assert.Contains(diagnostics, d => d.Code == "CB306");
+    }
+
+    [Fact]
+    public void CanConstruct_NullAuthType_ReturnsFalse()
+    {
+        var resource = new Resource("thing", null, new List<Operation>(),
+            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            ConstructorAuthTypeName: null);
+        var metadata = MinimalMetadata(resources: new[] { resource });
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+        Assert.False(model.Resources[0].CanConstruct);
+    }
+
+    [Fact]
+    public void CanConstruct_WithAuthType_ReturnsTrue()
+    {
+        var resource = new Resource("thing", null, new List<Operation>(),
+            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            ConstructorAuthTypeName: "string");
+        var metadata = MinimalMetadata(resources: new[] { resource });
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+        Assert.True(model.Resources[0].CanConstruct);
+    }
 }

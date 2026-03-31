@@ -591,15 +591,18 @@ public class DotNetAdapter : ISdkAdapter
         {
             var ctorParams = ctor.GetParameters();
 
-            // Count required (non-optional, non-CancellationToken) parameters
+            // Count required (non-optional, non-CancellationToken) parameters.
+            // Constructors with >1 required param are skipped because the template
+            // passes exactly one arg (the auth expression). Constructors with 1 required
+            // auth param + additional optional params are allowed — e.g.,
+            // ctor(ApiKeyCredential key, string? endpoint = null) is valid.
             var requiredParams = ctorParams.Where(p =>
                 !p.HasDefaultValue && p.ParameterType.FullName != "System.Threading.CancellationToken").ToList();
 
+            if (requiredParams.Count > 1) continue;
+
             foreach (var param in ctorParams)
             {
-                // Only match if this is the SOLE required param (the template passes exactly one arg).
-                // Multi-arg constructors like (string model, ApiKeyCredential cred) are skipped.
-                if (requiredParams.Count > 1) continue;
 
                 if (IsApiKeyCredentialParameter(param))
                     return (param.ParameterType.Name, param.ParameterType.Namespace);

@@ -181,14 +181,17 @@ public static partial class ModelMapper
 
         // Check return type: known non-awaitable types that slip through unwrapping.
         // Normal class return types (Customer, Order) are fine — they came from Task<T> unwrapping.
-        // But non-generic collection types and sub-client factories are not awaitable.
+        // But non-generic collection types and sub-client factory return types are not awaitable.
+        // The suffix list matches the adapter's service class suffixes (Service, Client, Api)
+        // plus Settings types, and the known collection wrappers.
         if (operation.ReturnType.Kind == TypeKind.Class && !operation.IsStreaming)
         {
             var name = operation.ReturnType.Name;
             if (name is "AsyncCollectionResult" or "CollectionResult"
-                || name.EndsWith("Client") || name.EndsWith("ClientSettings"))
+                || name.EndsWith("Client") || name.EndsWith("Service") || name.EndsWith("Api")
+                || name.EndsWith("ClientSettings") || name.EndsWith("Options"))
             {
-                diagnostics.Add(new Diagnostic(DiagnosticSeverity.Info, "CB306",
+                diagnostics.Add(new Diagnostic(DiagnosticSeverity.Warning, "CB306",
                     $"Operation '{operation.Name}' returns non-awaitable type '{name}' — falling back to echo stub"));
                 return false;
             }
