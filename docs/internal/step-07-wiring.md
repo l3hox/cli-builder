@@ -632,6 +632,17 @@ dotnet test --filter "OpenAi"          # scale still works
 ./scripts/coverage.sh                  # >= 80% coverage
 ```
 
+### Checkpoint 7D — COMPLETE
+
+```
+315 tests (49 Core + 240 Generator + 26 Integration), all passing.
+Coverage: 82.7% line, 94.6% method.
+OpenAI CLI: 20 resources, 169 operations, zero compile errors.
+TestSdk CLI: 12 E2E tests, real SDK calls with JSON output.
+```
+
+Step 7 completed 2026-03-31. Full 7D plan: [step-07d-openai-fixes.md](step-07d-openai-fixes.md).
+
 ---
 
 ## File manifest
