@@ -525,22 +525,74 @@ public class ModelMapperTests
         Assert.Equal("idValue", mp[0].ArgExpression);
     }
 
+    // MapOperation_BuildsMethodParams_MixedOrder was renamed to
+    // MapOperation_BuildsMethodParams_MultipleOptionsClasses (below) for clarity.
+
+    // -----------------------------------------------------------
+    // Council review fixes
+    // -----------------------------------------------------------
+
     [Fact]
-    public void MapOperation_BuildsMethodParams_MixedOrder()
+    public void MapResource_InvalidAuthTypeName_EmitsDiagnosticAndFallback()
     {
-        var optionsType = new TypeRef(TypeKind.Class, "UpdateOptions",
+        var resource = new Resource("thing", null, new List<Operation>(),
+            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            ConstructorAuthTypeName: "123BadType");
+        var metadata = MinimalMetadata(resources: new[] { resource });
+        var (model, diagnostics) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+
+        Assert.Equal("credential", model.Resources[0].ConstructorAuthExpression);
+        Assert.Contains(diagnostics, d => d.Code == "CB205");
+    }
+
+    [Fact]
+    public void MapResource_ScribanMetacharsInAuthTypeName_EmitsDiagnosticAndFallback()
+    {
+        var resource = new Resource("thing", null, new List<Operation>(),
+            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            ConstructorAuthTypeName: "Token{{Credential}}");
+        var metadata = MinimalMetadata(resources: new[] { resource });
+        var (model, diagnostics) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+
+        Assert.Equal("credential", model.Resources[0].ConstructorAuthExpression);
+        Assert.Contains(diagnostics, d => d.Code == "CB205");
+    }
+
+    [Fact]
+    public void MapOperation_BuildsMethodParams_PascalCaseDirectParam()
+    {
+        // SDK param "firstName" → SanitizeParameter → cliFlag "first-name" → KebabToCamelCase → "firstName"
+        var op = new Operation("search", null,
+            new[] { new Parameter("firstName", new TypeRef(TypeKind.Primitive, "string"), true) },
+            new TypeRef(TypeKind.Class, "Customer"),
+            SourceMethodName: "SearchAsync");
+        var resource = new Resource("thing", null, new[] { op },
+            SourceClassName: "ThingService", SourceNamespace: "Sdk");
+        var metadata = MinimalMetadata(resources: new[] { resource });
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+
+        var mp = model.Resources[0].Operations[0].MethodParams!;
+        Assert.Single(mp);
+        Assert.Equal("firstNameValue", mp[0].ArgExpression);
+    }
+
+    [Fact]
+    public void MapOperation_BuildsMethodParams_MultipleOptionsClasses()
+    {
+        // Renamed from MixedOrder — both params are options classes
+        var optionsType = new TypeRef(TypeKind.Class, "CreateOptions",
             Properties: new[] { new Parameter("Name", new TypeRef(TypeKind.Primitive, "string"), true) },
             Namespace: "Sdk.Models");
         var requestType = new TypeRef(TypeKind.Class, "RequestOptions",
             Properties: new[] { new Parameter("Key", new TypeRef(TypeKind.Primitive, "string"), false) },
             Namespace: "Sdk.Models");
-        var op = new Operation("update", null,
+        var op = new Operation("create", null,
             new Parameter[] {
                 new("options", optionsType, true),
                 new("requestOptions", requestType, false),
             },
             new TypeRef(TypeKind.Primitive, "void"),
-            SourceMethodName: "UpdateAsync");
+            SourceMethodName: "CreateAsync");
         var resource = new Resource("thing", null, new[] { op },
             SourceClassName: "ThingService", SourceNamespace: "Sdk");
         var metadata = MinimalMetadata(resources: new[] { resource });
@@ -548,9 +600,9 @@ public class ModelMapperTests
 
         var mp = model.Resources[0].Operations[0].MethodParams!;
         Assert.Equal(2, mp.Count);
-        Assert.Equal("updateOptions", mp[0].ArgExpression);
-        Assert.Equal("requestOptions", mp[1].ArgExpression);
         Assert.True(mp[0].IsOptionsClass);
         Assert.True(mp[1].IsOptionsClass);
+        Assert.Equal("createOptions", mp[0].ArgExpression);
+        Assert.Equal("requestOptions", mp[1].ArgExpression);
     }
 }

@@ -73,14 +73,21 @@ public static partial class ModelMapper
 
         // Compute constructor auth expression.
         // Validate type name is a valid identifier (defense-in-depth — adapter produces valid CLR names).
-        var ctorAuthExpr = resource.ConstructorAuthTypeName switch
+        string ctorAuthExpr;
+        if (resource.ConstructorAuthTypeName is null or "string")
         {
-            null or "string" => "credential",
-            var typeName when IdentifierValidator.IsValidIdentifier(typeName)
-                => $"new {SanitizeString(typeName)}(credential)",
-            var typeName => throw new InvalidOperationException(
-                $"ConstructorAuthTypeName '{typeName}' is not a valid C# identifier")
-        };
+            ctorAuthExpr = "credential";
+        }
+        else if (IdentifierValidator.IsValidIdentifier(resource.ConstructorAuthTypeName))
+        {
+            ctorAuthExpr = $"new {resource.ConstructorAuthTypeName}(credential)";
+        }
+        else
+        {
+            diagnostics.Add(new Diagnostic(DiagnosticSeverity.Warning, "CB205",
+                $"ConstructorAuthTypeName '{resource.ConstructorAuthTypeName}' is not a valid C# identifier — falling back to raw credential"));
+            ctorAuthExpr = "credential";
+        }
 
         // Collect all namespaces needed by this resource's generated code
         var namespaces = new HashSet<string>();
@@ -101,8 +108,6 @@ public static partial class ModelMapper
         }
         var requiredNamespaces = namespaces
             .Where(ns => IdentifierValidator.IsValidNamespace(ns))
-            .Select(ns => SanitizeString(ns)!)
-            .Where(ns => ns != null)
             .Distinct()
             .OrderBy(ns => ns)
             .ToList();
