@@ -251,6 +251,31 @@ When an SDK method takes multiple class-typed parameters (e.g., `CreateAsync(Cre
 
 Options classes, auth credential types, and service classes may live in different namespaces. `ResourceModel.RequiredNamespaces` collects all distinct namespaces needed by a resource's generated code — from `SourceNamespace`, `ConstructorAuthTypeNamespace`, and all `MethodParamModel.Namespace` values. Entries are validated as dotted identifiers, deduplicated, and sorted alphabetically for deterministic golden file output.
 
+### Non-instantiable type policy (step 7D)
+
+The adapter skips property extraction for types that can't be instantiated in generated handlers:
+- **Abstract types** (`type.IsAbstract`) — e.g., `BinaryContent`, `Stream`
+- **Types without a public parameterless constructor** — e.g., `GetResponseOptions(string responseId)`, `BinaryData`
+
+These types become plain `string` CLI parameters (via `forCliParam: true` mapping). The generated handler passes the string value directly. Future `--json-input` can handle proper deserialization.
+
+### Read-only property filtering (step 7D)
+
+`ExtractClassProperties` only includes properties with a public setter (`prop.CanWrite && prop.SetMethod?.IsPublic == true`). Read-only properties like `Stream.CanRead`, `BinaryData.Length` are excluded — they can't be assigned in generated handlers.
+
+### Constructor preference rule (step 7D)
+
+`ExtractConstructorAuthType` sorts constructors by parameter count (ascending, stable tiebreaker on param names) and only matches constructors with a single required parameter. This prefers `Client(ApiKeyCredential cred)` over `Client(string model, ApiKeyCredential cred)`. The `IsApiKeyParameter` heuristic uses an exact-match allowlist (`apikey`, `api_key`, `secretkey`, `secret`, `apisecret`, `api_secret`) — not `Contains("key")`.
+
+### CanConstruct / CanWireSdkCall gates (step 7D)
+
+Two gates control whether generated handlers emit real SDK calls or fall back to the echo stub:
+
+- **`CanConstruct`** (per resource): `true` when the adapter found a valid single-param auth constructor. `false` for clients like `RealtimeSessionClient` that require multi-arg constructors.
+- **`CanWireSdkCall`** (per operation): `true` when all direct parameters are convertible from CLI types AND the return type is awaitable. `false` when any direct param is `Generic`, `Array`, `Dictionary`, or bare `Class` (without properties), or when the return type matches known non-awaitable suffixes (`*Client`, `*Service`, `*Api`, `*ClientSettings`, `*Options`, `AsyncCollectionResult`, `CollectionResult`).
+
+Operations with `CanWireSdkCall = false` emit a `CB306` warning diagnostic and fall back to the echo stub.
+
 ---
 
 ## Generator sanitization surfaces

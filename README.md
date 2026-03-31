@@ -22,37 +22,36 @@ SDK Assembly (.dll)  ──>  cli-builder  ──>  Standalone CLI Project
 
 ## Demo
 
-Validated against the **OpenAI .NET SDK 2.9.1** — 20 resources, 169 operations:
+Generated from the **TestSdk** — real SDK method calls, not stubs:
 
 ```bash
-# Generated CLI output
-$ openai-cli --help
+$ testsdk-cli --help
 Description:
-  openai-cli -- CLI for OpenAI
+  testsdk-cli — CLI for CliBuilder.TestSdk
 
 Commands:
-  chat            audio           assistant       batch
-  embedding       evaluation      fine-tuning     image
-  moderation      open-ai-model   vector-store    ...
+  customer        order           product
 
-$ openai-cli chat complete-chat --help
-Options:
-  --messages <messages> (REQUIRED)
-  --response-modalities <Audio|Default|Text> (REQUIRED)
-  --frequency-penalty <frequency-penalty>
-  --temperature <temperature>
-  --json-input <json-input>    Full input as JSON
-  --json                       Output as JSON instead of table format
-  --api-key <api-key>          API key (prefer OPENAI_APIKEY env var)
-
-$ export OPENAI_APIKEY=sk-...
-$ openai-cli chat complete-chat --messages "hello" --json
+$ testsdk-cli customer get --id cust_42 --json --api-key demo
 {
-  "command": "chat complete-chat",
-  "parameters": { "messages": "hello", ... },
-  "authenticated": true
+  "id": "cust_42",
+  "email": "test@example.com",
+  "name": null,
+  "status": 0,
+  "address": null
 }
+
+$ testsdk-cli customer list --json --api-key demo
+[
+  { "id": "cust_001", "email": "alice@test.com", "status": 0 },
+  { "id": "cust_002", "email": "bob@test.com", "status": 1 }
+]
+
+$ testsdk-cli product list --json --api-key demo
+{ "id": "prod_001", "name": "Widget" }
 ```
+
+Also validated against the **OpenAI .NET SDK 2.9.1** — 20 resources, 169 operations, zero compile errors. Run `./scripts/demo.sh` to try the TestSdk CLI locally.
 
 ## Agent-readiness
 
@@ -88,15 +87,15 @@ openai-cli/
 
 ## Test suite
 
-227 tests across 3 projects:
+315 tests across 3 projects:
 
 | Project | Tests | Covers |
 |---------|-------|--------|
-| Generator Tests | 170 | Template rendering, parameter flattening, model mapping, sanitization, golden files, compile verification |
-| Core Tests | 43 | Adapter extraction, metadata serialization, type resolution |
-| Integration Tests | 14 | OpenAI SDK extraction, OpenAI CLI compilation |
+| Generator Tests | 240 | Template rendering, parameter flattening, model mapping, type conversion, sanitization, golden files, compile verification, CanWireSdkCall |
+| Core Tests | 49 | Adapter extraction, metadata serialization, type resolution, constructor auth detection, nullability |
+| Integration Tests | 26 | OpenAI SDK extraction, OpenAI CLI compilation, TestSdk E2E (generate → build → run → assert JSON) |
 
-Code coverage: **80.6% line, 95.3% method**. Run `./scripts/coverage.sh` for a full report.
+Run `./scripts/coverage.sh` for a full report.
 
 ## Documentation
 
@@ -112,9 +111,12 @@ Code coverage: **80.6% line, 95.3% method**. Run `./scripts/coverage.sh` for a f
 
 ## Status
 
-Steps 1-6 complete. The generator produces compilable, runnable CLIs from .NET SDK assemblies. Validated against the OpenAI .NET SDK at scale (20 resources, 169 operations).
+Steps 1-7 complete. The generator produces compilable CLIs with real SDK method calls. Generated handlers construct clients, populate options classes with type conversions, and call SDK methods.
 
-**Remaining:** Step 7 — wire real SDK method calls in generated handlers (currently stubbed with parameter echo). See [First Actions](docs/cli-builder-spec.md#first-actions) in the spec.
+- **TestSdk:** End-to-end validated — generate, build, run, assert JSON output (12 E2E tests)
+- **OpenAI SDK 2.9.1:** 20 resources, 169 operations, zero compile errors
+
+**Remaining:** `--json-input` deserialization for complex parameters, incremental streaming output, Stripe test mode validation. See [docs/FUTURE.md](docs/FUTURE.md).
 
 ## License
 
