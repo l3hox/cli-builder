@@ -771,6 +771,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -851,6 +903,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -1021,6 +1125,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -1067,6 +1223,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -1171,6 +1379,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -1217,6 +1477,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -1299,6 +1611,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -1433,6 +1797,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -1547,6 +1963,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -1593,6 +2061,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -1920,6 +2440,58 @@
                 "required": false,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -2052,6 +2624,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -2120,6 +2744,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -2150,6 +2826,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -3211,7 +3939,60 @@
           {
             "name": "receive-updates",
             "description": null,
-            "parameters": [],
+            "parameters": [
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
             "returnType": {
               "kind": "class",
               "name": "ClientResult",
@@ -3240,6 +4021,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": "System"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -3350,7 +4183,60 @@
           {
             "name": "get-models",
             "description": null,
-            "parameters": [],
+            "parameters": [
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
             "returnType": {
               "kind": "class",
               "name": "ClientResult",
@@ -3379,6 +4265,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -3413,6 +4351,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -5015,6 +6005,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -5115,6 +6157,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -5149,6 +6243,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -5179,6 +6325,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -5341,6 +6539,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -5371,6 +6621,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -5409,6 +6711,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -5439,6 +6793,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -5719,6 +7125,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -5783,6 +7241,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -5867,6 +7377,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -5965,6 +7527,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -6069,6 +7683,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -6119,6 +7785,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -6165,6 +7883,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -6283,6 +8053,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -6345,6 +8167,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -7087,6 +8961,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -7155,6 +9081,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -7185,6 +9163,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -7337,6 +9367,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -7383,6 +9465,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -7437,6 +9571,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -7483,6 +9669,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -8335,6 +10573,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -8415,6 +10705,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -8538,6 +10880,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -8616,6 +11010,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -8730,6 +11176,58 @@
                 "required": false,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -8760,6 +11258,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -9551,6 +12101,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -9635,6 +12237,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -9699,6 +12353,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -9783,6 +12489,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -10009,6 +12767,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -10055,6 +12865,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -10171,6 +13033,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -11279,6 +14193,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -11325,6 +14291,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -11522,6 +14540,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -11636,6 +14706,58 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
               }
             ],
             "returnType": {
@@ -11698,6 +14820,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -11846,6 +15020,58 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "RequestOptions",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "ErrorOptions",
+                      "type": {
+                        "kind": "enum",
+                        "name": "ClientErrorBehaviors",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": [
+                          "Default",
+                          "NoThrow"
+                        ],
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": "System.ClientModel.Primitives"
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "BufferResponse",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "bool",
+                        "isNullable": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": true,
                 "defaultValue": null,

@@ -272,8 +272,13 @@ public class DotNetAdapter : ISdkAdapter
         foreach (var param in method.GetParameters())
         {
             // Skip infrastructure types — not user-facing parameters
-            if (param.ParameterType.FullName is "System.Threading.CancellationToken"
-                or "System.ClientModel.Primitives.RequestOptions")
+            if (param.ParameterType.FullName == "System.Threading.CancellationToken")
+                continue;
+
+            // Skip optional RequestOptions — infrastructure type with sensible defaults.
+            // Required (non-optional) RequestOptions are kept so CanWireSdkCall can detect them.
+            if (param.ParameterType.FullName == "System.ClientModel.Primitives.RequestOptions"
+                && param.HasDefaultValue)
                 continue;
 
             var typeRef = BuildTypeRef(param.ParameterType);
