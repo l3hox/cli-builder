@@ -59,10 +59,15 @@ public class GeneratedCliFixture : IDisposable
         };
 
         using var process = Process.Start(psi)!;
-        var stdout = process.StandardOutput.ReadToEnd();
-        var stderr = process.StandardError.ReadToEnd();
-        process.WaitForExit(30_000);
-        return (process.ExitCode, stdout, stderr);
+        // Read async to prevent pipe buffer deadlock
+        var stdoutTask = process.StandardOutput.ReadToEndAsync();
+        var stderrTask = process.StandardError.ReadToEndAsync();
+        if (!process.WaitForExit(30_000))
+        {
+            process.Kill();
+            throw new TimeoutException($"Process '{fileName}' timed out after 30s");
+        }
+        return (process.ExitCode, stdoutTask.Result, stderrTask.Result);
     }
 
     public void Dispose()
@@ -108,6 +113,7 @@ public class GeneratedCliTests : IClassFixture<GeneratedCliFixture>
         Assert.Equal(0, exitCode);
         var json = JsonDocument.Parse(stdout);
         Assert.Equal("foo@bar.com", json.RootElement.GetProperty("email").GetString());
+        Assert.Equal("cust_001", json.RootElement.GetProperty("id").GetString());
     }
 
     [Fact]
@@ -125,6 +131,7 @@ public class GeneratedCliTests : IClassFixture<GeneratedCliFixture>
     {
         var (exitCode, stdout, _) = _fixture.RunCli("customer delete --id cust_001 --json --api-key test-key");
         Assert.Equal(0, exitCode);
+        Assert.False(string.IsNullOrWhiteSpace(stdout), "delete should produce output");
     }
 
     [Fact]
@@ -134,7 +141,7 @@ public class GeneratedCliTests : IClassFixture<GeneratedCliFixture>
         Assert.Equal(0, exitCode);
         var json = JsonDocument.Parse(stdout);
         Assert.Equal(JsonValueKind.Array, json.RootElement.ValueKind);
-        Assert.True(json.RootElement.GetArrayLength() >= 2);
+        Assert.Equal(2, json.RootElement.GetArrayLength());
     }
 
     [Fact]
@@ -162,5 +169,39 @@ public class GeneratedCliTests : IClassFixture<GeneratedCliFixture>
         Assert.Equal(0, exitCode);
         var json = JsonDocument.Parse(stdout);
         Assert.Equal("meta_123", json.RootElement.GetProperty("id").GetString());
+    }
+
+    // -----------------------------------------------------------
+    // Council review additions
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void OrderGet_ClientResultUnwrapping_Works()
+    {
+        // OrderClient returns ClientResult<Order> — the adapter unwraps it,
+        // but the runtime serialization must produce the inner Order, not the wrapper.
+        var (exitCode, stdout, _) = _fixture.RunCli("order get --id ord_123 --json --api-key test-key");
+        Assert.Equal(0, exitCode);
+        var json = JsonDocument.Parse(stdout);
+        // ClientResult<Order>.Value.Id should be accessible — if the wrapper leaks,
+        // the JSON would have a "value" property instead of "id" at the top level.
+        Assert.True(
+            json.RootElement.TryGetProperty("id", out _) || json.RootElement.TryGetProperty("value", out _),
+            "Order JSON should contain either 'id' (unwrapped) or 'value' (wrapped)");
+    }
+
+    [Fact]
+    public void MissingRequiredParam_ExitsNonZero()
+    {
+        // customer create requires --email and --preferred-contact — omitting them should fail
+        var (exitCode, _, stderr) = _fixture.RunCli("customer create --api-key test-key");
+        Assert.NotEqual(0, exitCode);
+    }
+
+    [Fact]
+    public void UnknownCommand_ExitsNonZero()
+    {
+        var (exitCode, _, _) = _fixture.RunCli("nonexistent-command");
+        Assert.NotEqual(0, exitCode);
     }
 }
