@@ -239,10 +239,19 @@ public class DotNetAdapter : ISdkAdapter
         return operations;
     }
 
+    private static readonly HashSet<string> InfrastructureParamTypes = new(StringComparer.Ordinal)
+    {
+        "System.Threading.CancellationToken",
+        "System.ClientModel.Primitives.RequestOptions"
+    };
+
     private MethodInfo SelectRichestOverload(List<MethodInfo> overloads, string verb, Type serviceType, List<Diagnostic> diagnostics)
     {
+        // Pick the overload with the most user-facing parameters.
+        // Exclude infrastructure types (CancellationToken, RequestOptions) from the count
+        // so convenience methods are preferred over protocol methods.
         var sorted = overloads.OrderByDescending(m =>
-            m.GetParameters().Count(p => p.ParameterType.FullName != "System.Threading.CancellationToken")).ToList();
+            m.GetParameters().Count(p => !InfrastructureParamTypes.Contains(p.ParameterType.FullName ?? ""))).ToList();
 
         diagnostics.Add(new Diagnostic(
             DiagnosticSeverity.Info,
@@ -271,24 +280,20 @@ public class DotNetAdapter : ISdkAdapter
         var parameters = new List<Parameter>();
         foreach (var param in method.GetParameters())
         {
-            // Skip infrastructure types — not user-facing parameters
+            // Skip CancellationToken — never user-facing
             if (param.ParameterType.FullName == "System.Threading.CancellationToken")
-                continue;
-
-            // Skip optional RequestOptions — infrastructure type with sensible defaults.
-            // Required (non-optional) RequestOptions are kept so CanWireSdkCall can detect them.
-            if (param.ParameterType.FullName == "System.ClientModel.Primitives.RequestOptions"
-                && param.HasDefaultValue)
                 continue;
 
             var typeRef = BuildTypeRef(param.ParameterType);
 
             // Check if the parameter type is a class with properties (options object).
-            // Skip abstract types and types without a public parameterless constructor —
-            // can't instantiate them in generated handlers. They become plain string CLI params.
+            // Skip abstract types, types without a public parameterless constructor,
+            // and infrastructure types (RequestOptions) — they become plain string CLI params
+            // which CanWireOperation detects as unconvertible → echo fallback.
             if (typeRef.Kind == TypeKind.Class && !IsPrimitiveType(param.ParameterType)
                 && !param.ParameterType.IsAbstract
-                && HasPublicParameterlessCtor(param.ParameterType))
+                && HasPublicParameterlessCtor(param.ParameterType)
+                && !InfrastructureParamTypes.Contains(param.ParameterType.FullName ?? ""))
             {
                 var properties = ExtractClassProperties(param.ParameterType, depth: 0);
                 typeRef = typeRef with { Properties = properties };
