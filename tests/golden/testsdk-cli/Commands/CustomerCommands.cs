@@ -3,6 +3,7 @@ using System.CommandLine.Invocation;
 using System.Text.Json;
 using TestsdkCli.Output;
 using TestsdkCli.Auth;
+using CliBuilder.TestSdk.Models;
 using CliBuilder.TestSdk.Services;
 
 namespace TestsdkCli.Commands;
@@ -167,71 +168,96 @@ public static class CustomerCommands
 
 
                     // SDK call: CustomerService.CreateAsync
-                    // var client = new CustomerService(credential);
-
-                    // var sdkOptions = new CreateCustomerOptions();
-
-                    // sdkOptions.Email = emailValue;
-
-                    // sdkOptions.PreferredContact = preferredContactValue;
-
-                    // sdkOptions.CreditLimit = creditLimitValue;
-
-                    // sdkOptions.Currency = currencyValue;
-
-                    // sdkOptions.Description = descriptionValue;
-
-                    // sdkOptions.InitialStatus = initialStatusValue;
-
-                    // sdkOptions.Locale = localeValue;
-
-                    // sdkOptions.Name = nameValue;
-
-                    // sdkOptions.Phone = phoneValue;
-
-                    // sdkOptions.TaxId = taxIdValue;
-
-                    // sdkOptions.IdempotencyKey = idempotencyKeyValue;
-
-                    // sdkOptions.Timeout = timeoutValue;
+                    var client = new CustomerService(credential);
 
 
 
-                    // var result = await client.CreateAsync(sdkOptions);
-                    await Task.CompletedTask;
-                    var result = (object)new Dictionary<string, object?>
-                    {
-                        ["command"] = "customer create",
-                        ["parameters"] = new Dictionary<string, object?>
-                        {
+                    var createCustomerOptions = new CreateCustomerOptions();
 
-                            ["Email"] = emailValue,
 
-                            ["PreferredContact"] = preferredContactValue,
+                    createCustomerOptions.Email = emailValue;
 
-                            ["CreditLimit"] = creditLimitValue,
 
-                            ["Currency"] = currencyValue,
 
-                            ["Description"] = descriptionValue,
+                    createCustomerOptions.PreferredContact = preferredContactValue;
 
-                            ["InitialStatus"] = initialStatusValue,
 
-                            ["Locale"] = localeValue,
 
-                            ["Name"] = nameValue,
+                    createCustomerOptions.CreditLimit = creditLimitValue;
 
-                            ["Phone"] = phoneValue,
 
-                            ["TaxId"] = taxIdValue,
 
-                            ["IdempotencyKey"] = idempotencyKeyValue,
+                    createCustomerOptions.Currency = currencyValue;
 
-                            ["Timeout"] = timeoutValue
 
-                        },
-                        ["authenticated"] = true
-                    };
+
+                    createCustomerOptions.Description = descriptionValue;
+
+
+
+                    createCustomerOptions.InitialStatus = initialStatusValue is not null ? Enum.Parse<CustomerStatus>(initialStatusValue) : (CustomerStatus?)null;
+
+
+
+                    createCustomerOptions.Locale = localeValue;
+
+
+
+                    createCustomerOptions.Name = nameValue;
+
+
+
+                    createCustomerOptions.Phone = phoneValue;
+
+
+
+                    createCustomerOptions.TaxId = taxIdValue;
+
+
+
+
+
+
+
+
+
+
+                    var requestOptions = new RequestOptions();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    requestOptions.IdempotencyKey = idempotencyKeyValue;
+
+
+
+                    requestOptions.Timeout = timeoutValue is not null ? TimeSpan.Parse(timeoutValue) : (TimeSpan?)null;
+
+
+
+
+
+                    var result = (object)await client.CreateAsync(createCustomerOptions, requestOptions);
+
+
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
@@ -297,22 +323,14 @@ public static class CustomerCommands
 
 
                     // SDK call: CustomerService.GetAsync
-                    // var client = new CustomerService(credential);
+                    var client = new CustomerService(credential);
 
 
-                    // var result = await client.GetAsync(idValue);
-                    await Task.CompletedTask;
-                    var result = (object)new Dictionary<string, object?>
-                    {
-                        ["command"] = "customer get",
-                        ["parameters"] = new Dictionary<string, object?>
-                        {
 
-                            ["id"] = idValue
 
-                        },
-                        ["authenticated"] = true
-                    };
+                    var result = (object)await client.GetAsync(idValue);
+
+
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
@@ -388,24 +406,16 @@ public static class CustomerCommands
 
 
                     // SDK call: CustomerService.ListAsync
-                    // var client = new CustomerService(credential);
+                    var client = new CustomerService(credential);
 
 
-                    // var result = await client.ListAsync(limitValue, cursorValue);
-                    await Task.CompletedTask;
-                    var result = (object)new Dictionary<string, object?>
-                    {
-                        ["command"] = "customer list",
-                        ["parameters"] = new Dictionary<string, object?>
-                        {
 
-                            ["limit"] = limitValue,
 
-                            ["cursor"] = cursorValue
 
-                        },
-                        ["authenticated"] = true
-                    };
+
+                    var result = (object)await client.ListAsync(limitValue, cursorValue);
+
+
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
@@ -471,22 +481,14 @@ public static class CustomerCommands
 
 
                     // SDK call: CustomerService.DeleteAsync
-                    // var client = new CustomerService(credential);
+                    var client = new CustomerService(credential);
 
 
-                    // var result = await client.DeleteAsync(idValue);
-                    await Task.CompletedTask;
-                    var result = (object)new Dictionary<string, object?>
-                    {
-                        ["command"] = "customer delete",
-                        ["parameters"] = new Dictionary<string, object?>
-                        {
 
-                            ["id"] = idValue
 
-                        },
-                        ["authenticated"] = true
-                    };
+                    var result = (object)await client.DeleteAsync(idValue);
+
+
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
@@ -542,20 +544,17 @@ public static class CustomerCommands
 
 
                     // SDK call: CustomerService.StreamAsync
-                    // var client = new CustomerService(credential);
+                    var client = new CustomerService(credential);
 
 
-                    // var result = await client.StreamAsync();
-                    await Task.CompletedTask;
-                    var result = (object)new Dictionary<string, object?>
+                    var items = new List<object>();
+                    await foreach (var item in client.StreamAsync())
                     {
-                        ["command"] = "customer stream",
-                        ["parameters"] = new Dictionary<string, object?>
-                        {
+                        items.Add(item);
+                    }
+                    var result = (object)items;
 
-                        },
-                        ["authenticated"] = true
-                    };
+
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
@@ -621,22 +620,14 @@ public static class CustomerCommands
 
 
                     // SDK call: CustomerService.GetMetadataAsync
-                    // var client = new CustomerService(credential);
+                    var client = new CustomerService(credential);
 
 
-                    // var result = await client.GetMetadataAsync(idValue);
-                    await Task.CompletedTask;
-                    var result = (object)new Dictionary<string, object?>
-                    {
-                        ["command"] = "customer get-metadata",
-                        ["parameters"] = new Dictionary<string, object?>
-                        {
 
-                            ["id"] = idValue
 
-                        },
-                        ["authenticated"] = true
-                    };
+                    var result = (object)await client.GetMetadataAsync(idValue);
+
+
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);

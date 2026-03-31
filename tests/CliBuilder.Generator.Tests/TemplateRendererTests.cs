@@ -44,4 +44,45 @@ public class TemplateRendererTests
         var result = _renderer.RenderInline("{{ value | escape_csharp }}", new { Value = (string?)null });
         Assert.Equal("null", result.Trim());
     }
+
+    // -----------------------------------------------------------
+    // apply_conversion custom function (step 7B)
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void ApplyConversion_NullExpression_ReturnsVarNameValue()
+    {
+        Assert.Equal("emailValue", TemplateRenderer.ApplyConversion("email", null));
+    }
+
+    [Fact]
+    public void ApplyConversion_EnumExpression_SubstitutesPlaceholder()
+    {
+        var result = TemplateRenderer.ApplyConversion("status", "Enum.Parse<CustomerStatus>({0})");
+        Assert.Equal("Enum.Parse<CustomerStatus>(statusValue)", result);
+    }
+
+    [Fact]
+    public void ApplyConversion_NullableTimeSpan_SubstitutesBothOccurrences()
+    {
+        var expr = "{0} is not null ? TimeSpan.Parse({0}) : (TimeSpan?)null";
+        var result = TemplateRenderer.ApplyConversion("timeout", expr);
+        Assert.Equal("timeoutValue is not null ? TimeSpan.Parse(timeoutValue) : (TimeSpan?)null", result);
+    }
+
+    [Fact]
+    public void ApplyConversion_ViaTemplate_IdentityPath()
+    {
+        var result = _renderer.RenderInline(
+            "{{ name | apply_conversion expr }}", new { Name = "email", Expr = (string?)null });
+        Assert.Equal("emailValue", result.Trim());
+    }
+
+    [Fact]
+    public void ApplyConversion_ViaTemplate_ConversionPath()
+    {
+        var result = _renderer.RenderInline(
+            "{{ name | apply_conversion expr }}", new { Name = "status", Expr = "Enum.Parse<X>({0})" });
+        Assert.Equal("Enum.Parse<X>(statusValue)", result.Trim());
+    }
 }

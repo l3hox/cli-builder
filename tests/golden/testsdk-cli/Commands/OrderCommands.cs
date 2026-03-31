@@ -3,6 +3,7 @@ using System.CommandLine.Invocation;
 using System.Text.Json;
 using TestsdkCli.Output;
 using TestsdkCli.Auth;
+using CliBuilder.TestSdk.Models;
 using CliBuilder.TestSdk.Services;
 
 namespace TestsdkCli.Commands;
@@ -152,63 +153,58 @@ public static class OrderCommands
 
 
                     // SDK call: OrderClient.CreateAsync
-                    // var client = new OrderClient(credential);
-
-                    // var sdkOptions = new CreateOrderOptions();
-
-                    // sdkOptions.Amount = amountValue;
-
-                    // sdkOptions.Currency = currencyValue;
-
-                    // sdkOptions.CustomerId = customerIdValue;
-
-                    // sdkOptions.GiftWrap = giftWrapValue;
-
-                    // sdkOptions.IsPriority = isPriorityValue;
-
-                    // sdkOptions.ProductId = productIdValue;
-
-                    // sdkOptions.Quantity = quantityValue;
-
-                    // sdkOptions.CouponCode = couponCodeValue;
-
-                    // sdkOptions.Description = descriptionValue;
-
-                    // sdkOptions.GiftMessage = giftMessageValue;
+                    var client = new OrderClient(credential);
 
 
 
-                    // var result = await client.CreateAsync(sdkOptions);
-                    await Task.CompletedTask;
-                    var result = (object)new Dictionary<string, object?>
-                    {
-                        ["command"] = "order create",
-                        ["parameters"] = new Dictionary<string, object?>
-                        {
+                    var createOrderOptions = new CreateOrderOptions();
 
-                            ["Amount"] = amountValue,
 
-                            ["Currency"] = currencyValue,
+                    createOrderOptions.Amount = amountValue;
 
-                            ["CustomerId"] = customerIdValue,
 
-                            ["GiftWrap"] = giftWrapValue,
 
-                            ["IsPriority"] = isPriorityValue,
+                    createOrderOptions.Currency = currencyValue;
 
-                            ["ProductId"] = productIdValue,
 
-                            ["Quantity"] = quantityValue,
 
-                            ["CouponCode"] = couponCodeValue,
+                    createOrderOptions.CustomerId = customerIdValue;
 
-                            ["Description"] = descriptionValue,
 
-                            ["GiftMessage"] = giftMessageValue
 
-                        },
-                        ["authenticated"] = true
-                    };
+                    createOrderOptions.GiftWrap = giftWrapValue;
+
+
+
+                    createOrderOptions.IsPriority = isPriorityValue;
+
+
+
+                    createOrderOptions.ProductId = productIdValue;
+
+
+
+                    createOrderOptions.Quantity = quantityValue;
+
+
+
+                    createOrderOptions.CouponCode = couponCodeValue;
+
+
+
+                    createOrderOptions.Description = descriptionValue;
+
+
+
+                    createOrderOptions.GiftMessage = giftMessageValue;
+
+
+
+
+
+                    var result = (object)await client.CreateAsync(createOrderOptions);
+
+
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
@@ -274,22 +270,14 @@ public static class OrderCommands
 
 
                     // SDK call: OrderClient.GetAsync
-                    // var client = new OrderClient(credential);
+                    var client = new OrderClient(credential);
 
 
-                    // var result = await client.GetAsync(idValue);
-                    await Task.CompletedTask;
-                    var result = (object)new Dictionary<string, object?>
-                    {
-                        ["command"] = "order get",
-                        ["parameters"] = new Dictionary<string, object?>
-                        {
 
-                            ["id"] = idValue
 
-                        },
-                        ["authenticated"] = true
-                    };
+                    var result = (object)await client.GetAsync(idValue);
+
+
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
@@ -362,27 +350,22 @@ public static class OrderCommands
 
 
                     // SDK call: OrderClient.UpdateAsync
-                    // var client = new OrderClient(credential);
-
-                    // var sdkOptions = new NestedOptions();
-
-                    // sdkOptions.Name = nameValue;
+                    var client = new OrderClient(credential);
 
 
 
-                    // var result = await client.UpdateAsync(sdkOptions);
-                    await Task.CompletedTask;
-                    var result = (object)new Dictionary<string, object?>
-                    {
-                        ["command"] = "order update",
-                        ["parameters"] = new Dictionary<string, object?>
-                        {
+                    var nestedOptions = new NestedOptions();
 
-                            ["Name"] = nameValue
 
-                        },
-                        ["authenticated"] = true
-                    };
+                    nestedOptions.Name = nameValue;
+
+
+
+
+
+                    var result = (object)await client.UpdateAsync(nestedOptions);
+
+
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
@@ -468,35 +451,30 @@ public static class OrderCommands
 
 
                     // SDK call: OrderClient.ProcessAsync
-                    // var client = new OrderClient(credential);
-
-                    // var sdkOptions = new SanitizationOptions();
-
-                    // sdkOptions.@class = classValueValue;
-
-                    // sdkOptions.@event = eventValueValue;
-
-                    // sdkOptions.NormalParam = normalParamValue;
+                    var client = new OrderClient(credential);
 
 
 
-                    // var result = await client.ProcessAsync(sdkOptions);
-                    await Task.CompletedTask;
-                    var result = (object)new Dictionary<string, object?>
-                    {
-                        ["command"] = "order process",
-                        ["parameters"] = new Dictionary<string, object?>
-                        {
+                    var sanitizationOptions = new SanitizationOptions();
 
-                            ["@class"] = classValueValue,
 
-                            ["@event"] = eventValueValue,
+                    sanitizationOptions.@class = classValueValue;
 
-                            ["NormalParam"] = normalParamValue
 
-                        },
-                        ["authenticated"] = true
-                    };
+
+                    sanitizationOptions.@event = eventValueValue;
+
+
+
+                    sanitizationOptions.NormalParam = normalParamValue;
+
+
+
+
+
+                    var result = (object)await client.ProcessAsync(sanitizationOptions);
+
+
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);

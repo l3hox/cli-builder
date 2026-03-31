@@ -674,4 +674,88 @@ public class CSharpCliGeneratorTests : IDisposable
         Assert.Contains("@class", orderCommands);
         Assert.Contains("@event", orderCommands);
     }
+
+    // -----------------------------------------------------------
+    // SDK call wiring tests (step 7B)
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void Generate_CustomerCreate_HasRealSdkCall()
+    {
+        var result = Generate();
+        var content = File.ReadAllText(
+            Path.Combine(result.ProjectDirectory, "Commands", "CustomerCommands.cs"));
+        // Real client instantiation (not commented out)
+        Assert.Contains("var client = new CustomerService(credential);", content);
+        Assert.DoesNotContain("// var client = new CustomerService", content);
+    }
+
+    [Fact]
+    public void Generate_ProductList_WrapsCredentialInNew()
+    {
+        var result = Generate();
+        var content = File.ReadAllText(
+            Path.Combine(result.ProjectDirectory, "Commands", "ProductCommands.cs"));
+        Assert.Contains("new TokenCredential(credential)", content);
+    }
+
+    [Fact]
+    public void Generate_CustomerCreate_HasOptionsClassConstruction()
+    {
+        var result = Generate();
+        var content = File.ReadAllText(
+            Path.Combine(result.ProjectDirectory, "Commands", "CustomerCommands.cs"));
+        Assert.Contains("var createCustomerOptions = new CreateCustomerOptions();", content);
+        Assert.Contains("createCustomerOptions.Email = emailValue;", content);
+    }
+
+    [Fact]
+    public void Generate_CustomerCreate_HasEnumConversion()
+    {
+        var result = Generate();
+        var content = File.ReadAllText(
+            Path.Combine(result.ProjectDirectory, "Commands", "CustomerCommands.cs"));
+        Assert.Contains("Enum.Parse<CustomerStatus>", content);
+    }
+
+    [Fact]
+    public void Generate_CustomerGet_PassesDirectParams()
+    {
+        var result = Generate();
+        var content = File.ReadAllText(
+            Path.Combine(result.ProjectDirectory, "Commands", "CustomerCommands.cs"));
+        Assert.Contains("client.GetAsync(idValue)", content);
+    }
+
+    [Fact]
+    public void Generate_CustomerStream_HasAwaitForeach()
+    {
+        var result = Generate();
+        var content = File.ReadAllText(
+            Path.Combine(result.ProjectDirectory, "Commands", "CustomerCommands.cs"));
+        Assert.Contains("await foreach", content);
+        Assert.Contains("client.StreamAsync()", content);
+    }
+
+    [Fact]
+    public void Generate_MultipleNamespaces_AllPresent()
+    {
+        var result = Generate();
+        var content = File.ReadAllText(
+            Path.Combine(result.ProjectDirectory, "Commands", "CustomerCommands.cs"));
+        Assert.Contains("using CliBuilder.TestSdk.Models;", content);
+        Assert.Contains("using CliBuilder.TestSdk.Services;", content);
+    }
+
+    [Fact]
+    public void Generate_CustomerCreate_HasMultipleOptionsClasses()
+    {
+        var result = Generate();
+        var content = File.ReadAllText(
+            Path.Combine(result.ProjectDirectory, "Commands", "CustomerCommands.cs"));
+        // CreateAsync takes CreateCustomerOptions + RequestOptions
+        Assert.Contains("new CreateCustomerOptions()", content);
+        Assert.Contains("new RequestOptions()", content);
+        Assert.Contains("client.CreateAsync(createCustomerOptions, requestOptions)", content);
+    }
 }

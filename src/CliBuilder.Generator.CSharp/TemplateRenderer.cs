@@ -79,6 +79,7 @@ public class TemplateRenderer
         var functions = new ScriptObject();
         functions.Import("escape_csharp", new Func<string?, string>(EscapeCSharp));
         functions.Import("to_var_name", new Func<string?, string>(ToVarName));
+        functions.Import("apply_conversion", new Func<string?, string?, string>(ApplyConversion));
         context.PushGlobal(functions);
 
         return context;
@@ -140,4 +141,17 @@ public class TemplateRenderer
 
     private static string ToVarName(string? value) =>
         IdentifierValidator.KebabToCamelCase(value ?? "");
+
+    /// <summary>
+    /// Apply a conversion expression to a variable name.
+    /// If conversionExpr is null, returns "{varName}Value" (identity — no conversion).
+    /// Otherwise, replaces all {0} placeholders in conversionExpr with "{varName}Value".
+    /// </summary>
+    internal static string ApplyConversion(string? varName, string? conversionExpr)
+    {
+        var valueExpr = (varName ?? "_param") + "Value";
+        if (conversionExpr is null)
+            return valueExpr;
+        return conversionExpr.Replace("{0}", valueExpr);
+    }
 }

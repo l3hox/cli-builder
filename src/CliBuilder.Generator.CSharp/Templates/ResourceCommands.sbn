@@ -5,8 +5,8 @@ using {{ root_namespace }}.Output;
 {{- if has_auth }}
 using {{ root_namespace }}.Auth;
 {{- end }}
-{{- if resource.source_namespace }}
-using {{ resource.source_namespace }};
+{{- for ns in resource.required_namespaces }}
+using {{ ns }};
 {{- end }}
 
 namespace {{ root_namespace }}.Commands;
@@ -70,31 +70,32 @@ public static class {{ resource.class_name }}Commands
 {{ if resource.source_class_name && op.source_method_name }}
 
                     // SDK call: {{ resource.source_class_name }}.{{ op.source_method_name }}
-                    // var client = new {{ resource.source_class_name }}(credential);
-{{ if op.options_class_name }}
-                    // var sdkOptions = new {{ op.options_class_name }}();
+                    var client = new {{ resource.source_class_name }}({{ resource.constructor_auth_expression }});
+{{ for mp in op.method_params }}
+{{ if mp.is_options_class }}
+
+                    var {{ mp.arg_expression }} = new {{ mp.type_name }}();
 {{ for param in op.parameters }}
-                    // sdkOptions.{{ param.property_name }} = {{ param.cli_flag | to_var_name }}Value;
+{{ if param.source_options_class_name == mp.type_name }}
+                    {{ mp.arg_expression }}.{{ param.property_name }} = {{ param.cli_flag | to_var_name | apply_conversion param.conversion_expression }};
 {{ end }}
 {{ end }}
-{{ if op.return_type_name == "void" }}
-                    // await client.{{ op.source_method_name }}({{ if op.options_class_name }}sdkOptions{{ else }}{{ for param in op.parameters }}{{ if !for.first }}, {{ end }}{{ param.cli_flag | to_var_name }}Value{{ end }}{{ end }});
-                    await Task.CompletedTask;
+{{ end }}
+{{ end }}
+{{ if op.is_streaming }}
+                    var items = new List<object>();
+                    await foreach (var item in client.{{ op.source_method_name }}({{ for mp in op.method_params }}{{ if !for.first }}, {{ end }}{{ mp.arg_expression }}{{ end }}))
+                    {
+                        items.Add(item);
+                    }
+                    var result = (object)items;
+{{ else if op.return_type_name == "void" }}
+                    await client.{{ op.source_method_name }}({{ for mp in op.method_params }}{{ if !for.first }}, {{ end }}{{ mp.arg_expression }}{{ end }});
                     Console.WriteLine("OK");
 {{ else }}
-                    // var result = await client.{{ op.source_method_name }}({{ if op.options_class_name }}sdkOptions{{ else }}{{ for param in op.parameters }}{{ if !for.first }}, {{ end }}{{ param.cli_flag | to_var_name }}Value{{ end }}{{ end }});
-                    await Task.CompletedTask;
-                    var result = (object)new Dictionary<string, object?>
-                    {
-                        ["command"] = "{{ resource.name }} {{ op.name }}",
-                        ["parameters"] = new Dictionary<string, object?>
-                        {
-{{ for param in op.parameters }}
-                            ["{{ param.property_name }}"] = {{ param.cli_flag | to_var_name }}Value{{ if !for.last }},{{ end }}
+                    var result = (object)await client.{{ op.source_method_name }}({{ for mp in op.method_params }}{{ if !for.first }}, {{ end }}{{ mp.arg_expression }}{{ end }});
 {{ end }}
-                        }{{ if has_auth }},
-                        ["authenticated"] = true{{ end }}
-                    };
+{{ if op.return_type_name != "void" }}
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);

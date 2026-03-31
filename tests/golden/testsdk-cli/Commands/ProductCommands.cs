@@ -3,6 +3,7 @@ using System.CommandLine.Invocation;
 using System.Text.Json;
 using TestsdkCli.Output;
 using TestsdkCli.Auth;
+using CliBuilder.TestSdk.Models;
 using CliBuilder.TestSdk.Services;
 
 namespace TestsdkCli.Commands;
@@ -45,20 +46,12 @@ public static class ProductCommands
 
 
                     // SDK call: ProductApi.ListAsync
-                    // var client = new ProductApi(credential);
+                    var client = new ProductApi(new TokenCredential(credential));
 
 
-                    // var result = await client.ListAsync();
-                    await Task.CompletedTask;
-                    var result = (object)new Dictionary<string, object?>
-                    {
-                        ["command"] = "product list",
-                        ["parameters"] = new Dictionary<string, object?>
-                        {
+                    var result = (object)await client.ListAsync();
 
-                        },
-                        ["authenticated"] = true
-                    };
+
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
