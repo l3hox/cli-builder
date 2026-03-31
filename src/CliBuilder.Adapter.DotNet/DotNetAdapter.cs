@@ -271,8 +271,9 @@ public class DotNetAdapter : ISdkAdapter
         var parameters = new List<Parameter>();
         foreach (var param in method.GetParameters())
         {
-            // Skip CancellationToken
-            if (param.ParameterType.FullName == "System.Threading.CancellationToken")
+            // Skip infrastructure types — not user-facing parameters
+            if (param.ParameterType.FullName is "System.Threading.CancellationToken"
+                or "System.ClientModel.Primitives.RequestOptions")
                 continue;
 
             var typeRef = BuildTypeRef(param.ParameterType);
