@@ -267,14 +267,29 @@ These types become plain `string` CLI parameters (via `forCliParam: true` mappin
 
 `ExtractConstructorAuthType` sorts constructors by parameter count (ascending, stable tiebreaker on param names) and only matches constructors with a single required parameter. This prefers `Client(ApiKeyCredential cred)` over `Client(string model, ApiKeyCredential cred)`. The `IsApiKeyParameter` heuristic uses an exact-match allowlist (`apikey`, `api_key`, `secretkey`, `secret`, `apisecret`, `api_secret`) — not `Contains("key")`.
 
+### Infrastructure parameter filtering (step 7D)
+
+The adapter recognizes infrastructure types that should not be exposed as CLI parameters:
+
+- **`CancellationToken`**: Skipped entirely from parameter extraction (never user-facing).
+- **`RequestOptions`** (`System.ClientModel.Primitives`): Kept in the parameter list but property extraction is skipped. This makes it a bare `Class` (no properties) → `CanWireOperation` detects it as unconvertible → operation falls back to echo. Constructing `RequestOptions` with defaults causes SDK errors (`Value cannot be null`), so it must not be instantiated in generated handlers.
+
+The overload selector also excludes infrastructure types from the parameter count, preferring convenience methods (e.g., `GetModelsAsync()`) over protocol methods (`GetModelsAsync(RequestOptions)`).
+
 ### CanConstruct / CanWireSdkCall gates (step 7D)
 
 Two gates control whether generated handlers emit real SDK calls or fall back to the echo stub:
 
 - **`CanConstruct`** (per resource): `true` when the adapter found a valid single-param auth constructor. `false` for clients like `RealtimeSessionClient` that require multi-arg constructors.
-- **`CanWireSdkCall`** (per operation): `true` when all direct parameters are convertible from CLI types AND the return type is awaitable. `false` when any direct param is `Generic`, `Array`, `Dictionary`, or bare `Class` (without properties), or when the return type matches known non-awaitable suffixes (`*Client`, `*Service`, `*Api`, `*ClientSettings`, `*Options`, `AsyncCollectionResult`, `CollectionResult`).
+- **`CanWireSdkCall`** (per operation): `true` when all direct parameters are convertible from CLI types AND the return type is awaitable. `false` when:
+  - Any direct param is `Generic`, `Array`, `Dictionary`, or bare `Class` (without properties — includes `RequestOptions`)
+  - The return type matches known non-awaitable suffixes (`*Client`, `*Service`, `*Api`, `*ClientSettings`, `*Options`, `AsyncCollectionResult`, `CollectionResult`)
 
 Operations with `CanWireSdkCall = false` emit a `CB306` warning diagnostic and fall back to the echo stub.
+
+### Value type property rule (step 7D)
+
+Value type properties (`bool`, `int`, `enum`) in options classes are never marked as `Required`. Unlike reference types, value types always have implicit defaults (`false`, `0`, first enum value) and the CLI can't distinguish "user didn't set" from "user set the default". This prevents SDK infrastructure properties like `BufferResponse` (`bool`) and `ErrorOptions` (`enum`) from becoming required CLI flags.
 
 ---
 

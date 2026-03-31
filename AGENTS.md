@@ -48,6 +48,6 @@ Each piece of information exists in exactly one place:
 
 [First Actions](docs/cli-builder-spec.md#first-actions) — steps 1-7 complete.
 
-**What's done:** The adapter extracts `SdkMetadata` from .NET assemblies. The generator produces compilable CLI projects with real SDK method calls. Generated handlers construct clients, populate options classes, apply type conversions, and call SDK methods. Validated end-to-end against TestSdk (12 E2E tests) and at scale against OpenAI SDK (20 resources, 169 ops, zero compile errors). 315 tests.
+**What's done:** The adapter extracts `SdkMetadata` from .NET assemblies. The generator produces compilable CLI projects with real SDK method calls. Generated handlers construct clients, populate options classes, apply type conversions, and call SDK methods. Validated end-to-end against TestSdk (12 E2E tests), at compile scale against OpenAI SDK (20 resources, 169 ops, zero errors), and live against the OpenAI API (`get-models`, `get-model` return real data). 315 tests.
 
 **What's next:** Step 8 — `--json-input` deserialization (complex params via JSON), incremental streaming output, Stripe test mode validation. See [docs/FUTURE.md](docs/FUTURE.md) for the full roadmap.

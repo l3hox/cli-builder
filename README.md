@@ -114,9 +114,11 @@ Run `./scripts/coverage.sh` for a full report.
 Steps 1-7 complete. The generator produces compilable CLIs with real SDK method calls. Generated handlers construct clients, populate options classes with type conversions, and call SDK methods.
 
 - **TestSdk:** End-to-end validated — generate, build, run, assert JSON output (12 E2E tests)
-- **OpenAI SDK 2.9.1:** 20 resources, 169 operations, zero compile errors
+- **OpenAI SDK 2.9.1:** 20 resources, 169 operations, zero compile errors. Live API calls validated (`get-models`, `get-model` return real data).
 
 **Remaining:** `--json-input` deserialization for complex parameters, incremental streaming output, Stripe test mode validation. See [docs/FUTURE.md](docs/FUTURE.md).
+
+**Try it:** `./scripts/demo.sh` (TestSdk) or `OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh` (OpenAI).
 
 ## License
 

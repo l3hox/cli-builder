@@ -382,3 +382,21 @@ dotnet test --filter "MatchesGoldenFile"  # TestSdk golden files still match
 **Fix 3 (constructor ordering):** Medium risk — changing constructor iteration order could select a different constructor for some types. Must verify TestSdk still works (its constructors are single-arg, so ordering doesn't matter).
 
 **Fix 5 (CanWireSdkCall):** Medium risk — introduces a new model field and template condition. Operations with unconvertible params fall back to echo, which is correct but reduces functionality. Need to count how many OpenAI operations become echo-only.
+
+---
+
+## Completion notes (2026-03-31)
+
+Phase 7D completed with additional fixes discovered during live testing:
+
+**Additional fixes applied after the initial 6:**
+- **RequestOptions handling:** `System.ClientModel.Primitives.RequestOptions` is an infrastructure type. Property extraction skipped (bare Class → CanWireOperation detects as unconvertible). Overload selector excludes it from param count, preferring convenience methods over protocol methods. Constructing `RequestOptions()` with defaults causes `Value cannot be null` — must not be instantiated.
+- **Value type properties not required:** `bool`, `int`, `enum` properties in options classes are never `Required` — they have implicit defaults and the CLI can't distinguish "not set" from "default".
+- **CancellationToken properties skipped:** Same as method-level CancellationToken filtering, now applied to class properties too.
+- **JsonFormatter fallback:** Added `IncludeFields` + `ToString()` fallback for SDK types with non-public properties (OpenAI SDK uses custom serialization patterns).
+
+**Final stats:**
+- 315 tests, all passing (49 Core + 240 Generator + 26 Integration)
+- 82.7% line coverage, 94.6% method coverage
+- OpenAI CLI: 20 resources, 169 operations, zero compile errors
+- Validated live: `get-models` and `get-model` return real data from OpenAI API
