@@ -16,33 +16,33 @@ public static class {{ resource.class_name }}Commands
     public static Command Build(Option<bool> jsonOption{{ if has_auth }}, Option<string?> apiKeyOption{{ end }})
     {
         var command = new Command("{{ resource.name }}", {{ resource.description | escape_csharp }});
-{{ for op in resource.operations }}
+{{~ for op in resource.operations }}
 
         // {{ op.name }}{{ if op.is_streaming }} [streaming]{{ end }}
         {
             var cmd = new Command("{{ op.name }}", {{ op.description | escape_csharp }});
-{{ for param in op.parameters }}
+{{~ for param in op.parameters }}
             var {{ param.cli_flag | to_var_name }}Option = new Option<{{ param.csharp_type }}>(
                 "--{{ param.cli_flag }}",
                 {{ param.description | escape_csharp }})
             { IsRequired = {{ if param.is_required }}true{{ else }}false{{ end }} };
-{{ if param.default_value_literal }}
+{{~ if param.default_value_literal }}
             {{ param.cli_flag | to_var_name }}Option.SetDefaultValue({{ param.default_value_literal }});
-{{ end }}
-{{ if param.enum_values }}
+{{~ end ~}}
+{{~ if param.enum_values }}
             {{ param.cli_flag | to_var_name }}Option.FromAmong({{ for val in param.enum_values }}{{ if !for.first }}, {{ end }}"{{ val }}"{{ end }});
-{{ end }}
+{{~ end }}
             cmd.AddOption({{ param.cli_flag | to_var_name }}Option);
-{{ end }}
-{{ if op.needs_json_input }}
+{{~ end ~}}
+{{~ if op.needs_json_input }}
             var jsonInputOption = new Option<string?>("--json-input", "Full input as JSON. Flat flags override individual properties.");
             cmd.AddOption(jsonInputOption);
-{{ end }}
+{{~ end }}
             cmd.SetHandler(async (InvocationContext ctx) =>
             {
                 try
                 {
-{{ if has_auth }}
+{{~ if has_auth }}
                     // Resolve credential (exit code 2 on auth failure)
                     string credential;
                     try
@@ -57,45 +57,44 @@ public static class {{ resource.class_name }}Commands
                         return;
                     }
 
-{{ end }}
+{{~ end }}
                     // Read parameter values
-{{ for param in op.parameters }}
+{{~ for param in op.parameters }}
                     var {{ param.cli_flag | to_var_name }}Value = ctx.ParseResult.GetValueForOption({{ param.cli_flag | to_var_name }}Option);
-{{ end }}
-{{ if op.needs_json_input }}
+{{~ end ~}}
+{{~ if op.needs_json_input }}
 
                     // Flat flags take precedence; --json-input fills remaining nulls
                     var jsonInputValue = ctx.ParseResult.GetValueForOption(jsonInputOption);
-{{ end }}
-{{ if resource.source_class_name && op.source_method_name }}
+{{~ end ~}}
+{{~ if resource.source_class_name && op.source_method_name }}
 
                     // SDK call: {{ resource.source_class_name }}.{{ op.source_method_name }}
                     var client = new {{ resource.source_class_name }}({{ resource.constructor_auth_expression }});
-{{ for mp in op.method_params }}
-{{ if mp.is_options_class }}
-
+{{~ for mp in op.method_params ~}}
+{{~ if mp.is_options_class }}
                     var {{ mp.arg_expression }} = new {{ mp.type_name }}();
-{{ for param in op.parameters }}
-{{ if param.source_options_class_name == mp.type_name }}
+{{~ for param in op.parameters ~}}
+{{~ if param.source_options_class_name == mp.type_name }}
                     {{ mp.arg_expression }}.{{ param.property_name }} = {{ param.cli_flag | to_var_name | apply_conversion param.conversion_expression }};
-{{ end }}
-{{ end }}
-{{ end }}
-{{ end }}
-{{ if op.is_streaming }}
+{{~ end ~}}
+{{~ end ~}}
+{{~ end ~}}
+{{~ end ~}}
+{{~ if op.is_streaming }}
                     var items = new List<object>();
                     await foreach (var item in client.{{ op.source_method_name }}({{ for mp in op.method_params }}{{ if !for.first }}, {{ end }}{{ mp.arg_expression }}{{ end }}))
                     {
                         items.Add(item);
                     }
                     var result = (object)items;
-{{ else if op.return_type_name == "void" }}
+{{~ else if op.return_type_name == "void" }}
                     await client.{{ op.source_method_name }}({{ for mp in op.method_params }}{{ if !for.first }}, {{ end }}{{ mp.arg_expression }}{{ end }});
                     Console.WriteLine("OK");
-{{ else }}
+{{~ else }}
                     var result = (object)await client.{{ op.source_method_name }}({{ for mp in op.method_params }}{{ if !for.first }}, {{ end }}{{ mp.arg_expression }}{{ end }});
-{{ end }}
-{{ if op.return_type_name != "void" }}
+{{~ end ~}}
+{{~ if op.return_type_name != "void" }}
 
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
@@ -103,29 +102,29 @@ public static class {{ resource.class_name }}Commands
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
-{{ end }}
-{{ else }}
+{{~ end ~}}
+{{~ else }}
                     // SDK client wiring not available (source class name unknown)
                     var result = new Dictionary<string, object?>
                     {
                         ["command"] = "{{ resource.name }} {{ op.name }}",
                         ["parameters"] = new Dictionary<string, object?>
                         {
-{{ for param in op.parameters }}
+{{~ for param in op.parameters }}
                             ["{{ param.property_name }}"] = {{ param.cli_flag | to_var_name }}Value{{ if !for.last }},{{ end }}
-{{ end }}
+{{~ end }}
                         }
                     };
-{{ if op.return_type_name == "void" }}
+{{~ if op.return_type_name == "void" }}
                     Console.WriteLine("OK");
-{{ else }}
+{{~ else }}
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
                     if (useJson)
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
-{{ end }}
-{{ end }}
+{{~ end ~}}
+{{~ end }}
 
                     ctx.ExitCode = 0;
                 }
@@ -139,7 +138,7 @@ public static class {{ resource.class_name }}Commands
             });
             command.AddCommand(cmd);
         }
-{{ end }}
+{{~ end }}
 
         return command;
     }

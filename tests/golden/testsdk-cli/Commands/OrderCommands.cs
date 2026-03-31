@@ -24,14 +24,12 @@ public static class OrderCommands
                 null)
             { IsRequired = true };
 
-
             cmd.AddOption(amountOption);
 
             var currencyOption = new Option<string>(
                 "--currency",
                 null)
             { IsRequired = true };
-
 
             cmd.AddOption(currencyOption);
 
@@ -40,14 +38,12 @@ public static class OrderCommands
                 null)
             { IsRequired = true };
 
-
             cmd.AddOption(customerIdOption);
 
             var giftWrapOption = new Option<bool>(
                 "--gift-wrap",
                 null)
             { IsRequired = true };
-
 
             cmd.AddOption(giftWrapOption);
 
@@ -56,14 +52,12 @@ public static class OrderCommands
                 null)
             { IsRequired = true };
 
-
             cmd.AddOption(isPriorityOption);
 
             var productIdOption = new Option<string>(
                 "--product-id",
                 null)
             { IsRequired = true };
-
 
             cmd.AddOption(productIdOption);
 
@@ -72,14 +66,12 @@ public static class OrderCommands
                 null)
             { IsRequired = true };
 
-
             cmd.AddOption(quantityOption);
 
             var couponCodeOption = new Option<string>(
                 "--coupon-code",
                 null)
             { IsRequired = false };
-
 
             cmd.AddOption(couponCodeOption);
 
@@ -88,7 +80,6 @@ public static class OrderCommands
                 null)
             { IsRequired = false };
 
-
             cmd.AddOption(descriptionOption);
 
             var giftMessageOption = new Option<string>(
@@ -96,9 +87,7 @@ public static class OrderCommands
                 null)
             { IsRequired = false };
 
-
             cmd.AddOption(giftMessageOption);
-
 
             var jsonInputOption = new Option<string?>("--json-input", "Full input as JSON. Flat flags override individual properties.");
             cmd.AddOption(jsonInputOption);
@@ -146,64 +135,36 @@ public static class OrderCommands
                     var giftMessageValue = ctx.ParseResult.GetValueForOption(giftMessageOption);
 
 
-
                     // Flat flags take precedence; --json-input fills remaining nulls
                     var jsonInputValue = ctx.ParseResult.GetValueForOption(jsonInputOption);
-
 
 
                     // SDK call: OrderClient.CreateAsync
                     var client = new OrderClient(credential);
 
-
-
                     var createOrderOptions = new CreateOrderOptions();
-
 
                     createOrderOptions.Amount = amountValue;
 
-
-
                     createOrderOptions.Currency = currencyValue;
-
-
 
                     createOrderOptions.CustomerId = customerIdValue;
 
-
-
                     createOrderOptions.GiftWrap = giftWrapValue;
-
-
 
                     createOrderOptions.IsPriority = isPriorityValue;
 
-
-
                     createOrderOptions.ProductId = productIdValue;
-
-
 
                     createOrderOptions.Quantity = quantityValue;
 
-
-
                     createOrderOptions.CouponCode = couponCodeValue;
-
-
 
                     createOrderOptions.Description = descriptionValue;
 
-
-
                     createOrderOptions.GiftMessage = giftMessageValue;
 
-
-
-
-
                     var result = (object)await client.CreateAsync(createOrderOptions);
-
 
 
                     // Format output
@@ -212,7 +173,6 @@ public static class OrderCommands
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
-
 
 
                     ctx.ExitCode = 0;
@@ -238,9 +198,7 @@ public static class OrderCommands
                 null)
             { IsRequired = true };
 
-
             cmd.AddOption(idOption);
-
 
             cmd.SetHandler(async (InvocationContext ctx) =>
             {
@@ -267,16 +225,10 @@ public static class OrderCommands
                     var idValue = ctx.ParseResult.GetValueForOption(idOption);
 
 
-
-
                     // SDK call: OrderClient.GetAsync
                     var client = new OrderClient(credential);
 
-
-
-
                     var result = (object)await client.GetAsync(idValue);
-
 
 
                     // Format output
@@ -285,7 +237,6 @@ public static class OrderCommands
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
-
 
 
                     ctx.ExitCode = 0;
@@ -311,9 +262,7 @@ public static class OrderCommands
                 null)
             { IsRequired = true };
 
-
             cmd.AddOption(nameOption);
-
 
             var jsonInputOption = new Option<string?>("--json-input", "Full input as JSON. Flat flags override individual properties.");
             cmd.AddOption(jsonInputOption);
@@ -343,28 +292,18 @@ public static class OrderCommands
                     var nameValue = ctx.ParseResult.GetValueForOption(nameOption);
 
 
-
                     // Flat flags take precedence; --json-input fills remaining nulls
                     var jsonInputValue = ctx.ParseResult.GetValueForOption(jsonInputOption);
-
 
 
                     // SDK call: OrderClient.UpdateAsync
                     var client = new OrderClient(credential);
 
-
-
                     var nestedOptions = new NestedOptions();
-
 
                     nestedOptions.Name = nameValue;
 
-
-
-
-
                     var result = (object)await client.UpdateAsync(nestedOptions);
-
 
 
                     // Format output
@@ -373,7 +312,6 @@ public static class OrderCommands
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
-
 
 
                     ctx.ExitCode = 0;
@@ -399,14 +337,12 @@ public static class OrderCommands
                 null)
             { IsRequired = true };
 
-
             cmd.AddOption(classValueOption);
 
             var eventValueOption = new Option<string>(
                 "--event-value",
                 null)
             { IsRequired = true };
-
 
             cmd.AddOption(eventValueOption);
 
@@ -415,9 +351,7 @@ public static class OrderCommands
                 null)
             { IsRequired = true };
 
-
             cmd.AddOption(normalParamOption);
-
 
             cmd.SetHandler(async (InvocationContext ctx) =>
             {
@@ -448,32 +382,18 @@ public static class OrderCommands
                     var normalParamValue = ctx.ParseResult.GetValueForOption(normalParamOption);
 
 
-
-
                     // SDK call: OrderClient.ProcessAsync
                     var client = new OrderClient(credential);
 
-
-
                     var sanitizationOptions = new SanitizationOptions();
-
 
                     sanitizationOptions.@class = classValueValue;
 
-
-
                     sanitizationOptions.@event = eventValueValue;
-
-
 
                     sanitizationOptions.NormalParam = normalParamValue;
 
-
-
-
-
                     var result = (object)await client.ProcessAsync(sanitizationOptions);
-
 
 
                     // Format output
@@ -482,7 +402,6 @@ public static class OrderCommands
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
-
 
 
                     ctx.ExitCode = 0;

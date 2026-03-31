@@ -24,14 +24,12 @@ public static class CustomerCommands
                 null)
             { IsRequired = true };
 
-
             cmd.AddOption(emailOption);
 
             var preferredContactOption = new Option<bool>(
                 "--preferred-contact",
                 null)
             { IsRequired = true };
-
 
             cmd.AddOption(preferredContactOption);
 
@@ -40,14 +38,12 @@ public static class CustomerCommands
                 null)
             { IsRequired = false };
 
-
             cmd.AddOption(creditLimitOption);
 
             var currencyOption = new Option<string>(
                 "--currency",
                 null)
             { IsRequired = false };
-
 
             cmd.AddOption(currencyOption);
 
@@ -56,14 +52,12 @@ public static class CustomerCommands
                 null)
             { IsRequired = false };
 
-
             cmd.AddOption(descriptionOption);
 
             var initialStatusOption = new Option<string>(
                 "--initial-status",
                 null)
             { IsRequired = false };
-
 
             initialStatusOption.FromAmong("Active", "Inactive", "Suspended");
 
@@ -74,14 +68,12 @@ public static class CustomerCommands
                 null)
             { IsRequired = false };
 
-
             cmd.AddOption(localeOption);
 
             var nameOption = new Option<string>(
                 "--name",
                 null)
             { IsRequired = false };
-
 
             cmd.AddOption(nameOption);
 
@@ -90,14 +82,12 @@ public static class CustomerCommands
                 null)
             { IsRequired = false };
 
-
             cmd.AddOption(phoneOption);
 
             var taxIdOption = new Option<string>(
                 "--tax-id",
                 null)
             { IsRequired = false };
-
 
             cmd.AddOption(taxIdOption);
 
@@ -106,7 +96,6 @@ public static class CustomerCommands
                 null)
             { IsRequired = false };
 
-
             cmd.AddOption(idempotencyKeyOption);
 
             var timeoutOption = new Option<string>(
@@ -114,9 +103,7 @@ public static class CustomerCommands
                 null)
             { IsRequired = false };
 
-
             cmd.AddOption(timeoutOption);
-
 
             cmd.SetHandler(async (InvocationContext ctx) =>
             {
@@ -165,98 +152,38 @@ public static class CustomerCommands
                     var timeoutValue = ctx.ParseResult.GetValueForOption(timeoutOption);
 
 
-
-
                     // SDK call: CustomerService.CreateAsync
                     var client = new CustomerService(credential);
 
-
-
                     var createCustomerOptions = new CreateCustomerOptions();
-
 
                     createCustomerOptions.Email = emailValue;
 
-
-
                     createCustomerOptions.PreferredContact = preferredContactValue;
-
-
 
                     createCustomerOptions.CreditLimit = creditLimitValue;
 
-
-
                     createCustomerOptions.Currency = currencyValue;
-
-
 
                     createCustomerOptions.Description = descriptionValue;
 
-
-
                     createCustomerOptions.InitialStatus = initialStatusValue is not null ? Enum.Parse<CustomerStatus>(initialStatusValue) : (CustomerStatus?)null;
-
-
 
                     createCustomerOptions.Locale = localeValue;
 
-
-
                     createCustomerOptions.Name = nameValue;
-
-
 
                     createCustomerOptions.Phone = phoneValue;
 
-
-
                     createCustomerOptions.TaxId = taxIdValue;
-
-
-
-
-
-
-
-
-
 
                     var requestOptions = new RequestOptions();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     requestOptions.IdempotencyKey = idempotencyKeyValue;
-
-
 
                     requestOptions.Timeout = timeoutValue is not null ? TimeSpan.Parse(timeoutValue) : (TimeSpan?)null;
 
-
-
-
-
                     var result = (object)await client.CreateAsync(createCustomerOptions, requestOptions);
-
 
 
                     // Format output
@@ -265,7 +192,6 @@ public static class CustomerCommands
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
-
 
 
                     ctx.ExitCode = 0;
@@ -291,9 +217,7 @@ public static class CustomerCommands
                 null)
             { IsRequired = true };
 
-
             cmd.AddOption(idOption);
-
 
             cmd.SetHandler(async (InvocationContext ctx) =>
             {
@@ -320,16 +244,10 @@ public static class CustomerCommands
                     var idValue = ctx.ParseResult.GetValueForOption(idOption);
 
 
-
-
                     // SDK call: CustomerService.GetAsync
                     var client = new CustomerService(credential);
 
-
-
-
                     var result = (object)await client.GetAsync(idValue);
-
 
 
                     // Format output
@@ -338,7 +256,6 @@ public static class CustomerCommands
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
-
 
 
                     ctx.ExitCode = 0;
@@ -364,7 +281,6 @@ public static class CustomerCommands
                 null)
             { IsRequired = false };
 
-
             cmd.AddOption(limitOption);
 
             var cursorOption = new Option<string>(
@@ -372,9 +288,7 @@ public static class CustomerCommands
                 null)
             { IsRequired = false };
 
-
             cmd.AddOption(cursorOption);
-
 
             cmd.SetHandler(async (InvocationContext ctx) =>
             {
@@ -403,18 +317,10 @@ public static class CustomerCommands
                     var cursorValue = ctx.ParseResult.GetValueForOption(cursorOption);
 
 
-
-
                     // SDK call: CustomerService.ListAsync
                     var client = new CustomerService(credential);
 
-
-
-
-
-
                     var result = (object)await client.ListAsync(limitValue, cursorValue);
-
 
 
                     // Format output
@@ -423,7 +329,6 @@ public static class CustomerCommands
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
-
 
 
                     ctx.ExitCode = 0;
@@ -449,9 +354,7 @@ public static class CustomerCommands
                 null)
             { IsRequired = true };
 
-
             cmd.AddOption(idOption);
-
 
             cmd.SetHandler(async (InvocationContext ctx) =>
             {
@@ -478,16 +381,10 @@ public static class CustomerCommands
                     var idValue = ctx.ParseResult.GetValueForOption(idOption);
 
 
-
-
                     // SDK call: CustomerService.DeleteAsync
                     var client = new CustomerService(credential);
 
-
-
-
                     var result = (object)await client.DeleteAsync(idValue);
-
 
 
                     // Format output
@@ -496,7 +393,6 @@ public static class CustomerCommands
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
-
 
 
                     ctx.ExitCode = 0;
@@ -516,7 +412,6 @@ public static class CustomerCommands
         // stream [streaming]
         {
             var cmd = new Command("stream", null);
-
 
             cmd.SetHandler(async (InvocationContext ctx) =>
             {
@@ -541,11 +436,8 @@ public static class CustomerCommands
                     // Read parameter values
 
 
-
-
                     // SDK call: CustomerService.StreamAsync
                     var client = new CustomerService(credential);
-
 
                     var items = new List<object>();
                     await foreach (var item in client.StreamAsync())
@@ -555,14 +447,12 @@ public static class CustomerCommands
                     var result = (object)items;
 
 
-
                     // Format output
                     var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
                     if (useJson)
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
-
 
 
                     ctx.ExitCode = 0;
@@ -588,9 +478,7 @@ public static class CustomerCommands
                 null)
             { IsRequired = true };
 
-
             cmd.AddOption(idOption);
-
 
             cmd.SetHandler(async (InvocationContext ctx) =>
             {
@@ -617,16 +505,10 @@ public static class CustomerCommands
                     var idValue = ctx.ParseResult.GetValueForOption(idOption);
 
 
-
-
                     // SDK call: CustomerService.GetMetadataAsync
                     var client = new CustomerService(credential);
 
-
-
-
                     var result = (object)await client.GetMetadataAsync(idValue);
-
 
 
                     // Format output
@@ -635,7 +517,6 @@ public static class CustomerCommands
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
-
 
 
                     ctx.ExitCode = 0;

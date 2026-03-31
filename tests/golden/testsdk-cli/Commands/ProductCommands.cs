@@ -19,7 +19,6 @@ public static class ProductCommands
         {
             var cmd = new Command("list", null);
 
-
             cmd.SetHandler(async (InvocationContext ctx) =>
             {
                 try
@@ -43,14 +42,10 @@ public static class ProductCommands
                     // Read parameter values
 
 
-
-
                     // SDK call: ProductApi.ListAsync
                     var client = new ProductApi(new TokenCredential(credential));
 
-
                     var result = (object)await client.ListAsync();
-
 
 
                     // Format output
@@ -59,7 +54,6 @@ public static class ProductCommands
                         JsonFormatter.Write(result);
                     else
                         TableFormatter.Write(result);
-
 
 
                     ctx.ExitCode = 0;

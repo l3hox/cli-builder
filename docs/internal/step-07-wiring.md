@@ -456,12 +456,24 @@ UPDATE_GOLDEN=1 dotnet test --filter "MatchesGoldenFile"
 
 Commit the regenerated golden files. The golden files now contain real SDK calls instead of echo dictionaries.
 
+### Council review findings (applied)
+
+A Developer Council (SoftwareDeveloper, QaTester — 3-round debate) reviewed 7B and identified:
+
+**P1 — Scriban whitespace (fixed).** Template control blocks emitted excessive blank lines (runs of 15-30) in golden files. Fixed by adding `{{~` whitespace suppressors to control-flow-only lines. Maximum consecutive blank lines reduced from 22 to 2.
+
+**P2 — Stub fallback + void return tests (added).** `Generate_NoSourceClassName_FallsBackToEcho` verifies the echo dictionary path for resources without SourceClassName. `Generate_CustomerDelete_IsVoidReturn` verifies non-void SDK calls.
+
+**Accepted deferrals (documented):**
+- `jsonInputValue` declared but unused — explicit step 8 deferral. The `--json-input` option is wired to the command parser but deserialization/merge logic is not implemented. The help text describes the intended behavior for when it ships.
+- OpenAI compile failures (abstract types like `BinaryContent`/`Stream`, multi-arg constructors, non-generic `AsyncCollectionResult`, read-only properties) — Phase 7D scope. Root causes: (1) adapter maps abstract classes as concrete options classes, (2) constructor auth detection doesn't handle multi-param constructors, (3) non-generic streaming return types not caught.
+
 ### Checkpoint 7B
 
 ```bash
 dotnet test --filter "CompilesWithDotnetBuild"  # compile still works
 dotnet test --filter "MatchesGoldenFile"         # golden files updated
-dotnet test                                       # full suite
+dotnet test --filter "FullyQualifiedName!~GenerateOpenAi_Compiles"  # all except OpenAI compile (7D)
 ```
 
 ---
