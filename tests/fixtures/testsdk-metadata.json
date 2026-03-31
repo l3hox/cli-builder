@@ -144,7 +144,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -502,7 +502,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -582,7 +582,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -598,7 +598,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -678,7 +678,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },

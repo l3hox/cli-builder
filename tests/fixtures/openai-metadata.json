@@ -470,22 +470,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -500,7 +484,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -516,7 +500,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -588,22 +572,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -618,7 +586,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -634,7 +602,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -690,22 +658,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -720,7 +672,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -736,7 +688,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -792,22 +744,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -822,7 +758,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -838,7 +774,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -910,22 +846,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -940,7 +860,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -956,7 +876,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -1044,22 +964,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -1074,7 +978,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -1090,7 +994,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -1156,22 +1060,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -1186,7 +1074,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -1202,7 +1090,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -1258,22 +1146,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -1288,7 +1160,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -1304,7 +1176,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -1376,22 +1248,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -1406,7 +1262,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -1422,7 +1278,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -1478,22 +1334,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -1508,7 +1348,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -1524,7 +1364,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -1596,22 +1436,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -1626,7 +1450,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -1642,7 +1466,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -1730,22 +1554,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -1760,7 +1568,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -1776,7 +1584,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -1848,22 +1656,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -1878,7 +1670,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -1894,7 +1686,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -1966,22 +1758,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -1996,7 +1772,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -2012,7 +1788,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -2084,22 +1860,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -2114,7 +1874,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -2130,7 +1890,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -2202,22 +1962,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -2232,7 +1976,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -2248,7 +1992,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -2320,22 +2064,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -2350,7 +2078,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -2366,7 +2094,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -2470,22 +2198,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -2500,7 +2212,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -2516,7 +2228,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -2668,22 +2380,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -2698,7 +2394,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -2714,7 +2410,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -2850,22 +2546,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -2880,7 +2560,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -2896,7 +2576,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -2968,22 +2648,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -2998,7 +2662,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3014,7 +2678,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -3086,22 +2750,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -3116,7 +2764,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3132,7 +2780,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -3427,22 +3075,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -3457,7 +3089,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3473,7 +3105,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -3627,22 +3259,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -3657,7 +3273,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3673,7 +3289,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -3763,22 +3379,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -3793,7 +3393,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3809,7 +3409,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -3865,22 +3465,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -3895,7 +3479,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3911,7 +3495,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -3983,22 +3567,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -4013,7 +3581,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -4029,7 +3597,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -4101,22 +3669,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -4131,7 +3683,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -4147,7 +3699,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -4462,22 +4014,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -4492,7 +4028,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -4508,7 +4044,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -5194,22 +4730,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -5224,7 +4744,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -5240,7 +4760,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -5296,22 +4816,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -5326,7 +4830,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -5342,7 +4846,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -5408,22 +4912,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -5438,7 +4926,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -5454,7 +4942,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -5510,22 +4998,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -5540,7 +5012,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -5556,7 +5028,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -5606,22 +5078,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -5636,7 +5092,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -5652,7 +5108,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -5708,22 +5164,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -5738,7 +5178,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -5754,7 +5194,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -5810,22 +5250,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -5840,7 +5264,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -5856,7 +5280,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -7086,22 +6510,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -7116,7 +6524,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -7132,7 +6540,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -7188,22 +6596,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -7218,7 +6610,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -7234,7 +6626,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -7612,22 +7004,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -7642,7 +7018,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -7658,7 +7034,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -7730,22 +7106,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -7760,7 +7120,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -7776,7 +7136,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -7848,22 +7208,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -7878,7 +7222,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -7894,7 +7238,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -7950,22 +7294,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -7980,7 +7308,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -7996,7 +7324,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -8052,22 +7380,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -8082,7 +7394,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8098,7 +7410,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -8278,22 +7590,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -8308,7 +7604,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8324,7 +7620,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -8380,22 +7676,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -8410,7 +7690,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8426,7 +7706,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -8482,22 +7762,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -8512,7 +7776,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8528,7 +7792,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -8584,22 +7848,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -8614,7 +7862,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8630,7 +7878,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -8686,22 +7934,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -8716,7 +7948,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8732,7 +7964,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -8820,22 +8052,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -8850,7 +8066,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8866,7 +8082,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -8938,22 +8154,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -8968,7 +8168,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8984,7 +8184,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -9040,22 +8240,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -9070,7 +8254,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9086,7 +8270,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -9200,22 +8384,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -9230,7 +8398,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9246,7 +8414,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -9302,22 +8470,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -9332,7 +8484,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9348,7 +8500,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -9404,22 +8556,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -9434,7 +8570,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9450,7 +8586,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -9522,22 +8658,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -9552,7 +8672,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9568,7 +8688,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -9624,22 +8744,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -9654,7 +8758,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9670,7 +8774,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -9790,22 +8894,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -9820,7 +8908,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9836,7 +8924,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -9908,22 +8996,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -9938,7 +9010,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9954,7 +9026,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -10026,22 +9098,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -10056,7 +9112,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10072,7 +9128,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -10144,22 +9200,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -10174,7 +9214,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10190,7 +9230,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -10262,22 +9302,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -10292,7 +9316,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10308,7 +9332,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -10444,22 +9468,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -10474,7 +9482,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10490,7 +9498,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -10578,22 +9586,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -10608,7 +9600,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10624,7 +9616,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -10952,22 +9944,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -10982,7 +9958,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10998,7 +9974,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -11097,22 +10073,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -11127,7 +10087,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11143,7 +10103,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -11215,22 +10175,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -11245,7 +10189,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11261,7 +10205,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -11360,22 +10304,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -11390,7 +10318,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11406,7 +10334,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -11462,22 +10390,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -11492,7 +10404,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11508,7 +10420,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -11564,22 +10476,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -11594,7 +10490,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11610,7 +10506,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -11666,22 +10562,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -11696,7 +10576,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11712,7 +10592,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -11784,22 +10664,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -11814,7 +10678,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11830,7 +10694,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -11928,22 +10792,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -11958,7 +10806,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11974,7 +10822,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -12030,22 +10878,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -12060,7 +10892,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12076,7 +10908,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -12132,22 +10964,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -12162,7 +10978,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12178,7 +10994,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -12234,22 +11050,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -12264,7 +11064,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12280,7 +11080,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -12368,22 +11168,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -12398,7 +11182,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12414,7 +11198,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -12518,22 +11302,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -12548,7 +11316,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12564,7 +11332,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -12636,22 +11404,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -12666,7 +11418,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12682,7 +11434,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -12754,22 +11506,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -12784,7 +11520,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12800,7 +11536,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -12872,22 +11608,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -12902,7 +11622,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12918,7 +11638,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -13154,7 +11874,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -13556,7 +12276,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -13788,22 +12508,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -13818,7 +12522,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -13834,7 +12538,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -13906,22 +12610,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -13936,7 +12624,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -13952,7 +12640,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -14008,22 +12696,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -14038,7 +12710,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -14054,7 +12726,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -14195,22 +12867,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -14225,7 +12881,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -14241,7 +12897,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -14345,22 +13001,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -14375,7 +13015,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -14391,7 +13031,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -14473,22 +13113,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -14503,7 +13127,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -14519,7 +13143,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -14591,22 +13215,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -14621,7 +13229,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -14637,7 +13245,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -14693,22 +13301,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -14723,7 +13315,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -14739,7 +13331,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -14951,7 +13543,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Audio"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -14970,7 +13562,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Audio"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -15121,7 +13713,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Audio"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -15140,7 +13732,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Audio"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -15548,22 +14140,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -15578,7 +14154,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -15594,7 +14170,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -15666,22 +14242,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -15696,7 +14256,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -15712,7 +14272,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -15768,22 +14328,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -15798,7 +14342,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -15814,7 +14358,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -15870,22 +14414,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -15900,7 +14428,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -15916,7 +14444,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -15972,22 +14500,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -16002,7 +14514,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -16018,7 +14530,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -16090,22 +14602,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -16120,7 +14616,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -16136,7 +14632,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -16192,22 +14688,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -16222,7 +14702,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -16238,7 +14718,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -16482,22 +14962,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -16512,7 +14976,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -16528,7 +14992,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -16600,22 +15064,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -16630,7 +15078,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -16646,7 +15094,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -16734,22 +15182,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -16764,7 +15196,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -16780,7 +15212,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -16852,22 +15284,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -16882,7 +15298,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -16898,7 +15314,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -18024,22 +16440,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -18054,7 +16454,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -18070,7 +16470,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -18142,22 +16542,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -18172,7 +16556,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -18188,7 +16572,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -18276,22 +16660,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -18306,7 +16674,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -18322,7 +16690,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -18471,22 +16839,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -18501,7 +16853,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -18517,7 +16869,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -18653,22 +17005,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -18683,7 +17019,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -18699,7 +17035,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -18787,22 +17123,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -18817,7 +17137,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -18833,7 +17153,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -18921,22 +17241,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -18951,7 +17255,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -18967,7 +17271,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -19071,22 +17375,6 @@
                   "enumValues": null,
                   "properties": [
                     {
-                      "name": "CancellationToken",
-                      "type": {
-                        "kind": "class",
-                        "name": "CancellationToken",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": "System.Threading"
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
                       "name": "ErrorOptions",
                       "type": {
                         "kind": "enum",
@@ -19101,7 +17389,7 @@
                         "elementType": null,
                         "namespace": "System.ClientModel.Primitives"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -19117,7 +17405,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }

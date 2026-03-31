@@ -26,13 +26,6 @@ public static class CustomerCommands
 
             cmd.AddOption(emailOption);
 
-            var preferredContactOption = new Option<bool>(
-                "--preferred-contact",
-                null)
-            { IsRequired = true };
-
-            cmd.AddOption(preferredContactOption);
-
             var creditLimitOption = new Option<int?>(
                 "--credit-limit",
                 null)
@@ -84,6 +77,13 @@ public static class CustomerCommands
 
             cmd.AddOption(phoneOption);
 
+            var preferredContactOption = new Option<bool>(
+                "--preferred-contact",
+                null)
+            { IsRequired = false };
+
+            cmd.AddOption(preferredContactOption);
+
             var taxIdOption = new Option<string>(
                 "--tax-id",
                 null)
@@ -129,8 +129,6 @@ public static class CustomerCommands
 
                     var emailValue = ctx.ParseResult.GetValueForOption(emailOption);
 
-                    var preferredContactValue = ctx.ParseResult.GetValueForOption(preferredContactOption);
-
                     var creditLimitValue = ctx.ParseResult.GetValueForOption(creditLimitOption);
 
                     var currencyValue = ctx.ParseResult.GetValueForOption(currencyOption);
@@ -144,6 +142,8 @@ public static class CustomerCommands
                     var nameValue = ctx.ParseResult.GetValueForOption(nameOption);
 
                     var phoneValue = ctx.ParseResult.GetValueForOption(phoneOption);
+
+                    var preferredContactValue = ctx.ParseResult.GetValueForOption(preferredContactOption);
 
                     var taxIdValue = ctx.ParseResult.GetValueForOption(taxIdOption);
 
@@ -159,8 +159,6 @@ public static class CustomerCommands
 
                     createCustomerOptions.Email = emailValue;
 
-                    createCustomerOptions.PreferredContact = preferredContactValue;
-
                     createCustomerOptions.CreditLimit = creditLimitValue;
 
                     createCustomerOptions.Currency = currencyValue;
@@ -174,6 +172,8 @@ public static class CustomerCommands
                     createCustomerOptions.Name = nameValue;
 
                     createCustomerOptions.Phone = phoneValue;
+
+                    createCustomerOptions.PreferredContact = preferredContactValue;
 
                     createCustomerOptions.TaxId = taxIdValue;
 

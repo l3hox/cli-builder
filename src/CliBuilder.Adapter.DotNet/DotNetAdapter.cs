@@ -310,6 +310,10 @@ public class DotNetAdapter : ISdkAdapter
             if (!prop.CanWrite || prop.SetMethod?.IsPublic != true)
                 continue;
 
+            // Skip CancellationToken properties (same as method parameter filtering)
+            if (prop.PropertyType.FullName == "System.Threading.CancellationToken")
+                continue;
+
             var typeRef = BuildTypeRef(prop.PropertyType, depth + 1);
 
             // Check nullability on properties (mirrors IsNullableParameter logic)
@@ -317,8 +321,10 @@ public class DotNetAdapter : ISdkAdapter
             if (isNullable && !typeRef.IsNullable)
                 typeRef = typeRef with { IsNullable = true };
 
-            // Required = non-nullable reference type (no default on properties)
-            var isRequired = !isNullable && !typeRef.IsNullable;
+            // Required = non-nullable reference type (no default on properties).
+            // Value types (bool, int, enum) are never required — they have implicit defaults
+            // (false, 0, first enum value) and can't be distinguished from "user didn't set".
+            var isRequired = !isNullable && !typeRef.IsNullable && !prop.PropertyType.IsValueType;
 
             props.Add(new Parameter(prop.Name, typeRef, isRequired));
         }
