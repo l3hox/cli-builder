@@ -7,5 +7,5 @@ public class ProductApi
     public ProductApi(TokenCredential credential) { }
 
     public Task<Product> ListAsync(CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+        => Task.FromResult(new Product { Id = "prod_001", Name = "Widget" });
 }
