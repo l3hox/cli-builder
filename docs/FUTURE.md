@@ -17,8 +17,8 @@ Ideas and features intentionally deferred. Not prioritized — this is a parking
 - Enrichment cache (`.enrichment-cache.json`)
 - Data minimization policy for enterprise SDK metadata sent to LLMs
 
-## Step 8 candidates (next up)
-- **`--json-input` deserialization** — the option exists on commands but doesn't deserialize. Need deep merge with flat flag override, options class construction from JSON.
+## Step 9 candidates (next up)
+- **`--json-input` deserialization** — the option exists on commands but doesn't deserialize. Need deep merge with flat flag override. Key challenge: abstract SDK types (`ChatMessage`) need SDK-specific serialization (e.g., `BinaryData.FromString()`). Would unblock ~78 more OpenAI operations.
 - **Incremental streaming output** — streaming operations currently collect all items before formatting. True incremental streaming (emit each item as it arrives) improves UX for long-running streams.
 - **Stripe test mode validation** — generate CLI from Stripe.net SDK, validate with `sk_test_` keys against live Stripe API.
 - **Token caching** — auth handler writes resolved credentials to config file for reuse.

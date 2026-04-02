@@ -87,12 +87,12 @@ openai-cli/
 
 ## Test suite
 
-315 tests across 3 projects:
+322 tests across 3 projects:
 
 | Project | Tests | Covers |
 |---------|-------|--------|
-| Generator Tests | 240 | Template rendering, parameter flattening, model mapping, type conversion, sanitization, golden files, compile verification, CanWireSdkCall |
-| Core Tests | 49 | Adapter extraction, metadata serialization, type resolution, constructor auth detection, nullability |
+| Generator Tests | 244 | Template rendering, parameter flattening, model mapping, type conversion, sanitization, golden files, compile verification, CanWireSdkCall, multi-arg constructors |
+| Core Tests | 52 | Adapter extraction, metadata serialization, type resolution, constructor param detection, nullability |
 | Integration Tests | 26 | OpenAI SDK extraction, OpenAI CLI compilation, TestSdk E2E (generate → build → run → assert JSON) |
 
 Run `./scripts/coverage.sh` for a full report.
@@ -111,12 +111,12 @@ Run `./scripts/coverage.sh` for a full report.
 
 ## Status
 
-Steps 1-7 complete. The generator produces compilable CLIs with real SDK method calls. Generated handlers construct clients, populate options classes with type conversions, and call SDK methods.
+Steps 1-8 complete. The generator produces compilable CLIs with real SDK method calls. Multi-arg constructor support enables sub-clients like `ChatClient(string model, ApiKeyCredential cred)` with `--model` as a CLI option.
 
 - **TestSdk:** End-to-end validated — generate, build, run, assert JSON output (12 E2E tests)
-- **OpenAI SDK 2.9.1:** 20 resources, 169 operations, zero compile errors. Live API calls validated (`get-models`, `get-model` return real data).
+- **OpenAI SDK 2.9.1:** 20 resources, 169 operations, 41 wired with real SDK calls, zero compile errors. Live API validated.
 
-**Remaining:** `--json-input` deserialization for complex parameters, incremental streaming output, Stripe test mode validation. See [docs/FUTURE.md](docs/FUTURE.md).
+**Remaining:** `--json-input` deserialization for complex parameters (unblocks ~78 more OpenAI ops). See [docs/FUTURE.md](docs/FUTURE.md).
 
 **Try it:** `./scripts/demo.sh` (TestSdk) or `OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh` (OpenAI).
 

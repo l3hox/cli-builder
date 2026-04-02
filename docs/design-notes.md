@@ -263,9 +263,11 @@ These types become plain `string` CLI parameters (via `forCliParam: true` mappin
 
 `ExtractClassProperties` only includes properties with a public setter (`prop.CanWrite && prop.SetMethod?.IsPublic == true`). Read-only properties like `Stream.CanRead`, `BinaryData.Length` are excluded — they can't be assigned in generated handlers.
 
-### Constructor preference rule (step 7D)
+### Constructor preference rule (step 8A — replaces step 7D rule)
 
-`ExtractConstructorAuthType` sorts constructors by parameter count (ascending, stable tiebreaker on param names) and only matches constructors with a single required parameter. This prefers `Client(ApiKeyCredential cred)` over `Client(string model, ApiKeyCredential cred)`. The `IsApiKeyParameter` heuristic uses an exact-match allowlist (`apikey`, `api_key`, `secretkey`, `secret`, `apisecret`, `api_secret`) — not `Contains("key")`.
+`ExtractConstructorParams` finds all constructors with at least one auth param, then prefers the one with the MOST user-facing (non-infrastructure) params. This picks `ChatClient(string model, ApiKeyCredential cred)` over `ChatClient(ApiKeyCredential cred)`, giving us `--model` as a CLI config option. Non-auth required params become resource-level options via `AddGlobalOption`. Stable tiebreaker on parameter names.
+
+The `IsApiKeyParameter` heuristic uses an exact-match allowlist (`apikey`, `api_key`, `secretkey`, `secret`, `apisecret`, `api_secret`) — not `Contains("key")`. `IsInfrastructureParam` matches `CancellationToken`, `RequestOptions`, and types ending with `ClientOptions` or `ClientSettings`.
 
 ### Infrastructure parameter filtering (step 7D)
 

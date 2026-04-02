@@ -46,8 +46,8 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-[First Actions](docs/cli-builder-spec.md#first-actions) — steps 1-7 complete.
+[First Actions](docs/cli-builder-spec.md#first-actions) — steps 1-8 complete.
 
-**What's done:** The adapter extracts `SdkMetadata` from .NET assemblies. The generator produces compilable CLI projects with real SDK method calls. Generated handlers construct clients, populate options classes, apply type conversions, and call SDK methods. Validated end-to-end against TestSdk (12 E2E tests), at compile scale against OpenAI SDK (20 resources, 169 ops, zero errors), and live against the OpenAI API (`get-models`, `get-model` return real data). 315 tests.
+**What's done:** The adapter extracts `SdkMetadata` from .NET assemblies. The generator produces compilable CLI projects with real SDK method calls. Multi-arg constructor support (step 8) enables sub-clients like `ChatClient(string model, ApiKeyCredential cred)` with `--model` as a resource-level CLI option. Validated end-to-end against TestSdk (12 E2E tests), at compile scale against OpenAI SDK (20 resources, 169 ops, 41 wired, zero compile errors), and live against the OpenAI API. 322 tests.
 
-**What's next:** Step 8 — `--json-input` deserialization (complex params via JSON), incremental streaming output, Stripe test mode validation. See [docs/FUTURE.md](docs/FUTURE.md) for the full roadmap.
+**What's next:** Step 9 — `--json-input` deserialization for complex params (`IEnumerable<ChatMessage>`, etc.). See [docs/FUTURE.md](docs/FUTURE.md).
