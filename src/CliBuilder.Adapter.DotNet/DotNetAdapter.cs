@@ -251,9 +251,8 @@ public class DotNetAdapter : ISdkAdapter
         if (InfrastructureParamTypes.Contains(fullName))
             return true;
         // SDK client configuration types (e.g., OpenAIClientOptions, RealtimeClientOptions)
-        // are infrastructure — not user-facing. Only match types whose name contains "Client"
-        // followed by "Options" or "Settings" to avoid false-positives on domain options classes
-        // like CreateCustomerOptions.
+        // are infrastructure — not user-facing. Match types whose name ends with "ClientOptions"
+        // or "ClientSettings" to avoid false-positives on domain classes like CreateCustomerOptions.
         var name = param.ParameterType.Name ?? "";
         return name.EndsWith("ClientOptions", StringComparison.Ordinal)
             || name.EndsWith("ClientSettings", StringComparison.Ordinal);

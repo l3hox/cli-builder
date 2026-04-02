@@ -35,17 +35,18 @@ public class DotNetAdapterTests
     // -------------------------------------------------------
 
     [Fact]
-    public void Discovers_ExactlyThreeResources()
+    public void Discovers_ExactlyFourResources()
     {
         var result = ExtractTestSdk();
         // customer (CustomerService), order (OrderClient), product (ProductApi)
         // InternalHelper excluded (no matching suffix)
         // CustomerApiService excluded (noun collision → error diagnostic)
         var resourceNames = result.Metadata.Resources.Select(r => r.Name).OrderBy(n => n).ToList();
-        Assert.Equal(3, resourceNames.Count);
+        Assert.Equal(4, resourceNames.Count);
         Assert.Contains("customer", resourceNames);
         Assert.Contains("order", resourceNames);
         Assert.Contains("product", resourceNames);
+        Assert.Contains("search", resourceNames);
     }
 
     [Fact]
@@ -537,5 +538,43 @@ public class DotNetAdapterTests
         Assert.Equal("apiKey", order.ConstructorParams![0].Name);
         Assert.Equal("string", order.ConstructorParams![0].TypeName);
         Assert.True(order.ConstructorParams![0].IsAuth);
+    }
+
+    // -------------------------------------------------------
+    // Multi-arg constructor (step 8A)
+    // -------------------------------------------------------
+
+    [Fact]
+    public void SearchClient_HasMultiArgConstructor()
+    {
+        var result = ExtractTestSdk();
+        var search = result.Metadata.Resources.First(r => r.Name == "search");
+        Assert.NotNull(search.ConstructorParams);
+        Assert.Equal(2, search.ConstructorParams!.Count);
+    }
+
+    [Fact]
+    public void SearchClient_PrefersRichestConstructor()
+    {
+        // SearchClient has both (ApiKeyCredential) and (string index, ApiKeyCredential) —
+        // adapter should prefer the richest (2-arg)
+        var result = ExtractTestSdk();
+        var search = result.Metadata.Resources.First(r => r.Name == "search");
+        var indexParam = search.ConstructorParams!.First(p => !p.IsAuth);
+        Assert.Equal("index", indexParam.Name);
+        Assert.Equal("String", indexParam.TypeName);
+        Assert.False(indexParam.IsAuth);
+        Assert.True(indexParam.IsRequired);
+    }
+
+    [Fact]
+    public void SearchClient_AuthParamIsApiKeyCredential()
+    {
+        var result = ExtractTestSdk();
+        var search = result.Metadata.Resources.First(r => r.Name == "search");
+        var authParam = search.ConstructorParams!.First(p => p.IsAuth);
+        Assert.Equal("credential", authParam.Name);
+        Assert.Equal("ApiKeyCredential", authParam.TypeName);
+        Assert.Equal("CliBuilder.TestSdk.Models", authParam.TypeNamespace);
     }
 }

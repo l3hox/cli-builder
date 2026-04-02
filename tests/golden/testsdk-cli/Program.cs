@@ -25,4 +25,7 @@ rootCommand.AddCommand(OrderCommands.Build(jsonOption, apiKeyOption));
 rootCommand.AddCommand(ProductCommands.Build(jsonOption, apiKeyOption));
 
 
+rootCommand.AddCommand(SearchCommands.Build(jsonOption, apiKeyOption));
+
+
 return await rootCommand.InvokeAsync(args);

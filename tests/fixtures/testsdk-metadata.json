@@ -957,6 +957,64 @@
             "isRequired": true
           }
         ]
+      },
+      {
+        "name": "search",
+        "description": null,
+        "operations": [
+          {
+            "name": "search",
+            "description": null,
+            "parameters": [
+              {
+                "name": "query",
+                "type": {
+                  "kind": "primitive",
+                  "name": "string",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": null,
+                  "elementType": null,
+                  "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "class",
+              "name": "Product",
+              "isNullable": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null,
+              "namespace": "CliBuilder.TestSdk.Models"
+            },
+            "isStreaming": false,
+            "sourceMethodName": "SearchAsync"
+          }
+        ],
+        "sourceClassName": "SearchClient",
+        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "constructorParams": [
+          {
+            "name": "index",
+            "typeName": "String",
+            "typeNamespace": "System",
+            "isAuth": false,
+            "isRequired": true
+          },
+          {
+            "name": "credential",
+            "typeName": "ApiKeyCredential",
+            "typeNamespace": "CliBuilder.TestSdk.Models",
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       }
     ],
     "authPatterns": [
@@ -970,6 +1028,13 @@
       {
         "type": "bearerToken",
         "envVar": "TESTSDK_TOKEN",
+        "parameterName": "credential",
+        "headerName": null,
+        "description": null
+      },
+      {
+        "type": "apiKey",
+        "envVar": "TESTSDK_API_KEY",
         "parameterName": "credential",
         "headerName": null,
         "description": null

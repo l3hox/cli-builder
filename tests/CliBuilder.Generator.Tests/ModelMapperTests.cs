@@ -456,6 +456,63 @@ public class ModelMapperTests
     }
 
     // -----------------------------------------------------------
+    // Multi-arg constructor (step 8A)
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void BuildConstructorInfo_MultiArg_Expression()
+    {
+        var resource = new Resource("search", null, new List<Operation>(),
+            SourceClassName: "SearchClient", SourceNamespace: "Sdk",
+            ConstructorParams: new[]
+            {
+                new ConstructorParam("index", "String", null, false, true),
+                new ConstructorParam("credential", "ApiKeyCredential", "Sdk.Auth", true, true),
+            });
+        var metadata = MinimalMetadata(resources: new[] { resource });
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+
+        Assert.Equal("indexValue, new ApiKeyCredential(credential)", model.Resources[0].ConstructorExpression);
+        Assert.True(model.Resources[0].CanConstruct);
+    }
+
+    [Fact]
+    public void BuildConstructorInfo_MultiArg_ConfigParams()
+    {
+        var resource = new Resource("search", null, new List<Operation>(),
+            SourceClassName: "SearchClient", SourceNamespace: "Sdk",
+            ConstructorParams: new[]
+            {
+                new ConstructorParam("index", "String", null, false, true),
+                new ConstructorParam("credential", "ApiKeyCredential", "Sdk.Auth", true, true),
+            });
+        var metadata = MinimalMetadata(resources: new[] { resource });
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+
+        Assert.Single(model.Resources[0].ConstructorConfigParams!);
+        var cp = model.Resources[0].ConstructorConfigParams![0];
+        Assert.Equal("index", cp.CliFlag);
+        Assert.Equal("indexValue", cp.VarName);
+        Assert.True(cp.IsRequired);
+    }
+
+    [Fact]
+    public void BuildConstructorInfo_NoAuthParam_CanConstructFalse()
+    {
+        // All params are non-auth — can't construct without credentials
+        var resource = new Resource("thing", null, new List<Operation>(),
+            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            ConstructorParams: new[]
+            {
+                new ConstructorParam("setting", "string", null, false, true),
+            });
+        var metadata = MinimalMetadata(resources: new[] { resource });
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+
+        Assert.False(model.Resources[0].CanConstruct);
+    }
+
+    // -----------------------------------------------------------
     // RequiredNamespaces (step 7A)
     // -----------------------------------------------------------
 

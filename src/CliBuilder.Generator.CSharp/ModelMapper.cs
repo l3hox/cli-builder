@@ -118,11 +118,13 @@ public static partial class ModelMapper
 
         var configParams = new List<ConstructorConfigParam>();
         var argParts = new List<string>();
+        var hasAuth = false;
 
         foreach (var p in resource.ConstructorParams)
         {
             if (p.IsAuth)
             {
+                hasAuth = true;
                 if (p.TypeName == "string")
                 {
                     argParts.Add("credential");
@@ -143,11 +145,17 @@ public static partial class ModelMapper
                 // Non-auth required param → becomes a CLI option (e.g., --model)
                 var (_, cliFlag, _) = IdentifierValidator.SanitizeParameter(p.Name);
                 var varName = KebabToCamelCase(cliFlag) + "Value";
-                configParams.Add(new ConstructorConfigParam(cliFlag, varName, "string", true));
+                // Flow the type from ConstructorParam — most are string, but preserve the actual type
+                var csharpType = MapPrimitiveType(p.TypeName);
+                configParams.Add(new ConstructorConfigParam(cliFlag, varName, csharpType, true));
                 argParts.Add(varName);
             }
             // Optional non-auth params: omitted from constructor call for v1
         }
+
+        // Must have at least one auth param to construct the client
+        if (!hasAuth)
+            return (null, Array.Empty<ConstructorConfigParam>(), false);
 
         return (string.Join(", ", argParts), configParams, true);
     }

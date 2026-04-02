@@ -210,9 +210,9 @@ public class CSharpCliGeneratorTests : IDisposable
     public void Generate_CreatesCommandFilePerResource()
     {
         var result = Generate();
-        // TestSdk has 3 resources: customer, order, product
+        // TestSdk has 4 resources: customer, order, product, search
         var commandFiles = result.GeneratedFiles.Where(f => f.Contains("Commands")).ToList();
-        Assert.Equal(3, commandFiles.Count);
+        Assert.Equal(4, commandFiles.Count);
     }
 
     [Fact]
@@ -228,10 +228,10 @@ public class CSharpCliGeneratorTests : IDisposable
     public void Generate_HasCommandFiles()
     {
         var result = Generate();
-        // 3 resources = 3 command files
+        // 4 resources = 4 command files
         var commandFiles = result.GeneratedFiles.Where(f =>
             f.Contains("Commands") && f.EndsWith(".cs")).ToList();
-        Assert.Equal(3, commandFiles.Count);
+        Assert.Equal(4, commandFiles.Count);
     }
 
     [Fact]
@@ -623,6 +623,7 @@ public class CSharpCliGeneratorTests : IDisposable
         "Commands/CustomerCommands.cs",
         "Commands/OrderCommands.cs",
         "Commands/ProductCommands.cs",
+        "Commands/SearchCommands.cs",
         "Output/JsonFormatter.cs",
         "Output/TableFormatter.cs",
         "Auth/AuthHandler.cs"
