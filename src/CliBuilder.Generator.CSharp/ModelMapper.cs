@@ -71,30 +71,19 @@ public static partial class ModelMapper
         var operations = resource.Operations.Select(op =>
             MapOperation(op, diagnostics)).ToList();
 
-        // Compute constructor auth expression.
-        // Validate type name is a valid identifier (defense-in-depth — adapter produces valid CLR names).
-        string ctorAuthExpr;
-        if (resource.ConstructorAuthTypeName is null or "string")
-        {
-            ctorAuthExpr = "credential";
-        }
-        else if (IdentifierValidator.IsValidIdentifier(resource.ConstructorAuthTypeName))
-        {
-            ctorAuthExpr = $"new {resource.ConstructorAuthTypeName}(credential)";
-        }
-        else
-        {
-            diagnostics.Add(new Diagnostic(DiagnosticSeverity.Warning, "CB205",
-                $"ConstructorAuthTypeName '{resource.ConstructorAuthTypeName}' is not a valid C# identifier — falling back to raw credential"));
-            ctorAuthExpr = "credential";
-        }
+        // Build constructor info from ConstructorParams
+        var (ctorExpr, ctorConfigParams, canConstruct) = BuildConstructorInfo(resource, diagnostics);
 
         // Collect all namespaces needed by this resource's generated code
         var namespaces = new HashSet<string>();
         if (resource.SourceNamespace != null)
             namespaces.Add(resource.SourceNamespace);
-        if (resource.ConstructorAuthTypeNamespace != null)
-            namespaces.Add(resource.ConstructorAuthTypeNamespace);
+        // Add namespaces from constructor params (e.g., ApiKeyCredential namespace)
+        if (resource.ConstructorParams != null)
+        {
+            foreach (var cp in resource.ConstructorParams.Where(p => p.IsAuth && p.TypeNamespace != null))
+                namespaces.Add(cp.TypeNamespace!);
+        }
         foreach (var op in operations)
         {
             if (op.MethodParams != null)
@@ -115,9 +104,52 @@ public static partial class ModelMapper
         return new ResourceModel(resource.Name, className, description, operations,
             SourceClassName: SanitizeString(resource.SourceClassName),
             SourceNamespace: SanitizeString(resource.SourceNamespace),
-            ConstructorAuthExpression: ctorAuthExpr,
+            ConstructorExpression: ctorExpr,
             RequiredNamespaces: requiredNamespaces,
-            CanConstruct: resource.ConstructorAuthTypeName != null);
+            CanConstruct: canConstruct,
+            ConstructorConfigParams: ctorConfigParams);
+    }
+
+    private static (string? Expression, IReadOnlyList<ConstructorConfigParam> ConfigParams, bool CanConstruct)
+        BuildConstructorInfo(Resource resource, List<Diagnostic> diagnostics)
+    {
+        if (resource.ConstructorParams is null || resource.ConstructorParams.Count == 0)
+            return (null, Array.Empty<ConstructorConfigParam>(), false);
+
+        var configParams = new List<ConstructorConfigParam>();
+        var argParts = new List<string>();
+
+        foreach (var p in resource.ConstructorParams)
+        {
+            if (p.IsAuth)
+            {
+                if (p.TypeName == "string")
+                {
+                    argParts.Add("credential");
+                }
+                else if (IdentifierValidator.IsValidIdentifier(p.TypeName))
+                {
+                    argParts.Add($"new {p.TypeName}(credential)");
+                }
+                else
+                {
+                    diagnostics.Add(new Diagnostic(DiagnosticSeverity.Warning, "CB205",
+                        $"Constructor auth type '{p.TypeName}' is not a valid C# identifier — falling back to raw credential"));
+                    argParts.Add("credential");
+                }
+            }
+            else if (p.IsRequired)
+            {
+                // Non-auth required param → becomes a CLI option (e.g., --model)
+                var (_, cliFlag, _) = IdentifierValidator.SanitizeParameter(p.Name);
+                var varName = KebabToCamelCase(cliFlag) + "Value";
+                configParams.Add(new ConstructorConfigParam(cliFlag, varName, "string", true));
+                argParts.Add(varName);
+            }
+            // Optional non-auth params: omitted from constructor call for v1
+        }
+
+        return (string.Join(", ", argParts), configParams, true);
     }
 
     private static OperationModel MapOperation(Operation operation, List<Diagnostic> diagnostics)

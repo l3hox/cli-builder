@@ -438,8 +438,15 @@
         ],
         "sourceClassName": "CustomerService",
         "sourceNamespace": "CliBuilder.TestSdk.Services",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "order",
@@ -907,8 +914,15 @@
         ],
         "sourceClassName": "OrderClient",
         "sourceNamespace": "CliBuilder.TestSdk.Services",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "product",
@@ -934,8 +948,15 @@
         ],
         "sourceClassName": "ProductApi",
         "sourceNamespace": "CliBuilder.TestSdk.Services",
-        "constructorAuthTypeName": "TokenCredential",
-        "constructorAuthTypeNamespace": "CliBuilder.TestSdk.Models"
+        "constructorParams": [
+          {
+            "name": "credential",
+            "typeName": "TokenCredential",
+            "typeNamespace": "CliBuilder.TestSdk.Models",
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       }
     ],
     "authPatterns": [

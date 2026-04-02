@@ -21,9 +21,17 @@ public record ResourceModel(
     IReadOnlyList<OperationModel> Operations,
     string? SourceClassName = null,
     string? SourceNamespace = null,
-    string? ConstructorAuthExpression = null,
+    string? ConstructorExpression = null,
     IReadOnlyList<string>? RequiredNamespaces = null,
-    bool CanConstruct = false
+    bool CanConstruct = false,
+    IReadOnlyList<ConstructorConfigParam>? ConstructorConfigParams = null
+);
+
+public record ConstructorConfigParam(
+    string CliFlag,
+    string VarName,
+    string CSharpType,
+    bool IsRequired
 );
 
 public record OperationModel(

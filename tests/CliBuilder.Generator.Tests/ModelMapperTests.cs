@@ -417,7 +417,7 @@ public class ModelMapperTests
     }
 
     // -----------------------------------------------------------
-    // ConstructorAuthExpression (step 7A)
+    // ConstructorExpression (step 7A)
     // -----------------------------------------------------------
 
     [Fact]
@@ -425,11 +425,11 @@ public class ModelMapperTests
     {
         var resource = new Resource("customer", null, new List<Operation>(),
             SourceClassName: "CustomerService", SourceNamespace: "Test.Services",
-            ConstructorAuthTypeName: "string");
+            ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
 
-        Assert.Equal("credential", model.Resources[0].ConstructorAuthExpression);
+        Assert.Equal("credential", model.Resources[0].ConstructorExpression);
     }
 
     [Fact]
@@ -437,21 +437,22 @@ public class ModelMapperTests
     {
         var resource = new Resource("product", null, new List<Operation>(),
             SourceClassName: "ProductApi", SourceNamespace: "Test.Services",
-            ConstructorAuthTypeName: "TokenCredential", ConstructorAuthTypeNamespace: "Test.Models");
+            ConstructorParams: new[] { new ConstructorParam("credential", "TokenCredential", "Test.Models", true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
 
-        Assert.Equal("new TokenCredential(credential)", model.Resources[0].ConstructorAuthExpression);
+        Assert.Equal("new TokenCredential(credential)", model.Resources[0].ConstructorExpression);
     }
 
     [Fact]
-    public void MapResource_NullAuth_DefaultsToCredential()
+    public void MapResource_NullAuth_ExpressionIsNull()
     {
         var resource = new Resource("thing", null, new List<Operation>());
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
 
-        Assert.Equal("credential", model.Resources[0].ConstructorAuthExpression);
+        Assert.Null(model.Resources[0].ConstructorExpression);
+        Assert.False(model.Resources[0].CanConstruct);
     }
 
     // -----------------------------------------------------------
@@ -470,7 +471,7 @@ public class ModelMapperTests
             SourceMethodName: "DoAsync");
         var resource = new Resource("thing", null, new[] { op },
             SourceClassName: "ThingService", SourceNamespace: "Sdk.Services",
-            ConstructorAuthTypeName: "TokenCredential", ConstructorAuthTypeNamespace: "Sdk.Auth");
+            ConstructorParams: new[] { new ConstructorParam("credential", "TokenCredential", "Sdk.Auth", true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
 
@@ -537,11 +538,11 @@ public class ModelMapperTests
     {
         var resource = new Resource("thing", null, new List<Operation>(),
             SourceClassName: "ThingService", SourceNamespace: "Sdk",
-            ConstructorAuthTypeName: "123BadType");
+            ConstructorParams: new[] { new ConstructorParam("cred", "123BadType", null, true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, diagnostics) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
 
-        Assert.Equal("credential", model.Resources[0].ConstructorAuthExpression);
+        Assert.Equal("credential", model.Resources[0].ConstructorExpression);
         Assert.Contains(diagnostics, d => d.Code == "CB205");
     }
 
@@ -550,11 +551,11 @@ public class ModelMapperTests
     {
         var resource = new Resource("thing", null, new List<Operation>(),
             SourceClassName: "ThingService", SourceNamespace: "Sdk",
-            ConstructorAuthTypeName: "Token{{Credential}}");
+            ConstructorParams: new[] { new ConstructorParam("cred", "Token{{Credential}}", null, true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, diagnostics) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
 
-        Assert.Equal("credential", model.Resources[0].ConstructorAuthExpression);
+        Assert.Equal("credential", model.Resources[0].ConstructorExpression);
         Assert.Contains(diagnostics, d => d.Code == "CB205");
     }
 
@@ -619,7 +620,7 @@ public class ModelMapperTests
             isStreaming, SourceMethodName: "TestAsync");
         var resource = new Resource("thing", null, new[] { op },
             SourceClassName: "ThingService", SourceNamespace: "Sdk",
-            ConstructorAuthTypeName: "string");
+            ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
         var metadata = new SdkMetadata("TestSdk", "1.0.0",
             new[] { resource }, new[] { new AuthPattern(AuthType.ApiKey, "TEST_KEY", "apiKey") });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
@@ -766,7 +767,7 @@ public class ModelMapperTests
             SourceMethodName: "TestAsync");
         var resource = new Resource("thing", null, new[] { op },
             SourceClassName: "ThingService", SourceNamespace: "Sdk",
-            ConstructorAuthTypeName: "string");
+            ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
         var metadata = new SdkMetadata("TestSdk", "1.0.0",
             new[] { resource }, new[] { new AuthPattern(AuthType.ApiKey, "TEST_KEY", "apiKey") });
         var (_, diagnostics) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
@@ -778,7 +779,7 @@ public class ModelMapperTests
     {
         var resource = new Resource("thing", null, new List<Operation>(),
             SourceClassName: "ThingService", SourceNamespace: "Sdk",
-            ConstructorAuthTypeName: null);
+            ConstructorParams: null);
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
         Assert.False(model.Resources[0].CanConstruct);
@@ -789,7 +790,7 @@ public class ModelMapperTests
     {
         var resource = new Resource("thing", null, new List<Operation>(),
             SourceClassName: "ThingService", SourceNamespace: "Sdk",
-            ConstructorAuthTypeName: "string");
+            ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
         Assert.True(model.Resources[0].CanConstruct);

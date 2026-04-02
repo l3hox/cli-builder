@@ -507,8 +507,11 @@ public class DotNetAdapterTests
     {
         var result = ExtractTestSdk();
         var customer = result.Metadata.Resources.First(r => r.Name == "customer");
-        Assert.Equal("string", customer.ConstructorAuthTypeName);
-        Assert.Null(customer.ConstructorAuthTypeNamespace);
+        Assert.NotNull(customer.ConstructorParams);
+        Assert.Single(customer.ConstructorParams!);
+        Assert.Equal("apiKey", customer.ConstructorParams![0].Name);
+        Assert.Equal("string", customer.ConstructorParams![0].TypeName);
+        Assert.True(customer.ConstructorParams![0].IsAuth);
     }
 
     [Fact]
@@ -516,8 +519,12 @@ public class DotNetAdapterTests
     {
         var result = ExtractTestSdk();
         var product = result.Metadata.Resources.First(r => r.Name == "product");
-        Assert.Equal("TokenCredential", product.ConstructorAuthTypeName);
-        Assert.Equal("CliBuilder.TestSdk.Models", product.ConstructorAuthTypeNamespace);
+        Assert.NotNull(product.ConstructorParams);
+        Assert.Single(product.ConstructorParams!);
+        Assert.Equal("credential", product.ConstructorParams![0].Name);
+        Assert.Equal("TokenCredential", product.ConstructorParams![0].TypeName);
+        Assert.Equal("CliBuilder.TestSdk.Models", product.ConstructorParams![0].TypeNamespace);
+        Assert.True(product.ConstructorParams![0].IsAuth);
     }
 
     [Fact]
@@ -525,7 +532,10 @@ public class DotNetAdapterTests
     {
         var result = ExtractTestSdk();
         var order = result.Metadata.Resources.First(r => r.Name == "order");
-        Assert.Equal("string", order.ConstructorAuthTypeName);
-        Assert.Null(order.ConstructorAuthTypeNamespace);
+        Assert.NotNull(order.ConstructorParams);
+        Assert.Single(order.ConstructorParams!);
+        Assert.Equal("apiKey", order.ConstructorParams![0].Name);
+        Assert.Equal("string", order.ConstructorParams![0].TypeName);
+        Assert.True(order.ConstructorParams![0].IsAuth);
     }
 }

@@ -401,8 +401,15 @@
         ],
         "sourceClassName": "OpenAIClient",
         "sourceNamespace": "OpenAI",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "video",
@@ -807,8 +814,15 @@
         ],
         "sourceClassName": "VideoClient",
         "sourceNamespace": "OpenAI.Videos",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "vector-store",
@@ -1955,8 +1969,15 @@
         ],
         "sourceClassName": "VectorStoreClient",
         "sourceNamespace": "OpenAI.VectorStores",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "responses",
@@ -2658,8 +2679,15 @@
         ],
         "sourceClassName": "ResponsesClient",
         "sourceNamespace": "OpenAI.Responses",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "realtime",
@@ -2693,40 +2721,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "ClientSecret",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "QueryString",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "OpenAI.Realtime"
                 },
@@ -2760,40 +2755,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "ClientSecret",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "QueryString",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "OpenAI.Realtime"
                 },
@@ -2859,40 +2821,7 @@
                   "isNullable": false,
                   "genericArguments": null,
                   "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "ClientSecret",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "QueryString",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": false,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": true,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
+                  "properties": null,
                   "elementType": null,
                   "namespace": "OpenAI.Realtime"
                 },
@@ -2967,8 +2896,15 @@
         ],
         "sourceClassName": "RealtimeClient",
         "sourceNamespace": "OpenAI.Realtime",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "realtime-session",
@@ -3664,8 +3600,7 @@
         ],
         "sourceClassName": "RealtimeSessionClient",
         "sourceNamespace": "OpenAI.Realtime",
-        "constructorAuthTypeName": null,
-        "constructorAuthTypeNamespace": null
+        "constructorParams": null
       },
       {
         "name": "moderation",
@@ -3753,8 +3688,22 @@
         ],
         "sourceClassName": "ModerationClient",
         "sourceNamespace": "OpenAI.Moderations",
-        "constructorAuthTypeName": null,
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "model",
+            "typeName": "String",
+            "typeNamespace": "System",
+            "isAuth": false,
+            "isRequired": true
+          },
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "open-ai-model",
@@ -3848,8 +3797,15 @@
         ],
         "sourceClassName": "OpenAIModelClient",
         "sourceNamespace": "OpenAI.Models",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "image",
@@ -5012,8 +4968,22 @@
         ],
         "sourceClassName": "ImageClient",
         "sourceNamespace": "OpenAI.Images",
-        "constructorAuthTypeName": null,
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "model",
+            "typeName": "String",
+            "typeNamespace": "System",
+            "isAuth": false,
+            "isRequired": true
+          },
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "grader",
@@ -5122,8 +5092,15 @@
         ],
         "sourceClassName": "GraderClient",
         "sourceNamespace": "OpenAI.Graders",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "fine-tuning",
@@ -5726,8 +5703,15 @@
         ],
         "sourceClassName": "FineTuningClient",
         "sourceNamespace": "OpenAI.FineTuning",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "open-ai-file",
@@ -6250,8 +6234,15 @@
         ],
         "sourceClassName": "OpenAIFileClient",
         "sourceNamespace": "OpenAI.Files",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "evaluation",
@@ -7164,8 +7155,15 @@
         ],
         "sourceClassName": "EvaluationClient",
         "sourceNamespace": "OpenAI.Evals",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "embedding",
@@ -7351,8 +7349,22 @@
         ],
         "sourceClassName": "EmbeddingClient",
         "sourceNamespace": "OpenAI.Embeddings",
-        "constructorAuthTypeName": null,
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "model",
+            "typeName": "String",
+            "typeNamespace": "System",
+            "isAuth": false,
+            "isRequired": true
+          },
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "conversation",
@@ -7954,8 +7966,15 @@
         ],
         "sourceClassName": "ConversationClient",
         "sourceNamespace": "OpenAI.Conversations",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "container",
@@ -8574,8 +8593,15 @@
         ],
         "sourceClassName": "ContainerClient",
         "sourceNamespace": "OpenAI.Containers",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "chat",
@@ -9760,8 +9786,22 @@
         ],
         "sourceClassName": "ChatClient",
         "sourceNamespace": "OpenAI.Chat",
-        "constructorAuthTypeName": null,
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "model",
+            "typeName": "String",
+            "typeNamespace": "System",
+            "isAuth": false,
+            "isRequired": true
+          },
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "batch",
@@ -9952,8 +9992,15 @@
         ],
         "sourceClassName": "BatchClient",
         "sourceNamespace": "OpenAI.Batch",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "audio",
@@ -10532,8 +10579,22 @@
         ],
         "sourceClassName": "AudioClient",
         "sourceNamespace": "OpenAI.Audio",
-        "constructorAuthTypeName": null,
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "model",
+            "typeName": "String",
+            "typeNamespace": "System",
+            "isAuth": false,
+            "isRequired": true
+          },
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       },
       {
         "name": "assistant",
@@ -13292,8 +13353,15 @@
         ],
         "sourceClassName": "AssistantClient",
         "sourceNamespace": "OpenAI.Assistants",
-        "constructorAuthTypeName": "string",
-        "constructorAuthTypeNamespace": null
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ]
       }
     ],
     "authPatterns": [

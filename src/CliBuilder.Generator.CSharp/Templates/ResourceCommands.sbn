@@ -16,6 +16,11 @@ public static class {{ resource.class_name }}Commands
     public static Command Build(Option<bool> jsonOption{{ if has_auth }}, Option<string?> apiKeyOption{{ end }})
     {
         var command = new Command("{{ resource.name }}", {{ resource.description | escape_csharp }});
+{{~ for cp in resource.constructor_config_params }}
+        var {{ cp.var_name }}Option = new Option<{{ cp.csharp_type }}>("--{{ cp.cli_flag }}")
+        { IsRequired = {{ if cp.is_required }}true{{ else }}false{{ end }} };
+        command.AddGlobalOption({{ cp.var_name }}Option);
+{{~ end ~}}
 {{~ for op in resource.operations }}
 
         // {{ op.name }}{{ if op.is_streaming }} [streaming]{{ end }}
@@ -68,9 +73,12 @@ public static class {{ resource.class_name }}Commands
                     var jsonInputValue = ctx.ParseResult.GetValueForOption(jsonInputOption);
 {{~ end ~}}
 {{~ if resource.can_construct && op.source_method_name && op.can_wire_sdk_call }}
+{{~ for cp in resource.constructor_config_params }}
+                    var {{ cp.var_name }} = ctx.ParseResult.GetValueForOption({{ cp.var_name }}Option);
+{{~ end ~}}
 
                     // SDK call: {{ resource.source_class_name }}.{{ op.source_method_name }}
-                    var client = new {{ resource.source_class_name }}({{ resource.constructor_auth_expression }});
+                    var client = new {{ resource.source_class_name }}({{ resource.constructor_expression }});
 {{~ for mp in op.method_params ~}}
 {{~ if mp.is_options_class }}
                     var {{ mp.arg_expression }} = new {{ mp.type_name }}();

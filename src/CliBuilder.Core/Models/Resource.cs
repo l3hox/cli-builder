@@ -6,6 +6,13 @@ public record Resource(
     IReadOnlyList<Operation> Operations,
     string? SourceClassName = null,
     string? SourceNamespace = null,
-    string? ConstructorAuthTypeName = null,
-    string? ConstructorAuthTypeNamespace = null
+    IReadOnlyList<ConstructorParam>? ConstructorParams = null
+);
+
+public record ConstructorParam(
+    string Name,
+    string TypeName,
+    string? TypeNamespace,
+    bool IsAuth,
+    bool IsRequired
 );

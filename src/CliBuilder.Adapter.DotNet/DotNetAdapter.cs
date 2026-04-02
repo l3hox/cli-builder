@@ -65,10 +65,10 @@ public class DotNetAdapter : ISdkAdapter
         foreach (var (noun, type) in serviceClasses)
         {
             var operations = ExtractOperations(type, diagnostics);
-            var (ctorAuthType, ctorAuthNs) = ExtractConstructorAuthType(type);
+            var ctorParams = ExtractConstructorParams(type);
             resources.Add(new Resource(noun, null, operations,
                 SourceClassName: type.Name, SourceNamespace: type.Namespace,
-                ConstructorAuthTypeName: ctorAuthType, ConstructorAuthTypeNamespace: ctorAuthNs));
+                ConstructorParams: ctorParams));
         }
 
         // Detect auth patterns
@@ -245,13 +245,27 @@ public class DotNetAdapter : ISdkAdapter
         "System.ClientModel.Primitives.RequestOptions"
     };
 
+    private static bool IsInfrastructureParam(ParameterInfo param)
+    {
+        var fullName = param.ParameterType.FullName ?? "";
+        if (InfrastructureParamTypes.Contains(fullName))
+            return true;
+        // SDK client configuration types (e.g., OpenAIClientOptions, RealtimeClientOptions)
+        // are infrastructure — not user-facing. Only match types whose name contains "Client"
+        // followed by "Options" or "Settings" to avoid false-positives on domain options classes
+        // like CreateCustomerOptions.
+        var name = param.ParameterType.Name ?? "";
+        return name.EndsWith("ClientOptions", StringComparison.Ordinal)
+            || name.EndsWith("ClientSettings", StringComparison.Ordinal);
+    }
+
     private MethodInfo SelectRichestOverload(List<MethodInfo> overloads, string verb, Type serviceType, List<Diagnostic> diagnostics)
     {
         // Pick the overload with the most user-facing parameters.
         // Exclude infrastructure types (CancellationToken, RequestOptions) from the count
         // so convenience methods are preferred over protocol methods.
         var sorted = overloads.OrderByDescending(m =>
-            m.GetParameters().Count(p => !InfrastructureParamTypes.Contains(p.ParameterType.FullName ?? ""))).ToList();
+            m.GetParameters().Count(p => !IsInfrastructureParam(p))).ToList();
 
         diagnostics.Add(new Diagnostic(
             DiagnosticSeverity.Info,
@@ -293,7 +307,7 @@ public class DotNetAdapter : ISdkAdapter
             if (typeRef.Kind == TypeKind.Class && !IsPrimitiveType(param.ParameterType)
                 && !param.ParameterType.IsAbstract
                 && HasPublicParameterlessCtor(param.ParameterType)
-                && !InfrastructureParamTypes.Contains(param.ParameterType.FullName ?? ""))
+                && !IsInfrastructureParam(param))
             {
                 var properties = ExtractClassProperties(param.ParameterType, depth: 0);
                 typeRef = typeRef with { Properties = properties };
@@ -594,42 +608,52 @@ public class DotNetAdapter : ISdkAdapter
         return patterns;
     }
 
-    private (string? TypeName, string? TypeNamespace) ExtractConstructorAuthType(Type type)
+    private IReadOnlyList<ConstructorParam>? ExtractConstructorParams(Type type)
     {
-        // Prefer constructors with fewer parameters — simpler constructors are more
-        // likely to be the one-arg auth constructor (e.g., ChatClient(ApiKeyCredential)
-        // over ChatClient(string model, ApiKeyCredential credential)).
+        bool HasAuthParam(ConstructorInfo ctor) =>
+            ctor.GetParameters().Any(p =>
+                IsApiKeyCredentialParameter(p) || IsCredentialParameter(p) || IsApiKeyParameter(p));
+
+        // Find constructors that have at least one auth param
+        var candidates = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance)
+            .Where(HasAuthParam)
+            .ToList();
+
+        if (candidates.Count == 0) return null;
+
+        // Among candidates, prefer the one with the MOST user-facing params.
+        // This picks ChatClient(string model, ApiKeyCredential cred) over ChatClient(ApiKeyCredential cred),
+        // giving us the model param as a CLI config option.
         // Stable tiebreaker on parameter names for deterministic output.
-        var constructors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance)
-            .OrderBy(c => c.GetParameters().Length)
-            .ThenBy(c => string.Join(",", c.GetParameters().Select(p => p.Name)));
+        var best = candidates
+            .OrderByDescending(c => c.GetParameters().Count(p =>
+                !IsInfrastructureParam(p)))
+            .ThenBy(c => string.Join(",", c.GetParameters().Select(p => p.Name)))
+            .First();
 
-        foreach (var ctor in constructors)
+        var result = new List<ConstructorParam>();
+        foreach (var param in best.GetParameters())
         {
-            var ctorParams = ctor.GetParameters();
+            if (IsInfrastructureParam(param))
+                continue;
 
-            // Count required (non-optional, non-CancellationToken) parameters.
-            // Constructors with >1 required param are skipped because the template
-            // passes exactly one arg (the auth expression). Constructors with 1 required
-            // auth param + additional optional params are allowed — e.g.,
-            // ctor(ApiKeyCredential key, string? endpoint = null) is valid.
-            var requiredParams = ctorParams.Where(p =>
-                !p.HasDefaultValue && p.ParameterType.FullName != "System.Threading.CancellationToken").ToList();
+            var isAuth = IsApiKeyCredentialParameter(param)
+                || IsCredentialParameter(param)
+                || IsApiKeyParameter(param);
 
-            if (requiredParams.Count > 1) continue;
+            var typeName = isAuth && param.ParameterType.FullName == "System.String"
+                ? "string" : param.ParameterType.Name;
+            var typeNamespace = isAuth && param.ParameterType.FullName == "System.String"
+                ? null : param.ParameterType.Namespace;
 
-            foreach (var param in ctorParams)
-            {
-
-                if (IsApiKeyCredentialParameter(param))
-                    return (param.ParameterType.Name, param.ParameterType.Namespace);
-                if (IsCredentialParameter(param))
-                    return (param.ParameterType.Name, param.ParameterType.Namespace);
-                if (IsApiKeyParameter(param))
-                    return ("string", null);
-            }
+            result.Add(new ConstructorParam(
+                param.Name ?? "unknown",
+                typeName,
+                typeNamespace,
+                isAuth,
+                !param.HasDefaultValue));
         }
-        return (null, null);
+        return result;
     }
 
     private bool IsApiKeyParameter(ParameterInfo param)
