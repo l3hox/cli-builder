@@ -32,7 +32,10 @@ public static partial class IdentifierValidator
 
     private static readonly HashSet<string> BoilerplateNames = new(StringComparer.OrdinalIgnoreCase)
     {
-        "JsonFormatter", "TableFormatter", "AuthHandler", "Program"
+        "JsonFormatter", "TableFormatter", "AuthHandler", "Program",
+        // CLI option variable names used in Build() and handlers — avoid collision
+        "apiKey", "json", "jsonInput", "credential", "ctx", "cmd", "command",
+        "result", "useJson", "client", "items", "item"
     };
 
     private static readonly Regex ValidIdentifier = new(@"^[a-zA-Z_][a-zA-Z0-9_]*$", RegexOptions.Compiled);

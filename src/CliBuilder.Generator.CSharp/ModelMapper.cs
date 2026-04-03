@@ -227,9 +227,13 @@ public static partial class ModelMapper
         if (operation.ReturnType.Kind == TypeKind.Class && !operation.IsStreaming)
         {
             var name = operation.ReturnType.Name;
+            // Known non-awaitable patterns: collection wrappers, sub-client factories,
+            // settings/options types, generic type params (T), response/notification types
             if (name is "AsyncCollectionResult" or "CollectionResult"
+                || name.Length == 1  // generic type parameter like "T"
                 || name.EndsWith("Client") || name.EndsWith("Service") || name.EndsWith("Api")
-                || name.EndsWith("ClientSettings") || name.EndsWith("Options"))
+                || name.EndsWith("ClientSettings") || name.EndsWith("Options")
+                || name.EndsWith("Response") || name.EndsWith("Notification"))
             {
                 diagnostics.Add(new Diagnostic(DiagnosticSeverity.Warning, "CB306",
                     $"Operation '{operation.Name}' returns non-awaitable type '{name}' — falling back to echo stub"));
