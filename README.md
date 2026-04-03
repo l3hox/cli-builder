@@ -87,13 +87,13 @@ openai-cli/
 
 ## Test suite
 
-322 tests across 3 projects:
+332 tests across 3 projects:
 
 | Project | Tests | Covers |
 |---------|-------|--------|
 | Generator Tests | 244 | Template rendering, parameter flattening, model mapping, type conversion, sanitization, golden files, compile verification, CanWireSdkCall, multi-arg constructors |
 | Core Tests | 52 | Adapter extraction, metadata serialization, type resolution, constructor param detection, nullability |
-| Integration Tests | 26 | OpenAI SDK extraction, OpenAI CLI compilation, TestSdk E2E (generate → build → run → assert JSON) |
+| Integration Tests | 36 | OpenAI + Stripe SDK extraction and compilation, TestSdk E2E (generate → build → run → assert JSON) |
 
 Run `./scripts/coverage.sh` for a full report.
 
@@ -115,10 +115,12 @@ Steps 1-8 complete. The generator produces compilable CLIs with real SDK method 
 
 - **TestSdk:** End-to-end validated — generate, build, run, assert JSON output (12 E2E tests)
 - **OpenAI SDK 2.9.1:** 20 resources, 169 operations, 41 wired with real SDK calls, zero compile errors. Live API validated.
+- **Stripe.net 51.0.0:** 136 resources, zero compile errors. Second SDK validation proving adapter generality.
 
 **Remaining:** `--json-input` deserialization for complex parameters (unblocks ~78 more OpenAI ops). See [docs/FUTURE.md](docs/FUTURE.md).
 
-**Try it:** `./scripts/demo.sh` (TestSdk) or `OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh` (OpenAI).
+**Try it:** `./scripts/demo.sh` (TestSdk) | `OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh` (OpenAI) | `STRIPE_API_KEY=sk_test_... ./scripts/demo-stripe.sh` (Stripe).
+
 
 ## License
 

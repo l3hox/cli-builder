@@ -48,6 +48,6 @@ Each piece of information exists in exactly one place:
 
 [First Actions](docs/cli-builder-spec.md#first-actions) — steps 1-8 complete.
 
-**What's done:** The adapter extracts `SdkMetadata` from .NET assemblies. The generator produces compilable CLI projects with real SDK method calls. Multi-arg constructor support (step 8) enables sub-clients like `ChatClient(string model, ApiKeyCredential cred)` with `--model` as a resource-level CLI option. Validated end-to-end against TestSdk (12 E2E tests), at compile scale against OpenAI SDK (20 resources, 169 ops, 41 wired, zero compile errors), and live against the OpenAI API. 322 tests.
+**What's done:** The adapter extracts `SdkMetadata` from .NET assemblies. The generator produces compilable CLI projects with real SDK method calls. Multi-arg constructor support enables sub-clients like `ChatClient(string model, ApiKeyCredential cred)`. Validated against three SDKs: TestSdk (12 E2E tests), OpenAI (20 resources, 169 ops, live API), Stripe (136 resources, zero compile errors). 332 tests.
 
 **What's next:** Step 9 — `--json-input` deserialization for complex params (`IEnumerable<ChatMessage>`, etc.). See [docs/FUTURE.md](docs/FUTURE.md).
