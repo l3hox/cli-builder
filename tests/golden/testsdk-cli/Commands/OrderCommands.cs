@@ -10,6 +10,11 @@ namespace TestsdkCli.Commands;
 
 public static class OrderCommands
 {
+    private static readonly JsonSerializerOptions _jsonInputOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     public static Command Build(Option<bool> jsonOption, Option<string?> apiKeyOption)
     {
         var command = new Command("order", null);
@@ -19,7 +24,7 @@ public static class OrderCommands
         {
             var cmd = new Command("create", null);
 
-            var amountOption = new Option<decimal>(
+            var amountOption = new Option<decimal?>(
                 "--amount",
                 null)
             { IsRequired = false };
@@ -61,14 +66,14 @@ public static class OrderCommands
 
             cmd.AddOption(giftMessageOption);
 
-            var giftWrapOption = new Option<bool>(
+            var giftWrapOption = new Option<bool?>(
                 "--gift-wrap",
                 null)
             { IsRequired = false };
 
             cmd.AddOption(giftWrapOption);
 
-            var isPriorityOption = new Option<bool>(
+            var isPriorityOption = new Option<bool?>(
                 "--is-priority",
                 null)
             { IsRequired = false };
@@ -145,25 +150,50 @@ public static class OrderCommands
 
                     var createOrderOptions = new CreateOrderOptions();
 
-                    createOrderOptions.Amount = amountValue;
+                    if (jsonInputValue is not null)
+                    {
+                        try
+                        {
+                            createOrderOptions = JsonSerializer.Deserialize<CreateOrderOptions>(jsonInputValue, _jsonInputOptions) ?? createOrderOptions;
+                        }
+                        catch (JsonException ex)
+                        {
+                            var jsonError = new { error = new { code = "json_input_error", message = ex.Message } };
+                            Console.Error.WriteLine(JsonSerializer.Serialize(jsonError));
+                            ctx.ExitCode = 1;
+                            return;
+                        }
+                    }
 
-                    createOrderOptions.CouponCode = couponCodeValue;
+                    if (amountValue is not null)
+                        createOrderOptions.Amount = amountValue.Value;
 
-                    createOrderOptions.Currency = currencyValue;
+                    if (couponCodeValue is not null)
+                        createOrderOptions.CouponCode = couponCodeValue;
 
-                    createOrderOptions.CustomerId = customerIdValue;
+                    if (currencyValue is not null)
+                        createOrderOptions.Currency = currencyValue;
 
-                    createOrderOptions.Description = descriptionValue;
+                    if (customerIdValue is not null)
+                        createOrderOptions.CustomerId = customerIdValue;
 
-                    createOrderOptions.GiftMessage = giftMessageValue;
+                    if (descriptionValue is not null)
+                        createOrderOptions.Description = descriptionValue;
 
-                    createOrderOptions.GiftWrap = giftWrapValue;
+                    if (giftMessageValue is not null)
+                        createOrderOptions.GiftMessage = giftMessageValue;
 
-                    createOrderOptions.IsPriority = isPriorityValue;
+                    if (giftWrapValue is not null)
+                        createOrderOptions.GiftWrap = giftWrapValue.Value;
 
-                    createOrderOptions.Notes = notesValue;
+                    if (isPriorityValue is not null)
+                        createOrderOptions.IsPriority = isPriorityValue.Value;
 
-                    createOrderOptions.ProductId = productIdValue;
+                    if (notesValue is not null)
+                        createOrderOptions.Notes = notesValue;
+
+                    if (productIdValue is not null)
+                        createOrderOptions.ProductId = productIdValue;
 
                     var result = (object)await client.CreateAsync(createOrderOptions);
 
@@ -304,7 +334,23 @@ public static class OrderCommands
 
                     var nestedOptions = new NestedOptions();
 
-                    nestedOptions.Name = nameValue;
+                    if (jsonInputValue is not null)
+                    {
+                        try
+                        {
+                            nestedOptions = JsonSerializer.Deserialize<NestedOptions>(jsonInputValue, _jsonInputOptions) ?? nestedOptions;
+                        }
+                        catch (JsonException ex)
+                        {
+                            var jsonError = new { error = new { code = "json_input_error", message = ex.Message } };
+                            Console.Error.WriteLine(JsonSerializer.Serialize(jsonError));
+                            ctx.ExitCode = 1;
+                            return;
+                        }
+                    }
+
+                    if (nameValue is not null)
+                        nestedOptions.Name = nameValue;
 
                     var result = (object)await client.UpdateAsync(nestedOptions);
 

@@ -10,6 +10,11 @@ namespace TestsdkCli.Commands;
 
 public static class SearchCommands
 {
+    private static readonly JsonSerializerOptions _jsonInputOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     public static Command Build(Option<bool> jsonOption, Option<string?> apiKeyOption)
     {
         var command = new Command("search", null);

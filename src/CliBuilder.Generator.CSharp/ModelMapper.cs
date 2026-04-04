@@ -176,6 +176,13 @@ public static partial class ModelMapper
         var flattenResult = ParameterFlattener.Flatten(operation.Parameters);
         diagnostics.AddRange(flattenResult.Diagnostics);
 
+        // When --json-input is present, all value-type CLI options must be nullable
+        // so "user didn't provide" (null) is distinguishable from "user set the default"
+        // (false/0). Without this, System.CommandLine defaults clobber JSON values.
+        var parameters = flattenResult.NeedsJsonInput
+            ? MakeValueTypesNullable(flattenResult.Parameters)
+            : flattenResult.Parameters;
+
         // Find the options class name (first class-typed parameter) for handler wiring.
         // Operations with multiple class-typed params (e.g., options + requestContext)
         // use only the first — the second is accessible via --json-input.
@@ -193,7 +200,7 @@ public static partial class ModelMapper
             Name: operation.Name,
             MethodName: methodName,
             Description: description,
-            Parameters: flattenResult.Parameters,
+            Parameters: parameters,
             NeedsJsonInput: flattenResult.NeedsJsonInput,
             ReturnTypeName: returnTypeName,
             IsStreaming: operation.IsStreaming,
@@ -249,6 +256,26 @@ public static partial class ModelMapper
         }
 
         return true;
+    }
+
+    private static readonly HashSet<string> ValueTypes = new(StringComparer.Ordinal)
+    {
+        "bool", "int", "long", "short", "byte", "float", "double", "decimal"
+    };
+
+    private static IReadOnlyList<FlatParameter> MakeValueTypesNullable(IReadOnlyList<FlatParameter> parameters)
+    {
+        return parameters.Select(p =>
+        {
+            // Only make options class params nullable — direct method params
+            // aren't affected by --json-input and must keep their original types.
+            if (ValueTypes.Contains(p.CSharpType) && p.SourceOptionsClassName != null)
+            {
+                var conversion = p.ConversionExpression ?? "{0}.Value";
+                return p with { CSharpType = p.CSharpType + "?", ConversionExpression = conversion };
+            }
+            return p;
+        }).ToList();
     }
 
     private static IReadOnlyList<MethodParamModel> BuildMethodParams(IReadOnlyList<Parameter> parameters)

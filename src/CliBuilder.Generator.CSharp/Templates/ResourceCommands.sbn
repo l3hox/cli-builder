@@ -13,6 +13,11 @@ namespace {{ root_namespace }}.Commands;
 
 public static class {{ resource.class_name }}Commands
 {
+    private static readonly JsonSerializerOptions _jsonInputOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     public static Command Build(Option<bool> jsonOption{{ if has_auth }}, Option<string?> apiKeyOption{{ end }})
     {
         var command = new Command("{{ resource.name }}", {{ resource.description | escape_csharp }});
@@ -85,9 +90,30 @@ public static class {{ resource.class_name }}Commands
 {{~ for mp in op.method_params ~}}
 {{~ if mp.is_options_class }}
                     var {{ mp.arg_expression }} = new {{ mp.type_name }}();
+{{~ if op.needs_json_input }}
+                    if (jsonInputValue is not null)
+                    {
+                        try
+                        {
+                            {{ mp.arg_expression }} = JsonSerializer.Deserialize<{{ mp.type_name }}>(jsonInputValue, _jsonInputOptions) ?? {{ mp.arg_expression }};
+                        }
+                        catch (JsonException ex)
+                        {
+                            var jsonError = new { error = new { code = "json_input_error", message = ex.Message } };
+                            Console.Error.WriteLine(JsonSerializer.Serialize(jsonError));
+                            ctx.ExitCode = 1;
+                            return;
+                        }
+                    }
+{{~ end ~}}
 {{~ for param in op.parameters ~}}
-{{~ if param.source_options_class_name == mp.type_name }}
+{{~ if param.source_options_class_name == mp.type_name ~}}
+{{~ if op.needs_json_input }}
+                    if ({{ param.cli_flag | to_var_name }}Value is not null)
+                        {{ mp.arg_expression }}.{{ param.property_name }} = {{ param.cli_flag | to_var_name | apply_conversion param.conversion_expression }};
+{{~ else }}
                     {{ mp.arg_expression }}.{{ param.property_name }} = {{ param.cli_flag | to_var_name | apply_conversion param.conversion_expression }};
+{{~ end ~}}
 {{~ end ~}}
 {{~ end ~}}
 {{~ end ~}}
