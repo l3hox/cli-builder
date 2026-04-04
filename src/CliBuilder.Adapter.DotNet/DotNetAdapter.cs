@@ -297,6 +297,11 @@ public class DotNetAdapter : ISdkAdapter
             // Skip CancellationToken — never user-facing
             if (param.ParameterType.FullName == "System.Threading.CancellationToken")
                 continue;
+            // Skip RequestOptions-like infrastructure types that have optional overloads.
+            // Only skip if the param is optional (has default value) — required RequestOptions
+            // stays in the list and CanWireOperation catches it as unconvertible.
+            if (IsInfrastructureParam(param) && param.HasDefaultValue)
+                continue;
 
             var typeRef = BuildTypeRef(param.ParameterType);
 

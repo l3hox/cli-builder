@@ -466,22 +466,6 @@
                 "required": false,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -532,22 +516,6 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -582,22 +550,6 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -630,22 +582,6 @@
                   "namespace": null
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -694,22 +630,6 @@
                   "properties": null,
                   "elementType": null,
                   "namespace": null
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
                 },
                 "required": false,
                 "defaultValue": null,
@@ -778,22 +698,6 @@
                   "namespace": null
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -1935,22 +1839,6 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -2579,22 +2467,6 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -2643,22 +2515,6 @@
                   "namespace": "System.ClientModel"
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -2712,22 +2568,6 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RealtimeSessionClientOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "OpenAI.Realtime"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -2746,24 +2586,7 @@
           {
             "name": "start-transcription-session",
             "description": null,
-            "parameters": [
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RealtimeSessionClientOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "OpenAI.Realtime"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
-              }
-            ],
+            "parameters": [],
             "returnType": {
               "kind": "class",
               "name": "RealtimeSessionClient",
@@ -2812,22 +2635,6 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RealtimeSessionClientOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "OpenAI.Realtime"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -2860,22 +2667,6 @@
                   "namespace": "System.ClientModel"
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -5008,22 +4799,6 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -5056,22 +4831,6 @@
                   "namespace": "System.ClientModel"
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -5501,22 +5260,6 @@
                   "namespace": "System.ClientModel"
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -6002,22 +5745,6 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -6084,22 +5811,6 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -6150,22 +5861,6 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -6198,22 +5893,6 @@
                   "namespace": null
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -6365,22 +6044,6 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -6479,22 +6142,6 @@
                   "namespace": "System.ClientModel"
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -6709,22 +6356,6 @@
                   "namespace": "System.ClientModel"
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -7464,22 +7095,6 @@
                 "required": false,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -7557,22 +7172,6 @@
                 "required": false,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -7621,22 +7220,6 @@
                   "namespace": null
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -7716,22 +7299,6 @@
                 "required": false,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -7764,22 +7331,6 @@
                   "namespace": "System.ClientModel"
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -7816,22 +7367,6 @@
                 "required": true,
                 "defaultValue": null,
                 "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
-                "defaultValue": null,
-                "description": null
               }
             ],
             "returnType": {
@@ -7864,22 +7399,6 @@
                   "namespace": null
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -7930,22 +7449,6 @@
                   "namespace": "System.ClientModel"
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -8079,22 +7582,6 @@
                   "namespace": "System.ClientModel"
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -8261,22 +7748,6 @@
                   "namespace": null
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -9840,22 +9311,6 @@
                   "namespace": null
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
@@ -13219,22 +12674,6 @@
                   "namespace": "System.ClientModel"
                 },
                 "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "options",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": null,
-                  "elementType": null,
-                  "namespace": "System.ClientModel.Primitives"
-                },
-                "required": false,
                 "defaultValue": null,
                 "description": null
               }
