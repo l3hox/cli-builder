@@ -74,17 +74,25 @@ The merge logic goes into `ResourceCommands.sbn`. For each options class that th
                     {
                         try
                         {
-                            {{ mp.arg_expression }} = System.Text.Json.JsonSerializer.Deserialize<{{ mp.type_name }}>(jsonInputValue, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? {{ mp.arg_expression }};
+                            {{ mp.arg_expression }} = JsonSerializer.Deserialize<{{ mp.type_name }}>(jsonInputValue, _jsonInputOptions) ?? {{ mp.arg_expression }};
                         }
-                        catch (System.Text.Json.JsonException ex)
+                        catch (JsonException ex)
                         {
-                            Console.Error.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { error = new { code = "json_input_error", message = ex.Message } }));
+                            Console.Error.WriteLine(JsonSerializer.Serialize(new { error = new { code = "json_input_error", message = ex.Message } }));
                             ctx.ExitCode = 1;
                             return;
                         }
                     }
 {{~ end }}
                     // Then flat flags override (existing assignments)
+```
+
+The `_jsonInputOptions` is a static field on the generated class:
+```csharp
+private static readonly JsonSerializerOptions _jsonInputOptions = new()
+{
+    PropertyNameCaseInsensitive = true
+};
 ```
 
 ### Ordering: deserialize then override
@@ -94,26 +102,33 @@ For each options class parameter:
 2. If `--json-input`: deserialize into it (replaces the empty instance)
 3. Apply flat flags: `if (emailValue is not null) opts.Email = emailValue;`
 
-This means flat flag assignments need a null guard — currently they assign unconditionally (`opts.Email = emailValue`). After step 9, they must check: `if (emailValue is not null) opts.Email = emailValue;` — so the JSON-provided value isn't overwritten by a null flat flag.
+This means flat flag assignments need a null guard — currently they assign unconditionally (`opts.Email = emailValue`). After step 9, they must check: `if (emailValue is not null) opts.Email = emailValue;` — so the JSON-provided value isn't overwritten by a default flat flag.
 
 ### Null guards on flat flag assignments
 
-**Current template (line ~84):**
-```scriban
-{{ mp.arg_expression }}.{{ param.property_name }} = {{ param.cli_flag | to_var_name | apply_conversion param.conversion_expression }};
-```
+#### Council review finding (critical): non-nullable value type clobber
 
-**After step 9:**
+System.CommandLine returns default values for unprovided options: `false` for `bool`, `0` for `int`, `0m` for `decimal`. After JSON deserialization sets `GiftWrap = true`, the unconditional `opts.GiftWrap = giftWrapValue` overwrites it with `false`. This is silent data corruption.
+
+**Fix:** For operations with `needs_json_input`, ALL flat flag CLI option types must be nullable — `Option<bool>` becomes `Option<bool?>`, `Option<int>` becomes `Option<int?>`. This makes "user didn't provide" distinguishable from "user provided the default."
+
+**Implementation:** The `ParameterFlattener` already computes `CSharpType` via `MapTypeName(type, forCliParam: true)`. For operations with `NeedsJsonInput = true`, the generator model must ensure all value-type CLI params are nullable. This can be done in `ModelMapper.MapOperation` — when `NeedsJsonInput`, post-process `FlatParameter.CSharpType` to append `?` to non-nullable value types.
+
+**Null guard rule (updated):**
+- **Operations WITH `needs_json_input`:** Every flat flag assignment is guarded: `if (xValue is not null) opts.X = xValue;` (or `.Value` for value types)
+- **Operations WITHOUT `needs_json_input`:** Unconditional assignment (current behavior, unchanged)
+
+This means null guards are ONLY added to operations that have `--json-input`. Operations without it keep their current generated code — no golden file churn for unaffected operations.
+
+**Template:**
 ```scriban
-{{~ if param.csharp_type == "string" }}
+{{~ if op.needs_json_input }}
                     if ({{ param.cli_flag | to_var_name }}Value is not null)
-{{~ else if param.csharp_type ends_with "?" }}
-                    if ({{ param.cli_flag | to_var_name }}Value is not null)
-{{~ end }}
                         {{ mp.arg_expression }}.{{ param.property_name }} = {{ param.cli_flag | to_var_name | apply_conversion param.conversion_expression }};
+{{~ else }}
+                    {{ mp.arg_expression }}.{{ param.property_name }} = {{ param.cli_flag | to_var_name | apply_conversion param.conversion_expression }};
+{{~ end }}
 ```
-
-For nullable types (`string`, `int?`, `bool?`), only assign if the user actually provided the flag. For non-nullable types (`int`, `bool`), always assign (they have implicit defaults and the user can't "not provide" them — System.CommandLine always gives a value).
 
 ### Which options class gets the JSON?
 
@@ -135,37 +150,49 @@ If `--json-input` contains valid JSON but wrong shape:
 
 ## Implementation Plan
 
-### Phase 9A: Template changes — deserialize + merge
+### Phase 9A: Nullable value types for json-input operations
+
+**`src/CliBuilder.Generator.CSharp/ModelMapper.cs`:**
+
+When `NeedsJsonInput = true`, post-process `FlatParameter.CSharpType` to make non-nullable value types nullable (`bool` → `bool?`, `int` → `int?`, `decimal` → `decimal?`). This ensures System.CommandLine returns `null` for unprovided flags instead of `false`/`0`/`0m`.
+
+This only applies to operations with `--json-input` — other operations keep their current types.
+
+### Phase 9B: Template changes — deserialize + merge + null guards
 
 **`src/CliBuilder.Generator.CSharp/Templates/ResourceCommands.sbn`:**
 
-1. After `jsonInputValue` is read, add deserialization block for the first options class
-2. Add null guards on flat flag assignments for nullable types
-3. Add JSON error handling (try/catch, exit code 1)
+1. Add static `_jsonInputOptions` field on the generated class
+2. After `jsonInputValue` is read, add deserialization block for the first options class
+3. Flat flag assignments: branched on `op.needs_json_input`
+   - WITH json-input: `if (xValue is not null) opts.X = xValue;`
+   - WITHOUT json-input: `opts.X = xValue;` (unchanged)
+4. JSON error handling (try/catch, exit code 1)
 
-**Changes:**
-- The `{{~ for mp in op.method_params }}` loop that constructs options classes needs to be split:
-  - First: construct empty instance
-  - Second (new): if `--json-input`, deserialize and replace
-  - Third: flat flag overrides with null guards
+**Key template structure:**
+```
+construct empty opts
+if (jsonInputValue is not null) → deserialize into opts
+for each flat param:
+  if (needs_json_input) → guarded assignment
+  else → unconditional assignment (current behavior)
+```
 
-### Phase 9B: Add `using System.Text.Json` to template
+### Phase 9C: TestSdk changes + E2E validation
 
-The template already has `using System.Text.Json;` at the top (line 3). `JsonSerializerOptions` with `PropertyNameCaseInsensitive = true` is needed because CLI JSON input may use camelCase while SDK properties are PascalCase.
+**Fix `OrderClient.UpdateAsync`** to echo back `options.Name` and `options.ShippingAddress` in the returned `Order`. Add `Address` property to `Order` model if needed. Without this, E2E tests can't assert deserialization correctness.
 
-### Phase 9C: TestSdk E2E validation
-
-**Implement TestSdk `order update` with `--json-input`:**
+**`order update` with `--json-input`:**
 ```bash
 testsdk-cli order update --json-input '{"name":"Updated","shippingAddress":{"line1":"123 Main","city":"Springfield","country":"US"}}' --json --api-key test
 ```
 
-The `NestedOptions.ShippingAddress` should be populated from JSON.
-
 **New E2E tests:**
-- `OrderUpdate_WithJsonInput_PopulatesNestedObject`
-- `CustomerCreate_JsonInputMergedWithFlatFlags` — JSON provides email, flag overrides name
-- `InvalidJsonInput_ExitsWithCode1`
+- `OrderUpdate_WithJsonInput_PopulatesNestedObject` — ShippingAddress from JSON appears in output
+- `OrderCreate_JsonInput_NonNullableBool_NotClobbered` — `--json-input '{"giftWrap":true}'` with no flat flag → giftWrap stays true
+- `CustomerCreate_JsonInputMergedWithFlatFlags` — JSON email + flag name → both in output
+- `CustomerCreate_FlatFlagOverridesJsonInput` — JSON name + flag name → flag wins
+- `InvalidJsonInput_ExitsWithCode1` — malformed JSON → exit 1, structured error
 
 ### Phase 9D: Golden files + compile verification
 
@@ -203,7 +230,8 @@ The `NestedOptions.ShippingAddress` should be populated from JSON.
 
 | File | Change |
 |------|--------|
-| `src/CliBuilder.Generator.CSharp/Templates/ResourceCommands.sbn` | Deserialization block, null guards, error handling |
+| `src/CliBuilder.Generator.CSharp/ModelMapper.cs` | Nullable value types for NeedsJsonInput operations |
+| `src/CliBuilder.Generator.CSharp/Templates/ResourceCommands.sbn` | Deserialization block, null guards, static JsonSerializerOptions, error handling |
 | `tests/golden/testsdk-cli/Commands/*.cs` | Regenerated with null guards + deserialization |
 | `tests/CliBuilder.Generator.Tests/CSharpCliGeneratorTests.cs` | New tests for JSON deserialization in output |
 | `tests/CliBuilder.Integration.Tests/GeneratedCliTests.cs` | E2E tests for --json-input |
@@ -245,3 +273,19 @@ STRIPE_API_KEY=sk_test_... dotnet run --project /tmp/stripe-cli-demo/stripe-cli 
 **JSON type mismatch:** Medium risk. If the user's JSON property types don't match the SDK options class (e.g., string where int expected), `JsonSerializer.Deserialize` may throw or silently skip. The error handling (exit code 1) covers the throw case. Silent skips are acceptable — partial population is by design.
 
 **Abstract types in JSON:** Not addressed. If the SDK options class has an abstract property (e.g., `ChatToolChoice`), deserialization may fail. This is expected and documented as a known limitation. The error handling catches it gracefully.
+
+---
+
+## Council review findings (incorporated)
+
+A Developer Council (SoftwareDeveloper, QaTester — 3-round debate) reviewed this plan. Critical finding incorporated:
+
+**P0 — Non-nullable value types clobbered by defaults.** System.CommandLine returns `false`/`0`/`0m` for unprovided `bool`/`int`/`decimal` flags. After JSON deserialization sets `GiftWrap = true`, the unconditional flat flag assignment overwrites it with `false`. Fix: make all value-type CLI options nullable (`bool?`, `int?`) for `NeedsJsonInput` operations. Guard every assignment with `if (xValue is not null)`.
+
+**P0 — Null guards gated on `needs_json_input` only.** Operations without `--json-input` keep unconditional assignment (no golden file churn for unaffected operations).
+
+**P1 — `OrderClient.UpdateAsync` must echo ShippingAddress.** E2E test can't assert deserialization without echoing the input back in the response.
+
+**P1 — Static `JsonSerializerOptions` field.** Not inline per-call allocation. Matches .NET idiom.
+
+**P2 — Additional tests:** `OrderCreate_JsonInput_NonNullableBool_NotClobbered`, JSON with `@class`/`@event` keyword properties.
