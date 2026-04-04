@@ -21,7 +21,13 @@ public class OrderClient
     public Task<ClientResult<Order>> UpdateAsync(NestedOptions options, CancellationToken cancellationToken = default)
         => Task.FromResult(new ClientResult<Order>
         {
-            Value = new Order { Id = "ord_updated", Amount = 0m }
+            Value = new Order
+            {
+                Id = "ord_updated",
+                Amount = 0m,
+                Name = options.Name,
+                ShippingAddress = options.ShippingAddress
+            }
         });
 
     public Task<ClientResult<Order>> ProcessAsync(SanitizationOptions options, CancellationToken cancellationToken = default)

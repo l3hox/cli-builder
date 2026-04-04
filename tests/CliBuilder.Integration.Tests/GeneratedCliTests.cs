@@ -204,4 +204,36 @@ public class GeneratedCliTests : IClassFixture<GeneratedCliFixture>
         var (exitCode, _, _) = _fixture.RunCli("nonexistent-command");
         Assert.NotEqual(0, exitCode);
     }
+
+    // -----------------------------------------------------------
+    // --json-input tests (step 9)
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void OrderUpdate_WithJsonInput_PopulatesNestedObject()
+    {
+        var jsonInput = @"{""name"":""Updated"",""shippingAddress"":{""line1"":""123 Main"",""city"":""Springfield"",""country"":""US""}}";
+        var (exitCode, stdout, stderr) = _fixture.RunCli($@"order update --json-input ""{jsonInput.Replace("\"", "\\\"")}"" --json --api-key test-key");
+        Assert.True(exitCode == 0, $"Exit {exitCode}, stderr: {stderr}");
+        var json = JsonDocument.Parse(stdout);
+        Assert.Equal("Updated", json.RootElement.GetProperty("value").GetProperty("name").GetString());
+    }
+
+    [Fact]
+    public void OrderUpdate_FlatFlagOverridesJsonInput()
+    {
+        var jsonInput = @"{""name"":""FromJson""}";
+        var (exitCode, stdout, stderr) = _fixture.RunCli($@"order update --json-input ""{jsonInput.Replace("\"", "\\\"")}"" --name Override --json --api-key test-key");
+        Assert.True(exitCode == 0, $"Exit {exitCode}, stderr: {stderr}");
+        var json = JsonDocument.Parse(stdout);
+        Assert.Equal("Override", json.RootElement.GetProperty("value").GetProperty("name").GetString());
+    }
+
+    [Fact]
+    public void InvalidJsonInput_ExitsWithCode1()
+    {
+        var (exitCode, _, stderr) = _fixture.RunCli("order update --json-input not-valid-json --api-key test-key");
+        Assert.Equal(1, exitCode);
+        Assert.Contains("json_input_error", stderr);
+    }
 }
