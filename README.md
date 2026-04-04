@@ -45,9 +45,9 @@ SDK Assembly (.dll)  ──>  cli-builder  ──>  Standalone CLI Project
 
 | SDK | Resources | Operations wired | Live API tested |
 |-----|-----------|-----------------|----------------|
-| TestSdk | 4 | 100% | Yes (12 E2E tests) |
+| TestSdk | 6 | 100% | Yes (15 E2E tests) |
 | OpenAI 2.9.1 | 20 | 41/169 (24%) | Yes (`get-models`, `get-model`) |
-| Stripe.net 51.0.0 | 136 | 490/524 (93%) | Yes (`payment-intent list`, `balance get`, etc.) |
+| Stripe.net 51.0.0 | 196 | ~93% | Yes (`payment-intent list`, `product create`, `price create`, etc.) |
 
 ## Agent-readiness
 
@@ -66,15 +66,15 @@ Every generated CLI satisfies:
 
 ## Test suite
 
-338 tests across 3 projects:
+343 tests across 3 projects:
 
 | Project | Tests | Covers |
 |---------|-------|--------|
-| Generator Tests | 248 | Template rendering, model mapping, type conversion, sanitization, golden files, compile verification |
-| Core Tests | 52 | Adapter extraction, type resolution, constructor detection, nullability |
-| Integration Tests | 38 | OpenAI + Stripe extraction/compilation, TestSdk E2E |
+| Generator Tests | 250 | Template rendering, model mapping, type conversion, sanitization, golden files, compile verification |
+| Core Tests | 52 | Adapter extraction, type resolution, constructor detection, collision resolution |
+| Integration Tests | 41 | OpenAI + Stripe extraction/compilation, TestSdk E2E, --json-input |
 
-83.8% line coverage, 95% method coverage. Run `./scripts/coverage.sh` for a full report.
+93.4% line coverage, 96.4% method coverage. Run `./scripts/coverage.sh` for a full report.
 
 ## Documentation
 

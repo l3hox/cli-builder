@@ -126,10 +126,29 @@ Multiple patterns can be comma-separated (e.g., `*Async,*Task`). First match win
 
 **Schema exposure:** When a command has a `--json-input` flag, the `--help` output must include the JSON schema (property names, types, required markers) for the input object. Format: a condensed property list, not a full JSON Schema document.
 
-**Precedence:** When both flat flags and `--json-input` are provided for the same command:
-- `--json-input` values are applied first as the base object
-- Flat flags override individual properties on top
-- This allows: `--json-input '{"email":"a@b.com","name":"Test"}' --name "Override"` where `--name` wins
+**Precedence (implemented step 9):** When both flat flags and `--json-input` are provided:
+1. Construct empty options class instance
+2. If `--json-input` provided: `JsonSerializer.Deserialize<T>(jsonInputValue, _jsonInputOptions)` replaces the instance
+3. Flat flags override individual properties on top: `if (xValue is not null) opts.X = xValue`
+4. This allows: `--json-input '{"email":"a@b.com","name":"Test"}' --name "Override"` where `--name` wins
+
+**Null guard rule:** For operations with `NeedsJsonInput`, all value-type CLI options are made nullable (`bool` → `bool?`, `int` → `int?`) to distinguish "user didn't provide" (`null`) from "user set the default" (`false`/`0`). Every flat flag assignment is guarded with `if (xValue is not null)`. Operations without `--json-input` keep unconditional assignment.
+
+**Static JsonSerializerOptions:** `_jsonInputOptions` is a `static readonly` field with `PropertyNameCaseInsensitive = true` (handles PascalCase SDK vs camelCase user JSON). Not inline per-call.
+
+---
+
+## Noun collision resolution (step 9)
+
+When multiple service classes map to the same noun (e.g., `Stripe.CustomerService` and `Stripe.TestHelpers.CustomerService` both → `customer`), the adapter disambiguates by namespace prefix:
+
+1. Find the common root namespace across all types (e.g., `Stripe`)
+2. For each colliding type, compute the relative namespace (e.g., `TestHelpers` from `Stripe.TestHelpers`)
+3. Prefix the noun: `test-helpers-customer`
+4. Types in the root namespace keep the original noun: `customer`
+5. If types are in the SAME namespace (can't disambiguate by namespace), fall back to full class name kebab-cased: `ShippingService` → `shipping-service`
+
+CB202 diagnostic changed from Error (drop both) to Info (resolved with qualified name).
 
 ---
 

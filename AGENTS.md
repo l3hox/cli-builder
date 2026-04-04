@@ -46,6 +46,6 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-**v1.0** — .NET adapter + C# generator. Three SDKs validated: TestSdk (E2E), OpenAI (live API), Stripe (live API, 93% ops wired). 338 tests, 83.8% coverage.
+**v1.1** — .NET adapter + C# generator. `--json-input` deserialization, noun collision resolution. Three SDKs validated: TestSdk (E2E), OpenAI (live API), Stripe (live API, 196 resources). 343 tests, 93.4% coverage.
 
-**What's next:** Step 9 (`--json-input`), Step 10 (CLI entry point), then Python adapter. See [docs/FUTURE.md](docs/FUTURE.md) for the full roadmap.
+**What's next:** Step 9B (abstract type handling), Step 10 (CLI entry point), then Python adapter. See [docs/FUTURE.md](docs/FUTURE.md).

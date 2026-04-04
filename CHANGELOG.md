@@ -2,6 +2,18 @@
 
 All notable changes to cli-builder.
 
+## v1.1.0 — 2026-04-04
+
+### Features
+- **`--json-input` deserialization** — JSON deserialized into options classes, flat flags override on top. Nested SDK objects (Stripe `Recurring`, `ProductData`, `ShippingAddress`) now populatable.
+- **Noun collision resolution** — namespace-qualified disambiguation instead of dropping colliding resources. `Stripe.Tax.CustomerService` → `tax-customer`. Stripe: 136 → 196 resources.
+- **Null guard system** — value-type CLI options made nullable for `--json-input` operations to prevent System.CommandLine defaults clobbering JSON values.
+
+### Stats
+- 343 tests (52 Core + 250 Generator + 41 Integration)
+- 93.4% line coverage, 96.4% method coverage
+- Stripe: 196 resources (was 136)
+
 ## v1.0.0 — 2026-04-04
 
 First release. .NET SDK adapter + C# CLI generator.

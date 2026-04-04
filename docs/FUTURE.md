@@ -6,9 +6,6 @@ Production roadmap for cli-builder — a .NET SDK CLI generator, with multi-lang
 
 ## Next up
 
-### Step 9: `--json-input` deserialization
-**Status: Next.** The `--json-input` option exists on commands but doesn't deserialize. Without it, nested SDK objects (`PriceCreateOptions.Recurring`, `ChatCompletionOptions.Tools`) can't be populated. Unblocks Stripe nested objects and overflow properties. See [docs/internal/step-09-json-input.md](../internal/step-09-json-input.md).
-
 ### Step 9B: Direct params + abstract type handling
 Unblocks `chat complete-chat` and other OpenAI operations with complex direct params (`IEnumerable<ChatMessage>`). Two sub-problems:
 - **Direct param deserialization** — method params like `messages` that are `IEnumerable<T>` need to accept JSON input (currently they're echo-stubbed via `CanWireSdkCall = false`)
@@ -72,10 +69,10 @@ Auth handler writes resolved credentials to config file for reuse.
 
 ---
 
-## Completed (v1.0)
+## Completed
 
-- Steps 1-8: Architecture, adapter, generator, real SDK calls, multi-arg constructors, static auth
-- TestSdk: 4 resources, 12 E2E tests
+- Steps 1-9: Architecture, adapter, generator, real SDK calls, multi-arg constructors, static auth, --json-input deserialization, noun collision resolution
+- TestSdk: 6 resources, 15 E2E tests (including --json-input merge/override/error)
 - OpenAI 2.9.1: 20 resources, 169 ops, 41 wired, live API validated
-- Stripe.net 51.0.0: 136 resources, 490/524 ops wired (93%), live API validated
-- 338 tests, 83.8% line coverage, 95% method coverage
+- Stripe.net 51.0.0: 196 resources (was 136 — collisions now resolved), live API validated
+- 343 tests, 93.4% line coverage, 96.4% method coverage
