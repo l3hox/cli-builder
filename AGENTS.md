@@ -46,8 +46,6 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-[First Actions](docs/cli-builder-spec.md#first-actions) — steps 1-8 complete.
+**v1.0** — .NET adapter + C# generator. Three SDKs validated: TestSdk (E2E), OpenAI (live API), Stripe (live API, 93% ops wired). 338 tests, 83.8% coverage.
 
-**What's done:** The adapter extracts `SdkMetadata` from .NET assemblies. The generator produces compilable CLI projects with real SDK method calls. Multi-arg constructors + static auth (`StripeConfiguration.ApiKey`) support. Validated against three SDKs: TestSdk (12 E2E tests), OpenAI (20 resources, 41 wired, live API), Stripe (136 resources, 490/524 ops wired, live API with `sk_test_` keys). 332 tests, 83.8% coverage.
-
-**What's next:** Step 9 — `--json-input` deserialization for complex params (`IEnumerable<ChatMessage>`, etc.). See [docs/FUTURE.md](docs/FUTURE.md).
+**What's next:** Step 9 (`--json-input`), Step 10 (CLI entry point), then Python adapter. See [docs/FUTURE.md](docs/FUTURE.md) for the full roadmap.

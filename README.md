@@ -1,12 +1,33 @@
 # cli-builder
 
-Generate agent-ready CLIs directly from SDK type information.
+Generate agent-ready CLIs directly from .NET SDK assemblies.
 
 ## Problem
 
 AI agents work best with CLI tools — structured output, discoverable commands, composable via pipes. But most SDKs ship without CLIs. Building a CLI by hand for each SDK is tedious, repetitive, and falls out of sync as SDKs evolve.
 
 cli-builder eliminates the manual step: point it at an SDK assembly, get a fully functional CLI back.
+
+## Try it now
+
+**Prerequisites:** [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+
+```bash
+git clone https://github.com/your-org/cli-builder.git
+cd cli-builder
+dotnet build
+
+# Generate and run the TestSdk demo CLI:
+./scripts/demo.sh
+
+# Generate and run against Stripe (with test key):
+STRIPE_API_KEY=sk_test_... ./scripts/demo-stripe.sh
+
+# Generate and run against OpenAI:
+OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh
+```
+
+> **Note:** cli-builder is currently a library. The `cli-builder generate --assembly X.dll` CLI entry point is in active development ([Step 10](docs/FUTURE.md)).
 
 ## How it works
 
@@ -18,40 +39,15 @@ SDK Assembly (.dll)  ──>  cli-builder  ──>  Standalone CLI Project
 
 2. **Generate** — The C# generator takes `SdkMetadata` and emits a complete CLI project using Scriban templates and System.CommandLine. The output is a standalone project with no cli-builder dependency.
 
-3. **Run** — The generated CLI compiles with `dotnet build` and runs immediately.
+3. **Run** — The generated CLI compiles with `dotnet build` and runs immediately. Generated handlers make real SDK method calls.
 
-## Demo
+## Validated SDKs
 
-Generated from the **TestSdk** — real SDK method calls, not stubs:
-
-```bash
-$ testsdk-cli --help
-Description:
-  testsdk-cli — CLI for CliBuilder.TestSdk
-
-Commands:
-  customer        order           product
-
-$ testsdk-cli customer get --id cust_42 --json --api-key demo
-{
-  "id": "cust_42",
-  "email": "test@example.com",
-  "name": null,
-  "status": 0,
-  "address": null
-}
-
-$ testsdk-cli customer list --json --api-key demo
-[
-  { "id": "cust_001", "email": "alice@test.com", "status": 0 },
-  { "id": "cust_002", "email": "bob@test.com", "status": 1 }
-]
-
-$ testsdk-cli product list --json --api-key demo
-{ "id": "prod_001", "name": "Widget" }
-```
-
-Also validated against the **OpenAI .NET SDK 2.9.1** — 20 resources, 169 operations, zero compile errors. Run `./scripts/demo.sh` to try the TestSdk CLI locally.
+| SDK | Resources | Operations wired | Live API tested |
+|-----|-----------|-----------------|----------------|
+| TestSdk | 4 | 100% | Yes (12 E2E tests) |
+| OpenAI 2.9.1 | 20 | 41/169 (24%) | Yes (`get-models`, `get-model`) |
+| Stripe.net 51.0.0 | 136 | 490/524 (93%) | Yes (`payment-intent list`, `balance get`, etc.) |
 
 ## Agent-readiness
 
@@ -68,59 +64,28 @@ Every generated CLI satisfies:
 | Non-interactive auth | Env var > config file > `--api-key` flag |
 | Pipe-friendly | No color when stdout is redirected |
 
-## Generated project structure
-
-```
-openai-cli/
-+-- openai-cli.csproj          # references OpenAI NuGet + System.CommandLine
-+-- Program.cs                 # entry point, --json/--api-key global options
-+-- Commands/
-|   +-- ChatCommands.cs        # chat complete-chat|get|update|delete|list
-|   +-- AssistantCommands.cs   # 26 operations
-|   +-- ...                    # one file per resource
-+-- Output/
-|   +-- JsonFormatter.cs       # --json serialization
-|   +-- TableFormatter.cs      # human-readable table
-+-- Auth/
-    +-- AuthHandler.cs         # env var > config file > flag, credential masking
-```
-
 ## Test suite
 
-332 tests across 3 projects:
+338 tests across 3 projects:
 
 | Project | Tests | Covers |
 |---------|-------|--------|
-| Generator Tests | 244 | Template rendering, parameter flattening, model mapping, type conversion, sanitization, golden files, compile verification, CanWireSdkCall, multi-arg constructors |
-| Core Tests | 52 | Adapter extraction, metadata serialization, type resolution, constructor param detection, nullability |
-| Integration Tests | 36 | OpenAI + Stripe SDK extraction and compilation, TestSdk E2E (generate → build → run → assert JSON) |
+| Generator Tests | 248 | Template rendering, model mapping, type conversion, sanitization, golden files, compile verification |
+| Core Tests | 52 | Adapter extraction, type resolution, constructor detection, nullability |
+| Integration Tests | 38 | OpenAI + Stripe extraction/compilation, TestSdk E2E |
 
-Run `./scripts/coverage.sh` for a full report.
+83.8% line coverage, 95% method coverage. Run `./scripts/coverage.sh` for a full report.
 
 ## Documentation
 
 | Document | Contents |
 |----------|----------|
-| [docs/cli-builder-spec.md](docs/cli-builder-spec.md) | Full specification -- interfaces, metadata model, config schema, test strategy, scope |
+| [docs/cli-builder-spec.md](docs/cli-builder-spec.md) | Specification — interfaces, metadata model, config schema, test strategy |
+| [docs/FUTURE.md](docs/FUTURE.md) | Roadmap — prioritized next steps |
 | [docs/ADR.md](docs/ADR.md) | Architecture Decision Records (ADR-001 through ADR-015) |
 | [docs/design-notes.md](docs/design-notes.md) | Edge-case policies, behavioral rules, diagnostic codes |
-| [docs/FUTURE.md](docs/FUTURE.md) | Out-of-scope ideas and deferred features |
 | [AGENTS.md](AGENTS.md) | Quick-start context for AI agents and contributors |
-| [docs/process.md](docs/process.md) | Development methodology |
-| `docs/internal/` | Agent implementation plans (step-by-step build instructions) |
-
-## Status
-
-Steps 1-8 complete. The generator produces compilable CLIs with real SDK method calls. Multi-arg constructor support enables sub-clients like `ChatClient(string model, ApiKeyCredential cred)` with `--model` as a CLI option.
-
-- **TestSdk:** End-to-end validated — generate, build, run, assert JSON output (12 E2E tests)
-- **OpenAI SDK 2.9.1:** 20 resources, 169 operations, 41 wired with real SDK calls, zero compile errors. Live API validated.
-- **Stripe.net 51.0.0:** 136 resources, 490/524 operations wired (93%), live API validated with `sk_test_` keys. Static auth via `StripeConfiguration.ApiKey`.
-
-**Remaining:** `--json-input` deserialization for complex parameters (unblocks ~78 more OpenAI ops). See [docs/FUTURE.md](docs/FUTURE.md).
-
-**Try it:** `./scripts/demo.sh` (TestSdk) | `OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh` (OpenAI) | `STRIPE_API_KEY=sk_test_... ./scripts/demo-stripe.sh` (Stripe).
-
+| [CHANGELOG.md](CHANGELOG.md) | Version history |
 
 ## License
 

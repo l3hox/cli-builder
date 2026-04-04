@@ -1,5 +1,5 @@
-# cli-builder — Project Specification (v0.1)
-*Draft: 2026-03-25*
+# cli-builder — Project Specification
+*Last updated: 2026-04-04*
 
 ---
 
@@ -443,38 +443,34 @@ Optional/later:
 
 ---
 
-## First Actions
+## Roadmap
 
-1. ~~Spec out architecture~~ ← this document
-2. ~~Create repo, README with problem statement and v1 scope~~
-3. ~~ADRs for all architectural decisions~~ ← [docs/ADR.md](docs/ADR.md)
-4. ~~Scaffold: adapter interface, .NET adapter, metadata model~~
-5. ~~First spike: OpenAI .NET SDK → `SdkMetadata` → inspect what comes out~~
-   - ~~**Acceptance criteria:** adapter extracts resources with correct names, operations with correct verbs, parameters with resolved `TypeRef` (no opaque `object` types for known SDK types). Output `SdkMetadata` as JSON, commit as a reference fixture.~~
-6. ~~CLI generator: metadata → compilable C# project~~
-   - ~~**Phases 6A-6E:** Template infrastructure, command generation, parameter flattening, output formatters, auth handler, compile verification, golden files, OpenAI scale validation (20 resources, 169 ops). 227 tests, 80.6% coverage.~~
-7. ~~Validate: does the generated CLI actually work against Stripe test mode?~~
-   - ~~**Phases 7A-7D:** Metadata enrichment, template rewrite (real SDK calls), TestSdk E2E validation (12 tests: generate → build → run → assert JSON), OpenAI scale fixes (900 → 0 compile errors). 315 tests.~~
-   - ~~**Note:** Stripe live API validated — 490/524 ops wired via static auth (`StripeConfiguration.ApiKey`).~~
-8. ~~Multi-arg constructor support + static auth~~
-   - ~~**Phase 8A:** Full constructor param extraction, richest-with-auth preference, non-auth config params as resource-level CLI options (`--model`). Static auth detection for SDKs like Stripe. 332 tests, 83.8% coverage.~~
+See [docs/FUTURE.md](FUTURE.md) for the full prioritized roadmap.
+
+**v1.0 (current):** .NET SDK adapter + C# CLI generator. Three SDKs validated (TestSdk E2E, OpenAI live, Stripe live). 338 tests, 83.8% coverage.
+
+**Next:**
+- Step 9: `--json-input` deserialization
+- Step 10: `cli-builder` CLI entry point (`cli-builder generate --assembly X.dll`)
+- Step 11: SdkMetadata abstraction for multi-language
+- Step 12: Python adapter proof-of-concept
 
 ---
 
 ## Success Criteria
 
-cli-builder v0.1 is done when:
-- `cli-builder generate --assembly OpenAI.dll` produces a working CLI
-- `cli-builder generate --assembly Stripe.net.dll` produces a working CLI
-- Both generated CLIs pass agent-readiness requirements (table above)
-- Adapter interface is documented and a second adapter could be built without touching core
-- Architecture is explained in README with visible judgment calls (ADRs)
+cli-builder is production-ready when:
+- A developer can install cli-builder, point it at any .NET SDK DLL, and get a working CLI
+- Generated CLIs pass agent-readiness requirements (table above)
+- At least two source language adapters exist (.NET + Python)
+- CI/CD integration is documented and tested
+- Generated CLIs can be distributed as standalone tools
 
 ---
 
 ## Versioning
 
-SemVer (`MAJOR.MINOR.PATCH`). Starting at `0.1.0`.
+SemVer (`MAJOR.MINOR.PATCH`).
 
 | Bump | Trigger |
 |------|---------|

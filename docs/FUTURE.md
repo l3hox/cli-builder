@@ -1,40 +1,74 @@
-# FUTURE.md — Out of Scope for v1
+# Roadmap
 
-Ideas and features intentionally deferred. Not prioritized — this is a parking lot, not a roadmap.
+Production roadmap for cli-builder — a .NET SDK CLI generator, with multi-language support planned.
 
-## Source adapters
-- **Python** — AST/inspect, type stubs, pyright for static analysis
+---
+
+## Next up
+
+### Step 9: `--json-input` deserialization
+**Status: Next.** The `--json-input` option exists on commands but doesn't deserialize. Without it, nested SDK objects (`PriceCreateOptions.Recurring`, `ChatCompletionOptions.Tools`) can't be populated. Blocks ~78 OpenAI and many Stripe operations with nested params.
+
+### Step 10: cli-builder CLI entry point
+`cli-builder generate --assembly Stripe.net.dll --output ./stripe-cli`. Currently a library — users can't run it without demo scripts. Need:
+- `dotnet tool` packaging
+- `generate` command with `--assembly`, `--output`, `--name`, `--config` flags
+- `inspect` command to dump metadata without generating
+- Structured diagnostics output
+
+### Step 11: SdkMetadata abstraction
+Remove .NET-specific leaks from the metadata contract (`StaticAuthSetup` stores C# expressions, `AdapterOptions.AssemblyPath` is .NET-specific). Prepare for multi-language adapters.
+
+### Step 12: Python adapter proof-of-concept
+Second source language. Extracts metadata from Python packages via AST/inspect or type stubs. Proves the adapter interface is truly language-agnostic.
+
+---
+
+## After that
+
+### Incremental streaming output
+Streaming operations (`IAsyncEnumerable<T>`) currently collect all items before formatting. True incremental streaming (emit each item as it arrives). NDJSON for pipe-friendly output.
+
+### Package publishing
+Generated CLIs need distribution: `dotnet tool install`, Homebrew, self-contained single-file.
+
+### DI/factory pattern support
+34 Stripe services without parameterless constructors need `IStripeClient` injection.
+
+### CI/CD integration
+GitHub Action, Docker image, output stability guarantees, webhook triggers.
+
+### Token caching
+Auth handler writes resolved credentials to config file for reuse.
+
+---
+
+## Later
+
+### Source adapters
 - **Kotlin** — JVM reflection or kotlinx-metadata
-- **OpenAPI** — spec parsing (overlaps with existing tools like NSwag, OpenAPI Generator)
+- **Go** — AST parsing, struct tags
+- **OpenAPI** — spec parsing (overlaps with existing tools — lower unique value)
 
-## Target language generators
+### Target language generators
 - **Python** — click-based CLI output
 - **Rust** — clap-based CLI output
-- **Kotlin** — clikt-based CLI output
 
-## Agent-assisted enrichment
+### Agent-assisted enrichment
 - `--enrich` flag with pluggable LLM provider (design approved, see ADR-014)
-- Enrichment cache (`.enrichment-cache.json`)
-- Data minimization policy for enterprise SDK metadata sent to LLMs
 
-## Step 9 candidates (next up)
-- **`--json-input` deserialization** — the option exists on commands but doesn't deserialize. Need deep merge with flat flag override. Key challenge: abstract SDK types (`ChatMessage`) need SDK-specific serialization (e.g., `BinaryData.FromString()`). Would unblock ~78 more OpenAI operations.
-- **Incremental streaming output** — streaming operations currently collect all items before formatting. True incremental streaming (emit each item as it arrives) improves UX for long-running streams.
-- ~~**Stripe live API validation**~~ — Done. 490/524 ops wired via static auth. Live API tested with `sk_test_` keys.
-- **Token caching** — auth handler writes resolved credentials to config file for reuse.
-
-## Tool features
-- Runtime wrapper mode (interpret SDK at runtime instead of generating code)
-- Incremental regeneration (detect SDK changes and update CLI without full regen)
-- `--dump-metadata` flag for debugging (requires auth redaction policy)
-- Package publishing (NuGet tool, Homebrew, etc.)
+### Other
+- Incremental regeneration (detect SDK changes)
 - Test generation for generated CLIs
+- Config file (`cli-builder.json`) per-SDK customization
+- GUI / VS Code plugin
 
-## Usage model analysis
-- How is cli-builder used in practice? One-off generation, recurring CI/CD pipeline step, agentic workflow component?
-- Implications for: idempotency (same input → same output?), caching/incremental regen, change detection (diff previous output?), non-interactive mode, stdout/stderr contracts, logging verbosity
-- Should inform versioning policy, breaking change definitions, and output stability guarantees
+---
 
-## Distribution
-- GUI / web interface
-- VS Code / JetBrains plugin for in-IDE generation
+## Completed (v1.0)
+
+- Steps 1-8: Architecture, adapter, generator, real SDK calls, multi-arg constructors, static auth
+- TestSdk: 4 resources, 12 E2E tests
+- OpenAI 2.9.1: 20 resources, 169 ops, 41 wired, live API validated
+- Stripe.net 51.0.0: 136 resources, 490/524 ops wired (93%), live API validated
+- 338 tests, 83.8% line coverage, 95% method coverage
