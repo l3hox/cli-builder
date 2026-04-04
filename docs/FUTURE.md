@@ -7,7 +7,14 @@ Production roadmap for cli-builder — a .NET SDK CLI generator, with multi-lang
 ## Next up
 
 ### Step 9: `--json-input` deserialization
-**Status: Next.** The `--json-input` option exists on commands but doesn't deserialize. Without it, nested SDK objects (`PriceCreateOptions.Recurring`, `ChatCompletionOptions.Tools`) can't be populated. Blocks ~78 OpenAI and many Stripe operations with nested params.
+**Status: Next.** The `--json-input` option exists on commands but doesn't deserialize. Without it, nested SDK objects (`PriceCreateOptions.Recurring`, `ChatCompletionOptions.Tools`) can't be populated. Unblocks Stripe nested objects and overflow properties. See [docs/internal/step-09-json-input.md](../internal/step-09-json-input.md).
+
+### Step 9B: Direct params + abstract type handling
+Unblocks `chat complete-chat` and other OpenAI operations with complex direct params (`IEnumerable<ChatMessage>`). Two sub-problems:
+- **Direct param deserialization** — method params like `messages` that are `IEnumerable<T>` need to accept JSON input (currently they're echo-stubbed via `CanWireSdkCall = false`)
+- **Abstract type serialization** — `ChatMessage` is abstract (factory pattern: `ChatMessage.CreateUserMessage()`). `JsonSerializer.Deserialize` fails. Options: SDK's `BinaryData.FromString()` pass-through, custom `JsonConverter<T>`, or protocol-method routing that accepts raw JSON
+
+This is primarily an OpenAI problem — Stripe uses concrete types everywhere.
 
 ### Step 10: cli-builder CLI entry point
 `cli-builder generate --assembly Stripe.net.dll --output ./stripe-cli`. Currently a library — users can't run it without demo scripts. Need:
