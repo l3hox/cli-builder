@@ -78,7 +78,8 @@
         ],
         "sourceClassName": "IHttpClient",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "i-stripe",
@@ -381,7 +382,8 @@
         ],
         "sourceClassName": "IStripeClient",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "stripe",
@@ -1045,7 +1047,8 @@
             "isAuth": false,
             "isRequired": false
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "system-net-http",
@@ -1122,7 +1125,8 @@
         ],
         "sourceClassName": "SystemNetHttpClient",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "account-capability",
@@ -1535,7 +1539,8 @@
         ],
         "sourceClassName": "AccountCapabilityService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "account-external-account",
@@ -2750,7 +2755,8 @@
         ],
         "sourceClassName": "AccountExternalAccountService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "account-login-link",
@@ -2874,7 +2880,8 @@
         ],
         "sourceClassName": "AccountLoginLinkService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "account-person",
@@ -4678,7 +4685,8 @@
         ],
         "sourceClassName": "AccountPersonService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "account-session",
@@ -4818,7 +4826,8 @@
         ],
         "sourceClassName": "AccountSessionService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "apple-pay-domain",
@@ -5509,7 +5518,8 @@
         ],
         "sourceClassName": "ApplePayDomainService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "application-fee-refund",
@@ -6280,7 +6290,8 @@
         ],
         "sourceClassName": "ApplicationFeeRefundService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "application-fee",
@@ -6815,7 +6826,8 @@
         ],
         "sourceClassName": "ApplicationFeeService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "apps",
@@ -6823,7 +6835,8 @@
         "operations": [],
         "sourceClassName": "AppsService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "balance",
@@ -6931,7 +6944,8 @@
         ],
         "sourceClassName": "BalanceService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "balance-settings",
@@ -7154,7 +7168,8 @@
         ],
         "sourceClassName": "BalanceSettingsService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "balance-transaction",
@@ -7785,7 +7800,8 @@
         ],
         "sourceClassName": "BalanceTransactionService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "bank-account",
@@ -8930,7 +8946,8 @@
         ],
         "sourceClassName": "BankAccountService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "billing-portal",
@@ -8938,7 +8955,8 @@
         "operations": [],
         "sourceClassName": "BillingPortalService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "charge",
@@ -10768,7 +10786,8 @@
         ],
         "sourceClassName": "ChargeService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "checkout",
@@ -10776,7 +10795,8 @@
         "operations": [],
         "sourceClassName": "CheckoutService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "climate",
@@ -10784,7 +10804,8 @@
         "operations": [],
         "sourceClassName": "ClimateService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "country-spec",
@@ -11213,7 +11234,8 @@
         ],
         "sourceClassName": "CountrySpecService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "coupon",
@@ -12285,7 +12307,8 @@
         ],
         "sourceClassName": "CouponService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "credit-note-preview-lines",
@@ -13059,7 +13082,8 @@
         ],
         "sourceClassName": "CreditNotePreviewLinesService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "credit-note",
@@ -15508,7 +15532,8 @@
         ],
         "sourceClassName": "CreditNoteService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "customer-balance-transaction",
@@ -16433,7 +16458,8 @@
         ],
         "sourceClassName": "CustomerBalanceTransactionService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "customer-cash-balance",
@@ -16688,7 +16714,8 @@
         ],
         "sourceClassName": "CustomerCashBalanceService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "customer-cash-balance-transaction",
@@ -17165,7 +17192,8 @@
         ],
         "sourceClassName": "CustomerCashBalanceTransactionService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "customer-funding-instructions",
@@ -17337,7 +17365,8 @@
         ],
         "sourceClassName": "CustomerFundingInstructionsService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "customer-payment-method",
@@ -17878,7 +17907,8 @@
         ],
         "sourceClassName": "CustomerPaymentMethodService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "customer-payment-source",
@@ -19178,7 +19208,8 @@
         ],
         "sourceClassName": "CustomerPaymentSourceService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "customer-session",
@@ -19334,7 +19365,8 @@
         ],
         "sourceClassName": "CustomerSessionService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "customer-tax-id",
@@ -20089,7 +20121,8 @@
         ],
         "sourceClassName": "CustomerTaxIdService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "discount",
@@ -20166,7 +20199,8 @@
         ],
         "sourceClassName": "DiscountService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "entitlements",
@@ -20174,7 +20208,8 @@
         "operations": [],
         "sourceClassName": "EntitlementsService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "ephemeral-key",
@@ -20477,7 +20512,8 @@
         ],
         "sourceClassName": "EphemeralKeyService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "file-link",
@@ -21338,7 +21374,8 @@
         ],
         "sourceClassName": "FileLinkService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "file",
@@ -22020,7 +22057,8 @@
         ],
         "sourceClassName": "FileService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "financial-connections",
@@ -22028,7 +22066,8 @@
         "operations": [],
         "sourceClassName": "FinancialConnectionsService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "forwarding",
@@ -22036,7 +22075,8 @@
         "operations": [],
         "sourceClassName": "ForwardingService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "identity",
@@ -22044,7 +22084,8 @@
         "operations": [],
         "sourceClassName": "IdentityService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "invoice-item",
@@ -23576,7 +23617,8 @@
         ],
         "sourceClassName": "InvoiceItemService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "invoice-line-item",
@@ -24406,7 +24448,8 @@
         ],
         "sourceClassName": "InvoiceLineItemService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "invoice-payment",
@@ -25005,7 +25048,8 @@
         ],
         "sourceClassName": "InvoicePaymentService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "invoice-rendering-template",
@@ -25712,7 +25756,8 @@
         ],
         "sourceClassName": "InvoiceRenderingTemplateService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "invoice",
@@ -30399,7 +30444,8 @@
         ],
         "sourceClassName": "InvoiceService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "mandate",
@@ -30523,7 +30569,8 @@
         ],
         "sourceClassName": "MandateService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "o-auth-token",
@@ -31139,7 +31186,8 @@
         ],
         "sourceClassName": "OAuthTokenService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "payment-attempt-record",
@@ -31600,7 +31648,8 @@
         ],
         "sourceClassName": "PaymentAttemptRecordService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "payment-intent-amount-details-line-item",
@@ -31946,7 +31995,8 @@
         ],
         "sourceClassName": "PaymentIntentAmountDetailsLineItemService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "payment-intent",
@@ -35495,7 +35545,8 @@
         ],
         "sourceClassName": "PaymentIntentService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "payment-link-line-item",
@@ -35841,7 +35892,8 @@
         ],
         "sourceClassName": "PaymentLinkLineItemService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "payment-link",
@@ -37784,7 +37836,8 @@
         ],
         "sourceClassName": "PaymentLinkService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "payment-method-configuration",
@@ -40347,7 +40400,8 @@
         ],
         "sourceClassName": "PaymentMethodConfigurationService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "payment-method-domain",
@@ -41217,7 +41271,8 @@
         ],
         "sourceClassName": "PaymentMethodDomainService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "payment-method",
@@ -43306,7 +43361,8 @@
         ],
         "sourceClassName": "PaymentMethodService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "payment-record",
@@ -44795,7 +44851,8 @@
         ],
         "sourceClassName": "PaymentRecordService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "payout",
@@ -46056,7 +46113,8 @@
         ],
         "sourceClassName": "PayoutService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "plan",
@@ -47336,7 +47394,8 @@
         ],
         "sourceClassName": "PlanService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "price",
@@ -48983,7 +49042,8 @@
         ],
         "sourceClassName": "PriceService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "product-feature",
@@ -49722,7 +49782,8 @@
         ],
         "sourceClassName": "ProductFeatureService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "promotion-code",
@@ -50791,7 +50852,8 @@
         ],
         "sourceClassName": "PromotionCodeService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "quote-computed-upfront-line-items",
@@ -51137,7 +51199,8 @@
         ],
         "sourceClassName": "QuoteComputedUpfrontLineItemsService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "quote-line-item",
@@ -51483,7 +51546,8 @@
         ],
         "sourceClassName": "QuoteLineItemService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "quote",
@@ -54078,7 +54142,8 @@
         ],
         "sourceClassName": "QuoteService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "radar",
@@ -54086,7 +54151,8 @@
         "operations": [],
         "sourceClassName": "RadarService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "reporting",
@@ -54094,7 +54160,8 @@
         "operations": [],
         "sourceClassName": "ReportingService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "review",
@@ -54712,7 +54779,8 @@
         ],
         "sourceClassName": "ReviewService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "setup-attempt",
@@ -55132,7 +55200,8 @@
         ],
         "sourceClassName": "SetupAttemptService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "setup-intent",
@@ -57119,7 +57188,8 @@
         ],
         "sourceClassName": "SetupIntentService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "shipping-rate",
@@ -58076,7 +58146,8 @@
         ],
         "sourceClassName": "ShippingRateService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "sigma",
@@ -58084,7 +58155,8 @@
         "operations": [],
         "sourceClassName": "SigmaService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "source",
@@ -59760,7 +59832,8 @@
         ],
         "sourceClassName": "SourceService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "source-transaction",
@@ -60106,7 +60179,8 @@
         ],
         "sourceClassName": "SourceTransactionService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "subscription-item",
@@ -61388,7 +61462,8 @@
         ],
         "sourceClassName": "SubscriptionItemService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "subscription",
@@ -64582,7 +64657,8 @@
         ],
         "sourceClassName": "SubscriptionService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "subscription-schedule",
@@ -66162,7 +66238,8 @@
         ],
         "sourceClassName": "SubscriptionScheduleService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "tax-code",
@@ -66591,7 +66668,8 @@
         ],
         "sourceClassName": "TaxCodeService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "tax-id",
@@ -67394,7 +67472,8 @@
         ],
         "sourceClassName": "TaxIdService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "tax-rate",
@@ -68463,7 +68542,8 @@
         ],
         "sourceClassName": "TaxRateService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "tax",
@@ -68471,7 +68551,8 @@
         "operations": [],
         "sourceClassName": "TaxService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "test-helpers",
@@ -68479,7 +68560,8 @@
         "operations": [],
         "sourceClassName": "TestHelpersService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "topup",
@@ -69561,7 +69643,8 @@
         ],
         "sourceClassName": "TopupService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "transfer-reversal",
@@ -70364,7 +70447,8 @@
         ],
         "sourceClassName": "TransferReversalService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "transfer",
@@ -71305,7 +71389,8 @@
         ],
         "sourceClassName": "TransferService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "webhook-endpoint",
@@ -72261,7 +72346,8 @@
         ],
         "sourceClassName": "WebhookEndpointService",
         "sourceNamespace": "Stripe",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "core",
@@ -72269,7 +72355,8 @@
         "operations": [],
         "sourceClassName": "CoreService",
         "sourceNamespace": "Stripe.V2",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "account-person-additional-terms-of",
@@ -72277,7 +72364,8 @@
         "operations": [],
         "sourceClassName": "AccountPersonAdditionalTermsOfService",
         "sourceNamespace": "Stripe.V2.Core",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "account-identity-attestations-terms-of",
@@ -72285,7 +72373,8 @@
         "operations": [],
         "sourceClassName": "AccountIdentityAttestationsTermsOfService",
         "sourceNamespace": "Stripe.V2.Core",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "account-identity-individual-additional-terms-of",
@@ -72293,7 +72382,8 @@
         "operations": [],
         "sourceClassName": "AccountIdentityIndividualAdditionalTermsOfService",
         "sourceNamespace": "Stripe.V2.Core",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "account-token",
@@ -72580,7 +72670,8 @@
         ],
         "sourceClassName": "AccountTokenService",
         "sourceNamespace": "Stripe.V2.Core",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "event-destination",
@@ -74027,7 +74118,8 @@
         ],
         "sourceClassName": "EventDestinationService",
         "sourceNamespace": "Stripe.V2.Core",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "person",
@@ -75513,7 +75605,8 @@
         ],
         "sourceClassName": "PersonService",
         "sourceNamespace": "Stripe.V2.Core.Accounts",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "person-token",
@@ -76100,7 +76193,8 @@
         ],
         "sourceClassName": "PersonTokenService",
         "sourceNamespace": "Stripe.V2.Core.Accounts",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "meter-event-session",
@@ -76208,7 +76302,8 @@
         ],
         "sourceClassName": "MeterEventSessionService",
         "sourceNamespace": "Stripe.V2.Billing",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "meter-event-stream",
@@ -76343,7 +76438,8 @@
         ],
         "sourceClassName": "MeterEventStreamService",
         "sourceNamespace": "Stripe.V2.Billing",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "credit-reversal",
@@ -76999,7 +77095,8 @@
         ],
         "sourceClassName": "CreditReversalService",
         "sourceNamespace": "Stripe.Treasury",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "debit-reversal",
@@ -77687,7 +77784,8 @@
         ],
         "sourceClassName": "DebitReversalService",
         "sourceNamespace": "Stripe.Treasury",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "financial-account-features",
@@ -78038,7 +78136,8 @@
         ],
         "sourceClassName": "FinancialAccountFeaturesService",
         "sourceNamespace": "Stripe.Treasury",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "financial-account",
@@ -79431,7 +79530,8 @@
         ],
         "sourceClassName": "FinancialAccountService",
         "sourceNamespace": "Stripe.Treasury",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "transaction-entry",
@@ -80104,7 +80204,8 @@
         ],
         "sourceClassName": "TransactionEntryService",
         "sourceNamespace": "Stripe.Treasury",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "test-clock",
@@ -80910,7 +81011,8 @@
         ],
         "sourceClassName": "TestClockService",
         "sourceNamespace": "Stripe.TestHelpers",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "connection-token",
@@ -81034,7 +81136,8 @@
         ],
         "sourceClassName": "ConnectionTokenService",
         "sourceNamespace": "Stripe.Terminal",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "location",
@@ -82080,7 +82183,8 @@
         ],
         "sourceClassName": "LocationService",
         "sourceNamespace": "Stripe.Terminal",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "onboarding-link",
@@ -82236,7 +82340,8 @@
         ],
         "sourceClassName": "OnboardingLinkService",
         "sourceNamespace": "Stripe.Terminal",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "association",
@@ -82360,7 +82465,8 @@
         ],
         "sourceClassName": "AssociationService",
         "sourceNamespace": "Stripe.Tax",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "calculation-line-item",
@@ -82706,7 +82812,8 @@
         ],
         "sourceClassName": "CalculationLineItemService",
         "sourceNamespace": "Stripe.Tax",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "calculation",
@@ -83389,7 +83496,8 @@
         ],
         "sourceClassName": "CalculationService",
         "sourceNamespace": "Stripe.Tax",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "registration",
@@ -84223,7 +84331,8 @@
         ],
         "sourceClassName": "RegistrationService",
         "sourceNamespace": "Stripe.Tax",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "settings",
@@ -84462,7 +84571,8 @@
         ],
         "sourceClassName": "SettingsService",
         "sourceNamespace": "Stripe.Tax",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "transaction-line-item",
@@ -84808,7 +84918,8 @@
         ],
         "sourceClassName": "TransactionLineItemService",
         "sourceNamespace": "Stripe.Tax",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "scheduled-query-run",
@@ -85237,7 +85348,8 @@
         ],
         "sourceClassName": "ScheduledQueryRunService",
         "sourceNamespace": "Stripe.Sigma",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "report-run",
@@ -85871,7 +85983,8 @@
         ],
         "sourceClassName": "ReportRunService",
         "sourceNamespace": "Stripe.Reporting",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "report-type",
@@ -86105,7 +86218,8 @@
         ],
         "sourceClassName": "ReportTypeService",
         "sourceNamespace": "Stripe.Reporting",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "early-fraud-warning",
@@ -86672,7 +86786,8 @@
         ],
         "sourceClassName": "EarlyFraudWarningService",
         "sourceNamespace": "Stripe.Radar",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "payment-evaluation",
@@ -86844,7 +86959,8 @@
         ],
         "sourceClassName": "PaymentEvaluationService",
         "sourceNamespace": "Stripe.Radar",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "value-list-item",
@@ -87657,7 +87773,8 @@
         ],
         "sourceClassName": "ValueListItemService",
         "sourceNamespace": "Stripe.Radar",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "value-list",
@@ -88665,7 +88782,8 @@
         ],
         "sourceClassName": "ValueListService",
         "sourceNamespace": "Stripe.Radar",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "cardholder",
@@ -89852,7 +89970,8 @@
         ],
         "sourceClassName": "CardholderService",
         "sourceNamespace": "Stripe.Issuing",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "physical-bundle",
@@ -90345,7 +90464,8 @@
         ],
         "sourceClassName": "PhysicalBundleService",
         "sourceNamespace": "Stripe.Issuing",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "verification-report",
@@ -90944,7 +91064,8 @@
         ],
         "sourceClassName": "VerificationReportService",
         "sourceNamespace": "Stripe.Identity",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "verification-session",
@@ -92243,7 +92364,8 @@
         ],
         "sourceClassName": "VerificationSessionService",
         "sourceNamespace": "Stripe.Identity",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "request",
@@ -92894,7 +93016,8 @@
         ],
         "sourceClassName": "RequestService",
         "sourceNamespace": "Stripe.Forwarding",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "account-owner",
@@ -93272,7 +93395,8 @@
         ],
         "sourceClassName": "AccountOwnerService",
         "sourceNamespace": "Stripe.FinancialConnections",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "active-entitlement",
@@ -93733,7 +93857,8 @@
         ],
         "sourceClassName": "ActiveEntitlementService",
         "sourceNamespace": "Stripe.Entitlements",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "feature",
@@ -94536,7 +94661,8 @@
         ],
         "sourceClassName": "FeatureService",
         "sourceNamespace": "Stripe.Entitlements",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "order",
@@ -95422,7 +95548,8 @@
         ],
         "sourceClassName": "OrderService",
         "sourceNamespace": "Stripe.Climate",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "supplier",
@@ -95851,7 +95978,8 @@
         ],
         "sourceClassName": "SupplierService",
         "sourceNamespace": "Stripe.Climate",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "session-line-item",
@@ -96197,7 +96325,8 @@
         ],
         "sourceClassName": "SessionLineItemService",
         "sourceNamespace": "Stripe.Checkout",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "alert",
@@ -97182,7 +97311,8 @@
         ],
         "sourceClassName": "AlertService",
         "sourceNamespace": "Stripe.Billing",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "credit-balance-summary",
@@ -97338,7 +97468,8 @@
         ],
         "sourceClassName": "CreditBalanceSummaryService",
         "sourceNamespace": "Stripe.Billing",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "credit-balance-transaction",
@@ -97863,7 +97994,8 @@
         ],
         "sourceClassName": "CreditBalanceTransactionService",
         "sourceNamespace": "Stripe.Billing",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "credit-grant",
@@ -98992,7 +99124,8 @@
         ],
         "sourceClassName": "CreditGrantService",
         "sourceNamespace": "Stripe.Billing",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "meter-event-summary",
@@ -99466,7 +99599,8 @@
         ],
         "sourceClassName": "MeterEventSummaryService",
         "sourceNamespace": "Stripe.Billing",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "meter",
@@ -100483,7 +100617,8 @@
         ],
         "sourceClassName": "MeterService",
         "sourceNamespace": "Stripe.Billing",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       },
       {
         "name": "secret",
@@ -101254,7 +101389,8 @@
         ],
         "sourceClassName": "SecretService",
         "sourceNamespace": "Stripe.Apps",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": true
       }
     ],
     "authPatterns": [
@@ -101265,7 +101401,8 @@
         "headerName": null,
         "description": null
       }
-    ]
+    ],
+    "staticAuthSetup": "Stripe.StripeConfiguration.ApiKey"
   },
   "diagnostics": [
     {

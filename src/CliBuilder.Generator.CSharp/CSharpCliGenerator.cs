@@ -31,7 +31,7 @@ public class CSharpCliGenerator : ICliGenerator
 
             foreach (var resource in model.Resources)
             {
-                var commandModel = new CommandFileModel(model.RootNamespace, resource, hasAuth);
+                var commandModel = new CommandFileModel(model.RootNamespace, resource, hasAuth, model.StaticAuthSetup);
                 files.Add(renderer.RenderToFile(
                     "ResourceCommands.sbn",
                     commandsDir,

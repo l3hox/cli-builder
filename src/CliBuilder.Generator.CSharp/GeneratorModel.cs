@@ -11,7 +11,8 @@ public record GeneratorModel(
     string CliDescription,
     IReadOnlyList<ResourceModel> Resources,
     AuthModel? Auth,
-    string? SdkProjectPath = null
+    string? SdkProjectPath = null,
+    string? StaticAuthSetup = null
 );
 
 public record ResourceModel(
@@ -86,7 +87,8 @@ public record AuthModel(
 public record CommandFileModel(
     string RootNamespace,
     ResourceModel Resource,
-    bool HasAuth
+    bool HasAuth,
+    string? StaticAuthSetup = null
 );
 
 public record AuthFileModel(

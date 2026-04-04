@@ -135,6 +135,7 @@ public static class CustomerCommands
 
 
                     // SDK call: CustomerService.CreateAsync
+
                     var client = new CustomerService(credential);
 
                     var createCustomerOptions = new CreateCustomerOptions();
@@ -221,6 +222,7 @@ public static class CustomerCommands
 
 
                     // SDK call: CustomerService.GetAsync
+
                     var client = new CustomerService(credential);
 
                     var result = (object)await client.GetAsync(idValue);
@@ -294,6 +296,7 @@ public static class CustomerCommands
 
 
                     // SDK call: CustomerService.ListAsync
+
                     var client = new CustomerService(credential);
 
                     var result = (object)await client.ListAsync(limitValue, cursorValue);
@@ -358,6 +361,7 @@ public static class CustomerCommands
 
 
                     // SDK call: CustomerService.DeleteAsync
+
                     var client = new CustomerService(credential);
 
                     var result = (object)await client.DeleteAsync(idValue);
@@ -413,6 +417,7 @@ public static class CustomerCommands
 
 
                     // SDK call: CustomerService.StreamAsync
+
                     var client = new CustomerService(credential);
 
                     var items = new List<object>();
@@ -482,6 +487,7 @@ public static class CustomerCommands
 
 
                     // SDK call: CustomerService.GetMetadataAsync
+
                     var client = new CustomerService(credential);
 
                     var result = (object)await client.GetMetadataAsync(idValue);

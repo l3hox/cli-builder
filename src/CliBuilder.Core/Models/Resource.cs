@@ -6,7 +6,8 @@ public record Resource(
     IReadOnlyList<Operation> Operations,
     string? SourceClassName = null,
     string? SourceNamespace = null,
-    IReadOnlyList<ConstructorParam>? ConstructorParams = null
+    IReadOnlyList<ConstructorParam>? ConstructorParams = null,
+    bool HasParameterlessCtor = false
 );
 
 public record ConstructorParam(

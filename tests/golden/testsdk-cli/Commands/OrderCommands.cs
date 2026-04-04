@@ -140,6 +140,7 @@ public static class OrderCommands
 
 
                     // SDK call: OrderClient.CreateAsync
+
                     var client = new OrderClient(credential);
 
                     var createOrderOptions = new CreateOrderOptions();
@@ -226,6 +227,7 @@ public static class OrderCommands
 
 
                     // SDK call: OrderClient.GetAsync
+
                     var client = new OrderClient(credential);
 
                     var result = (object)await client.GetAsync(idValue);
@@ -297,6 +299,7 @@ public static class OrderCommands
 
 
                     // SDK call: OrderClient.UpdateAsync
+
                     var client = new OrderClient(credential);
 
                     var nestedOptions = new NestedOptions();
@@ -383,6 +386,7 @@ public static class OrderCommands
 
 
                     // SDK call: OrderClient.ProcessAsync
+
                     var client = new OrderClient(credential);
 
                     var sanitizationOptions = new SanitizationOptions();

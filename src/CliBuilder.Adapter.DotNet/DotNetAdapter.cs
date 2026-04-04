@@ -68,13 +68,17 @@ public class DotNetAdapter : ISdkAdapter
             var ctorParams = ExtractConstructorParams(type);
             resources.Add(new Resource(noun, null, operations,
                 SourceClassName: type.Name, SourceNamespace: type.Namespace,
-                ConstructorParams: ctorParams));
+                ConstructorParams: ctorParams,
+                HasParameterlessCtor: HasPublicParameterlessCtor(type)));
         }
 
         // Detect auth patterns
         var authPatterns = DetectAuthPatterns(assembly, serviceClasses);
 
-        var metadata = new SdkMetadata(sdkName, sdkVersion, resources, authPatterns);
+        // Detect static auth configuration (e.g., Stripe.StripeConfiguration.ApiKey)
+        var staticAuthSetup = DetectStaticAuthSetup(assembly);
+
+        var metadata = new SdkMetadata(sdkName, sdkVersion, resources, authPatterns, staticAuthSetup);
         return new AdapterResult(metadata, diagnostics);
     }
 
@@ -573,6 +577,34 @@ public class DotNetAdapter : ISdkAdapter
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Detect static auth configuration pattern (e.g., Stripe.StripeConfiguration.ApiKey).
+    /// Some SDKs use a static property for auth instead of constructor injection.
+    /// Returns "Namespace.ClassName.PropertyName" or null.
+    /// </summary>
+    private string? DetectStaticAuthSetup(Assembly assembly)
+    {
+        Type[] types;
+        try { types = assembly.GetExportedTypes(); }
+        catch (ReflectionTypeLoadException ex) { types = ex.Types.Where(t => t != null).ToArray()!; }
+
+        foreach (var type in types)
+        {
+            if (!type.Name.EndsWith("Configuration", StringComparison.Ordinal))
+                continue;
+
+            var prop = type.GetProperties(BindingFlags.Public | BindingFlags.Static)
+                .FirstOrDefault(p =>
+                    p.CanWrite && p.SetMethod?.IsPublic == true
+                    && p.PropertyType.FullName == "System.String"
+                    && (p.Name is "ApiKey" or "SecretKey" or "ApiSecret"));
+
+            if (prop != null)
+                return $"{type.Namespace}.{type.Name}.{prop.Name}";
+        }
+        return null;
     }
 
     private IReadOnlyList<AuthPattern> DetectAuthPatterns(Assembly assembly, List<(string Noun, Type Type)> serviceClasses)

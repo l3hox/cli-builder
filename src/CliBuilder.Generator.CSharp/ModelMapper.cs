@@ -16,7 +16,7 @@ public static partial class ModelMapper
         var cliName = options.CliName ?? DeriveCliName(metadata.Name);
 
         var resources = metadata.Resources.Select(r =>
-            MapResource(r, diagnostics)).ToList();
+            MapResource(r, diagnostics, metadata.StaticAuthSetup)).ToList();
 
         var auth = metadata.AuthPatterns.Count > 0
             ? MapAuth(metadata.AuthPatterns[0])
@@ -41,12 +41,13 @@ public static partial class ModelMapper
             CliDescription: SanitizeString($"{cliName} — CLI for {sdkName}") ?? "",
             Resources: resources,
             Auth: auth,
-            SdkProjectPath: sdkProjectPath);
+            SdkProjectPath: sdkProjectPath,
+            StaticAuthSetup: SanitizeString(metadata.StaticAuthSetup));
 
         return (model, diagnostics);
     }
 
-    private static ResourceModel MapResource(Resource resource, List<Diagnostic> diagnostics)
+    private static ResourceModel MapResource(Resource resource, List<Diagnostic> diagnostics, string? staticAuthSetup = null)
     {
         var className = IdentifierValidator.KebabToPascal(resource.Name);
 
@@ -72,7 +73,7 @@ public static partial class ModelMapper
             MapOperation(op, diagnostics)).ToList();
 
         // Build constructor info from ConstructorParams
-        var (ctorExpr, ctorConfigParams, canConstruct) = BuildConstructorInfo(resource, diagnostics);
+        var (ctorExpr, ctorConfigParams, canConstruct) = BuildConstructorInfo(resource, diagnostics, staticAuthSetup);
 
         // Collect all namespaces needed by this resource's generated code
         var namespaces = new HashSet<string>();
@@ -111,10 +112,16 @@ public static partial class ModelMapper
     }
 
     private static (string? Expression, IReadOnlyList<ConstructorConfigParam> ConfigParams, bool CanConstruct)
-        BuildConstructorInfo(Resource resource, List<Diagnostic> diagnostics)
+        BuildConstructorInfo(Resource resource, List<Diagnostic> diagnostics, string? staticAuthSetup = null)
     {
         if (resource.ConstructorParams is null || resource.ConstructorParams.Count == 0)
+        {
+            // No auth constructor found. If the SDK has static auth (e.g., StripeConfiguration.ApiKey)
+            // and the service has a parameterless constructor, it can be constructed.
+            if (staticAuthSetup != null && resource.HasParameterlessCtor)
+                return ("", Array.Empty<ConstructorConfigParam>(), true);
             return (null, Array.Empty<ConstructorConfigParam>(), false);
+        }
 
         var configParams = new List<ConstructorConfigParam>();
         var argParts = new List<string>();
@@ -229,7 +236,7 @@ public static partial class ModelMapper
             var name = operation.ReturnType.Name;
             // Known non-awaitable patterns: collection wrappers, sub-client factories,
             // settings/options types, generic type params (T), response/notification types
-            if (name is "AsyncCollectionResult" or "CollectionResult"
+            if (name is "AsyncCollectionResult" or "CollectionResult" or "Uri" or "Stream"
                 || name.Length == 1  // generic type parameter like "T"
                 || name.EndsWith("Client") || name.EndsWith("Service") || name.EndsWith("Api")
                 || name.EndsWith("ClientSettings") || name.EndsWith("Options")

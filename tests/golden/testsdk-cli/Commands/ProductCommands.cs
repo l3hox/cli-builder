@@ -43,6 +43,7 @@ public static class ProductCommands
 
 
                     // SDK call: ProductApi.ListAsync
+
                     var client = new ProductApi(new TokenCredential(credential));
 
                     var result = (object)await client.ListAsync();

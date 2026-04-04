@@ -78,6 +78,9 @@ public static class {{ resource.class_name }}Commands
 {{~ end ~}}
 
                     // SDK call: {{ resource.source_class_name }}.{{ op.source_method_name }}
+{{~ if static_auth_setup }}
+                    {{ static_auth_setup }} = credential;
+{{~ end }}
                     var client = new {{ resource.source_class_name }}({{ resource.constructor_expression }});
 {{~ for mp in op.method_params ~}}
 {{~ if mp.is_options_class }}

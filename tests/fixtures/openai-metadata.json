@@ -409,7 +409,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "video",
@@ -726,7 +727,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "vector-store",
@@ -1865,7 +1867,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "responses",
@@ -2543,7 +2546,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "realtime",
@@ -2695,7 +2699,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "realtime-session",
@@ -3391,7 +3396,8 @@
         ],
         "sourceClassName": "RealtimeSessionClient",
         "sourceNamespace": "OpenAI.Realtime",
-        "constructorParams": null
+        "constructorParams": null,
+        "hasParameterlessCtor": false
       },
       {
         "name": "moderation",
@@ -3494,7 +3500,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "open-ai-model",
@@ -3596,7 +3603,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "image",
@@ -4774,7 +4782,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "grader",
@@ -4859,7 +4868,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "fine-tuning",
@@ -5454,7 +5464,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "open-ai-file",
@@ -5921,7 +5932,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "evaluation",
@@ -6794,7 +6806,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "embedding",
@@ -6995,7 +7008,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "conversation",
@@ -7477,7 +7491,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "container",
@@ -8072,7 +8087,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "chat",
@@ -9272,7 +9288,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "batch",
@@ -9455,7 +9472,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "audio",
@@ -10049,7 +10067,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "assistant",
@@ -12800,7 +12819,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       }
     ],
     "authPatterns": [
@@ -12818,7 +12838,8 @@
         "headerName": null,
         "description": null
       }
-    ]
+    ],
+    "staticAuthSetup": null
   },
   "diagnostics": [
     {

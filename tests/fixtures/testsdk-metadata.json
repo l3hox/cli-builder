@@ -397,7 +397,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "order",
@@ -873,7 +874,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "product",
@@ -907,7 +909,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       },
       {
         "name": "search",
@@ -965,7 +968,8 @@
             "isAuth": true,
             "isRequired": true
           }
-        ]
+        ],
+        "hasParameterlessCtor": false
       }
     ],
     "authPatterns": [
@@ -990,7 +994,8 @@
         "headerName": null,
         "description": null
       }
-    ]
+    ],
+    "staticAuthSetup": null
   },
   "diagnostics": [
     {

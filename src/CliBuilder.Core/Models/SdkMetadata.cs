@@ -4,5 +4,6 @@ public record SdkMetadata(
     string Name,
     string Version,
     IReadOnlyList<Resource> Resources,
-    IReadOnlyList<AuthPattern> AuthPatterns
+    IReadOnlyList<AuthPattern> AuthPatterns,
+    string? StaticAuthSetup = null
 );

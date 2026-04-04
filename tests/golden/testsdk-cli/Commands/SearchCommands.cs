@@ -58,6 +58,7 @@ public static class SearchCommands
                     var indexValue = ctx.ParseResult.GetValueForOption(indexValueOption);
 
                     // SDK call: SearchClient.SearchAsync
+
                     var client = new SearchClient(indexValue, new ApiKeyCredential(credential));
 
                     var result = (object)await client.SearchAsync(queryValue);
