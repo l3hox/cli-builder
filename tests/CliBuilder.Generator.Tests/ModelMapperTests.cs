@@ -906,4 +906,67 @@ public class ModelMapperTests
 
         Assert.False(model.Resources[0].CanConstruct);
     }
+
+    // -----------------------------------------------------------
+    // Nullable value types for NeedsJsonInput (step 9)
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void NeedsJsonInput_ValueTypesBecomesNullable()
+    {
+        // An operation with nested objects triggers NeedsJsonInput.
+        // Value-type options class params should become nullable.
+        var nestedType = new TypeRef(TypeKind.Class, "Address");
+        var props = new Parameter[]
+        {
+            new("Amount", new TypeRef(TypeKind.Primitive, "decimal"), true),
+            new("Active", new TypeRef(TypeKind.Primitive, "bool"), false),
+            new("Nested", nestedType, false),
+        };
+        var optType = new TypeRef(TypeKind.Class, "Opts", Properties: props);
+        var op = new Operation("create", null,
+            new[] { new Parameter("opts", optType, true) },
+            new TypeRef(TypeKind.Primitive, "void"),
+            SourceMethodName: "CreateAsync");
+        var resource = new Resource("thing", null, new[] { op },
+            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
+        var metadata = MinimalMetadata(resources: new[] { resource });
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+
+        Assert.True(model.Resources[0].Operations[0].NeedsJsonInput);
+        var amountParam = model.Resources[0].Operations[0].Parameters.First(p => p.PropertyName == "Amount");
+        Assert.Equal("decimal?", amountParam.CSharpType);
+        var activeParam = model.Resources[0].Operations[0].Parameters.First(p => p.PropertyName == "Active");
+        Assert.Equal("bool?", activeParam.CSharpType);
+    }
+
+    [Fact]
+    public void NeedsJsonInput_DirectParamsStayNonNullable()
+    {
+        // Direct method params (SourceOptionsClassName == null) should NOT become nullable
+        var nestedType = new TypeRef(TypeKind.Class, "Address");
+        var props = new Parameter[]
+        {
+            new("Nested", nestedType, false),
+        };
+        var optType = new TypeRef(TypeKind.Class, "Opts", Properties: props);
+        var op = new Operation("update", null,
+            new Parameter[]
+            {
+                new("id", new TypeRef(TypeKind.Primitive, "int"), true),
+                new("opts", optType, true),
+            },
+            new TypeRef(TypeKind.Primitive, "void"),
+            SourceMethodName: "UpdateAsync");
+        var resource = new Resource("thing", null, new[] { op },
+            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
+        var metadata = MinimalMetadata(resources: new[] { resource });
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+
+        Assert.True(model.Resources[0].Operations[0].NeedsJsonInput);
+        var idParam = model.Resources[0].Operations[0].Parameters.First(p => p.PropertyName == "id");
+        Assert.Equal("int", idParam.CSharpType); // NOT int? — direct param stays non-nullable
+    }
 }

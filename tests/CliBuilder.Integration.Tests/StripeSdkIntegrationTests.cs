@@ -108,4 +108,25 @@ public class StripeSdkIntegrationTests
         var paymentIntent = result.Metadata.Resources.First(r => r.Name == "payment-intent");
         Assert.True(paymentIntent.HasParameterlessCtor);
     }
+
+    [Fact]
+    public void ExtractStripe_NamespaceDisambiguation_QualifiesSubNamespace()
+    {
+        // Stripe.CustomerService → "customer" (top-level, no prefix)
+        // Stripe.TestHelpers.CustomerService → "test-helpers-customer" (namespace prefix)
+        var result = ExtractStripe();
+        Assert.Contains(result.Metadata.Resources, r => r.Name == "customer");
+        Assert.Contains(result.Metadata.Resources, r => r.Name == "test-helpers-customer");
+    }
+
+    [Fact]
+    public void ExtractStripe_NamespaceDisambiguation_IssuingPrefix()
+    {
+        var result = ExtractStripe();
+        // Three-way collision: Stripe.CardService, Stripe.Issuing.CardService, Stripe.TestHelpers.Issuing.CardService
+        // Top-level keeps "card", sub-namespaces get prefixed
+        Assert.Contains(result.Metadata.Resources, r => r.Name == "card");
+        Assert.Contains(result.Metadata.Resources, r => r.Name == "issuing-card");
+        Assert.Contains(result.Metadata.Resources, r => r.Name == "test-helpers-issuing-card");
+    }
 }

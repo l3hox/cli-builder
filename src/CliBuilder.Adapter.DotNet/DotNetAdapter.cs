@@ -210,7 +210,9 @@ public class DotNetAdapter : ISdkAdapter
     private static string FindCommonNamespacePrefix(IReadOnlyList<string> namespaces)
     {
         if (namespaces.Count == 0) return "";
-        var parts = namespaces[0].Split('.');
+        // Use the shortest namespace as reference to avoid undersized prefix
+        var shortest = namespaces.OrderBy(n => n.Length).First();
+        var parts = shortest.Split('.');
         var commonLength = parts.Length;
         foreach (var ns in namespaces.Skip(1))
         {

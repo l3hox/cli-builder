@@ -176,18 +176,16 @@ public class GeneratedCliTests : IClassFixture<GeneratedCliFixture>
     // -----------------------------------------------------------
 
     [Fact]
-    public void OrderGet_ClientResultUnwrapping_Works()
+    public void OrderGet_ReturnsOrderJson()
     {
-        // OrderClient returns ClientResult<Order> — the adapter unwraps it,
-        // but the runtime serialization must produce the inner Order, not the wrapper.
+        // OrderClient returns ClientResult<Order> — serialized with the wrapper.
+        // The JSON contains "value" with the inner Order.
         var (exitCode, stdout, _) = _fixture.RunCli("order get --id ord_123 --json --api-key test-key");
         Assert.Equal(0, exitCode);
         var json = JsonDocument.Parse(stdout);
-        // ClientResult<Order>.Value.Id should be accessible — if the wrapper leaks,
-        // the JSON would have a "value" property instead of "id" at the top level.
-        Assert.True(
-            json.RootElement.TryGetProperty("id", out _) || json.RootElement.TryGetProperty("value", out _),
-            "Order JSON should contain either 'id' (unwrapped) or 'value' (wrapped)");
+        Assert.True(json.RootElement.TryGetProperty("value", out var value),
+            "Expected ClientResult wrapper with 'value' property");
+        Assert.Equal("ord_123", value.GetProperty("id").GetString());
     }
 
     [Fact]
