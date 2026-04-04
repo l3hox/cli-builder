@@ -35,18 +35,18 @@ public class DotNetAdapterTests
     // -------------------------------------------------------
 
     [Fact]
-    public void Discovers_ExactlyFourResources()
+    public void Discovers_SixResources()
     {
         var result = ExtractTestSdk();
-        // customer (CustomerService), order (OrderClient), product (ProductApi)
-        // InternalHelper excluded (no matching suffix)
-        // CustomerApiService excluded (noun collision → error diagnostic)
+        // customer, order, product, search + disambiguated shipping-service, shipping-client
         var resourceNames = result.Metadata.Resources.Select(r => r.Name).OrderBy(n => n).ToList();
-        Assert.Equal(4, resourceNames.Count);
+        Assert.Equal(6, resourceNames.Count);
         Assert.Contains("customer", resourceNames);
         Assert.Contains("order", resourceNames);
         Assert.Contains("product", resourceNames);
         Assert.Contains("search", resourceNames);
+        Assert.Contains("shipping-service", resourceNames);
+        Assert.Contains("shipping-client", resourceNames);
     }
 
     [Fact]
@@ -59,14 +59,15 @@ public class DotNetAdapterTests
     }
 
     [Fact]
-    public void Emits_NounCollision_Error_ForShippingClasses()
+    public void ResolvesNounCollision_ForShippingClasses()
     {
         var result = ExtractTestSdk();
-        var collision = result.Diagnostics.FirstOrDefault(d => d.Code == "CB202");
-        Assert.NotNull(collision);
-        Assert.Equal(DiagnosticSeverity.Error, collision.Severity);
-        Assert.Contains("shipping", collision.Message, StringComparison.OrdinalIgnoreCase);
-        // Colliding resources are excluded entirely
+        var collisions = result.Diagnostics.Where(d => d.Code == "CB202").ToList();
+        Assert.True(collisions.Count >= 2);
+        // Shipping collision is resolved by full class name (same namespace)
+        Assert.Contains(result.Metadata.Resources, r => r.Name == "shipping-service");
+        Assert.Contains(result.Metadata.Resources, r => r.Name == "shipping-client");
+        // Plain "shipping" should not exist (was disambiguated)
         Assert.DoesNotContain(result.Metadata.Resources, r => r.Name == "shipping");
     }
 

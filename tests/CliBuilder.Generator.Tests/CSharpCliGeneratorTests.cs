@@ -212,7 +212,7 @@ public class CSharpCliGeneratorTests : IDisposable
         var result = Generate();
         // TestSdk has 4 resources: customer, order, product, search
         var commandFiles = result.GeneratedFiles.Where(f => f.Contains("Commands")).ToList();
-        Assert.Equal(4, commandFiles.Count);
+        Assert.Equal(6, commandFiles.Count);
     }
 
     [Fact]
@@ -231,7 +231,7 @@ public class CSharpCliGeneratorTests : IDisposable
         // 4 resources = 4 command files
         var commandFiles = result.GeneratedFiles.Where(f =>
             f.Contains("Commands") && f.EndsWith(".cs")).ToList();
-        Assert.Equal(4, commandFiles.Count);
+        Assert.Equal(6, commandFiles.Count);
     }
 
     [Fact]
@@ -624,6 +624,8 @@ public class CSharpCliGeneratorTests : IDisposable
         "Commands/OrderCommands.cs",
         "Commands/ProductCommands.cs",
         "Commands/SearchCommands.cs",
+        "Commands/ShippingServiceCommands.cs",
+        "Commands/ShippingClientCommands.cs",
         "Output/JsonFormatter.cs",
         "Output/TableFormatter.cs",
         "Auth/AuthHandler.cs"

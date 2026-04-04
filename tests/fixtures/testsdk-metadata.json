@@ -4,6 +4,94 @@
     "version": "1.0.0.0",
     "resources": [
       {
+        "name": "shipping-service",
+        "description": null,
+        "operations": [
+          {
+            "name": "track",
+            "description": null,
+            "parameters": [
+              {
+                "name": "trackingId",
+                "type": {
+                  "kind": "primitive",
+                  "name": "string",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": null,
+                  "elementType": null,
+                  "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "class",
+              "name": "Order",
+              "isNullable": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null,
+              "namespace": "CliBuilder.TestSdk.Models"
+            },
+            "isStreaming": false,
+            "sourceMethodName": "TrackAsync"
+          }
+        ],
+        "sourceClassName": "ShippingService",
+        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "constructorParams": null,
+        "hasParameterlessCtor": true
+      },
+      {
+        "name": "shipping-client",
+        "description": null,
+        "operations": [
+          {
+            "name": "track",
+            "description": null,
+            "parameters": [
+              {
+                "name": "trackingId",
+                "type": {
+                  "kind": "primitive",
+                  "name": "string",
+                  "isNullable": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": null,
+                  "elementType": null,
+                  "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "class",
+              "name": "Order",
+              "isNullable": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null,
+              "namespace": "CliBuilder.TestSdk.Models"
+            },
+            "isStreaming": false,
+            "sourceMethodName": "TrackAsync"
+          }
+        ],
+        "sourceClassName": "ShippingClient",
+        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "constructorParams": null,
+        "hasParameterlessCtor": true
+      },
+      {
         "name": "customer",
         "description": null,
         "operations": [
@@ -999,9 +1087,14 @@
   },
   "diagnostics": [
     {
-      "severity": "error",
+      "severity": "warning",
       "code": "CB202",
-      "message": "Noun collision: classes ShippingService, ShippingClient all map to resource \u0027shipping\u0027. Add an override in cli-builder.json to disambiguate."
+      "message": "Noun collision unresolvable by namespace: ShippingService (CliBuilder.TestSdk.Services) \u2192 \u0027shipping-service\u0027"
+    },
+    {
+      "severity": "warning",
+      "code": "CB202",
+      "message": "Noun collision unresolvable by namespace: ShippingClient (CliBuilder.TestSdk.Services) \u2192 \u0027shipping-client\u0027"
     },
     {
       "severity": "info",

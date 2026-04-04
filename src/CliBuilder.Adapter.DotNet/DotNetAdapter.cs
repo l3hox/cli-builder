@@ -135,17 +135,44 @@ public class DotNetAdapter : ISdkAdapter
             list.Add(type);
         }
 
+        // Find the common root namespace (e.g., "Stripe") for disambiguation
+        var allNamespaces = candidates.Values.SelectMany(ts => ts).Select(t => t.Namespace ?? "").ToList();
+        var rootNamespace = FindCommonNamespacePrefix(allNamespaces);
+
         var result = new List<(string, Type)>();
         foreach (var (noun, types) in candidates)
         {
             if (types.Count > 1)
             {
-                var classNames = string.Join(", ", types.Select(t => t.Name));
-                diagnostics.Add(new Diagnostic(
-                    DiagnosticSeverity.Error,
-                    "CB202",
-                    $"Noun collision: classes {classNames} all map to resource '{noun}'. Add an override in cli-builder.json to disambiguate."));
-                // Collision: skip all colliding classes — require config override
+                // Disambiguate by namespace prefix: Stripe.Tax.CustomerService → "tax-customer"
+                var qualified = types.Select(t => (QualifyNounWithNamespace(noun, t, rootNamespace), t)).ToList();
+
+                // Check if namespace disambiguation produced duplicates (same namespace, different suffixes)
+                var qualifiedNames = qualified.Select(q => q.Item1).ToList();
+                if (qualifiedNames.Distinct().Count() < qualifiedNames.Count)
+                {
+                    // Still have collisions — fall back to full class name kebab-cased
+                    foreach (var type in types)
+                    {
+                        var fullNoun = PascalToKebabCase(type.Name);
+                        diagnostics.Add(new Diagnostic(
+                            DiagnosticSeverity.Warning,
+                            "CB202",
+                            $"Noun collision unresolvable by namespace: {type.Name} ({type.Namespace}) → '{fullNoun}'"));
+                        result.Add((fullNoun, type));
+                    }
+                }
+                else
+                {
+                    foreach (var (qualifiedNoun, type) in qualified)
+                    {
+                        diagnostics.Add(new Diagnostic(
+                            DiagnosticSeverity.Info,
+                            "CB202",
+                            $"Noun collision resolved: {type.Name} ({type.Namespace}) → '{qualifiedNoun}'"));
+                        result.Add((qualifiedNoun, type));
+                    }
+                }
                 continue;
             }
 
@@ -153,6 +180,52 @@ public class DotNetAdapter : ISdkAdapter
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Qualify a noun with its namespace segment to resolve collisions.
+    /// Stripe.Tax.CustomerService → "tax-customer", Stripe.CustomerService → "customer"
+    /// </summary>
+    private static string QualifyNounWithNamespace(string noun, Type type, string rootNamespace)
+    {
+        var ns = type.Namespace ?? "";
+        // Strip the root namespace prefix to get the relative part
+        if (ns.StartsWith(rootNamespace, StringComparison.Ordinal))
+        {
+            var relative = ns[rootNamespace.Length..].TrimStart('.');
+            if (!string.IsNullOrEmpty(relative))
+            {
+                // Convert namespace segments to kebab prefix: "Tax" → "tax", "Issuing.Cards" → "issuing-cards"
+                var prefix = string.Join("-", relative.Split('.').Select(PascalToKebabCase));
+                return $"{prefix}-{noun}";
+            }
+        }
+        return noun; // top-level namespace — no prefix needed
+    }
+
+    /// <summary>
+    /// Find the longest common namespace prefix across all types.
+    /// ["Stripe", "Stripe.Tax", "Stripe.Issuing"] → "Stripe"
+    /// </summary>
+    private static string FindCommonNamespacePrefix(IReadOnlyList<string> namespaces)
+    {
+        if (namespaces.Count == 0) return "";
+        var parts = namespaces[0].Split('.');
+        var commonLength = parts.Length;
+        foreach (var ns in namespaces.Skip(1))
+        {
+            var otherParts = ns.Split('.');
+            commonLength = Math.Min(commonLength, otherParts.Length);
+            for (int i = 0; i < commonLength; i++)
+            {
+                if (parts[i] != otherParts[i])
+                {
+                    commonLength = i;
+                    break;
+                }
+            }
+        }
+        return string.Join(".", parts.Take(commonLength));
     }
 
     private string? TryExtractNoun(string className)
