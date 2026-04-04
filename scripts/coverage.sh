@@ -35,7 +35,8 @@ reportgenerator \
     -reports:"$COVERAGE_FILES" \
     -targetdir:"$COVERAGE_DIR/report" \
     -reporttypes:"TextSummary;Html" \
-    -assemblyfilters:"+CliBuilder.Core;+CliBuilder.Generator.CSharp;+CliBuilder.Adapter.DotNet"
+    -assemblyfilters:"+CliBuilder.Core;+CliBuilder.Generator.CSharp;+CliBuilder.Adapter.DotNet" \
+    -classfilters:"-System.Text.RegularExpressions.Generated*"
 
 echo ""
 echo "=== Coverage Summary ==="
