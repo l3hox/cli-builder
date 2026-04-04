@@ -10,7 +10,7 @@ All notable changes to cli-builder.
 - **Null guard system** — value-type CLI options made nullable for `--json-input` operations to prevent System.CommandLine defaults clobbering JSON values.
 
 ### Stats
-- 343 tests (52 Core + 250 Generator + 41 Integration)
+- 347 tests (52 Core + 252 Generator + 43 Integration)
 - 93.4% line coverage, 96.4% method coverage
 - Stripe: 196 resources (was 136)
 

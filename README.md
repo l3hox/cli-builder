@@ -66,13 +66,13 @@ Every generated CLI satisfies:
 
 ## Test suite
 
-343 tests across 3 projects:
+347 tests across 3 projects:
 
 | Project | Tests | Covers |
 |---------|-------|--------|
-| Generator Tests | 250 | Template rendering, model mapping, type conversion, sanitization, golden files, compile verification |
+| Generator Tests | 252 | Template rendering, model mapping, type conversion, sanitization, golden files, compile verification, nullable guards |
 | Core Tests | 52 | Adapter extraction, type resolution, constructor detection, collision resolution |
-| Integration Tests | 41 | OpenAI + Stripe extraction/compilation, TestSdk E2E, --json-input |
+| Integration Tests | 43 | OpenAI + Stripe extraction/compilation, TestSdk E2E, --json-input, namespace disambiguation |
 
 93.4% line coverage, 96.4% method coverage. Run `./scripts/coverage.sh` for a full report.
 

@@ -75,4 +75,5 @@ Auth handler writes resolved credentials to config file for reuse.
 - TestSdk: 6 resources, 15 E2E tests (including --json-input merge/override/error)
 - OpenAI 2.9.1: 20 resources, 169 ops, 41 wired, live API validated
 - Stripe.net 51.0.0: 196 resources (was 136 — collisions now resolved), live API validated
-- 343 tests, 93.4% line coverage, 96.4% method coverage
+- Step 9: --json-input deserialization, noun collision resolution, nullable value type guards
+- 347 tests, 93.4% line coverage, 96.4% method coverage
