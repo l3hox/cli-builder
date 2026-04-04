@@ -19,13 +19,6 @@ public static class CustomerCommands
         {
             var cmd = new Command("create", null);
 
-            var emailOption = new Option<string>(
-                "--email",
-                null)
-            { IsRequired = true };
-
-            cmd.AddOption(emailOption);
-
             var creditLimitOption = new Option<int?>(
                 "--credit-limit",
                 null)
@@ -46,6 +39,13 @@ public static class CustomerCommands
             { IsRequired = false };
 
             cmd.AddOption(descriptionOption);
+
+            var emailOption = new Option<string>(
+                "--email",
+                null)
+            { IsRequired = false };
+
+            cmd.AddOption(emailOption);
 
             var initialStatusOption = new Option<string>(
                 "--initial-status",
@@ -91,20 +91,6 @@ public static class CustomerCommands
 
             cmd.AddOption(taxIdOption);
 
-            var idempotencyKeyOption = new Option<string>(
-                "--idempotency-key",
-                null)
-            { IsRequired = false };
-
-            cmd.AddOption(idempotencyKeyOption);
-
-            var timeoutOption = new Option<string>(
-                "--timeout",
-                null)
-            { IsRequired = false };
-
-            cmd.AddOption(timeoutOption);
-
             cmd.SetHandler(async (InvocationContext ctx) =>
             {
                 try
@@ -127,13 +113,13 @@ public static class CustomerCommands
 
                     // Read parameter values
 
-                    var emailValue = ctx.ParseResult.GetValueForOption(emailOption);
-
                     var creditLimitValue = ctx.ParseResult.GetValueForOption(creditLimitOption);
 
                     var currencyValue = ctx.ParseResult.GetValueForOption(currencyOption);
 
                     var descriptionValue = ctx.ParseResult.GetValueForOption(descriptionOption);
+
+                    var emailValue = ctx.ParseResult.GetValueForOption(emailOption);
 
                     var initialStatusValue = ctx.ParseResult.GetValueForOption(initialStatusOption);
 
@@ -147,23 +133,19 @@ public static class CustomerCommands
 
                     var taxIdValue = ctx.ParseResult.GetValueForOption(taxIdOption);
 
-                    var idempotencyKeyValue = ctx.ParseResult.GetValueForOption(idempotencyKeyOption);
-
-                    var timeoutValue = ctx.ParseResult.GetValueForOption(timeoutOption);
-
 
                     // SDK call: CustomerService.CreateAsync
                     var client = new CustomerService(credential);
 
                     var createCustomerOptions = new CreateCustomerOptions();
 
-                    createCustomerOptions.Email = emailValue;
-
                     createCustomerOptions.CreditLimit = creditLimitValue;
 
                     createCustomerOptions.Currency = currencyValue;
 
                     createCustomerOptions.Description = descriptionValue;
+
+                    createCustomerOptions.Email = emailValue;
 
                     createCustomerOptions.InitialStatus = initialStatusValue is not null ? Enum.Parse<CustomerStatus>(initialStatusValue) : (CustomerStatus?)null;
 
@@ -177,13 +159,7 @@ public static class CustomerCommands
 
                     createCustomerOptions.TaxId = taxIdValue;
 
-                    var requestOptions = new RequestOptions();
-
-                    requestOptions.IdempotencyKey = idempotencyKeyValue;
-
-                    requestOptions.Timeout = timeoutValue is not null ? TimeSpan.Parse(timeoutValue) : (TimeSpan?)null;
-
-                    var result = (object)await client.CreateAsync(createCustomerOptions, requestOptions);
+                    var result = (object)await client.CreateAsync(createCustomerOptions);
 
 
                     // Format output

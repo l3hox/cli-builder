@@ -749,15 +749,14 @@ public class CSharpCliGeneratorTests : IDisposable
     }
 
     [Fact]
-    public void Generate_CustomerCreate_HasMultipleOptionsClasses()
+    public void Generate_CustomerCreate_HasOptionsClass()
     {
         var result = Generate();
         var content = File.ReadAllText(
             Path.Combine(result.ProjectDirectory, "Commands", "CustomerCommands.cs"));
-        // CreateAsync takes CreateCustomerOptions + RequestOptions
+        // CreateAsync takes CreateCustomerOptions (RequestOptions is filtered as infrastructure)
         Assert.Contains("new CreateCustomerOptions()", content);
-        Assert.Contains("new RequestOptions()", content);
-        Assert.Contains("client.CreateAsync(createCustomerOptions, requestOptions)", content);
+        Assert.Contains("client.CreateAsync(createCustomerOptions)", content);
     }
 
     [Fact]

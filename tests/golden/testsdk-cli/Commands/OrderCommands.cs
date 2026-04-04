@@ -19,27 +19,6 @@ public static class OrderCommands
         {
             var cmd = new Command("create", null);
 
-            var currencyOption = new Option<string>(
-                "--currency",
-                null)
-            { IsRequired = true };
-
-            cmd.AddOption(currencyOption);
-
-            var customerIdOption = new Option<string>(
-                "--customer-id",
-                null)
-            { IsRequired = true };
-
-            cmd.AddOption(customerIdOption);
-
-            var productIdOption = new Option<string>(
-                "--product-id",
-                null)
-            { IsRequired = true };
-
-            cmd.AddOption(productIdOption);
-
             var amountOption = new Option<decimal>(
                 "--amount",
                 null)
@@ -53,6 +32,20 @@ public static class OrderCommands
             { IsRequired = false };
 
             cmd.AddOption(couponCodeOption);
+
+            var currencyOption = new Option<string>(
+                "--currency",
+                null)
+            { IsRequired = false };
+
+            cmd.AddOption(currencyOption);
+
+            var customerIdOption = new Option<string>(
+                "--customer-id",
+                null)
+            { IsRequired = false };
+
+            cmd.AddOption(customerIdOption);
 
             var descriptionOption = new Option<string>(
                 "--description",
@@ -89,6 +82,13 @@ public static class OrderCommands
 
             cmd.AddOption(notesOption);
 
+            var productIdOption = new Option<string>(
+                "--product-id",
+                null)
+            { IsRequired = false };
+
+            cmd.AddOption(productIdOption);
+
             var jsonInputOption = new Option<string?>("--json-input", "Full input as JSON. Flat flags override individual properties.");
             cmd.AddOption(jsonInputOption);
 
@@ -114,15 +114,13 @@ public static class OrderCommands
 
                     // Read parameter values
 
-                    var currencyValue = ctx.ParseResult.GetValueForOption(currencyOption);
-
-                    var customerIdValue = ctx.ParseResult.GetValueForOption(customerIdOption);
-
-                    var productIdValue = ctx.ParseResult.GetValueForOption(productIdOption);
-
                     var amountValue = ctx.ParseResult.GetValueForOption(amountOption);
 
                     var couponCodeValue = ctx.ParseResult.GetValueForOption(couponCodeOption);
+
+                    var currencyValue = ctx.ParseResult.GetValueForOption(currencyOption);
+
+                    var customerIdValue = ctx.ParseResult.GetValueForOption(customerIdOption);
 
                     var descriptionValue = ctx.ParseResult.GetValueForOption(descriptionOption);
 
@@ -134,6 +132,8 @@ public static class OrderCommands
 
                     var notesValue = ctx.ParseResult.GetValueForOption(notesOption);
 
+                    var productIdValue = ctx.ParseResult.GetValueForOption(productIdOption);
+
 
                     // Flat flags take precedence; --json-input fills remaining nulls
                     var jsonInputValue = ctx.ParseResult.GetValueForOption(jsonInputOption);
@@ -144,15 +144,13 @@ public static class OrderCommands
 
                     var createOrderOptions = new CreateOrderOptions();
 
-                    createOrderOptions.Currency = currencyValue;
-
-                    createOrderOptions.CustomerId = customerIdValue;
-
-                    createOrderOptions.ProductId = productIdValue;
-
                     createOrderOptions.Amount = amountValue;
 
                     createOrderOptions.CouponCode = couponCodeValue;
+
+                    createOrderOptions.Currency = currencyValue;
+
+                    createOrderOptions.CustomerId = customerIdValue;
 
                     createOrderOptions.Description = descriptionValue;
 
@@ -163,6 +161,8 @@ public static class OrderCommands
                     createOrderOptions.IsPriority = isPriorityValue;
 
                     createOrderOptions.Notes = notesValue;
+
+                    createOrderOptions.ProductId = productIdValue;
 
                     var result = (object)await client.CreateAsync(createOrderOptions);
 
@@ -260,7 +260,7 @@ public static class OrderCommands
             var nameOption = new Option<string>(
                 "--name",
                 null)
-            { IsRequired = true };
+            { IsRequired = false };
 
             cmd.AddOption(nameOption);
 
@@ -335,21 +335,21 @@ public static class OrderCommands
             var classValueOption = new Option<string>(
                 "--class-value",
                 null)
-            { IsRequired = true };
+            { IsRequired = false };
 
             cmd.AddOption(classValueOption);
 
             var eventValueOption = new Option<string>(
                 "--event-value",
                 null)
-            { IsRequired = true };
+            { IsRequired = false };
 
             cmd.AddOption(eventValueOption);
 
             var normalParamOption = new Option<string>(
                 "--normal-param",
                 null)
-            { IsRequired = true };
+            { IsRequired = false };
 
             cmd.AddOption(normalParamOption);
 

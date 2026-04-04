@@ -254,7 +254,8 @@ public class DotNetAdapter : ISdkAdapter
         // are infrastructure — not user-facing. Match types whose name ends with "ClientOptions"
         // or "ClientSettings" to avoid false-positives on domain classes like CreateCustomerOptions.
         var name = param.ParameterType.Name ?? "";
-        return name.EndsWith("ClientOptions", StringComparison.Ordinal)
+        return name == "RequestOptions"  // Catch all RequestOptions regardless of namespace
+            || name.EndsWith("ClientOptions", StringComparison.Ordinal)
             || name.EndsWith("ClientSettings", StringComparison.Ordinal);
     }
 
@@ -345,10 +346,12 @@ public class DotNetAdapter : ISdkAdapter
             if (isNullable && !typeRef.IsNullable)
                 typeRef = typeRef with { IsNullable = true };
 
-            // Required = non-nullable reference type (no default on properties).
-            // Value types (bool, int, enum) are never required — they have implicit defaults
-            // (false, 0, first enum value) and can't be distinguished from "user didn't set".
-            var isRequired = !isNullable && !typeRef.IsNullable && !prop.PropertyType.IsValueType;
+            // Options class properties are never required in the CLI. SDK options classes
+            // are configuration objects — all properties are optional by nature. Many SDKs
+            // (Stripe, older .NET) have non-nullable strings with no default annotation,
+            // but they handle null gracefully at runtime. Marking them required forces the
+            // user to provide values for every property, which defeats the purpose of options.
+            var isRequired = false;
 
             props.Add(new Parameter(prop.Name, typeRef, isRequired));
         }

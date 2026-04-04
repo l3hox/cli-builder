@@ -193,8 +193,8 @@ public class GeneratedCliTests : IClassFixture<GeneratedCliFixture>
     [Fact]
     public void MissingRequiredParam_ExitsNonZero()
     {
-        // customer create requires --email and --preferred-contact — omitting them should fail
-        var (exitCode, _, stderr) = _fixture.RunCli("customer create --api-key test-key");
+        // customer get requires --id (a direct method param) — omitting it should fail
+        var (exitCode, _, stderr) = _fixture.RunCli("customer get --api-key test-key");
         Assert.NotEqual(0, exitCode);
     }
 

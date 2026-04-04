@@ -853,7 +853,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.VectorStores"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -869,7 +869,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.VectorStores"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -885,7 +885,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -986,7 +986,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.VectorStores"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -1002,7 +1002,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -3003,7 +3003,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3019,7 +3019,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Realtime"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3035,7 +3035,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Realtime"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3051,7 +3051,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Realtime"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3067,7 +3067,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Realtime"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3083,7 +3083,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Realtime"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3099,7 +3099,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -3150,7 +3150,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Realtime"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -3402,7 +3402,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Realtime"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3418,7 +3418,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Realtime"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3450,7 +3450,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Realtime"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3466,7 +3466,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -3503,7 +3503,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -3900,7 +3900,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -4111,7 +4111,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -4418,7 +4418,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -4677,7 +4677,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -4808,7 +4808,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -4939,7 +4939,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -5179,7 +5179,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -5195,7 +5195,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -5227,7 +5227,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.FineTuning"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -5312,7 +5312,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -7210,7 +7210,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -7304,7 +7304,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8691,7 +8691,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8707,7 +8707,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8739,7 +8739,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8823,7 +8823,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8839,7 +8839,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8855,7 +8855,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8903,7 +8903,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -8967,7 +8967,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9093,7 +9093,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9109,7 +9109,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9141,7 +9141,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9225,7 +9225,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9241,7 +9241,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9257,7 +9257,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9305,7 +9305,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -9369,7 +9369,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10079,7 +10079,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10217,7 +10217,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10233,7 +10233,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10387,7 +10387,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10403,7 +10403,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10518,7 +10518,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10641,7 +10641,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10657,7 +10657,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10689,7 +10689,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10705,7 +10705,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10721,7 +10721,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10838,7 +10838,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10854,7 +10854,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10870,7 +10870,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10902,7 +10902,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10918,7 +10918,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -10934,7 +10934,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11035,7 +11035,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -11136,7 +11136,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -11294,7 +11294,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -11657,7 +11657,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11673,7 +11673,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11689,7 +11689,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11705,7 +11705,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11801,7 +11801,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11817,7 +11817,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -11900,7 +11900,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11916,7 +11916,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11932,7 +11932,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -11948,7 +11948,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12044,7 +12044,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12060,7 +12060,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -12127,7 +12127,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -12160,7 +12160,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12176,7 +12176,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12192,7 +12192,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12208,7 +12208,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12304,7 +12304,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12320,7 +12320,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -12387,7 +12387,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -12420,7 +12420,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12436,7 +12436,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12452,7 +12452,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12468,7 +12468,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12564,7 +12564,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -12580,7 +12580,7 @@
                         "elementType": null,
                         "namespace": "OpenAI.Assistants"
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }

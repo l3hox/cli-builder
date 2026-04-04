@@ -32,7 +32,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -179,55 +179,6 @@
                         "properties": null,
                         "elementType": null,
                         "namespace": "CliBuilder.TestSdk.Models"
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    }
-                  ],
-                  "elementType": null,
-                  "namespace": "CliBuilder.TestSdk.Models"
-                },
-                "required": true,
-                "defaultValue": null,
-                "description": null
-              },
-              {
-                "name": "requestOptions",
-                "type": {
-                  "kind": "class",
-                  "name": "RequestOptions",
-                  "isNullable": false,
-                  "genericArguments": null,
-                  "enumValues": null,
-                  "properties": [
-                    {
-                      "name": "IdempotencyKey",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "string",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
-                      },
-                      "required": false,
-                      "defaultValue": null,
-                      "description": null
-                    },
-                    {
-                      "name": "Timeout",
-                      "type": {
-                        "kind": "primitive",
-                        "name": "TimeSpan",
-                        "isNullable": true,
-                        "genericArguments": null,
-                        "enumValues": null,
-                        "properties": null,
-                        "elementType": null,
-                        "namespace": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -477,7 +428,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -493,7 +444,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -525,7 +476,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -786,7 +737,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -853,7 +804,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -869,7 +820,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     },
@@ -885,7 +836,7 @@
                         "elementType": null,
                         "namespace": null
                       },
-                      "required": true,
+                      "required": false,
                       "defaultValue": null,
                       "description": null
                     }
@@ -1050,7 +1001,7 @@
     {
       "severity": "info",
       "code": "CB203",
-      "message": "Overload disambiguated: \u0027CreateAsync\u0027 on CustomerService has 2 overloads for verb \u0027create\u0027. Using the variant with 3 parameters."
+      "message": "Overload disambiguated: \u0027CreateAsync\u0027 on CustomerService has 2 overloads for verb \u0027create\u0027. Using the variant with 2 parameters."
     }
   ]
 }

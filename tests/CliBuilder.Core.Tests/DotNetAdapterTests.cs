@@ -431,10 +431,11 @@ public class DotNetAdapterTests
         var optionsParam = create.Parameters.FirstOrDefault(p => p.Type.Kind == TypeKind.Class);
         Assert.NotNull(optionsParam);
         Assert.NotNull(optionsParam.Type.Properties);
-        // Email is string (non-nullable, no default) → required
+        // Email is string (non-nullable, no default) — but options class properties
+        // are never required in the CLI (SDKs handle null gracefully at runtime)
         var email = optionsParam.Type.Properties.FirstOrDefault(p => p.Name == "Email");
         Assert.NotNull(email);
-        Assert.True(email.Required);
+        Assert.False(email.Required);
     }
 
     [Fact]
