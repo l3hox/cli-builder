@@ -115,7 +115,7 @@ Steps 1-8 complete. The generator produces compilable CLIs with real SDK method 
 
 - **TestSdk:** End-to-end validated — generate, build, run, assert JSON output (12 E2E tests)
 - **OpenAI SDK 2.9.1:** 20 resources, 169 operations, 41 wired with real SDK calls, zero compile errors. Live API validated.
-- **Stripe.net 51.0.0:** 136 resources, zero compile errors. Second SDK validation proving adapter generality.
+- **Stripe.net 51.0.0:** 136 resources, 490/524 operations wired (93%), live API validated with `sk_test_` keys. Static auth via `StripeConfiguration.ApiKey`.
 
 **Remaining:** `--json-input` deserialization for complex parameters (unblocks ~78 more OpenAI ops). See [docs/FUTURE.md](docs/FUTURE.md).
 

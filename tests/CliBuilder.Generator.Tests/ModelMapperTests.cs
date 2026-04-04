@@ -10,13 +10,15 @@ public class ModelMapperTests
         string name = "TestSdk",
         string version = "1.0.0",
         IReadOnlyList<Resource>? resources = null,
-        IReadOnlyList<AuthPattern>? authPatterns = null)
+        IReadOnlyList<AuthPattern>? authPatterns = null,
+        string? staticAuthSetup = null)
     {
         return new SdkMetadata(
             name,
             version,
             resources ?? new List<Resource>(),
-            authPatterns ?? new List<AuthPattern>());
+            authPatterns ?? new List<AuthPattern>(),
+            staticAuthSetup);
     }
 
     private static Resource MakeResource(string name, string? description = null)
@@ -851,5 +853,57 @@ public class ModelMapperTests
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
         Assert.True(model.Resources[0].CanConstruct);
+    }
+
+    // -----------------------------------------------------------
+    // Static auth (step 8B)
+    // -----------------------------------------------------------
+
+    [Fact]
+    public void StaticAuth_ParameterlessCtor_CanConstructTrue()
+    {
+        var resource = new Resource("charge", null, new List<Operation>(),
+            SourceClassName: "ChargeService", SourceNamespace: "Stripe",
+            HasParameterlessCtor: true);
+        var metadata = MinimalMetadata(resources: new[] { resource },
+            staticAuthSetup: "Stripe.StripeConfiguration.ApiKey");
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+
+        Assert.True(model.Resources[0].CanConstruct);
+        Assert.Equal("", model.Resources[0].ConstructorExpression);
+    }
+
+    [Fact]
+    public void StaticAuth_NoParameterlessCtor_CanConstructFalse()
+    {
+        var resource = new Resource("nested", null, new List<Operation>(),
+            SourceClassName: "NestedService", SourceNamespace: "Stripe",
+            HasParameterlessCtor: false);
+        var metadata = MinimalMetadata(resources: new[] { resource },
+            staticAuthSetup: "Stripe.StripeConfiguration.ApiKey");
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+
+        Assert.False(model.Resources[0].CanConstruct);
+    }
+
+    [Fact]
+    public void StaticAuth_PassedToGeneratorModel()
+    {
+        var metadata = MinimalMetadata(staticAuthSetup: "Sdk.Config.ApiKey");
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+        Assert.Equal("Sdk.Config.ApiKey", model.StaticAuthSetup);
+    }
+
+    [Fact]
+    public void NoStaticAuth_ParameterlessCtor_StillCannotConstruct()
+    {
+        // Without static auth, parameterless ctor alone is not enough
+        var resource = new Resource("thing", null, new List<Operation>(),
+            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            HasParameterlessCtor: true);
+        var metadata = MinimalMetadata(resources: new[] { resource });
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+
+        Assert.False(model.Resources[0].CanConstruct);
     }
 }

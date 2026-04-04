@@ -93,4 +93,19 @@ public class StripeSdkIntegrationTests
         Assert.NotNull(parsed);
         Assert.Equal(result.Metadata.Resources.Count, parsed.Metadata.Resources.Count);
     }
+
+    [Fact]
+    public void ExtractStripe_DetectsStaticAuthSetup()
+    {
+        var result = ExtractStripe();
+        Assert.Equal("Stripe.StripeConfiguration.ApiKey", result.Metadata.StaticAuthSetup);
+    }
+
+    [Fact]
+    public void ExtractStripe_ServicesHaveParameterlessCtor()
+    {
+        var result = ExtractStripe();
+        var paymentIntent = result.Metadata.Resources.First(r => r.Name == "payment-intent");
+        Assert.True(paymentIntent.HasParameterlessCtor);
+    }
 }

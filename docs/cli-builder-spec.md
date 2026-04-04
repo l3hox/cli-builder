@@ -455,9 +455,9 @@ Optional/later:
    - ~~**Phases 6A-6E:** Template infrastructure, command generation, parameter flattening, output formatters, auth handler, compile verification, golden files, OpenAI scale validation (20 resources, 169 ops). 227 tests, 80.6% coverage.~~
 7. ~~Validate: does the generated CLI actually work against Stripe test mode?~~
    - ~~**Phases 7A-7D:** Metadata enrichment, template rewrite (real SDK calls), TestSdk E2E validation (12 tests: generate → build → run → assert JSON), OpenAI scale fixes (900 → 0 compile errors). 315 tests.~~
-   - **Note:** Stripe test mode validation deferred — TestSdk E2E and OpenAI live API validation provide sufficient confidence.
-8. ~~Multi-arg constructor support~~
-   - ~~**Phase 8A:** Full constructor param extraction, richest-with-auth preference, non-auth config params as resource-level CLI options (`--model`). Unblocked chat/embedding/image/audio/moderation sub-clients. 41/169 OpenAI ops wired. 322 tests.~~
+   - ~~**Note:** Stripe live API validated — 490/524 ops wired via static auth (`StripeConfiguration.ApiKey`).~~
+8. ~~Multi-arg constructor support + static auth~~
+   - ~~**Phase 8A:** Full constructor param extraction, richest-with-auth preference, non-auth config params as resource-level CLI options (`--model`). Static auth detection for SDKs like Stripe. 332 tests, 83.8% coverage.~~
 
 ---
 

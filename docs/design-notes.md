@@ -267,7 +267,19 @@ These types become plain `string` CLI parameters (via `forCliParam: true` mappin
 
 `ExtractConstructorParams` finds all constructors with at least one auth param, then prefers the one with the MOST user-facing (non-infrastructure) params. This picks `ChatClient(string model, ApiKeyCredential cred)` over `ChatClient(ApiKeyCredential cred)`, giving us `--model` as a CLI config option. Non-auth required params become resource-level options via `AddGlobalOption`. Stable tiebreaker on parameter names.
 
-The `IsApiKeyParameter` heuristic uses an exact-match allowlist (`apikey`, `api_key`, `secretkey`, `secret`, `apisecret`, `api_secret`) — not `Contains("key")`. `IsInfrastructureParam` matches `CancellationToken`, `RequestOptions`, and types ending with `ClientOptions` or `ClientSettings`.
+The `IsApiKeyParameter` heuristic uses an exact-match allowlist (`apikey`, `api_key`, `secretkey`, `secret`, `apisecret`, `api_secret`) — not `Contains("key")`. `IsInfrastructureParam` matches `CancellationToken`, `RequestOptions` (any namespace), and types ending with `ClientOptions` or `ClientSettings`.
+
+### Static auth configuration (step 8B)
+
+Some SDKs (Stripe) use static properties for auth instead of constructor injection. The adapter scans the assembly for `*Configuration` classes with a static writable `ApiKey`/`SecretKey`/`ApiSecret` property. If found, it stores the fully qualified path (e.g., `Stripe.StripeConfiguration.ApiKey`) as `StaticAuthSetup` on `SdkMetadata`.
+
+Services with parameterless constructors in static-auth SDKs are constructable — the template emits `Stripe.StripeConfiguration.ApiKey = credential;` before `new PaymentIntentService()`. This unblocked 93% of Stripe operations (490/524).
+
+Services WITHOUT parameterless constructors (e.g., nested services requiring `IStripeClient` injection) remain as echo stubs — they need DI support which is deferred.
+
+### Options class properties never required (step 8B)
+
+Options class properties are never marked `Required` in the CLI. SDK options classes are configuration objects — all properties are optional by nature. Many SDKs (Stripe, older .NET) have non-nullable strings without annotations but handle null gracefully at runtime.
 
 ### Infrastructure parameter filtering (step 7D)
 
