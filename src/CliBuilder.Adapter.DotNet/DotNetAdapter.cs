@@ -343,8 +343,12 @@ public class DotNetAdapter : ISdkAdapter
         // Pick the overload with the most user-facing parameters.
         // Exclude infrastructure types (CancellationToken, RequestOptions) from the count
         // so convenience methods are preferred over protocol methods.
-        var sorted = overloads.OrderByDescending(m =>
-            m.GetParameters().Count(p => !IsInfrastructureParam(p))).ToList();
+        // Secondary sort: prefer overloads with fewer infrastructure params (avoids
+        // selecting an overload with required RequestOptions when a simpler one exists).
+        var sorted = overloads
+            .OrderByDescending(m => m.GetParameters().Count(p => !IsInfrastructureParam(p)))
+            .ThenBy(m => m.GetParameters().Count(p => IsInfrastructureParam(p)))
+            .ToList();
 
         diagnostics.Add(new Diagnostic(
             DiagnosticSeverity.Info,
@@ -376,9 +380,9 @@ public class DotNetAdapter : ISdkAdapter
             // Skip CancellationToken — never user-facing
             if (param.ParameterType.FullName == "System.Threading.CancellationToken")
                 continue;
-            // Skip RequestOptions-like infrastructure types that have optional overloads.
-            // Only skip if the param is optional (has default value) — required RequestOptions
-            // stays in the list and CanWireOperation catches it as unconvertible.
+            // Skip RequestOptions-like infrastructure types when optional.
+            // Required infra params stay in the list — BuildMethodParams will emit null for them,
+            // and CanWireOperation allows them with a null placeholder.
             if (IsInfrastructureParam(param) && param.HasDefaultValue)
                 continue;
 
@@ -518,9 +522,10 @@ public class DotNetAdapter : ISdkAdapter
             if (StreamingUnwrapTypes.Contains(genericName) && args.Length == 1)
                 return UnwrapAndBuild(args[0], isStreaming: true, depth + 1);
 
-            // Dictionary special case
+            // Dictionary special case — preserve K,V type arguments
             if (genericName == "Dictionary" && args.Length == 2)
-                return (new TypeRef(TypeKind.Dictionary, "Dictionary"), isStreaming);
+                return (new TypeRef(TypeKind.Dictionary, "Dictionary",
+                    GenericArguments: args.Select(a => BuildTypeRef(a, depth + 1)).ToList()), isStreaming);
 
             // Nullable<T> (value type nullable)
             if (genericName == "Nullable" && args.Length == 1)
@@ -553,10 +558,11 @@ public class DotNetAdapter : ISdkAdapter
                 return inner with { IsNullable = true };
             }
 
-            // Dictionary
+            // Dictionary — preserve K,V type arguments
             var args = type.GetGenericArguments();
             if (genericName == "Dictionary" && args.Length == 2)
-                return new TypeRef(TypeKind.Dictionary, "Dictionary");
+                return new TypeRef(TypeKind.Dictionary, "Dictionary",
+                    GenericArguments: args.Select(a => BuildTypeRef(a, depth + 1)).ToList());
 
             // Other generics
             var genericArgs = args.Select(a => BuildTypeRef(a, depth + 1)).ToList();
@@ -585,7 +591,8 @@ public class DotNetAdapter : ISdkAdapter
         }
 
         // Class
-        return new TypeRef(TypeKind.Class, type.Name, Namespace: type.Namespace);
+        return new TypeRef(TypeKind.Class, type.Name, Namespace: type.Namespace,
+            IsAbstract: type.IsAbstract || type.IsInterface);
     }
 
     private static string StripArityFromName(string typeName)

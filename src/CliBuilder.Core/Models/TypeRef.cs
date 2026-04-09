@@ -4,6 +4,7 @@ public record TypeRef(
     TypeKind Kind,
     string Name,
     bool IsNullable = false,
+    bool IsAbstract = false,
     IReadOnlyList<TypeRef>? GenericArguments = null,
     IReadOnlyList<string>? EnumValues = null,
     IReadOnlyList<Parameter>? Properties = null,
