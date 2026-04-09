@@ -46,6 +46,6 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-**v1.1** — `--json-input` deserialization, noun collision resolution (196 Stripe resources), nullable value type guards. 347 tests, 93.4% coverage.
+**v1.2** — CLI entry point: `cli-builder generate` and `cli-builder inspect` commands. Installable as `dotnet tool`. 367 tests.
 
-**What's next:** Step 9B (abstract types), Step 10 (CLI entry point), then Python adapter. See [docs/FUTURE.md](docs/FUTURE.md).
+**What's next:** Step 9B (direct param deserialization + abstract types), then Python adapter. See [docs/FUTURE.md](docs/FUTURE.md).

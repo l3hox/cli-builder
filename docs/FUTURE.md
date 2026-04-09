@@ -13,13 +13,6 @@ Unblocks `chat complete-chat` and other OpenAI operations with complex direct pa
 
 This is primarily an OpenAI problem — Stripe uses concrete types everywhere.
 
-### Step 10: cli-builder CLI entry point
-`cli-builder generate --assembly Stripe.net.dll --output ./stripe-cli`. Currently a library — users can't run it without demo scripts. Need:
-- `dotnet tool` packaging
-- `generate` command with `--assembly`, `--output`, `--name`, `--config` flags
-- `inspect` command to dump metadata without generating
-- Structured diagnostics output
-
 ### Step 11: SdkMetadata abstraction
 Remove .NET-specific leaks from the metadata contract (`StaticAuthSetup` stores C# expressions, `AdapterOptions.AssemblyPath` is .NET-specific). Prepare for multi-language adapters.
 
@@ -72,8 +65,8 @@ Auth handler writes resolved credentials to config file for reuse.
 ## Completed
 
 - Steps 1-9: Architecture, adapter, generator, real SDK calls, multi-arg constructors, static auth, --json-input deserialization, noun collision resolution
+- Step 10: CLI entry point — `cli-builder generate` and `cli-builder inspect` commands, `dotnet tool` packaging, structured diagnostics, exit codes 0/1/2
 - TestSdk: 6 resources, 15 E2E tests (including --json-input merge/override/error)
 - OpenAI 2.9.1: 20 resources, 169 ops, 41 wired, live API validated
 - Stripe.net 51.0.0: 196 resources (was 136 — collisions now resolved), live API validated
-- Step 9: --json-input deserialization, noun collision resolution, nullable value type guards
-- 347 tests, 93.4% line coverage, 96.4% method coverage
+- 367 tests, 93.4% line coverage, 96.4% method coverage
