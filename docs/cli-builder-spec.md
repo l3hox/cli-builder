@@ -447,10 +447,9 @@ Optional/later:
 
 See [docs/FUTURE.md](FUTURE.md) for the full prioritized roadmap.
 
-**v1.2 (current):** .NET SDK adapter + C# CLI generator + CLI entry point. Three SDKs validated (TestSdk E2E, OpenAI compile, Stripe compile). `cli-builder generate` and `cli-builder inspect` commands. Installable as `dotnet tool`. 367 tests, 93.4% coverage.
+**v1.3 (current):** .NET SDK adapter + C# CLI generator + CLI entry point + direct param deserialization. Three SDKs validated (TestSdk E2E, OpenAI compile, Stripe compile). `cli-builder generate` and `cli-builder inspect` commands. Installable as `dotnet tool`. 386 tests, 93.4% coverage.
 
 **Next:**
-- Step 9B: Direct param deserialization + abstract type handling
 - Step 11: SdkMetadata abstraction for multi-language
 - Step 12: Python adapter proof-of-concept
 

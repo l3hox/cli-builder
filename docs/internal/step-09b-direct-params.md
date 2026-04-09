@@ -1,5 +1,7 @@
 # Step 9B: Direct Param Deserialization + Infrastructure Param Fix
 
+**STATUS: COMPLETE (2026-04-08)** — 386 tests (385 pass). Deferred items in FUTURE.md.
+
 **Prerequisite:** Steps 1-9 complete. `--json-input` works for options classes (nested objects, flat flag override, null guards). 347 tests, 93.4% coverage. 41/169 OpenAI operations wired.
 **Output:** Complex direct params (IEnumerable<T>, Dictionary<K,V>, Array, bare Class) deserializable via `--json-input`. RequestOptions always filtered. OpenAI wired operations: 41 → ~80+.
 

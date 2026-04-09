@@ -109,6 +109,30 @@ If a required property falls outside the flattened set (more than 10 required sc
 
 ---
 
+## Direct param JSON deserialization (step 9B)
+
+When an operation has complex direct parameters (Generic, Array, Dictionary, bare Class that isn't binary or infrastructure), `--json-input` accepts a JSON object where **parameter names are keys**:
+
+```bash
+# IEnumerable<ChatMessage> direct param + ChatCompletionOptions options class
+my-cli chat complete-chat \
+  --json-input '{"messages":[{"role":"user","content":"hello"}],"temperature":0.7}'
+```
+
+**Type mapping** (`BuildDeserializationTypeName`):
+- `IEnumerable<T>`, `IReadOnlyList<T>`, `IList<T>` → `List<T>` (concrete for instantiation)
+- `IDictionary<K,V>` → `Dictionary<K,V>`
+- `T[]` → `T[]` (already concrete)
+- Bare Class → class name directly
+
+**Template behavior**: JSON parsed once via `using var _jsonInputDoc = JsonDocument.Parse(jsonInputValue)`. Each direct param extracted by name: `_jsonInputDoc.RootElement.TryGetProperty("paramName", ...)`. Per-param deserialization wrapped in try/catch for `json_input_error`. Required params get null guard → `missing_required_param` error with exit code 1.
+
+**Coexistence with options class**: direct param keys extracted by name, options class deserializes from the full JSON (ignoring unknown keys via `PropertyNameCaseInsensitive`). Flat flags still override options class properties. Direct params have no flat flags — they're JSON-only.
+
+**ParameterFlattener**: complex direct params are skipped entirely (no CLI `--flag` generated). They only appear via `--json-input`.
+
+---
+
 ## `operationPattern` semantics
 
 The spec says `operationPattern` is a "glob pattern" that also strips a suffix. This is ambiguous.
@@ -175,6 +199,8 @@ Expanding the ranges from ADR-015 with specific codes:
 - `CB301` — Required parameter hidden behind `--json-input` (flatten threshold)
 - `CB302` — Scriban template rendering warning
 - `CB303` — Generated file path exceeds platform limit (Windows 260 char)
+- `CB306` — Operation has unconvertible parameter (binary type like BinaryContent/Stream, or infrastructure type like RequestOptions) — falls back to echo stub
+- `CB307` — Abstract type in generic argument (e.g., `IEnumerable<ChatMessage>` where ChatMessage is abstract) — deserialization requires SDK-registered JsonConverters. Info-level, not a blocker.
 
 **CB4xx — Output validation (generator):**
 - `CB401` — Generated project failed `dotnet build` verification
@@ -195,6 +221,7 @@ The purpose-built test SDK assembly must contain:
 - `CustomerService` — standard service, matches `*Service` pattern
 - `OrderClient` — matches `*Client` pattern
 - `ProductApi` — matches `*Api` pattern
+- `MessageClient` — matches `*Client`, has `IEnumerable<Message>` (abstract) and `IEnumerable<string>` direct params (step 9B)
 - `InternalHelper` — should NOT be discovered (no matching suffix)
 - `CustomerApiService` — collides with `CustomerService` on noun `customer`
 
@@ -214,6 +241,9 @@ The purpose-built test SDK assembly must contain:
 - `Dictionary<string, object>` return type — dictionary kind
 - `CustomerStatus` enum parameter — enum values extraction
 - `string?` nullable parameter — nullability annotation
+- `IEnumerable<Message>` direct param — abstract generic argument, CB307 diagnostic (step 9B)
+- `IEnumerable<string>` direct param — concrete generic, JSON deserialization (step 9B)
+- `Message` abstract class — `[JsonDerivedType]` with UserMessage/SystemMessage subclasses (step 9B)
 
 **Options classes (flattening):**
 - `SmallOptions` — exactly 10 scalar properties (boundary: all flattened)

@@ -1,5 +1,7 @@
 # Step 10: cli-builder CLI Entry Point
 
+**STATUS: COMPLETE (2026-04-08)** — System.CommandLine 2.0.0-beta4.22272.1 (changed from 2.0.5).
+
 **Prerequisite:** Steps 1-9 complete. cli-builder is a library — users run demo scripts or test runners. 347 tests, 93.4% coverage.
 **Output:** `cli-builder generate --assembly Stripe.net.dll --output ./stripe-cli` works. Users can install and run cli-builder as a `dotnet tool`. The `inspect` command dumps metadata without generating. `--help` and `--version` work out of the box.
 

@@ -67,7 +67,7 @@ Auth handler writes resolved credentials to config file for reuse.
 - Steps 1-9: Architecture, adapter, generator, real SDK calls, multi-arg constructors, static auth, --json-input deserialization, noun collision resolution
 - Step 10: CLI entry point — `cli-builder generate` and `cli-builder inspect` commands, `dotnet tool` packaging, structured diagnostics, exit codes 0/1/2
 - Step 9B: Direct param deserialization — IEnumerable&lt;T&gt;, Dictionary&lt;K,V&gt;, Array, bare Class via `--json-input`. CB307 abstract type diagnostics. IsAbstract on TypeRef. Dictionary GenericArguments preserved.
-- TestSdk: 6 resources, 15 E2E tests (including --json-input merge/override/error)
-- OpenAI 2.9.1: 20 resources, 169 ops, 41 wired, live API validated
-- Stripe.net 51.0.0: 196 resources (was 136 — collisions now resolved), live API validated
-- 367 tests, 93.4% line coverage, 96.4% method coverage
+- TestSdk: 7 resources (incl. MessageClient with abstract Message type), 23 E2E tests
+- OpenAI 2.9.1: 20 resources, 169 ops, 41 wired (1 pre-existing struct type issue in compile test)
+- Stripe.net 51.0.0: 196 resources (was 136 — collisions now resolved), compile validated
+- 386 tests (385 pass), 93.4% line coverage, 96.4% method coverage
