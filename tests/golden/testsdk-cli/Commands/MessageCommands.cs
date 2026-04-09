@@ -77,12 +77,12 @@ public static class MessageCommands
                     var client = new MessageClient(credential);
 
                     // Parse --json-input once for direct param extraction
-                    System.Text.Json.JsonDocument? _jsonInputDoc = null;
+                    System.Text.Json.JsonDocument? _jsonInputDocParsed = null;
                     if (jsonInputValue is not null)
                     {
                         try
                         {
-                            _jsonInputDoc = System.Text.Json.JsonDocument.Parse(jsonInputValue);
+                            _jsonInputDocParsed = System.Text.Json.JsonDocument.Parse(jsonInputValue);
                         }
                         catch (System.Text.Json.JsonException ex)
                         {
@@ -92,6 +92,7 @@ public static class MessageCommands
                             return;
                         }
                     }
+                    using var _jsonInputDoc = _jsonInputDocParsed;
 
                     List<Message> messagesValue = default!;
                     if (_jsonInputDoc is not null
@@ -206,12 +207,12 @@ public static class MessageCommands
                     var client = new MessageClient(credential);
 
                     // Parse --json-input once for direct param extraction
-                    System.Text.Json.JsonDocument? _jsonInputDoc = null;
+                    System.Text.Json.JsonDocument? _jsonInputDocParsed = null;
                     if (jsonInputValue is not null)
                     {
                         try
                         {
-                            _jsonInputDoc = System.Text.Json.JsonDocument.Parse(jsonInputValue);
+                            _jsonInputDocParsed = System.Text.Json.JsonDocument.Parse(jsonInputValue);
                         }
                         catch (System.Text.Json.JsonException ex)
                         {
@@ -221,6 +222,7 @@ public static class MessageCommands
                             return;
                         }
                     }
+                    using var _jsonInputDoc = _jsonInputDocParsed;
 
                     List<string> idsValue = default!;
                     if (_jsonInputDoc is not null

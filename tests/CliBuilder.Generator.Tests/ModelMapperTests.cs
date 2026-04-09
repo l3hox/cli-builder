@@ -540,6 +540,29 @@ public class ModelMapperTests
         Assert.Contains("Sdk.Auth", ns);
     }
 
+    [Fact]
+    public void RequiredNamespaces_IncludesGenericArgumentNamespace()
+    {
+        // IEnumerable<ChatMessage> where ChatMessage.Namespace = "Sdk.Chat"
+        // → "Sdk.Chat" must appear in RequiredNamespaces
+        var innerType = new TypeRef(TypeKind.Class, "ChatMessage", Namespace: "Sdk.Chat", IsAbstract: true);
+        var genericType = new TypeRef(TypeKind.Generic, "IEnumerable",
+            GenericArguments: new[] { innerType });
+        var op = new Operation("send", null,
+            new[] { new Parameter("messages", genericType, true) },
+            new TypeRef(TypeKind.Primitive, "void"),
+            SourceMethodName: "SendAsync");
+        var resource = new Resource("chat", null, new[] { op },
+            SourceClassName: "ChatService", SourceNamespace: "Sdk.Services",
+            ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
+        var metadata = new SdkMetadata("TestSdk", "1.0.0",
+            new[] { resource }, new[] { new AuthPattern(AuthType.ApiKey, "TEST_KEY", "apiKey") });
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+
+        var ns = model.Resources[0].RequiredNamespaces!;
+        Assert.Contains("Sdk.Chat", ns);
+    }
+
     // -----------------------------------------------------------
     // MethodParams (step 7A)
     // -----------------------------------------------------------

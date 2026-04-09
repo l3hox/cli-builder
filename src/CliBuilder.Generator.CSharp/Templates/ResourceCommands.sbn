@@ -89,12 +89,12 @@ public static class {{ resource.class_name }}Commands
                     var client = new {{ resource.source_class_name }}({{ resource.constructor_expression }});
 {{~ if op.has_json_direct_params }}
                     // Parse --json-input once for direct param extraction
-                    System.Text.Json.JsonDocument? _jsonInputDoc = null;
+                    System.Text.Json.JsonDocument? _jsonInputDocParsed = null;
                     if (jsonInputValue is not null)
                     {
                         try
                         {
-                            _jsonInputDoc = System.Text.Json.JsonDocument.Parse(jsonInputValue);
+                            _jsonInputDocParsed = System.Text.Json.JsonDocument.Parse(jsonInputValue);
                         }
                         catch (System.Text.Json.JsonException ex)
                         {
@@ -104,6 +104,7 @@ public static class {{ resource.class_name }}Commands
                             return;
                         }
                     }
+                    using var _jsonInputDoc = _jsonInputDocParsed;
 {{~ end ~}}
 {{~ for mp in op.method_params ~}}
 {{~ if mp.needs_json_deserialization }}

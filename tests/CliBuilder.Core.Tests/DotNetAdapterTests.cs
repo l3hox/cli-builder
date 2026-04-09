@@ -580,4 +580,30 @@ public class DotNetAdapterTests
         Assert.Equal("ApiKeyCredential", authParam.TypeName);
         Assert.Equal("CliBuilder.TestSdk.Models", authParam.TypeNamespace);
     }
+
+    // --- IsAbstract via reflection (Step 9B) ---
+
+    [Fact]
+    public void BuildTypeRef_AbstractClass_SetsIsAbstract()
+    {
+        var result = ExtractTestSdk();
+        var message = result.Metadata.Resources.First(r => r.Name == "message");
+        var sendOp = message.Operations.First(o => o.Name == "send");
+        // IEnumerable<Message> — Message is abstract, should be marked on the generic argument
+        var messagesParam = sendOp.Parameters.First(p => p.Name == "messages");
+        Assert.Equal(TypeKind.Generic, messagesParam.Type.Kind);
+        var innerType = messagesParam.Type.GenericArguments![0];
+        Assert.Equal("Message", innerType.Name);
+        Assert.True(innerType.IsAbstract, "Abstract class Message should have IsAbstract=true");
+    }
+
+    [Fact]
+    public void BuildTypeRef_ConcreteClass_IsAbstractFalse()
+    {
+        var result = ExtractTestSdk();
+        var order = result.Metadata.Resources.First(r => r.Name == "order");
+        var getOp = order.Operations.First(o => o.Name == "get");
+        // Return type Order is concrete
+        Assert.False(getOp.ReturnType.IsAbstract, "Concrete class Order should have IsAbstract=false");
+    }
 }

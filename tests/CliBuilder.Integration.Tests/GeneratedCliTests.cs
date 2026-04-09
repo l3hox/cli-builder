@@ -326,4 +326,15 @@ public class GeneratedCliTests : IClassFixture<GeneratedCliFixture>
         Assert.Equal(1, exitCode);
         Assert.Contains("json_input_error", stderr);
     }
+
+    [Fact]
+    public void MessageSend_NullJsonValue_ExitsWithError()
+    {
+        // "messages" key present but value is null → deserialization returns null → required guard fires
+        var ji = JsonArg(@"{""messages"":null}");
+        var (exitCode, _, stderr) = _fixture.RunCli(
+            $"message send --json-input {ji} --json --api-key test-key");
+        Assert.Equal(1, exitCode);
+        Assert.Contains("missing_required_param", stderr);
+    }
 }

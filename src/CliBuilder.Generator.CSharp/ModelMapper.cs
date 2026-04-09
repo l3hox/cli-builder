@@ -393,11 +393,15 @@ public static partial class ModelMapper
             return $"{elementName}[]";
         }
 
-        if (type.Kind == TypeKind.Dictionary && type.GenericArguments is { Count: 2 })
+        if (type.Kind == TypeKind.Dictionary)
         {
-            var keyName = type.GenericArguments[0].Name;
-            var valueName = type.GenericArguments[1].Name;
-            return $"Dictionary<{keyName}, {valueName}>";
+            if (type.GenericArguments is { Count: 2 })
+            {
+                var keyName = type.GenericArguments[0].Name;
+                var valueName = type.GenericArguments[1].Name;
+                return $"Dictionary<{keyName}, {valueName}>";
+            }
+            return "Dictionary<string, object>";
         }
 
         if (type.Kind == TypeKind.Generic && type.GenericArguments is { Count: > 0 })
