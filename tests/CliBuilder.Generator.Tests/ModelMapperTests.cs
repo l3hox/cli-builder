@@ -1015,6 +1015,14 @@ public class ModelMapperTests
     }
 
     [Fact]
+    public void StaticAuthConfig_EmptyModule_NoLeadingDot()
+    {
+        var metadata = MinimalMetadata(staticAuth: new StaticAuthConfig("GlobalConfig", "", "ApiKey"));
+        var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+        Assert.Equal("GlobalConfig.ApiKey", model.StaticAuthSetup);
+    }
+
+    [Fact]
     public void NoStaticAuth_ParameterlessCtor_StillCannotConstruct()
     {
         // Without static auth, parameterless ctor alone is not enough

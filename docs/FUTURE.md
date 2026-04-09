@@ -6,9 +6,6 @@ Production roadmap for cli-builder — a .NET SDK CLI generator, with multi-lang
 
 ## Next up
 
-### Step 11: SdkMetadata abstraction
-Remove .NET-specific leaks from the metadata contract (`StaticAuthSetup` stores C# expressions, `AdapterOptions.AssemblyPath` is .NET-specific). Prepare for multi-language adapters.
-
 ### Step 12: Python adapter proof-of-concept
 Second source language. Extracts metadata from Python packages via AST/inspect or type stubs. Proves the adapter interface is truly language-agnostic.
 
@@ -63,4 +60,10 @@ Auth handler writes resolved credentials to config file for reuse.
 - TestSdk: 7 resources (incl. MessageClient with abstract Message type), 23 E2E tests
 - OpenAI 2.9.1: 20 resources, 169 ops, 41 wired (1 pre-existing struct type issue in compile test)
 - Stripe.net 51.0.0: 196 resources (was 136 — collisions now resolved), compile validated
-- 393 tests (all pass), 93.4% line coverage, 96.4% method coverage
+- Step 11: SdkMetadata abstraction — StaticAuthSetup→StaticAuthConfig (structured record), AssemblyPath→ArtifactPath, XmlDocPath→DocsPath, Namespace→Module renames, TypeKind.Other added
+- 396 tests (all pass), 93.4% line coverage, 96.4% method coverage
+
+**Deferred from Step 11 council (Step 12 prerequisites):**
+- StaticAuthConfig Style discriminator (`StaticProperty` vs `ModuleAttribute`) for Python auth patterns
+- Language-neutrality reflection guard test (assert no .NET-specific field names via reflection)
+- TypeKind may need further values for Python-specific concepts (tuple, union)

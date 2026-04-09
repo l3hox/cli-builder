@@ -20,5 +20,6 @@ public enum TypeKind
     Class,
     Generic,
     Array,
-    Dictionary
+    Dictionary,
+    Other
 }

@@ -606,4 +606,24 @@ public class DotNetAdapterTests
         // Return type Order is concrete
         Assert.False(getOp.ReturnType.IsAbstract, "Concrete class Order should have IsAbstract=false");
     }
+
+    // --- Language-neutral JSON contract (Step 11) ---
+
+    [Fact]
+    public void SdkMetadata_JsonFieldNames_AreLanguageNeutral()
+    {
+        var result = ExtractTestSdk();
+        var json = System.Text.Json.JsonSerializer.Serialize(result, CliBuilder.Core.Json.SdkMetadataJson.Options);
+
+        // Verify no .NET-specific field names remain in serialized JSON
+        Assert.DoesNotContain("\"assemblyPath\"", json);
+        Assert.DoesNotContain("\"xmlDocPath\"", json);
+        Assert.DoesNotContain("\"staticAuthSetup\"", json);
+        Assert.DoesNotContain("\"sourceNamespace\"", json);
+        Assert.DoesNotContain("\"typeNamespace\"", json);
+
+        // Verify new language-neutral names are present
+        Assert.Contains("\"sourceModule\"", json);
+        Assert.Contains("\"module\"", json);
+    }
 }

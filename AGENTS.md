@@ -46,6 +46,6 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-**v1.3** — Steps 9B + 10 complete. CLI entry point (`cli-builder generate/inspect`), direct param deserialization, extensible enum detection, CB307 diagnostics. 393 tests, 0 failures.
+**v1.4** — Step 11: SdkMetadata abstraction complete. Language-neutral metadata contract (StaticAuthConfig, ArtifactPath, Module renames, TypeKind.Other). 396 tests, 0 failures.
 
-**What's next:** Step 11 (SdkMetadata abstraction for multi-language), then Python adapter. See [docs/FUTURE.md](docs/FUTURE.md).
+**What's next:** Step 12 (Python adapter proof-of-concept). See [docs/FUTURE.md](docs/FUTURE.md).

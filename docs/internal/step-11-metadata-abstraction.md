@@ -1,5 +1,7 @@
 # Step 11: SdkMetadata Abstraction for Multi-Language Support
 
+**STATUS: COMPLETE (2026-04-08)** — 396 tests, 0 failures. All 6 leaks fixed + TypeKind.Other added.
+
 **Prerequisite:** Steps 1-10 + 9B complete. 394 tests, 0 failures. `SdkMetadata` is the contract between adapter and generator, but contains .NET-specific leaks.
 **Output:** `SdkMetadata` is truly language-neutral. A Python adapter could produce identical metadata for equivalent SDK constructs. All .NET-specific interpretation moves to the C# generator layer.
 
