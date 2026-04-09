@@ -469,7 +469,7 @@ public class DotNetAdapterTests
     }
 
     // -------------------------------------------------------
-    // TypeRef.Namespace (step 7A)
+    // TypeRef.Module (step 7A)
     // -------------------------------------------------------
 
     [Fact]
@@ -479,7 +479,7 @@ public class DotNetAdapterTests
         var customer = result.Metadata.Resources.First(r => r.Name == "customer");
         var create = customer.Operations.First(o => o.Name == "create");
         var optionsParam = create.Parameters.First(p => p.Type.Kind == TypeKind.Class);
-        Assert.Equal("CliBuilder.TestSdk.Models", optionsParam.Type.Namespace);
+        Assert.Equal("CliBuilder.TestSdk.Models", optionsParam.Type.Module);
     }
 
     [Fact]
@@ -490,7 +490,7 @@ public class DotNetAdapterTests
         var create = customer.Operations.First(o => o.Name == "create");
         var optionsParam = create.Parameters.First(p => p.Type.Kind == TypeKind.Class);
         var statusProp = optionsParam.Type.Properties!.First(p => p.Name == "InitialStatus");
-        Assert.Equal("CliBuilder.TestSdk.Models", statusProp.Type.Namespace);
+        Assert.Equal("CliBuilder.TestSdk.Models", statusProp.Type.Module);
     }
 
     [Fact]
@@ -499,7 +499,7 @@ public class DotNetAdapterTests
         var result = ExtractTestSdk();
         var customer = result.Metadata.Resources.First(r => r.Name == "customer");
         var create = customer.Operations.First(o => o.Name == "create");
-        Assert.Equal("CliBuilder.TestSdk.Models", create.ReturnType.Namespace);
+        Assert.Equal("CliBuilder.TestSdk.Models", create.ReturnType.Module);
     }
 
     // -------------------------------------------------------
@@ -527,7 +527,7 @@ public class DotNetAdapterTests
         Assert.Single(product.ConstructorParams!);
         Assert.Equal("credential", product.ConstructorParams![0].Name);
         Assert.Equal("TokenCredential", product.ConstructorParams![0].TypeName);
-        Assert.Equal("CliBuilder.TestSdk.Models", product.ConstructorParams![0].TypeNamespace);
+        Assert.Equal("CliBuilder.TestSdk.Models", product.ConstructorParams![0].TypeModule);
         Assert.True(product.ConstructorParams![0].IsAuth);
     }
 
@@ -578,7 +578,7 @@ public class DotNetAdapterTests
         var authParam = search.ConstructorParams!.First(p => p.IsAuth);
         Assert.Equal("credential", authParam.Name);
         Assert.Equal("ApiKeyCredential", authParam.TypeName);
-        Assert.Equal("CliBuilder.TestSdk.Models", authParam.TypeNamespace);
+        Assert.Equal("CliBuilder.TestSdk.Models", authParam.TypeModule);
     }
 
     // --- IsAbstract via reflection (Step 9B) ---

@@ -46,7 +46,7 @@ public class DotNetAdapter : ISdkAdapter
     {
         var diagnostics = new List<Diagnostic>();
 
-        var assemblyPath = Path.GetFullPath(options.AssemblyPath);
+        var assemblyPath = Path.GetFullPath(options.ArtifactPath);
         if (!File.Exists(assemblyPath))
             throw new FileNotFoundException($"Assembly not found: {assemblyPath}", assemblyPath);
 
@@ -67,7 +67,7 @@ public class DotNetAdapter : ISdkAdapter
             var operations = ExtractOperations(type, diagnostics);
             var ctorParams = ExtractConstructorParams(type);
             resources.Add(new Resource(noun, null, operations,
-                SourceClassName: type.Name, SourceNamespace: type.Namespace,
+                SourceClassName: type.Name, SourceModule: type.Namespace,
                 ConstructorParams: ctorParams,
                 HasParameterlessCtor: HasPublicParameterlessCtor(type)));
         }
@@ -573,7 +573,7 @@ public class DotNetAdapter : ISdkAdapter
         if (type.IsEnum)
         {
             var values = type.GetEnumNames().ToList();
-            return new TypeRef(TypeKind.Enum, type.Name, EnumValues: values, Namespace: type.Namespace);
+            return new TypeRef(TypeKind.Enum, type.Name, EnumValues: values, Module: type.Namespace);
         }
 
         // Array
@@ -609,11 +609,11 @@ public class DotNetAdapter : ISdkAdapter
             }
             if (values.Count >= 2)
                 return new TypeRef(TypeKind.Enum, type.Name, EnumValues: values,
-                    Namespace: type.Namespace, IsExtensibleEnum: true);
+                    Module: type.Namespace, IsExtensibleEnum: true);
         }
 
         // Class
-        return new TypeRef(TypeKind.Class, type.Name, Namespace: type.Namespace,
+        return new TypeRef(TypeKind.Class, type.Name, Module: type.Namespace,
             IsAbstract: type.IsAbstract || type.IsInterface);
     }
 

@@ -10,7 +10,7 @@ public record TypeRef(
     IReadOnlyList<string>? EnumValues = null,
     IReadOnlyList<Parameter>? Properties = null,
     TypeRef? ElementType = null,
-    string? Namespace = null
+    string? Module = null
 );
 
 public enum TypeKind

@@ -23,7 +23,7 @@
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": null
+                  "module": null
                 },
                 "required": true,
                 "defaultValue": null,
@@ -40,14 +40,14 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": "CliBuilder.TestSdk.Models"
+              "module": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "TrackAsync"
           }
         ],
         "sourceClassName": "ShippingService",
-        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "sourceModule": "CliBuilder.TestSdk.Services",
         "constructorParams": null,
         "hasParameterlessCtor": true
       },
@@ -71,7 +71,7 @@
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": null
+                  "module": null
                 },
                 "required": true,
                 "defaultValue": null,
@@ -88,14 +88,14 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": "CliBuilder.TestSdk.Models"
+              "module": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "TrackAsync"
           }
         ],
         "sourceClassName": "ShippingClient",
-        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "sourceModule": "CliBuilder.TestSdk.Services",
         "constructorParams": null,
         "hasParameterlessCtor": true
       },
@@ -130,7 +130,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -148,7 +148,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -166,7 +166,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -184,7 +184,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -202,7 +202,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -220,7 +220,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -238,7 +238,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -256,7 +256,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -274,7 +274,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -296,7 +296,7 @@
                         ],
                         "properties": null,
                         "elementType": null,
-                        "namespace": "CliBuilder.TestSdk.Models"
+                        "module": "CliBuilder.TestSdk.Models"
                       },
                       "required": false,
                       "defaultValue": null,
@@ -304,7 +304,7 @@
                     }
                   ],
                   "elementType": null,
-                  "namespace": "CliBuilder.TestSdk.Models"
+                  "module": "CliBuilder.TestSdk.Models"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -321,7 +321,7 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": "CliBuilder.TestSdk.Models"
+              "module": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "CreateAsync"
@@ -342,7 +342,7 @@
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": null
+                  "module": null
                 },
                 "required": true,
                 "defaultValue": null,
@@ -359,7 +359,7 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": "CliBuilder.TestSdk.Models"
+              "module": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "GetAsync"
@@ -380,7 +380,7 @@
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": null
+                  "module": null
                 },
                 "required": false,
                 "defaultValue": null,
@@ -398,7 +398,7 @@
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": null
+                  "module": null
                 },
                 "required": false,
                 "defaultValue": null,
@@ -422,13 +422,13 @@
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": "CliBuilder.TestSdk.Models"
+                  "module": "CliBuilder.TestSdk.Models"
                 }
               ],
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": null
+              "module": null
             },
             "isStreaming": false,
             "sourceMethodName": "ListAsync"
@@ -449,7 +449,7 @@
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": null
+                  "module": null
                 },
                 "required": true,
                 "defaultValue": null,
@@ -466,7 +466,7 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": null
+              "module": null
             },
             "isStreaming": false,
             "sourceMethodName": "DeleteAsync"
@@ -485,7 +485,7 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": "CliBuilder.TestSdk.Models"
+              "module": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": true,
             "sourceMethodName": "StreamAsync"
@@ -506,7 +506,7 @@
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": null
+                  "module": null
                 },
                 "required": true,
                 "defaultValue": null,
@@ -530,7 +530,7 @@
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": null
+                  "module": null
                 },
                 {
                   "kind": "class",
@@ -542,25 +542,25 @@
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": "System"
+                  "module": "System"
                 }
               ],
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": null
+              "module": null
             },
             "isStreaming": false,
             "sourceMethodName": "GetMetadataAsync"
           }
         ],
         "sourceClassName": "CustomerService",
-        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "sourceModule": "CliBuilder.TestSdk.Services",
         "constructorParams": [
           {
             "name": "apiKey",
             "typeName": "string",
-            "typeNamespace": null,
+            "typeModule": null,
             "isAuth": true,
             "isRequired": true
           }
@@ -594,13 +594,13 @@
                       "enumValues": null,
                       "properties": null,
                       "elementType": null,
-                      "namespace": "CliBuilder.TestSdk.Models"
+                      "module": "CliBuilder.TestSdk.Models"
                     }
                   ],
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": null
+                  "module": null
                 },
                 "required": true,
                 "defaultValue": null,
@@ -629,7 +629,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -647,7 +647,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -655,7 +655,7 @@
                     }
                   ],
                   "elementType": null,
-                  "namespace": "CliBuilder.TestSdk.Models"
+                  "module": "CliBuilder.TestSdk.Models"
                 },
                 "required": false,
                 "defaultValue": null,
@@ -672,7 +672,7 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": "CliBuilder.TestSdk.Models"
+              "module": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "SendAsync"
@@ -700,13 +700,13 @@
                       "enumValues": null,
                       "properties": null,
                       "elementType": null,
-                      "namespace": null
+                      "module": null
                     }
                   ],
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": null
+                  "module": null
                 },
                 "required": true,
                 "defaultValue": null,
@@ -723,19 +723,19 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": "CliBuilder.TestSdk.Models"
+              "module": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "BatchAsync"
           }
         ],
         "sourceClassName": "MessageClient",
-        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "sourceModule": "CliBuilder.TestSdk.Services",
         "constructorParams": [
           {
             "name": "apiKey",
             "typeName": "string",
-            "typeNamespace": null,
+            "typeModule": null,
             "isAuth": true,
             "isRequired": true
           }
@@ -773,7 +773,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -791,7 +791,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -809,7 +809,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -827,7 +827,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -845,7 +845,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -863,7 +863,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -881,7 +881,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -899,7 +899,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -917,7 +917,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -935,7 +935,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -953,7 +953,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -971,7 +971,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -989,7 +989,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -1007,7 +1007,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -1025,7 +1025,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -1033,7 +1033,7 @@
                     }
                   ],
                   "elementType": null,
-                  "namespace": "CliBuilder.TestSdk.Models"
+                  "module": "CliBuilder.TestSdk.Models"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -1050,7 +1050,7 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": "CliBuilder.TestSdk.Models"
+              "module": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "CreateAsync"
@@ -1071,7 +1071,7 @@
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": null
+                  "module": null
                 },
                 "required": true,
                 "defaultValue": null,
@@ -1088,7 +1088,7 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": "CliBuilder.TestSdk.Models"
+              "module": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "GetAsync"
@@ -1120,7 +1120,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -1138,7 +1138,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": "CliBuilder.TestSdk.Models"
+                        "module": "CliBuilder.TestSdk.Models"
                       },
                       "required": false,
                       "defaultValue": null,
@@ -1146,7 +1146,7 @@
                     }
                   ],
                   "elementType": null,
-                  "namespace": "CliBuilder.TestSdk.Models"
+                  "module": "CliBuilder.TestSdk.Models"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -1163,7 +1163,7 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": "CliBuilder.TestSdk.Models"
+              "module": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "UpdateAsync"
@@ -1195,7 +1195,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -1213,7 +1213,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -1231,7 +1231,7 @@
                         "enumValues": null,
                         "properties": null,
                         "elementType": null,
-                        "namespace": null
+                        "module": null
                       },
                       "required": false,
                       "defaultValue": null,
@@ -1239,7 +1239,7 @@
                     }
                   ],
                   "elementType": null,
-                  "namespace": "CliBuilder.TestSdk.Models"
+                  "module": "CliBuilder.TestSdk.Models"
                 },
                 "required": true,
                 "defaultValue": null,
@@ -1256,19 +1256,19 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": "CliBuilder.TestSdk.Models"
+              "module": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "ProcessAsync"
           }
         ],
         "sourceClassName": "OrderClient",
-        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "sourceModule": "CliBuilder.TestSdk.Services",
         "constructorParams": [
           {
             "name": "apiKey",
             "typeName": "string",
-            "typeNamespace": null,
+            "typeModule": null,
             "isAuth": true,
             "isRequired": true
           }
@@ -1293,19 +1293,19 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": "CliBuilder.TestSdk.Models"
+              "module": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "ListAsync"
           }
         ],
         "sourceClassName": "ProductApi",
-        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "sourceModule": "CliBuilder.TestSdk.Services",
         "constructorParams": [
           {
             "name": "credential",
             "typeName": "TokenCredential",
-            "typeNamespace": "CliBuilder.TestSdk.Models",
+            "typeModule": "CliBuilder.TestSdk.Models",
             "isAuth": true,
             "isRequired": true
           }
@@ -1332,7 +1332,7 @@
                   "enumValues": null,
                   "properties": null,
                   "elementType": null,
-                  "namespace": null
+                  "module": null
                 },
                 "required": true,
                 "defaultValue": null,
@@ -1349,26 +1349,26 @@
               "enumValues": null,
               "properties": null,
               "elementType": null,
-              "namespace": "CliBuilder.TestSdk.Models"
+              "module": "CliBuilder.TestSdk.Models"
             },
             "isStreaming": false,
             "sourceMethodName": "SearchAsync"
           }
         ],
         "sourceClassName": "SearchClient",
-        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "sourceModule": "CliBuilder.TestSdk.Services",
         "constructorParams": [
           {
             "name": "index",
             "typeName": "String",
-            "typeNamespace": "System",
+            "typeModule": "System",
             "isAuth": false,
             "isRequired": true
           },
           {
             "name": "credential",
             "typeName": "ApiKeyCredential",
-            "typeNamespace": "CliBuilder.TestSdk.Models",
+            "typeModule": "CliBuilder.TestSdk.Models",
             "isAuth": true,
             "isRequired": true
           }

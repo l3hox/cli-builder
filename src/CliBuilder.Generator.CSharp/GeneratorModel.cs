@@ -21,7 +21,7 @@ public record ResourceModel(
     string? Description,
     IReadOnlyList<OperationModel> Operations,
     string? SourceClassName = null,
-    string? SourceNamespace = null,
+    string? SourceModule = null,
     string? ConstructorExpression = null,
     IReadOnlyList<string>? RequiredNamespaces = null,
     bool CanConstruct = false,

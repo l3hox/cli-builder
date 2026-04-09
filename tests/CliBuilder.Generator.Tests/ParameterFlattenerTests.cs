@@ -309,7 +309,7 @@ public class ParameterFlattenerTests
         var parameters = new List<Parameter>
         {
             new("options", new TypeRef(TypeKind.Class, "CreateCustomerOptions",
-                Properties: props, Namespace: "TestNs"), true),
+                Properties: props, Module: "TestNs"), true),
         };
         var result = ParameterFlattener.Flatten(parameters);
 

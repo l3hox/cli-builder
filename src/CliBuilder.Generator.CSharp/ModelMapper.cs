@@ -82,13 +82,13 @@ public static partial class ModelMapper
 
         // Collect all namespaces needed by this resource's generated code
         var namespaces = new HashSet<string>();
-        if (resource.SourceNamespace != null)
-            namespaces.Add(resource.SourceNamespace);
+        if (resource.SourceModule != null)
+            namespaces.Add(resource.SourceModule);
         // Add namespaces from constructor params (e.g., ApiKeyCredential namespace)
         if (resource.ConstructorParams != null)
         {
-            foreach (var cp in resource.ConstructorParams.Where(p => p.IsAuth && p.TypeNamespace != null))
-                namespaces.Add(cp.TypeNamespace!);
+            foreach (var cp in resource.ConstructorParams.Where(p => p.IsAuth && p.TypeModule != null))
+                namespaces.Add(cp.TypeModule!);
         }
         foreach (var op in operations)
         {
@@ -116,7 +116,7 @@ public static partial class ModelMapper
 
         return new ResourceModel(resource.Name, className, description, operations,
             SourceClassName: SanitizeString(resource.SourceClassName),
-            SourceNamespace: SanitizeString(resource.SourceNamespace),
+            SourceModule: SanitizeString(resource.SourceModule),
             ConstructorExpression: ctorExpr,
             RequiredNamespaces: requiredNamespaces,
             CanConstruct: canConstruct,
@@ -329,7 +329,7 @@ public static partial class ModelMapper
                 methodParams.Add(new MethodParamModel(
                     ArgExpression: PascalToCamelCase(typeName),
                     TypeName: typeName,
-                    Namespace: SanitizeString(p.Type.Namespace),
+                    Namespace: SanitizeString(p.Type.Module),
                     IsOptionsClass: true));
             }
             else if (p.Type.Kind is TypeKind.Generic or TypeKind.Array or TypeKind.Dictionary
@@ -342,7 +342,7 @@ public static partial class ModelMapper
                 methodParams.Add(new MethodParamModel(
                     ArgExpression: KebabToCamelCase(cliFlag) + "Value",
                     TypeName: deserTypeName,
-                    Namespace: SanitizeString(p.Type.Namespace),
+                    Namespace: SanitizeString(p.Type.Module),
                     IsOptionsClass: false,
                     NeedsJsonDeserialization: true,
                     DeserializationTypeName: deserTypeName,
@@ -357,7 +357,7 @@ public static partial class ModelMapper
                 methodParams.Add(new MethodParamModel(
                     ArgExpression: KebabToCamelCase(cliFlag) + "Value",
                     TypeName: p.Type.Name,
-                    Namespace: SanitizeString(p.Type.Namespace),
+                    Namespace: SanitizeString(p.Type.Module),
                     IsOptionsClass: false,
                     NeedsJsonDeserialization: true,
                     DeserializationTypeName: p.Type.Name,
@@ -378,7 +378,7 @@ public static partial class ModelMapper
                 methodParams.Add(new MethodParamModel(
                     ArgExpression: argExpr,
                     TypeName: null,
-                    Namespace: p.Type.Kind == TypeKind.Enum ? SanitizeString(p.Type.Namespace) : null,
+                    Namespace: p.Type.Kind == TypeKind.Enum ? SanitizeString(p.Type.Module) : null,
                     IsOptionsClass: false));
             }
         }
@@ -406,8 +406,8 @@ public static partial class ModelMapper
         if (type.GenericArguments == null) return;
         foreach (var ga in type.GenericArguments)
         {
-            if (ga.Namespace != null)
-                namespaces.Add(ga.Namespace);
+            if (ga.Module != null)
+                namespaces.Add(ga.Module);
             CollectGenericArgumentNamespaces(ga, namespaces);
         }
     }

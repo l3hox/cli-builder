@@ -426,7 +426,7 @@ public class ModelMapperTests
     public void MapResource_StringAuth_CredentialExpression()
     {
         var resource = new Resource("customer", null, new List<Operation>(),
-            SourceClassName: "CustomerService", SourceNamespace: "Test.Services",
+            SourceClassName: "CustomerService", SourceModule: "Test.Services",
             ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
@@ -438,7 +438,7 @@ public class ModelMapperTests
     public void MapResource_TokenCredentialAuth_WrapsInNew()
     {
         var resource = new Resource("product", null, new List<Operation>(),
-            SourceClassName: "ProductApi", SourceNamespace: "Test.Services",
+            SourceClassName: "ProductApi", SourceModule: "Test.Services",
             ConstructorParams: new[] { new ConstructorParam("credential", "TokenCredential", "Test.Models", true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
@@ -465,7 +465,7 @@ public class ModelMapperTests
     public void BuildConstructorInfo_MultiArg_Expression()
     {
         var resource = new Resource("search", null, new List<Operation>(),
-            SourceClassName: "SearchClient", SourceNamespace: "Sdk",
+            SourceClassName: "SearchClient", SourceModule: "Sdk",
             ConstructorParams: new[]
             {
                 new ConstructorParam("index", "String", null, false, true),
@@ -482,7 +482,7 @@ public class ModelMapperTests
     public void BuildConstructorInfo_MultiArg_ConfigParams()
     {
         var resource = new Resource("search", null, new List<Operation>(),
-            SourceClassName: "SearchClient", SourceNamespace: "Sdk",
+            SourceClassName: "SearchClient", SourceModule: "Sdk",
             ConstructorParams: new[]
             {
                 new ConstructorParam("index", "String", null, false, true),
@@ -503,7 +503,7 @@ public class ModelMapperTests
     {
         // All params are non-auth — can't construct without credentials
         var resource = new Resource("thing", null, new List<Operation>(),
-            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            SourceClassName: "ThingService", SourceModule: "Sdk",
             ConstructorParams: new[]
             {
                 new ConstructorParam("setting", "string", null, false, true),
@@ -523,13 +523,13 @@ public class ModelMapperTests
     {
         var optionsType = new TypeRef(TypeKind.Class, "MyOptions",
             Properties: new[] { new Parameter("X", new TypeRef(TypeKind.Primitive, "string"), true) },
-            Namespace: "Sdk.Options");
+            Module: "Sdk.Options");
         var op = new Operation("do", null,
             new[] { new Parameter("opts", optionsType, true) },
             new TypeRef(TypeKind.Primitive, "void"),
             SourceMethodName: "DoAsync");
         var resource = new Resource("thing", null, new[] { op },
-            SourceClassName: "ThingService", SourceNamespace: "Sdk.Services",
+            SourceClassName: "ThingService", SourceModule: "Sdk.Services",
             ConstructorParams: new[] { new ConstructorParam("credential", "TokenCredential", "Sdk.Auth", true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
@@ -545,7 +545,7 @@ public class ModelMapperTests
     {
         // IEnumerable<ChatMessage> where ChatMessage.Namespace = "Sdk.Chat"
         // → "Sdk.Chat" must appear in RequiredNamespaces
-        var innerType = new TypeRef(TypeKind.Class, "ChatMessage", Namespace: "Sdk.Chat", IsAbstract: true);
+        var innerType = new TypeRef(TypeKind.Class, "ChatMessage", Module: "Sdk.Chat", IsAbstract: true);
         var genericType = new TypeRef(TypeKind.Generic, "IEnumerable",
             GenericArguments: new[] { innerType });
         var op = new Operation("send", null,
@@ -553,7 +553,7 @@ public class ModelMapperTests
             new TypeRef(TypeKind.Primitive, "void"),
             SourceMethodName: "SendAsync");
         var resource = new Resource("chat", null, new[] { op },
-            SourceClassName: "ChatService", SourceNamespace: "Sdk.Services",
+            SourceClassName: "ChatService", SourceModule: "Sdk.Services",
             ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
         var metadata = new SdkMetadata("TestSdk", "1.0.0",
             new[] { resource }, new[] { new AuthPattern(AuthType.ApiKey, "TEST_KEY", "apiKey") });
@@ -572,13 +572,13 @@ public class ModelMapperTests
     {
         var optionsType = new TypeRef(TypeKind.Class, "CreateOptions",
             Properties: new[] { new Parameter("Name", new TypeRef(TypeKind.Primitive, "string"), true) },
-            Namespace: "Sdk.Models");
+            Module: "Sdk.Models");
         var op = new Operation("create", null,
             new[] { new Parameter("options", optionsType, true) },
             new TypeRef(TypeKind.Primitive, "void"),
             SourceMethodName: "CreateAsync");
         var resource = new Resource("thing", null, new[] { op },
-            SourceClassName: "ThingService", SourceNamespace: "Sdk");
+            SourceClassName: "ThingService", SourceModule: "Sdk");
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
 
@@ -598,7 +598,7 @@ public class ModelMapperTests
             new TypeRef(TypeKind.Class, "Customer"),
             SourceMethodName: "GetAsync");
         var resource = new Resource("thing", null, new[] { op },
-            SourceClassName: "ThingService", SourceNamespace: "Sdk");
+            SourceClassName: "ThingService", SourceModule: "Sdk");
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
 
@@ -619,7 +619,7 @@ public class ModelMapperTests
     public void MapResource_InvalidAuthTypeName_EmitsDiagnosticAndFallback()
     {
         var resource = new Resource("thing", null, new List<Operation>(),
-            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            SourceClassName: "ThingService", SourceModule: "Sdk",
             ConstructorParams: new[] { new ConstructorParam("cred", "123BadType", null, true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, diagnostics) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
@@ -632,7 +632,7 @@ public class ModelMapperTests
     public void MapResource_ScribanMetacharsInAuthTypeName_EmitsDiagnosticAndFallback()
     {
         var resource = new Resource("thing", null, new List<Operation>(),
-            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            SourceClassName: "ThingService", SourceModule: "Sdk",
             ConstructorParams: new[] { new ConstructorParam("cred", "Token{{Credential}}", null, true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, diagnostics) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
@@ -650,7 +650,7 @@ public class ModelMapperTests
             new TypeRef(TypeKind.Class, "Customer"),
             SourceMethodName: "SearchAsync");
         var resource = new Resource("thing", null, new[] { op },
-            SourceClassName: "ThingService", SourceNamespace: "Sdk");
+            SourceClassName: "ThingService", SourceModule: "Sdk");
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
 
@@ -665,10 +665,10 @@ public class ModelMapperTests
         // Renamed from MixedOrder — both params are options classes
         var optionsType = new TypeRef(TypeKind.Class, "CreateOptions",
             Properties: new[] { new Parameter("Name", new TypeRef(TypeKind.Primitive, "string"), true) },
-            Namespace: "Sdk.Models");
+            Module: "Sdk.Models");
         var requestType = new TypeRef(TypeKind.Class, "RequestOptions",
             Properties: new[] { new Parameter("Key", new TypeRef(TypeKind.Primitive, "string"), false) },
-            Namespace: "Sdk.Models");
+            Module: "Sdk.Models");
         var op = new Operation("create", null,
             new Parameter[] {
                 new("options", optionsType, true),
@@ -677,7 +677,7 @@ public class ModelMapperTests
             new TypeRef(TypeKind.Primitive, "void"),
             SourceMethodName: "CreateAsync");
         var resource = new Resource("thing", null, new[] { op },
-            SourceClassName: "ThingService", SourceNamespace: "Sdk");
+            SourceClassName: "ThingService", SourceModule: "Sdk");
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
 
@@ -701,7 +701,7 @@ public class ModelMapperTests
         var op = new Operation("test-op", null, parameters, returnType,
             isStreaming, SourceMethodName: "TestAsync");
         var resource = new Resource("thing", null, new[] { op },
-            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            SourceClassName: "ThingService", SourceModule: "Sdk",
             ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
         var metadata = new SdkMetadata("TestSdk", "1.0.0",
             new[] { resource }, new[] { new AuthPattern(AuthType.ApiKey, "TEST_KEY", "apiKey") });
@@ -808,7 +808,7 @@ public class ModelMapperTests
     [Fact]
     public void CanWireSdkCall_GenericWithAbstractArg_EmitsCB307()
     {
-        var abstractInner = new TypeRef(TypeKind.Class, "ChatMessage", IsAbstract: true, Namespace: "OpenAI.Chat");
+        var abstractInner = new TypeRef(TypeKind.Class, "ChatMessage", IsAbstract: true, Module: "OpenAI.Chat");
         var genericType = new TypeRef(TypeKind.Generic, "IEnumerable",
             GenericArguments: new[] { abstractInner });
         var op = new Operation("test-op", null,
@@ -816,7 +816,7 @@ public class ModelMapperTests
             new TypeRef(TypeKind.Primitive, "void"),
             SourceMethodName: "TestAsync");
         var resource = new Resource("thing", null, new[] { op },
-            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            SourceClassName: "ThingService", SourceModule: "Sdk",
             ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
         var metadata = new SdkMetadata("TestSdk", "1.0.0",
             new[] { resource }, new[] { new AuthPattern(AuthType.ApiKey, "TEST_KEY", "apiKey") });
@@ -945,7 +945,7 @@ public class ModelMapperTests
             new TypeRef(TypeKind.Primitive, "void"),
             SourceMethodName: "TestAsync");
         var resource = new Resource("thing", null, new[] { op },
-            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            SourceClassName: "ThingService", SourceModule: "Sdk",
             ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
         var metadata = new SdkMetadata("TestSdk", "1.0.0",
             new[] { resource }, new[] { new AuthPattern(AuthType.ApiKey, "TEST_KEY", "apiKey") });
@@ -957,7 +957,7 @@ public class ModelMapperTests
     public void CanConstruct_NullAuthType_ReturnsFalse()
     {
         var resource = new Resource("thing", null, new List<Operation>(),
-            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            SourceClassName: "ThingService", SourceModule: "Sdk",
             ConstructorParams: null);
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
@@ -968,7 +968,7 @@ public class ModelMapperTests
     public void CanConstruct_WithAuthType_ReturnsTrue()
     {
         var resource = new Resource("thing", null, new List<Operation>(),
-            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            SourceClassName: "ThingService", SourceModule: "Sdk",
             ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
@@ -983,7 +983,7 @@ public class ModelMapperTests
     public void StaticAuth_ParameterlessCtor_CanConstructTrue()
     {
         var resource = new Resource("charge", null, new List<Operation>(),
-            SourceClassName: "ChargeService", SourceNamespace: "Stripe",
+            SourceClassName: "ChargeService", SourceModule: "Stripe",
             HasParameterlessCtor: true);
         var metadata = MinimalMetadata(resources: new[] { resource },
             staticAuth: new StaticAuthConfig("StripeConfiguration", "Stripe", "ApiKey"));
@@ -997,7 +997,7 @@ public class ModelMapperTests
     public void StaticAuth_NoParameterlessCtor_CanConstructFalse()
     {
         var resource = new Resource("nested", null, new List<Operation>(),
-            SourceClassName: "NestedService", SourceNamespace: "Stripe",
+            SourceClassName: "NestedService", SourceModule: "Stripe",
             HasParameterlessCtor: false);
         var metadata = MinimalMetadata(resources: new[] { resource },
             staticAuth: new StaticAuthConfig("StripeConfiguration", "Stripe", "ApiKey"));
@@ -1019,7 +1019,7 @@ public class ModelMapperTests
     {
         // Without static auth, parameterless ctor alone is not enough
         var resource = new Resource("thing", null, new List<Operation>(),
-            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            SourceClassName: "ThingService", SourceModule: "Sdk",
             HasParameterlessCtor: true);
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
@@ -1049,7 +1049,7 @@ public class ModelMapperTests
             new TypeRef(TypeKind.Primitive, "void"),
             SourceMethodName: "CreateAsync");
         var resource = new Resource("thing", null, new[] { op },
-            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            SourceClassName: "ThingService", SourceModule: "Sdk",
             ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
@@ -1080,7 +1080,7 @@ public class ModelMapperTests
             new TypeRef(TypeKind.Primitive, "void"),
             SourceMethodName: "UpdateAsync");
         var resource = new Resource("thing", null, new[] { op },
-            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            SourceClassName: "ThingService", SourceModule: "Sdk",
             ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
         var metadata = MinimalMetadata(resources: new[] { resource });
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));

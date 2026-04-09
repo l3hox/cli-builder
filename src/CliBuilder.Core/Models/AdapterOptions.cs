@@ -1,7 +1,7 @@
 namespace CliBuilder.Core.Models;
 
 public record AdapterOptions(
-    string AssemblyPath,
+    string ArtifactPath,
     string? ConfigPath = null,
-    string? XmlDocPath = null
+    string? DocsPath = null
 );

@@ -5,7 +5,7 @@ public record Resource(
     string? Description,
     IReadOnlyList<Operation> Operations,
     string? SourceClassName = null,
-    string? SourceNamespace = null,
+    string? SourceModule = null,
     IReadOnlyList<ConstructorParam>? ConstructorParams = null,
     bool HasParameterlessCtor = false
 );
@@ -13,7 +13,7 @@ public record Resource(
 public record ConstructorParam(
     string Name,
     string TypeName,
-    string? TypeNamespace,
+    string? TypeModule,
     bool IsAuth,
     bool IsRequired
 );
