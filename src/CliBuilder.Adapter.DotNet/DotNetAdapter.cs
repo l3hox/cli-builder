@@ -583,11 +583,32 @@ public class DotNetAdapter : ISdkAdapter
             return new TypeRef(TypeKind.Array, type.Name, ElementType: elementType);
         }
 
-        // Primitive
+        // Primitive (must come before extensible enum to avoid false positives on TimeSpan etc.)
         if (IsPrimitiveType(type))
         {
             var name = PrimitiveAliases.TryGetValue(type.Name, out var alias) ? alias : type.Name;
             return new TypeRef(TypeKind.Primitive, name);
+        }
+
+        // Extensible enum pattern: readonly struct with static fields/properties of its own type
+        // (e.g., OpenAI's GeneratedSpeechVoice, MessageRole — uses static properties)
+        if (type.IsValueType && !type.IsPrimitive && !type.IsEnum)
+        {
+            // Check static fields first (field-based pattern)
+            var values = type.GetFields(BindingFlags.Public | BindingFlags.Static)
+                .Where(f => f.FieldType.Name == type.Name && f.FieldType.Namespace == type.Namespace)
+                .Select(f => f.Name)
+                .ToList();
+            // Fall back to static properties (property-based pattern, e.g., OpenAI SDK)
+            if (values.Count == 0)
+            {
+                values = type.GetProperties(BindingFlags.Public | BindingFlags.Static)
+                    .Where(p => p.PropertyType.Name == type.Name && p.PropertyType.Namespace == type.Namespace)
+                    .Select(p => p.Name)
+                    .ToList();
+            }
+            if (values.Count > 0)
+                return new TypeRef(TypeKind.Enum, type.Name, EnumValues: values, Namespace: type.Namespace);
         }
 
         // Class

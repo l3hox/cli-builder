@@ -2178,12 +2178,18 @@
                   "isAbstract": false,
                   "genericArguments": [
                     {
-                      "kind": "class",
+                      "kind": "enum",
                       "name": "IncludedResponseProperty",
                       "isNullable": false,
                       "isAbstract": false,
                       "genericArguments": null,
-                      "enumValues": null,
+                      "enumValues": [
+                        "MessageInputImageUri",
+                        "ComputerCallOutputImageUri",
+                        "FileSearchCallResults",
+                        "ReasoningEncryptedContent",
+                        "CodeInterpreterCallOutputs"
+                      ],
                       "properties": null,
                       "elementType": null,
                       "namespace": "OpenAI.Responses"
@@ -3411,12 +3417,15 @@
                     {
                       "name": "DefaultConversationConfiguration",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "RealtimeResponseDefaultConversationConfiguration",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Auto",
+                          "None"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Realtime"
@@ -3855,12 +3864,15 @@
                     {
                       "name": "ModerationLevel",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageModerationLevel",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Low",
+                          "Auto"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -3889,12 +3901,16 @@
                     {
                       "name": "OutputFileFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageFileFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Png",
+                          "Jpeg",
+                          "Webp"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -3923,12 +3939,19 @@
                     {
                       "name": "Quality",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageQuality",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "High",
+                          "LowQuality",
+                          "MediumQuality",
+                          "HighQuality",
+                          "Standard",
+                          "Auto"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -3940,12 +3963,15 @@
                     {
                       "name": "ResponseFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Bytes",
+                          "Uri"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -3957,12 +3983,20 @@
                     {
                       "name": "Size",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageSize",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "W256xH256",
+                          "W512xH512",
+                          "W1024xH1024",
+                          "W1024xH1536",
+                          "W1536xH1024",
+                          "W1024xH1792",
+                          "W1792xH1024"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -3974,12 +4008,16 @@
                     {
                       "name": "Background",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageBackground",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Transparent",
+                          "Opaque",
+                          "Auto"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -3991,12 +4029,15 @@
                     {
                       "name": "Style",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageStyle",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Vivid",
+                          "Natural"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4079,12 +4120,15 @@
                     {
                       "name": "ModerationLevel",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageModerationLevel",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Low",
+                          "Auto"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4113,12 +4157,16 @@
                     {
                       "name": "OutputFileFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageFileFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Png",
+                          "Jpeg",
+                          "Webp"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4147,12 +4195,19 @@
                     {
                       "name": "Quality",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageQuality",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "High",
+                          "LowQuality",
+                          "MediumQuality",
+                          "HighQuality",
+                          "Standard",
+                          "Auto"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4164,12 +4219,15 @@
                     {
                       "name": "ResponseFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Bytes",
+                          "Uri"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4181,12 +4239,20 @@
                     {
                       "name": "Size",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageSize",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "W256xH256",
+                          "W512xH512",
+                          "W1024xH1024",
+                          "W1024xH1536",
+                          "W1536xH1024",
+                          "W1024xH1792",
+                          "W1792xH1024"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4198,12 +4264,16 @@
                     {
                       "name": "Background",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageBackground",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Transparent",
+                          "Opaque",
+                          "Auto"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4215,12 +4285,15 @@
                     {
                       "name": "Style",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageStyle",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Vivid",
+                          "Natural"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4354,12 +4427,16 @@
                     {
                       "name": "Background",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageBackground",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Transparent",
+                          "Opaque",
+                          "Auto"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4388,12 +4465,16 @@
                     {
                       "name": "OutputFileFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageFileFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Png",
+                          "Jpeg",
+                          "Webp"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4405,12 +4486,19 @@
                     {
                       "name": "Quality",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageQuality",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "High",
+                          "LowQuality",
+                          "MediumQuality",
+                          "HighQuality",
+                          "Standard",
+                          "Auto"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4422,12 +4510,15 @@
                     {
                       "name": "ResponseFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Bytes",
+                          "Uri"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4439,12 +4530,20 @@
                     {
                       "name": "Size",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageSize",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "W256xH256",
+                          "W512xH512",
+                          "W1024xH1024",
+                          "W1024xH1536",
+                          "W1536xH1024",
+                          "W1024xH1792",
+                          "W1792xH1024"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4473,12 +4572,15 @@
                     {
                       "name": "InputFidelity",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "ImageInputFidelity",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "High",
+                          "Low"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4629,12 +4731,16 @@
                     {
                       "name": "Background",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageBackground",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Transparent",
+                          "Opaque",
+                          "Auto"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4663,12 +4769,16 @@
                     {
                       "name": "OutputFileFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageFileFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Png",
+                          "Jpeg",
+                          "Webp"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4680,12 +4790,19 @@
                     {
                       "name": "Quality",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageQuality",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "High",
+                          "LowQuality",
+                          "MediumQuality",
+                          "HighQuality",
+                          "Standard",
+                          "Auto"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4697,12 +4814,15 @@
                     {
                       "name": "ResponseFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Bytes",
+                          "Uri"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4714,12 +4834,20 @@
                     {
                       "name": "Size",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageSize",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "W256xH256",
+                          "W512xH512",
+                          "W1024xH1024",
+                          "W1024xH1536",
+                          "W1536xH1024",
+                          "W1024xH1792",
+                          "W1792xH1024"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4748,12 +4876,15 @@
                     {
                       "name": "InputFidelity",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "ImageInputFidelity",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "High",
+                          "Low"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4836,12 +4967,15 @@
                     {
                       "name": "ResponseFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Bytes",
+                          "Uri"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4853,12 +4987,20 @@
                     {
                       "name": "Size",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageSize",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "W256xH256",
+                          "W512xH512",
+                          "W1024xH1024",
+                          "W1024xH1536",
+                          "W1536xH1024",
+                          "W1024xH1792",
+                          "W1792xH1024"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4975,12 +5117,15 @@
                     {
                       "name": "ResponseFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Bytes",
+                          "Uri"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -4992,12 +5137,20 @@
                     {
                       "name": "Size",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedImageSize",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "W256xH256",
+                          "W512xH512",
+                          "W1024xH1024",
+                          "W1024xH1536",
+                          "W1536xH1024",
+                          "W1024xH1792",
+                          "W1792xH1024"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Images"
@@ -5833,12 +5986,19 @@
               {
                 "name": "purpose",
                 "type": {
-                  "kind": "class",
+                  "kind": "enum",
                   "name": "FileUploadPurpose",
                   "isNullable": false,
                   "isAbstract": false,
                   "genericArguments": null,
-                  "enumValues": null,
+                  "enumValues": [
+                    "UserData",
+                    "Evaluations",
+                    "Assistants",
+                    "Batch",
+                    "FineTune",
+                    "Vision"
+                  ],
                   "properties": null,
                   "elementType": null,
                   "namespace": "OpenAI.Files"
@@ -7507,12 +7667,21 @@
                   "isAbstract": false,
                   "genericArguments": [
                     {
-                      "kind": "class",
+                      "kind": "enum",
                       "name": "IncludedConversationItemProperty",
                       "isNullable": false,
                       "isAbstract": false,
                       "genericArguments": null,
-                      "enumValues": null,
+                      "enumValues": [
+                        "MessageInputImageUri",
+                        "ComputerCallOutputImageUri",
+                        "FileSearchCallResults",
+                        "WebSearchCallResults",
+                        "WebSearchCallActionSources",
+                        "CodeInterpreterCallOutputs",
+                        "ReasoningEncryptedContent",
+                        "MessageOutputTextLogprobs"
+                      ],
                       "properties": null,
                       "elementType": null,
                       "namespace": "OpenAI.Conversations"
@@ -7589,12 +7758,21 @@
                   "isAbstract": false,
                   "genericArguments": [
                     {
-                      "kind": "class",
+                      "kind": "enum",
                       "name": "IncludedConversationItemProperty",
                       "isNullable": false,
                       "isAbstract": false,
                       "genericArguments": null,
-                      "enumValues": null,
+                      "enumValues": [
+                        "MessageInputImageUri",
+                        "ComputerCallOutputImageUri",
+                        "FileSearchCallResults",
+                        "WebSearchCallResults",
+                        "WebSearchCallActionSources",
+                        "CodeInterpreterCallOutputs",
+                        "ReasoningEncryptedContent",
+                        "MessageOutputTextLogprobs"
+                      ],
                       "properties": null,
                       "elementType": null,
                       "namespace": "OpenAI.Conversations"
@@ -7724,12 +7902,21 @@
                   "isAbstract": false,
                   "genericArguments": [
                     {
-                      "kind": "class",
+                      "kind": "enum",
                       "name": "IncludedConversationItemProperty",
                       "isNullable": false,
                       "isAbstract": false,
                       "genericArguments": null,
-                      "enumValues": null,
+                      "enumValues": [
+                        "MessageInputImageUri",
+                        "ComputerCallOutputImageUri",
+                        "FileSearchCallResults",
+                        "WebSearchCallResults",
+                        "WebSearchCallActionSources",
+                        "CodeInterpreterCallOutputs",
+                        "ReasoningEncryptedContent",
+                        "MessageOutputTextLogprobs"
+                      ],
                       "properties": null,
                       "elementType": null,
                       "namespace": "OpenAI.Conversations"
@@ -8751,12 +8938,18 @@
                     {
                       "name": "ReasoningEffortLevel",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "ChatReasoningEffortLevel",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "None",
+                          "Minimal",
+                          "Low",
+                          "Medium",
+                          "High"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
@@ -8891,12 +9084,17 @@
                     {
                       "name": "ServiceTier",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "ChatServiceTier",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Auto",
+                          "Default",
+                          "Flex",
+                          "Scale"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
@@ -9178,12 +9376,18 @@
                     {
                       "name": "ReasoningEffortLevel",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "ChatReasoningEffortLevel",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "None",
+                          "Minimal",
+                          "Low",
+                          "Medium",
+                          "High"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
@@ -9318,12 +9522,17 @@
                     {
                       "name": "ServiceTier",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "ChatServiceTier",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Auto",
+                          "Default",
+                          "Flex",
+                          "Scale"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Chat"
@@ -10062,12 +10271,24 @@
               {
                 "name": "voice",
                 "type": {
-                  "kind": "class",
+                  "kind": "enum",
                   "name": "GeneratedSpeechVoice",
                   "isNullable": false,
                   "isAbstract": false,
                   "genericArguments": null,
-                  "enumValues": null,
+                  "enumValues": [
+                    "Alloy",
+                    "Ash",
+                    "Ballad",
+                    "Coral",
+                    "Echo",
+                    "Fable",
+                    "Onyx",
+                    "Nova",
+                    "Sage",
+                    "Shimmer",
+                    "Verse"
+                  ],
                   "properties": null,
                   "elementType": null,
                   "namespace": "OpenAI.Audio"
@@ -10123,12 +10344,19 @@
                     {
                       "name": "ResponseFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "GeneratedSpeechFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Mp3",
+                          "Opus",
+                          "Aac",
+                          "Flac",
+                          "Wav",
+                          "Pcm"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Audio"
@@ -10286,12 +10514,18 @@
                     {
                       "name": "ResponseFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "AudioTranscriptionFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Text",
+                          "Simple",
+                          "Verbose",
+                          "Srt",
+                          "Vtt"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Audio"
@@ -10466,12 +10700,18 @@
                     {
                       "name": "ResponseFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "AudioTranscriptionFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Text",
+                          "Simple",
+                          "Verbose",
+                          "Srt",
+                          "Vtt"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Audio"
@@ -10588,12 +10828,18 @@
                     {
                       "name": "ResponseFormat",
                       "type": {
-                        "kind": "class",
+                        "kind": "enum",
                         "name": "AudioTranslationFormat",
                         "isNullable": true,
                         "isAbstract": false,
                         "genericArguments": null,
-                        "enumValues": null,
+                        "enumValues": [
+                          "Text",
+                          "Simple",
+                          "Verbose",
+                          "Srt",
+                          "Vtt"
+                        ],
                         "properties": null,
                         "elementType": null,
                         "namespace": "OpenAI.Audio"

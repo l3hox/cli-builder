@@ -348,10 +348,18 @@ public static partial class ModelMapper
             {
                 // Primitive/enum direct param — from CLI flag
                 var (_, cliFlag, _) = IdentifierValidator.SanitizeParameter(p.Name);
+                var varName = KebabToCamelCase(cliFlag) + "Value";
+                // For enum direct params, the CLI flag is a string — need conversion
+                var argExpr = varName;
+                if (p.Type.Kind == TypeKind.Enum)
+                {
+                    var enumName = SanitizeString(p.Type.Name) ?? p.Type.Name;
+                    argExpr = $"Enum.Parse<{enumName}>({varName})";
+                }
                 methodParams.Add(new MethodParamModel(
-                    ArgExpression: KebabToCamelCase(cliFlag) + "Value",
+                    ArgExpression: argExpr,
                     TypeName: null,
-                    Namespace: null,
+                    Namespace: p.Type.Kind == TypeKind.Enum ? SanitizeString(p.Type.Namespace) : null,
                     IsOptionsClass: false));
             }
         }
