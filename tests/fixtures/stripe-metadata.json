@@ -163040,7 +163040,11 @@
         "description": null
       }
     ],
-    "staticAuthSetup": "Stripe.StripeConfiguration.ApiKey"
+    "staticAuth": {
+      "typeName": "StripeConfiguration",
+      "typeModule": "Stripe",
+      "propertyName": "ApiKey"
+    }
   },
   "diagnostics": [
     {

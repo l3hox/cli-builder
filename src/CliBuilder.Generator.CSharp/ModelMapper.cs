@@ -15,8 +15,13 @@ public static partial class ModelMapper
         var diagnostics = new List<Diagnostic>();
         var cliName = options.CliName ?? DeriveCliName(metadata.Name);
 
+        // Construct C# expression from structured StaticAuthConfig
+        var staticAuthExpr = metadata.StaticAuth is { } sa
+            ? (sa.TypeModule.Length > 0 ? $"{sa.TypeModule}.{sa.TypeName}.{sa.PropertyName}" : $"{sa.TypeName}.{sa.PropertyName}")
+            : null;
+
         var resources = metadata.Resources.Select(r =>
-            MapResource(r, diagnostics, metadata.StaticAuthSetup)).ToList();
+            MapResource(r, diagnostics, staticAuthExpr)).ToList();
 
         var auth = metadata.AuthPatterns.Count > 0
             ? MapAuth(metadata.AuthPatterns[0])
@@ -42,7 +47,7 @@ public static partial class ModelMapper
             Resources: resources,
             Auth: auth,
             SdkProjectPath: sdkProjectPath,
-            StaticAuthSetup: SanitizeString(metadata.StaticAuthSetup));
+            StaticAuthSetup: SanitizeString(staticAuthExpr));
 
         return (model, diagnostics);
     }

@@ -1399,7 +1399,7 @@
         "description": null
       }
     ],
-    "staticAuthSetup": null
+    "staticAuth": null
   },
   "diagnostics": [
     {

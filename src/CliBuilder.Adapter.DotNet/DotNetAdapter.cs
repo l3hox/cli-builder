@@ -76,9 +76,9 @@ public class DotNetAdapter : ISdkAdapter
         var authPatterns = DetectAuthPatterns(assembly, serviceClasses);
 
         // Detect static auth configuration (e.g., Stripe.StripeConfiguration.ApiKey)
-        var staticAuthSetup = DetectStaticAuthSetup(assembly);
+        var staticAuth = DetectStaticAuthSetup(assembly);
 
-        var metadata = new SdkMetadata(sdkName, sdkVersion, resources, authPatterns, staticAuthSetup);
+        var metadata = new SdkMetadata(sdkName, sdkVersion, resources, authPatterns, staticAuth);
         return new AdapterResult(metadata, diagnostics);
     }
 
@@ -688,7 +688,7 @@ public class DotNetAdapter : ISdkAdapter
     /// Some SDKs use a static property for auth instead of constructor injection.
     /// Returns "Namespace.ClassName.PropertyName" or null.
     /// </summary>
-    private string? DetectStaticAuthSetup(Assembly assembly)
+    private StaticAuthConfig? DetectStaticAuthSetup(Assembly assembly)
     {
         Type[] types;
         try { types = assembly.GetExportedTypes(); }
@@ -706,7 +706,7 @@ public class DotNetAdapter : ISdkAdapter
                     && (p.Name is "ApiKey" or "SecretKey" or "ApiSecret"));
 
             if (prop != null)
-                return $"{type.Namespace}.{type.Name}.{prop.Name}";
+                return new StaticAuthConfig(type.Name, type.Namespace ?? "", prop.Name);
         }
         return null;
     }

@@ -95,10 +95,13 @@ public class StripeSdkIntegrationTests
     }
 
     [Fact]
-    public void ExtractStripe_DetectsStaticAuthSetup()
+    public void ExtractStripe_DetectsStaticAuth()
     {
         var result = ExtractStripe();
-        Assert.Equal("Stripe.StripeConfiguration.ApiKey", result.Metadata.StaticAuthSetup);
+        Assert.NotNull(result.Metadata.StaticAuth);
+        Assert.Equal("StripeConfiguration", result.Metadata.StaticAuth!.TypeName);
+        Assert.Equal("Stripe", result.Metadata.StaticAuth.TypeModule);
+        Assert.Equal("ApiKey", result.Metadata.StaticAuth.PropertyName);
     }
 
     [Fact]

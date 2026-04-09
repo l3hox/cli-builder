@@ -11,14 +11,14 @@ public class ModelMapperTests
         string version = "1.0.0",
         IReadOnlyList<Resource>? resources = null,
         IReadOnlyList<AuthPattern>? authPatterns = null,
-        string? staticAuthSetup = null)
+        StaticAuthConfig? staticAuth = null)
     {
         return new SdkMetadata(
             name,
             version,
             resources ?? new List<Resource>(),
             authPatterns ?? new List<AuthPattern>(),
-            staticAuthSetup);
+            staticAuth);
     }
 
     private static Resource MakeResource(string name, string? description = null)
@@ -986,7 +986,7 @@ public class ModelMapperTests
             SourceClassName: "ChargeService", SourceNamespace: "Stripe",
             HasParameterlessCtor: true);
         var metadata = MinimalMetadata(resources: new[] { resource },
-            staticAuthSetup: "Stripe.StripeConfiguration.ApiKey");
+            staticAuth: new StaticAuthConfig("StripeConfiguration", "Stripe", "ApiKey"));
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
 
         Assert.True(model.Resources[0].CanConstruct);
@@ -1000,7 +1000,7 @@ public class ModelMapperTests
             SourceClassName: "NestedService", SourceNamespace: "Stripe",
             HasParameterlessCtor: false);
         var metadata = MinimalMetadata(resources: new[] { resource },
-            staticAuthSetup: "Stripe.StripeConfiguration.ApiKey");
+            staticAuth: new StaticAuthConfig("StripeConfiguration", "Stripe", "ApiKey"));
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
 
         Assert.False(model.Resources[0].CanConstruct);
@@ -1009,7 +1009,7 @@ public class ModelMapperTests
     [Fact]
     public void StaticAuth_PassedToGeneratorModel()
     {
-        var metadata = MinimalMetadata(staticAuthSetup: "Sdk.Config.ApiKey");
+        var metadata = MinimalMetadata(staticAuth: new StaticAuthConfig("Config", "Sdk", "ApiKey"));
         var (model, _) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
         Assert.Equal("Sdk.Config.ApiKey", model.StaticAuthSetup);
     }
