@@ -42,6 +42,13 @@ public class NestedOptions
     public Address? ShippingAddress { get; set; }
 }
 
+// Options for MessageClient.SendAsync
+public class SendMessageOptions
+{
+    public string? Model { get; set; }
+    public float? Temperature { get; set; }
+}
+
 // Sanitization edge cases — parameter names that are C# keywords
 public class SanitizationOptions
 {

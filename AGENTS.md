@@ -46,6 +46,6 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-**v1.2** — CLI entry point: `cli-builder generate` and `cli-builder inspect` commands. Installable as `dotnet tool`. 367 tests.
+**v1.3** — Step 9B: direct param deserialization (`IEnumerable<T>`, `Dictionary<K,V>`, bare Class via `--json-input`). CB307 abstract type diagnostics. 381 tests.
 
 **What's next:** Step 9B (direct param deserialization + abstract types), then Python adapter. See [docs/FUTURE.md](docs/FUTURE.md).

@@ -210,9 +210,9 @@ public class CSharpCliGeneratorTests : IDisposable
     public void Generate_CreatesCommandFilePerResource()
     {
         var result = Generate();
-        // TestSdk has 4 resources: customer, order, product, search
+        // TestSdk has 7 resources: customer, message, order, product, search, shipping-service, shipping-client
         var commandFiles = result.GeneratedFiles.Where(f => f.Contains("Commands")).ToList();
-        Assert.Equal(6, commandFiles.Count);
+        Assert.Equal(7, commandFiles.Count);
     }
 
     [Fact]
@@ -220,6 +220,7 @@ public class CSharpCliGeneratorTests : IDisposable
     {
         var result = Generate();
         Assert.Contains(result.GeneratedFiles, f => f.EndsWith("CustomerCommands.cs"));
+        Assert.Contains(result.GeneratedFiles, f => f.EndsWith("MessageCommands.cs"));
         Assert.Contains(result.GeneratedFiles, f => f.EndsWith("OrderCommands.cs"));
         Assert.Contains(result.GeneratedFiles, f => f.EndsWith("ProductCommands.cs"));
     }
@@ -228,10 +229,10 @@ public class CSharpCliGeneratorTests : IDisposable
     public void Generate_HasCommandFiles()
     {
         var result = Generate();
-        // 4 resources = 4 command files
+        // 7 resources = 7 command files
         var commandFiles = result.GeneratedFiles.Where(f =>
             f.Contains("Commands") && f.EndsWith(".cs")).ToList();
-        Assert.Equal(6, commandFiles.Count);
+        Assert.Equal(7, commandFiles.Count);
     }
 
     [Fact]
@@ -621,6 +622,7 @@ public class CSharpCliGeneratorTests : IDisposable
         "testsdk-cli.csproj",
         "Program.cs",
         "Commands/CustomerCommands.cs",
+        "Commands/MessageCommands.cs",
         "Commands/OrderCommands.cs",
         "Commands/ProductCommands.cs",
         "Commands/SearchCommands.cs",

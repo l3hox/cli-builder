@@ -111,7 +111,17 @@ public static class {{ resource.class_name }}Commands
                     if (_jsonInputDoc is not null
                         && _jsonInputDoc.RootElement.TryGetProperty("{{ mp.json_property_name }}", out var _{{ mp.json_property_name }}Prop))
                     {
-                        {{ mp.arg_expression }} = JsonSerializer.Deserialize<{{ mp.deserialization_type_name }}>(_{{ mp.json_property_name }}Prop.GetRawText(), _jsonInputOptions)!;
+                        try
+                        {
+                            {{ mp.arg_expression }} = JsonSerializer.Deserialize<{{ mp.deserialization_type_name }}>(_{{ mp.json_property_name }}Prop.GetRawText(), _jsonInputOptions)!;
+                        }
+                        catch (JsonException ex)
+                        {
+                            var jsonError = new { error = new { code = "json_input_error", message = $"Failed to deserialize '{{ mp.json_property_name }}': {ex.Message}" } };
+                            Console.Error.WriteLine(JsonSerializer.Serialize(jsonError));
+                            ctx.ExitCode = 1;
+                            return;
+                        }
                     }
 {{~ if mp.is_required }}
                     if ({{ mp.arg_expression }} is null)

@@ -116,7 +116,7 @@ public class CliBuilderToolTests : IDisposable
             InspectCommand.Execute(new DotNetAdapter(), _testSdkPath, false));
 
         Assert.Contains("SDK: CliBuilder.TestSdk", stdout);
-        Assert.Contains("Resources: 6", stdout);
+        Assert.Contains("Resources: 7", stdout);
         Assert.Contains("customer", stdout);
     }
 

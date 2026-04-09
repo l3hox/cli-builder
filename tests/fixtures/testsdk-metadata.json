@@ -539,6 +539,172 @@
         "hasParameterlessCtor": false
       },
       {
+        "name": "message",
+        "description": null,
+        "operations": [
+          {
+            "name": "send",
+            "description": null,
+            "parameters": [
+              {
+                "name": "messages",
+                "type": {
+                  "kind": "generic",
+                  "name": "IEnumerable",
+                  "isNullable": false,
+                  "isAbstract": false,
+                  "genericArguments": [
+                    {
+                      "kind": "class",
+                      "name": "Message",
+                      "isNullable": false,
+                      "isAbstract": true,
+                      "genericArguments": null,
+                      "enumValues": null,
+                      "properties": null,
+                      "elementType": null,
+                      "namespace": "CliBuilder.TestSdk.Models"
+                    }
+                  ],
+                  "enumValues": null,
+                  "properties": null,
+                  "elementType": null,
+                  "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              },
+              {
+                "name": "options",
+                "type": {
+                  "kind": "class",
+                  "name": "SendMessageOptions",
+                  "isNullable": true,
+                  "isAbstract": false,
+                  "genericArguments": null,
+                  "enumValues": null,
+                  "properties": [
+                    {
+                      "name": "Model",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "string",
+                        "isNullable": true,
+                        "isAbstract": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    },
+                    {
+                      "name": "Temperature",
+                      "type": {
+                        "kind": "primitive",
+                        "name": "float",
+                        "isNullable": true,
+                        "isAbstract": false,
+                        "genericArguments": null,
+                        "enumValues": null,
+                        "properties": null,
+                        "elementType": null,
+                        "namespace": null
+                      },
+                      "required": false,
+                      "defaultValue": null,
+                      "description": null
+                    }
+                  ],
+                  "elementType": null,
+                  "namespace": "CliBuilder.TestSdk.Models"
+                },
+                "required": false,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "class",
+              "name": "Order",
+              "isNullable": false,
+              "isAbstract": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null,
+              "namespace": "CliBuilder.TestSdk.Models"
+            },
+            "isStreaming": false,
+            "sourceMethodName": "SendAsync"
+          },
+          {
+            "name": "batch",
+            "description": null,
+            "parameters": [
+              {
+                "name": "ids",
+                "type": {
+                  "kind": "generic",
+                  "name": "IEnumerable",
+                  "isNullable": false,
+                  "isAbstract": false,
+                  "genericArguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "string",
+                      "isNullable": false,
+                      "isAbstract": false,
+                      "genericArguments": null,
+                      "enumValues": null,
+                      "properties": null,
+                      "elementType": null,
+                      "namespace": null
+                    }
+                  ],
+                  "enumValues": null,
+                  "properties": null,
+                  "elementType": null,
+                  "namespace": null
+                },
+                "required": true,
+                "defaultValue": null,
+                "description": null
+              }
+            ],
+            "returnType": {
+              "kind": "class",
+              "name": "Order",
+              "isNullable": false,
+              "isAbstract": false,
+              "genericArguments": null,
+              "enumValues": null,
+              "properties": null,
+              "elementType": null,
+              "namespace": "CliBuilder.TestSdk.Models"
+            },
+            "isStreaming": false,
+            "sourceMethodName": "BatchAsync"
+          }
+        ],
+        "sourceClassName": "MessageClient",
+        "sourceNamespace": "CliBuilder.TestSdk.Services",
+        "constructorParams": [
+          {
+            "name": "apiKey",
+            "typeName": "string",
+            "typeNamespace": null,
+            "isAuth": true,
+            "isRequired": true
+          }
+        ],
+        "hasParameterlessCtor": false
+      },
+      {
         "name": "order",
         "description": null,
         "operations": [

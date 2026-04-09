@@ -25,6 +25,9 @@ rootCommand.AddCommand(ShippingClientCommands.Build(jsonOption, apiKeyOption));
 rootCommand.AddCommand(CustomerCommands.Build(jsonOption, apiKeyOption));
 
 
+rootCommand.AddCommand(MessageCommands.Build(jsonOption, apiKeyOption));
+
+
 rootCommand.AddCommand(OrderCommands.Build(jsonOption, apiKeyOption));
 
 

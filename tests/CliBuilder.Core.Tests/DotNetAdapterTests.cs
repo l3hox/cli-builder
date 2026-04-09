@@ -35,13 +35,14 @@ public class DotNetAdapterTests
     // -------------------------------------------------------
 
     [Fact]
-    public void Discovers_SixResources()
+    public void Discovers_SevenResources()
     {
         var result = ExtractTestSdk();
-        // customer, order, product, search + disambiguated shipping-service, shipping-client
+        // customer, message, order, product, search + disambiguated shipping-service, shipping-client
         var resourceNames = result.Metadata.Resources.Select(r => r.Name).OrderBy(n => n).ToList();
-        Assert.Equal(6, resourceNames.Count);
+        Assert.Equal(7, resourceNames.Count);
         Assert.Contains("customer", resourceNames);
+        Assert.Contains("message", resourceNames);
         Assert.Contains("order", resourceNames);
         Assert.Contains("product", resourceNames);
         Assert.Contains("search", resourceNames);

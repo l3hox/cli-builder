@@ -234,4 +234,96 @@ public class GeneratedCliTests : IClassFixture<GeneratedCliFixture>
         Assert.Equal(1, exitCode);
         Assert.Contains("json_input_error", stderr);
     }
+
+    // --- Direct param deserialization tests (Step 9B) ---
+
+    [Fact]
+    public void Help_ShowsMessageClientCommands()
+    {
+        var (exitCode, stdout, _) = _fixture.RunCli("--help");
+        Assert.Equal(0, exitCode);
+        Assert.Contains("message", stdout);
+    }
+
+    private static string JsonArg(string json) =>
+        $@"""{json.Replace("\"", "\\\"")}""";
+
+    [Fact]
+    public void MessageBatch_WithJsonInput_DeserializesStringList()
+    {
+        var ji = JsonArg(@"{""ids"":[""a"",""b"",""c""]}");
+        var (exitCode, stdout, stderr) = _fixture.RunCli(
+            $"message batch --json-input {ji} --json --api-key test-key");
+        Assert.True(exitCode == 0, $"Exit {exitCode}, stderr: {stderr}");
+        var json = JsonDocument.Parse(stdout);
+        var value = json.RootElement.GetProperty("value");
+        Assert.Equal("batch_001", value.GetProperty("id").GetString());
+        Assert.Contains("a,b,c", value.GetProperty("name").GetString());
+    }
+
+    [Fact]
+    public void MessageBatch_EmptyArray_Succeeds()
+    {
+        var ji = JsonArg(@"{""ids"":[]}");
+        var (exitCode, stdout, stderr) = _fixture.RunCli(
+            $"message batch --json-input {ji} --json --api-key test-key");
+        Assert.True(exitCode == 0, $"Exit {exitCode}, stderr: {stderr}");
+        var json = JsonDocument.Parse(stdout);
+        Assert.Equal("batch_001", json.RootElement.GetProperty("value").GetProperty("id").GetString());
+    }
+
+    [Fact]
+    public void MessageSend_WithJsonInput_DeserializesMessageList()
+    {
+        var ji = JsonArg(@"{""messages"":[{""$type"":""user"",""content"":""hello""}]}");
+        var (exitCode, stdout, stderr) = _fixture.RunCli(
+            $"message send --json-input {ji} --json --api-key test-key");
+        Assert.True(exitCode == 0, $"Exit {exitCode}, stderr: {stderr}");
+        var json = JsonDocument.Parse(stdout);
+        Assert.Contains("Sent 1 messages", json.RootElement.GetProperty("value").GetProperty("name").GetString());
+    }
+
+    [Fact]
+    public void MessageSend_MixedJsonInput_PopulatesBothParamsAndOptions()
+    {
+        var ji = JsonArg(@"{""messages"":[{""$type"":""user"",""content"":""hi""}],""model"":""gpt-4""}");
+        var (exitCode, stdout, stderr) = _fixture.RunCli(
+            $"message send --json-input {ji} --json --api-key test-key");
+        Assert.True(exitCode == 0, $"Exit {exitCode}, stderr: {stderr}");
+        var json = JsonDocument.Parse(stdout);
+        var name = json.RootElement.GetProperty("value").GetProperty("name").GetString()!;
+        Assert.Contains("Sent 1 messages", name);
+        Assert.Contains("with model gpt-4", name);
+    }
+
+    [Fact]
+    public void MessageSend_MissingRequiredDirectParam_ExitsWithError()
+    {
+        // No --json-input at all, but messages is required
+        var (exitCode, _, stderr) = _fixture.RunCli(
+            "message send --json --api-key test-key");
+        Assert.Equal(1, exitCode);
+        Assert.Contains("missing_required_param", stderr);
+    }
+
+    [Fact]
+    public void MessageSend_JsonInputMissingKey_ExitsWithError()
+    {
+        // --json-input provided but no "messages" key
+        var ji = JsonArg(@"{""model"":""gpt-4""}");
+        var (exitCode, _, stderr) = _fixture.RunCli(
+            $"message send --json-input {ji} --json --api-key test-key");
+        Assert.Equal(1, exitCode);
+        Assert.Contains("missing_required_param", stderr);
+    }
+
+    [Fact]
+    public void MessageBatch_TypeMismatch_ExitsWithJsonError()
+    {
+        var ji = JsonArg(@"{""ids"":""not-an-array""}");
+        var (exitCode, _, stderr) = _fixture.RunCli(
+            $"message batch --json-input {ji} --json --api-key test-key");
+        Assert.Equal(1, exitCode);
+        Assert.Contains("json_input_error", stderr);
+    }
 }
