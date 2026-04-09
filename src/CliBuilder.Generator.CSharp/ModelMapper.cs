@@ -244,6 +244,15 @@ public static partial class ModelMapper
                     return false;
                 }
 
+                // Infrastructure types (RequestOptions, etc.) — SDK plumbing, not user-facing
+                if (IsInfrastructureType(p.Type.Name))
+                {
+                    diagnostics.Add(new Diagnostic(DiagnosticSeverity.Info, "CB306",
+                        $"Operation '{operation.Name}' has infrastructure parameter " +
+                        $"'{p.Name}' ({p.Type.Name}) — falling back to echo stub"));
+                    return false;
+                }
+
                 // JSON-deserializable — allow, will use --json-input
                 // Check for abstract inner types (CB307 info diagnostic, not a blocker)
                 if (p.Type.GenericArguments?.Any(ga => ga.IsAbstract) == true
@@ -319,7 +328,8 @@ public static partial class ModelMapper
                     IsOptionsClass: true));
             }
             else if (p.Type.Kind is TypeKind.Generic or TypeKind.Array or TypeKind.Dictionary
-                     || (p.Type.Kind == TypeKind.Class && p.Type.Properties == null && !IsBinaryType(p.Type.Name)))
+                     || (p.Type.Kind == TypeKind.Class && p.Type.Properties == null
+                         && !IsBinaryType(p.Type.Name) && !IsInfrastructureType(p.Type.Name)))
             {
                 // Complex direct param — deserialized from --json-input
                 var (_, cliFlag, _) = IdentifierValidator.SanitizeParameter(p.Name);
@@ -353,7 +363,16 @@ public static partial class ModelMapper
         "BinaryContent", "BinaryData", "Stream", "ReadOnlyMemory", "ReadOnlySpan"
     };
 
+    private static readonly HashSet<string> InfrastructureTypeNames = new(StringComparer.Ordinal)
+    {
+        "RequestOptions", "CancellationToken"
+    };
+
     private static bool IsBinaryType(string name) => BinaryTypeNames.Contains(name);
+    private static bool IsInfrastructureType(string name) =>
+        InfrastructureTypeNames.Contains(name)
+        || name.EndsWith("ClientOptions", StringComparison.Ordinal)
+        || name.EndsWith("ClientSettings", StringComparison.Ordinal);
 
     private static void CollectGenericArgumentNamespaces(TypeRef type, HashSet<string> namespaces)
     {
@@ -383,6 +402,13 @@ public static partial class ModelMapper
 
         if (type.Kind == TypeKind.Generic && type.GenericArguments is { Count: > 0 })
         {
+            // IDictionary<K,V> comes through as Generic with 2 args
+            if (type.Name.Contains("Dictionary") && type.GenericArguments.Count == 2)
+            {
+                var keyName = type.GenericArguments[0].Name;
+                var valueName = type.GenericArguments[1].Name;
+                return $"Dictionary<{keyName}, {valueName}>";
+            }
             var innerName = type.GenericArguments[0].Name;
             return $"List<{innerName}>";
         }

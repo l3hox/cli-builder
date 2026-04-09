@@ -22,6 +22,13 @@ public static class ParameterFlattener
                 FlattenOptionsClass(param.Type, threshold,
                     flatParams, ref needsJsonInput, diagnostics);
             }
+            else if (param.Type.Kind is TypeKind.Generic or TypeKind.Array or TypeKind.Dictionary
+                     || (param.Type.Kind == TypeKind.Class && param.Type.Properties == null))
+            {
+                // Complex direct param (IEnumerable<T>, Dictionary<K,V>, Array, bare Class)
+                // — handled via --json-input deserialization, not as a CLI flag
+                needsJsonInput = true;
+            }
             else
             {
                 // Primitive / enum param — always flat
