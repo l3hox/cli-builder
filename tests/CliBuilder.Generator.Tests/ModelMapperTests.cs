@@ -781,6 +781,20 @@ public class ModelMapperTests
         Assert.False(op.CanWireSdkCall);
     }
 
+    [Theory]
+    [InlineData("BinaryData")]
+    [InlineData("Stream")]
+    [InlineData("ReadOnlyMemory")]
+    [InlineData("ReadOnlySpan")]
+    public void CanWireSdkCall_OtherBinaryTypes_ReturnFalse(string typeName)
+    {
+        var classType = new TypeRef(TypeKind.Class, typeName);
+        var op = BuildOperationModel(
+            new[] { new Parameter("data", classType, true) },
+            new TypeRef(TypeKind.Primitive, "void"));
+        Assert.False(op.CanWireSdkCall);
+    }
+
     [Fact]
     public void CanWireSdkCall_NonBinaryBareClass_ReturnsTrue()
     {

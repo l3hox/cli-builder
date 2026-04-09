@@ -337,4 +337,18 @@ public class GeneratedCliTests : IClassFixture<GeneratedCliFixture>
         Assert.Equal(1, exitCode);
         Assert.Contains("missing_required_param", stderr);
     }
+
+    [Fact]
+    public void MessageSend_FlatFlagOverridesOptions_NotDirectParam()
+    {
+        // --json-input provides messages (direct param) + model (options)
+        // --model flat flag should override the JSON model value
+        var ji = JsonArg(@"{""messages"":[{""$type"":""user"",""content"":""hi""}],""model"":""from-json""}");
+        var (exitCode, stdout, stderr) = _fixture.RunCli(
+            $"message send --json-input {ji} --model override --json --api-key test-key");
+        Assert.True(exitCode == 0, $"Exit {exitCode}, stderr: {stderr}");
+        var json = JsonDocument.Parse(stdout);
+        var name = json.RootElement.GetProperty("value").GetProperty("name").GetString()!;
+        Assert.Contains("with model override", name);
+    }
 }

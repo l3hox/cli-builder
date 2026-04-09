@@ -46,6 +46,6 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-**v1.3** — Steps 9B + 10 complete. CLI entry point (`cli-builder generate/inspect`), direct param deserialization (`IEnumerable<T>`, `Dictionary<K,V>`, bare Class via `--json-input`), CB307 abstract type diagnostics. 386 tests (385 pass, 1 pre-existing OpenAI struct issue).
+**v1.3** — Steps 9B + 10 complete. CLI entry point (`cli-builder generate/inspect`), direct param deserialization, extensible enum detection, CB307 diagnostics. 393 tests, 0 failures.
 
 **What's next:** Step 11 (SdkMetadata abstraction for multi-language), then Python adapter. See [docs/FUTURE.md](docs/FUTURE.md).

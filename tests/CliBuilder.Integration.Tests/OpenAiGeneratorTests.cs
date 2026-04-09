@@ -110,4 +110,14 @@ public class OpenAiGeneratorTests : IDisposable
         var errors = result.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
         Assert.Empty(errors);
     }
+
+    [Fact]
+    public void OpenAi_WiredOperationCount_AtLeast50()
+    {
+        var (model, _) = ModelMapper.Build(_openAiMetadata, new GeneratorOptions(_outputDir, "openai-cli"));
+        var wiredOps = model.Resources.Sum(r => r.Operations.Count(o => o.CanWireSdkCall));
+        var totalOps = model.Resources.Sum(r => r.Operations.Count);
+        // Minimum wire count — should increase as we fix more param types
+        Assert.True(wiredOps >= 50, $"Expected at least 50 wired ops, got {wiredOps}/{totalOps}");
+    }
 }

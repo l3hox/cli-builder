@@ -6,13 +6,6 @@ Production roadmap for cli-builder — a .NET SDK CLI generator, with multi-lang
 
 ## Next up
 
-### Step 9B polish
-Deferred from council review:
-- `MessageSend_FlatFlagOverridesOptions_NotDirectParam` E2E test (flat flag wins over JSON options in mixed direct-param+options operation)
-- `CanWireSdkCall_StreamParam_ReturnsFalse` + tests for all 5 IsBinaryType entries (BinaryData, Stream, ReadOnlyMemory, ReadOnlySpan — only BinaryContent tested)
-- OpenAI/Stripe wire-count pinning integration tests (`OpenAI_InfraParamsFiltered_WireCount`, `Stripe_NoRegressions_WireCount`)
-- OpenAI struct type classification fix (MessageRole, GeneratedSpeechVoice classified as bare Class instead of Enum — pre-existing, exposed by 9B wiring more operations)
-
 ### Step 11: SdkMetadata abstraction
 Remove .NET-specific leaks from the metadata contract (`StaticAuthSetup` stores C# expressions, `AdapterOptions.AssemblyPath` is .NET-specific). Prepare for multi-language adapters.
 
@@ -70,4 +63,4 @@ Auth handler writes resolved credentials to config file for reuse.
 - TestSdk: 7 resources (incl. MessageClient with abstract Message type), 23 E2E tests
 - OpenAI 2.9.1: 20 resources, 169 ops, 41 wired (1 pre-existing struct type issue in compile test)
 - Stripe.net 51.0.0: 196 resources (was 136 — collisions now resolved), compile validated
-- 386 tests (385 pass), 93.4% line coverage, 96.4% method coverage
+- 393 tests (all pass), 93.4% line coverage, 96.4% method coverage

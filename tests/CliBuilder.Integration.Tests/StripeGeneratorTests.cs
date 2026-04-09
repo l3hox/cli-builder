@@ -113,4 +113,14 @@ public class StripeGeneratorTests : IDisposable
                 $"Stripe CLI dotnet build failed (exit {process.ExitCode}):\n{stdout}\n{stderr}");
         }
     }
+
+    [Fact]
+    public void Stripe_WiredOperationCount_AtLeast700()
+    {
+        var (model, _) = ModelMapper.Build(_stripeMetadata, new GeneratorOptions(_outputDir, "stripe-cli"));
+        var wiredOps = model.Resources.Sum(r => r.Operations.Count(o => o.CanWireSdkCall));
+        var totalOps = model.Resources.Sum(r => r.Operations.Count);
+        // Stripe has high wire rate — most operations use simple param patterns
+        Assert.True(wiredOps >= 700, $"Expected at least 700 wired ops, got {wiredOps}/{totalOps}");
+    }
 }
