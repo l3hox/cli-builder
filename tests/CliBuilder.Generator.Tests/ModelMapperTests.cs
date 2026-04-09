@@ -716,46 +716,130 @@ public class ModelMapperTests
     }
 
     [Fact]
-    public void CanWireSdkCall_GenericDirectParam_ReturnsFalse()
+    public void CanWireSdkCall_GenericDirectParam_ReturnsTrue()
     {
         var genericType = new TypeRef(TypeKind.Generic, "IEnumerable",
             GenericArguments: new[] { new TypeRef(TypeKind.Class, "ChatMessage") });
         var op = BuildOperationModel(
             new[] { new Parameter("messages", genericType, true) },
             new TypeRef(TypeKind.Primitive, "void"));
-        Assert.False(op.CanWireSdkCall);
+        Assert.True(op.CanWireSdkCall);
     }
 
     [Fact]
-    public void CanWireSdkCall_ArrayDirectParam_ReturnsFalse()
+    public void CanWireSdkCall_ArrayDirectParam_ReturnsTrue()
     {
         var arrayType = new TypeRef(TypeKind.Array, "string[]",
             ElementType: new TypeRef(TypeKind.Primitive, "string"));
         var op = BuildOperationModel(
             new[] { new Parameter("items", arrayType, true) },
             new TypeRef(TypeKind.Primitive, "void"));
-        Assert.False(op.CanWireSdkCall);
+        Assert.True(op.CanWireSdkCall);
     }
 
     [Fact]
-    public void CanWireSdkCall_DictionaryDirectParam_ReturnsFalse()
+    public void CanWireSdkCall_DictionaryDirectParam_ReturnsTrue()
     {
         var dictType = new TypeRef(TypeKind.Dictionary, "Dictionary");
         var op = BuildOperationModel(
             new[] { new Parameter("meta", dictType, true) },
             new TypeRef(TypeKind.Primitive, "void"));
-        Assert.False(op.CanWireSdkCall);
+        Assert.True(op.CanWireSdkCall);
     }
 
     [Fact]
-    public void CanWireSdkCall_BareClassDirectParam_ReturnsFalse()
+    public void CanWireSdkCall_BinaryContentParam_ReturnsFalse()
     {
-        // Class without properties = not an options class, becomes string CLI param
+        // BinaryContent is a binary type — can't deserialize from JSON
         var classType = new TypeRef(TypeKind.Class, "BinaryContent");
         var op = BuildOperationModel(
             new[] { new Parameter("content", classType, true) },
             new TypeRef(TypeKind.Primitive, "void"));
         Assert.False(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_NonBinaryBareClass_ReturnsTrue()
+    {
+        var classType = new TypeRef(TypeKind.Class, "RealtimeItem");
+        var op = BuildOperationModel(
+            new[] { new Parameter("item", classType, true) },
+            new TypeRef(TypeKind.Primitive, "void"));
+        Assert.True(op.CanWireSdkCall);
+    }
+
+    [Fact]
+    public void CanWireSdkCall_GenericWithAbstractArg_EmitsCB307()
+    {
+        var abstractInner = new TypeRef(TypeKind.Class, "ChatMessage", IsAbstract: true, Namespace: "OpenAI.Chat");
+        var genericType = new TypeRef(TypeKind.Generic, "IEnumerable",
+            GenericArguments: new[] { abstractInner });
+        var op = new Operation("test-op", null,
+            new[] { new Parameter("messages", genericType, true) },
+            new TypeRef(TypeKind.Primitive, "void"),
+            SourceMethodName: "TestAsync");
+        var resource = new Resource("thing", null, new[] { op },
+            SourceClassName: "ThingService", SourceNamespace: "Sdk",
+            ConstructorParams: new[] { new ConstructorParam("apiKey", "string", null, true, true) });
+        var metadata = new SdkMetadata("TestSdk", "1.0.0",
+            new[] { resource }, new[] { new AuthPattern(AuthType.ApiKey, "TEST_KEY", "apiKey") });
+        var (_, diagnostics) = ModelMapper.Build(metadata, new GeneratorOptions("/tmp/out", "test-cli"));
+        Assert.Contains(diagnostics, d => d.Code == "CB307");
+    }
+
+    [Fact]
+    public void CanWireSdkCall_GenericWithConcreteArg_NoCB307()
+    {
+        var concreteInner = new TypeRef(TypeKind.Class, "UserMessage", IsAbstract: false);
+        var genericType = new TypeRef(TypeKind.Generic, "IEnumerable",
+            GenericArguments: new[] { concreteInner });
+        var op = BuildOperationModel(
+            new[] { new Parameter("messages", genericType, true) },
+            new TypeRef(TypeKind.Primitive, "void"));
+        Assert.True(op.CanWireSdkCall);
+        // No CB307 — concrete type, no abstract warning needed
+    }
+
+    [Fact]
+    public void BuildMethodParams_GenericParam_SetsNeedsJsonDeserialization()
+    {
+        var genericType = new TypeRef(TypeKind.Generic, "IEnumerable",
+            GenericArguments: new[] { new TypeRef(TypeKind.Primitive, "string") });
+        var op = BuildOperationModel(
+            new[] { new Parameter("ids", genericType, true) },
+            new TypeRef(TypeKind.Primitive, "void"));
+        var mp = op.MethodParams!.First();
+        Assert.True(mp.NeedsJsonDeserialization);
+        Assert.Equal("List<string>", mp.DeserializationTypeName);
+        Assert.Equal("ids", mp.JsonPropertyName);
+    }
+
+    [Fact]
+    public void BuildMethodParams_DictionaryParam_DeserializationTypeName()
+    {
+        var dictType = new TypeRef(TypeKind.Dictionary, "Dictionary",
+            GenericArguments: new[] {
+                new TypeRef(TypeKind.Primitive, "string"),
+                new TypeRef(TypeKind.Primitive, "string")
+            });
+        var op = BuildOperationModel(
+            new[] { new Parameter("metadata", dictType, true) },
+            new TypeRef(TypeKind.Primitive, "void"));
+        var mp = op.MethodParams!.First();
+        Assert.True(mp.NeedsJsonDeserialization);
+        Assert.Equal("Dictionary<string, string>", mp.DeserializationTypeName);
+    }
+
+    [Fact]
+    public void HasJsonDirectParams_SetWhenDirectParamPresent()
+    {
+        var genericType = new TypeRef(TypeKind.Generic, "IEnumerable",
+            GenericArguments: new[] { new TypeRef(TypeKind.Primitive, "string") });
+        var op = BuildOperationModel(
+            new[] { new Parameter("ids", genericType, true) },
+            new TypeRef(TypeKind.Primitive, "void"));
+        Assert.True(op.HasJsonDirectParams);
+        Assert.True(op.NeedsJsonInput);
     }
 
     [Fact]
@@ -816,12 +900,11 @@ public class ModelMapperTests
     }
 
     [Fact]
-    public void CanWireSdkCall_GenericParam_EmitsCB306()
+    public void CanWireSdkCall_BinaryParam_EmitsCB306()
     {
-        var genericType = new TypeRef(TypeKind.Generic, "IEnumerable",
-            GenericArguments: new[] { new TypeRef(TypeKind.Class, "Item") });
+        var binaryType = new TypeRef(TypeKind.Class, "BinaryContent");
         var op = new Operation("test-op", null,
-            new[] { new Parameter("items", genericType, true) },
+            new[] { new Parameter("content", binaryType, true) },
             new TypeRef(TypeKind.Primitive, "void"),
             SourceMethodName: "TestAsync");
         var resource = new Resource("thing", null, new[] { op },

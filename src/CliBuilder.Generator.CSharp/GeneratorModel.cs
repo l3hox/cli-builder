@@ -46,7 +46,8 @@ public record OperationModel(
     string? SourceMethodName = null,
     string? OptionsClassName = null,
     IReadOnlyList<MethodParamModel>? MethodParams = null,
-    bool CanWireSdkCall = true
+    bool CanWireSdkCall = true,
+    bool HasJsonDirectParams = false
 );
 
 public record FlatParameter(
@@ -75,7 +76,11 @@ public record MethodParamModel(
     string ArgExpression,
     string? TypeName,
     string? Namespace,
-    bool IsOptionsClass
+    bool IsOptionsClass,
+    bool NeedsJsonDeserialization = false,
+    string? DeserializationTypeName = null,
+    string? JsonPropertyName = null,
+    bool IsRequired = false
 );
 
 public record AuthModel(

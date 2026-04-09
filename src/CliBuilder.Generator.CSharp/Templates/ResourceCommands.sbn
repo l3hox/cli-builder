@@ -87,8 +87,43 @@ public static class {{ resource.class_name }}Commands
                     {{ static_auth_setup }} = credential;
 {{~ end }}
                     var client = new {{ resource.source_class_name }}({{ resource.constructor_expression }});
+{{~ if op.has_json_direct_params }}
+                    // Parse --json-input once for direct param extraction
+                    System.Text.Json.JsonDocument? _jsonInputDoc = null;
+                    if (jsonInputValue is not null)
+                    {
+                        try
+                        {
+                            _jsonInputDoc = System.Text.Json.JsonDocument.Parse(jsonInputValue);
+                        }
+                        catch (System.Text.Json.JsonException ex)
+                        {
+                            var jsonError = new { error = new { code = "json_input_error", message = ex.Message } };
+                            Console.Error.WriteLine(JsonSerializer.Serialize(jsonError));
+                            ctx.ExitCode = 1;
+                            return;
+                        }
+                    }
+{{~ end ~}}
 {{~ for mp in op.method_params ~}}
-{{~ if mp.is_options_class }}
+{{~ if mp.needs_json_deserialization }}
+                    {{ mp.deserialization_type_name }} {{ mp.arg_expression }} = default!;
+                    if (_jsonInputDoc is not null
+                        && _jsonInputDoc.RootElement.TryGetProperty("{{ mp.json_property_name }}", out var _{{ mp.json_property_name }}Prop))
+                    {
+                        {{ mp.arg_expression }} = JsonSerializer.Deserialize<{{ mp.deserialization_type_name }}>(_{{ mp.json_property_name }}Prop.GetRawText(), _jsonInputOptions)!;
+                    }
+{{~ if mp.is_required }}
+                    if ({{ mp.arg_expression }} is null)
+                    {
+                        var missingError = new { error = new { code = "missing_required_param",
+                            message = "Required parameter '{{ mp.json_property_name }}' must be provided via --json-input" } };
+                        Console.Error.WriteLine(JsonSerializer.Serialize(missingError));
+                        ctx.ExitCode = 1;
+                        return;
+                    }
+{{~ end ~}}
+{{~ else if mp.is_options_class }}
                     var {{ mp.arg_expression }} = new {{ mp.type_name }}();
 {{~ if op.needs_json_input }}
                     if (jsonInputValue is not null)

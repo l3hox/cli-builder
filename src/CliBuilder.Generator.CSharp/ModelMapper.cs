@@ -96,6 +96,13 @@ public static partial class ModelMapper
                 }
             }
         }
+        // Collect generic argument namespaces from original parameters
+        // (e.g., List<ChatMessage> needs using OpenAI.Chat)
+        foreach (var srcOp in resource.Operations)
+        {
+            foreach (var p in srcOp.Parameters)
+                CollectGenericArgumentNamespaces(p.Type, namespaces);
+        }
         var requiredNamespaces = namespaces
             .Where(ns => IdentifierValidator.IsValidNamespace(ns))
             .Distinct()
@@ -196,18 +203,22 @@ public static partial class ModelMapper
         // Also check that the return type is awaitable (not a raw class like AsyncCollectionResult).
         var canWire = CanWireOperation(operation, methodParams, diagnostics);
 
+        var hasJsonDirectParams = methodParams.Any(mp => mp.NeedsJsonDeserialization);
+        var needsJsonInput = flattenResult.NeedsJsonInput || hasJsonDirectParams;
+
         return new OperationModel(
             Name: operation.Name,
             MethodName: methodName,
             Description: description,
             Parameters: parameters,
-            NeedsJsonInput: flattenResult.NeedsJsonInput,
+            NeedsJsonInput: needsJsonInput,
             ReturnTypeName: returnTypeName,
             IsStreaming: operation.IsStreaming,
             SourceMethodName: SanitizeString(operation.SourceMethodName),
             OptionsClassName: SanitizeString(optionsParam?.Type.Name),
             MethodParams: methodParams,
-            CanWireSdkCall: canWire);
+            CanWireSdkCall: canWire,
+            HasJsonDirectParams: hasJsonDirectParams);
     }
 
     private static bool CanWireOperation(Operation operation,
@@ -220,16 +231,30 @@ public static partial class ModelMapper
             if (p.Type.Kind == TypeKind.Class && p.Type.Properties != null)
                 continue; // options class — handled by construction
 
-            // Direct param: CLI type is "string" for complex types.
-            // Convertible: Primitive (string, int, bool, etc.), Enum (via Enum.Parse)
-            // Unconvertible: Generic (IEnumerable<T>), Array, Dictionary, Class (without properties)
+            // Complex direct params: Generic, Array, Dictionary, bare Class
             if (p.Type.Kind is TypeKind.Generic or TypeKind.Array or TypeKind.Dictionary
                 || (p.Type.Kind == TypeKind.Class && p.Type.Properties == null))
             {
-                diagnostics.Add(new Diagnostic(DiagnosticSeverity.Info, "CB306",
-                    $"Operation '{operation.Name}' has unconvertible parameter " +
-                    $"'{p.Name}' ({p.Type.Name}) — falling back to echo stub"));
-                return false;
+                // Binary types (BinaryContent, Stream, etc.) — can't deserialize from JSON
+                if (IsBinaryType(p.Type.Name))
+                {
+                    diagnostics.Add(new Diagnostic(DiagnosticSeverity.Info, "CB306",
+                        $"Operation '{operation.Name}' has binary parameter " +
+                        $"'{p.Name}' ({p.Type.Name}) — falling back to echo stub"));
+                    return false;
+                }
+
+                // JSON-deserializable — allow, will use --json-input
+                // Check for abstract inner types (CB307 info diagnostic, not a blocker)
+                if (p.Type.GenericArguments?.Any(ga => ga.IsAbstract) == true
+                    || (p.Type.Kind == TypeKind.Class && p.Type.IsAbstract))
+                {
+                    var innerName = p.Type.GenericArguments?.FirstOrDefault(ga => ga.IsAbstract)?.Name ?? p.Type.Name;
+                    diagnostics.Add(new Diagnostic(DiagnosticSeverity.Info, "CB307",
+                        $"Operation '{operation.Name}' has abstract parameter '{p.Name}' ({innerName}) " +
+                        "— deserialization requires SDK-registered JsonConverters"));
+                }
+                continue;
             }
         }
 
@@ -285,6 +310,7 @@ public static partial class ModelMapper
         {
             if (p.Type.Kind == TypeKind.Class && p.Type.Properties != null)
             {
+                // Options class — constructed and populated from --json-input + flat flags
                 var typeName = SanitizeString(p.Type.Name) ?? p.Type.Name;
                 methodParams.Add(new MethodParamModel(
                     ArgExpression: PascalToCamelCase(typeName),
@@ -292,8 +318,25 @@ public static partial class ModelMapper
                     Namespace: SanitizeString(p.Type.Namespace),
                     IsOptionsClass: true));
             }
+            else if (p.Type.Kind is TypeKind.Generic or TypeKind.Array or TypeKind.Dictionary
+                     || (p.Type.Kind == TypeKind.Class && p.Type.Properties == null && !IsBinaryType(p.Type.Name)))
+            {
+                // Complex direct param — deserialized from --json-input
+                var (_, cliFlag, _) = IdentifierValidator.SanitizeParameter(p.Name);
+                var deserTypeName = BuildDeserializationTypeName(p.Type);
+                methodParams.Add(new MethodParamModel(
+                    ArgExpression: KebabToCamelCase(cliFlag) + "Value",
+                    TypeName: deserTypeName,
+                    Namespace: SanitizeString(p.Type.Namespace),
+                    IsOptionsClass: false,
+                    NeedsJsonDeserialization: true,
+                    DeserializationTypeName: deserTypeName,
+                    JsonPropertyName: p.Name,
+                    IsRequired: p.Required));
+            }
             else
             {
+                // Primitive/enum direct param — from CLI flag
                 var (_, cliFlag, _) = IdentifierValidator.SanitizeParameter(p.Name);
                 methodParams.Add(new MethodParamModel(
                     ArgExpression: KebabToCamelCase(cliFlag) + "Value",
@@ -303,6 +346,49 @@ public static partial class ModelMapper
             }
         }
         return methodParams;
+    }
+
+    private static readonly HashSet<string> BinaryTypeNames = new(StringComparer.Ordinal)
+    {
+        "BinaryContent", "BinaryData", "Stream", "ReadOnlyMemory", "ReadOnlySpan"
+    };
+
+    private static bool IsBinaryType(string name) => BinaryTypeNames.Contains(name);
+
+    private static void CollectGenericArgumentNamespaces(TypeRef type, HashSet<string> namespaces)
+    {
+        if (type.GenericArguments == null) return;
+        foreach (var ga in type.GenericArguments)
+        {
+            if (ga.Namespace != null)
+                namespaces.Add(ga.Namespace);
+            CollectGenericArgumentNamespaces(ga, namespaces);
+        }
+    }
+
+    internal static string BuildDeserializationTypeName(TypeRef type)
+    {
+        if (type.Kind == TypeKind.Array)
+        {
+            var elementName = type.ElementType?.Name ?? type.GenericArguments?.FirstOrDefault()?.Name ?? "object";
+            return $"{elementName}[]";
+        }
+
+        if (type.Kind == TypeKind.Dictionary && type.GenericArguments is { Count: 2 })
+        {
+            var keyName = type.GenericArguments[0].Name;
+            var valueName = type.GenericArguments[1].Name;
+            return $"Dictionary<{keyName}, {valueName}>";
+        }
+
+        if (type.Kind == TypeKind.Generic && type.GenericArguments is { Count: > 0 })
+        {
+            var innerName = type.GenericArguments[0].Name;
+            return $"List<{innerName}>";
+        }
+
+        // Bare class
+        return type.Name;
     }
 
     private static AuthModel MapAuth(AuthPattern pattern) =>
