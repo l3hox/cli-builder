@@ -5,6 +5,7 @@ public record TypeRef(
     string Name,
     bool IsNullable = false,
     bool IsAbstract = false,
+    bool IsExtensibleEnum = false,
     IReadOnlyList<TypeRef>? GenericArguments = null,
     IReadOnlyList<string>? EnumValues = null,
     IReadOnlyList<Parameter>? Properties = null,

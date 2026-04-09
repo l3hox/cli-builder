@@ -112,6 +112,21 @@ public class OpenAiGeneratorTests : IDisposable
     }
 
     [Fact]
+    public void OpenAi_ExtensibleEnum_DetectedAsEnum()
+    {
+        // GeneratedSpeechVoice is a readonly struct with static properties — extensible enum pattern
+        var audioResource = _openAiMetadata.Resources.FirstOrDefault(r => r.Name == "audio");
+        Assert.NotNull(audioResource);
+        var speechOp = audioResource.Operations.FirstOrDefault(o => o.Name == "generate-speech");
+        Assert.NotNull(speechOp);
+        var voiceParam = speechOp.Parameters.FirstOrDefault(p => p.Name == "voice");
+        Assert.NotNull(voiceParam);
+        Assert.Equal(TypeKind.Enum, voiceParam.Type.Kind);
+        Assert.True(voiceParam.Type.IsExtensibleEnum, "GeneratedSpeechVoice should be marked as extensible enum");
+        Assert.True(voiceParam.Type.EnumValues!.Count >= 2, "Should have at least 2 enum values");
+    }
+
+    [Fact]
     public void OpenAi_WiredOperationCount_AtLeast50()
     {
         var (model, _) = ModelMapper.Build(_openAiMetadata, new GeneratorOptions(_outputDir, "openai-cli"));

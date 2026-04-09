@@ -344,12 +344,26 @@ public static partial class ModelMapper
                     JsonPropertyName: p.Name,
                     IsRequired: p.Required));
             }
+            else if (p.Type.Kind == TypeKind.Enum && p.Type.IsExtensibleEnum)
+            {
+                // Extensible enum direct param — struct, use JSON deserialization
+                // IsRequired=false because structs can't be null-checked (value type)
+                var (_, cliFlag, _) = IdentifierValidator.SanitizeParameter(p.Name);
+                methodParams.Add(new MethodParamModel(
+                    ArgExpression: KebabToCamelCase(cliFlag) + "Value",
+                    TypeName: p.Type.Name,
+                    Namespace: SanitizeString(p.Type.Namespace),
+                    IsOptionsClass: false,
+                    NeedsJsonDeserialization: true,
+                    DeserializationTypeName: p.Type.Name,
+                    JsonPropertyName: p.Name,
+                    IsRequired: false));
+            }
             else
             {
-                // Primitive/enum direct param — from CLI flag
+                // Primitive/real-enum direct param — from CLI flag
                 var (_, cliFlag, _) = IdentifierValidator.SanitizeParameter(p.Name);
                 var varName = KebabToCamelCase(cliFlag) + "Value";
-                // For enum direct params, the CLI flag is a string — need conversion
                 var argExpr = varName;
                 if (p.Type.Kind == TypeKind.Enum)
                 {

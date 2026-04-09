@@ -23,9 +23,10 @@ public static class ParameterFlattener
                     flatParams, ref needsJsonInput, diagnostics);
             }
             else if (param.Type.Kind is TypeKind.Generic or TypeKind.Array or TypeKind.Dictionary
-                     || (param.Type.Kind == TypeKind.Class && param.Type.Properties == null))
+                     || (param.Type.Kind == TypeKind.Class && param.Type.Properties == null)
+                     || (param.Type.Kind == TypeKind.Enum && param.Type.IsExtensibleEnum))
             {
-                // Complex direct param (IEnumerable<T>, Dictionary<K,V>, Array, bare Class)
+                // Complex direct param or extensible enum
                 // — handled via --json-input deserialization, not as a CLI flag
                 needsJsonInput = true;
             }
@@ -136,6 +137,10 @@ public static class ParameterFlattener
             var enumName = ModelMapper.SanitizeString(sdkType.Name) ?? sdkType.Name;
             if (!IdentifierValidator.IsValidIdentifier(enumName))
                 return null; // Invalid enum name — fall back to identity (no conversion)
+            // Extensible enums (structs) — no conversion, handled by JSON deserializer
+            // or SDK implicit conversion. Constructor shape varies (string, int, etc.)
+            if (sdkType.IsExtensibleEnum)
+                return null;
             return sdkType.IsNullable
                 ? $"{{0}} is not null ? Enum.Parse<{enumName}>({{0}}) : ({enumName}?)null"
                 : $"Enum.Parse<{enumName}>({{0}})";
@@ -166,5 +171,6 @@ public static class ParameterFlattener
     }
 
     private static bool IsScalar(TypeRef type) =>
-        type.Kind is TypeKind.Primitive or TypeKind.Enum;
+        type.Kind == TypeKind.Primitive
+        || (type.Kind == TypeKind.Enum && !type.IsExtensibleEnum);
 }

@@ -607,8 +607,9 @@ public class DotNetAdapter : ISdkAdapter
                     .Select(p => p.Name)
                     .ToList();
             }
-            if (values.Count > 0)
-                return new TypeRef(TypeKind.Enum, type.Name, EnumValues: values, Namespace: type.Namespace);
+            if (values.Count >= 2)
+                return new TypeRef(TypeKind.Enum, type.Name, EnumValues: values,
+                    Namespace: type.Namespace, IsExtensibleEnum: true);
         }
 
         // Class
