@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "cli-builder-adapter-python"
+version = "0.1.0"
+description = "Python SDK adapter for cli-builder — extracts SdkMetadata from Python packages"
+requires-python = ">=3.10"
+license = {text = "EUPL-1.2"}
+authors = [{name = "Jakub Lehotsky"}]
+
+[project.scripts]
+cli-builder-adapter-python = "cli_builder_adapter.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
