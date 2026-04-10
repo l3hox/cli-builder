@@ -46,6 +46,6 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-**v1.4** — Step 11: SdkMetadata abstraction complete. Language-neutral metadata contract (StaticAuthConfig, ArtifactPath, Module renames, TypeKind.Other). 396 tests, 0 failures.
+**v1.5** — Step 12 MVP: Python adapter (`cli-builder-adapter-python`). Cross-adapter architecture proof — Python JSON schema matches .NET. 397 .NET tests + Python adapter functional.
 
-**What's next:** Step 12 (Python adapter as standalone `cli-builder-adapter-python` subprocess). Future: Rust orchestrator replaces .NET CLI. See [docs/FUTURE.md](docs/FUTURE.md).
+**What's next:** Step 12b (Python adapter hardening — test files, JSON schema, Stripe validation). See [docs/FUTURE.md](docs/FUTURE.md).

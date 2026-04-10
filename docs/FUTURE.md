@@ -6,8 +6,12 @@ Production roadmap for cli-builder — a .NET SDK CLI generator, with multi-lang
 
 ## Next up
 
-### Step 12: Python adapter as standalone subprocess
-Standalone `cli-builder-adapter-python` package (PyPI). Extracts metadata from installed Python packages via `inspect` module and type annotations. Outputs `SdkMetadata` JSON to stdout. Validates the subprocess-based adapter architecture — adapters are permanent executables in their native language, called by the orchestrator as child processes. See [ADR-016](ADR.md#adr-016-subprocess-based-adapter-architecture--rust-migration-path).
+### Step 12b: Python adapter hardening + real SDK validation
+- Write missing test files: `test_type_mapper.py`, `test_auth_detector.py`, `test_extractor.py`, `test_error_paths.py`, `test_integration.py` (needs pytest)
+- Create `docs/sdk-metadata-schema.json` — machine-readable JSON schema for cross-adapter contract validation
+- ADR-013 compliant extraction: `.pyi` stub parsing via `ast.parse` (currently uses controlled import with CB601 diagnostic)
+- Stripe validation: service/auth detection against `stripe-python` (StripeObject handling)
+- Wire `--adapter python` into `cli-builder generate` (blocked on StaticAuthConfig.Style discriminator)
 
 ---
 
@@ -64,7 +68,8 @@ Rewrite the `cli-builder` CLI in Rust (clap, single binary). Calls adapters as s
 - OpenAI 2.9.1: 20 resources, 169 ops, 41 wired (1 pre-existing struct type issue in compile test)
 - Stripe.net 51.0.0: 196 resources (was 136 — collisions now resolved), compile validated
 - Step 11: SdkMetadata abstraction — StaticAuthSetup→StaticAuthConfig (structured record), AssemblyPath→ArtifactPath, XmlDocPath→DocsPath, Namespace→Module renames, TypeKind.Other added
-- 396 tests (all pass), 93.4% line coverage, 96.4% method coverage
+- Step 12 MVP: Python adapter (`cli-builder-adapter-python`) — extracts SdkMetadata from Python TestSdk, JSON schema compatible with .NET adapter. Architecture proof: cross-adapter key structure match.
+- 397 .NET tests (all pass) + Python adapter functional
 
 **Deferred from Step 11 council (Step 12 prerequisites):**
 - StaticAuthConfig Style discriminator (`StaticProperty` vs `ModuleAttribute`) for Python auth patterns
