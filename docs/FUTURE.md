@@ -6,8 +6,8 @@ Production roadmap for cli-builder — a .NET SDK CLI generator, with multi-lang
 
 ## Next up
 
-### Step 12: Python adapter proof-of-concept
-Second source language. Extracts metadata from Python packages via AST/inspect or type stubs. Proves the adapter interface is truly language-agnostic.
+### Step 12: Python adapter as standalone subprocess
+Standalone `cli-builder-adapter-python` package (PyPI). Extracts metadata from installed Python packages via `inspect` module and type annotations. Outputs `SdkMetadata` JSON to stdout. Validates the subprocess-based adapter architecture — adapters are permanent executables in their native language, called by the orchestrator as child processes. See [ADR-016](ADR.md#adr-016-subprocess-based-adapter-architecture--rust-migration-path).
 
 ---
 
@@ -43,6 +43,9 @@ Auth handler writes resolved credentials to config file for reuse.
 
 ### Agent-assisted enrichment
 - `--enrich` flag with pluggable LLM provider (design approved, see ADR-014)
+
+### v2.0: Rust orchestrator migration
+Rewrite the `cli-builder` CLI in Rust (clap, single binary). Calls adapters as subprocesses, reads `SdkMetadata` JSON from stdout. Adapters remain in native languages permanently. C# generator optionally moves to Rust (Tera templates). Distribution: `cargo install cli-builder` — no .NET runtime needed for orchestration. See [ADR-016](ADR.md#adr-016-subprocess-based-adapter-architecture--rust-migration-path).
 
 ### Other
 - Incremental regeneration (detect SDK changes)

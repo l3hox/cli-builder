@@ -28,11 +28,11 @@ The generated CLI follows agent-friendly patterns:
 ## Architecture
 
 ### Design Principles
-- **Language-agnostic design, .NET-first implementation.** The core architecture assumes nothing about the source language. An adapter interface defines how SDK metadata is extracted. v1 ships only the .NET adapter.
+- **Subprocess-based adapters in native languages.** Each source adapter is a standalone executable in its native language (Python adapter in Python, .NET adapter in .NET). Adapters output `SdkMetadata` JSON to stdout. The orchestrator calls adapters as subprocesses. Adapters are permanent — never rewritten when the orchestrator migrates to Rust ([ADR-016](ADR.md#adr-016-subprocess-based-adapter-architecture--rust-migration-path)).
 - **Reflection-based discovery.** The .NET adapter uses runtime reflection to discover public types, methods, parameters, and return types from SDK assemblies.
 - **Convention + configuration.** Sensible defaults from reflection (public service classes → nouns, public methods → verbs), overridable via a config file for edge cases.
 - **Generated CLI wrapper.** cli-builder generates a CLI shell that wraps the original SDK — not a reimplementation. The generated project depends on the original SDK (NuGet) and System.CommandLine, but has no dependency on cli-builder itself. All business logic (auth, retries, pagination) stays in the SDK.
-- **SdkMetadata as the contract.** The metadata model is the boundary between source adapters and target generators. It is serializable to JSON from day one, even though v1 only uses it in-memory. This makes it trivial to introduce process boundaries later without refactoring.
+- **SdkMetadata JSON as the universal contract.** The metadata model is the boundary between all source adapters and all target generators, communicated as JSON over process boundaries. Each adapter emits it to stdout; each generator reads it from stdin or file. This subprocess design isolates language runtimes and makes adapters permanent.
 - **Cross-platform from day one.** Both cli-builder and generated CLIs run on Windows, Linux, and macOS. No platform-specific code without an abstraction. Target `net8.0` (not platform-specific TFMs). CI tests on Windows and Linux at minimum.
 
 ### Key Decisions
@@ -447,10 +447,11 @@ Optional/later:
 
 See [docs/FUTURE.md](FUTURE.md) for the full prioritized roadmap.
 
-**v1.4 (current):** .NET SDK adapter + C# CLI generator + CLI entry point + direct param deserialization + language-neutral metadata. Three SDKs validated (TestSdk E2E, OpenAI compile, Stripe compile). 396 tests.
+**v1.4 (current):** .NET SDK adapter + C# CLI generator + CLI entry point + direct param deserialization + language-neutral metadata. Three SDKs validated (TestSdk E2E, OpenAI compile, Stripe compile). 397 tests.
 
-**Next:**
-- Step 12: Python adapter proof-of-concept
+**v1.5 (Step 12):** Python adapter as standalone `cli-builder-adapter-python` package. Subprocess orchestration. Adapter invocation contract finalized (JSON stdout, stderr diagnostics, exit codes).
+
+**v2.0 (future):** Rust orchestrator replaces .NET CLI. Adapters remain in native languages. Language-specific generators added as subprocesses.
 
 ---
 

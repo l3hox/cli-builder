@@ -16,7 +16,7 @@ A tool that generates agent-ready CLIs from .NET SDK assemblies via reflection. 
 
 ## Architecture (one paragraph)
 
-`ISdkAdapter` extracts `SdkMetadata` from an SDK assembly via `MetadataLoadContext` (read-only, no code execution). An optional `IMetadataEnricher` (future) improves descriptions via a pluggable LLM. `ICliGenerator` takes `SdkMetadata` and emits a C# CLI project that wraps the original SDK using Scriban templates. `SdkMetadata` is the JSON-serializable contract between all stages. All operations return results + `List<Diagnostic>` — exceptions are reserved for environment failures only.
+Each adapter is a standalone executable in its native language (.NET adapter in C#, Python adapter in Python) that extracts `SdkMetadata` and emits it as JSON to stdout. Each generator is a standalone executable that reads `SdkMetadata` JSON and emits a CLI project. `SdkMetadata` JSON is the universal contract between all adapters and generators. The orchestrator (`cli-builder` CLI, currently .NET, future Rust) calls adapters as subprocesses. Adapters are permanent — never rewritten when the orchestrator migrates. See [ADR-016](docs/ADR.md#adr-016-subprocess-based-adapter-architecture--rust-migration-path).
 
 ## Documentation hierarchy
 
@@ -48,4 +48,4 @@ Each piece of information exists in exactly one place:
 
 **v1.4** — Step 11: SdkMetadata abstraction complete. Language-neutral metadata contract (StaticAuthConfig, ArtifactPath, Module renames, TypeKind.Other). 396 tests, 0 failures.
 
-**What's next:** Step 12 (Python adapter proof-of-concept). See [docs/FUTURE.md](docs/FUTURE.md).
+**What's next:** Step 12 (Python adapter as standalone `cli-builder-adapter-python` subprocess). Future: Rust orchestrator replaces .NET CLI. See [docs/FUTURE.md](docs/FUTURE.md).

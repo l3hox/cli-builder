@@ -379,3 +379,32 @@ The generator converts metadata strings into three distinct output formats, each
 - CI runs generator on both `ubuntu-latest` and `windows-latest`, asserts identical output
 
 **Path construction in generator:** Use string concatenation with `/` for paths inside generated project files (`.csproj`, `using` directives). Use `Path.Combine` only for file I/O operations on the host machine.
+
+---
+
+## Adapter invocation contract (Step 12+)
+
+Each adapter is a standalone CLI executable. The orchestrator calls it as a subprocess.
+
+**Interface:**
+1. Accepts a path to the SDK artifact (DLL, installed package, JAR, etc.)
+2. Emits `SdkMetadata` JSON to stdout on success
+3. Emits diagnostics to stderr (human-readable, same format as `DiagnosticsFormatter`)
+4. Exit code 0 = success (Info/Warning diagnostics OK), exit code 1 = Error diagnostics, exit code 2 = environment failure
+
+**Invocations:**
+```bash
+# .NET adapter (already exists as cli-builder inspect)
+cli-builder inspect --assembly /path/to/Stripe.net.dll --json
+
+# Python adapter (Step 12)
+cli-builder-adapter-python --package stripe --json
+
+# Future: Kotlin, Go, OpenAPI adapters follow same pattern
+```
+
+**Contract rules:**
+- Adapters must NOT load or execute SDK code — metadata-only analysis (reflection, AST, type stubs)
+- JSON schema matches `SdkMetadataJson.Options` (camelCase, enums as strings, indented)
+- Adapters are permanent — they stay in their native language when the orchestrator migrates to Rust
+- Each adapter is versioned independently (SemVer on the JSON schema version)

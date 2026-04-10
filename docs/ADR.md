@@ -764,3 +764,56 @@ When cli-builder runs as a CLI tool, diagnostics map to exit codes:
 - **Positive:** Same mental model as Roslyn — familiar to .NET developers.
 - **Negative:** Callers must check diagnostics after every operation — easy to ignore.
 - **Mitigated by:** The CLI wrapper checks diagnostics and prints warnings/errors to stderr automatically. The exit code reflects the worst diagnostic severity. Tests assert on expected diagnostics, not just on the returned metadata.
+
+---
+
+## ADR-016: Subprocess-based adapter architecture + Rust migration path
+
+**Date:** 2026-04-10
+**Status:** Accepted
+
+### Context
+
+cli-builder needs to support multiple source languages (Python, Kotlin, Go) and multiple target generators (C#, Python, Rust CLIs). The .NET adapter uses `MetadataLoadContext` (a .NET-only API). A Python adapter would use Python's `inspect` module. Each language's metadata extraction is best done in its native runtime.
+
+Three approaches were considered:
+
+1. **In-process plugins** — adapters as .NET assemblies loaded via `AssemblyLoadContext`. Requires non-.NET adapters to have a .NET wrapper (Python ↔ IronPython, or a JSON bridge within the process). Complex, fragile, runtime coupling.
+2. **Subprocess executables** — each adapter is a standalone executable in its native language, called by the orchestrator as a child process. Communication via `SdkMetadata` JSON on stdout. Simple, isolated, permanent.
+3. **Shared library (FFI)** — adapters compiled to shared libraries called via C FFI. Maximum performance, maximum complexity, maximum build system pain.
+
+### Decision
+
+**Subprocess executables.** Each adapter is a standalone CLI tool in its native language that:
+- Accepts a path to the SDK artifact
+- Emits `SdkMetadata` JSON to stdout
+- Emits diagnostics to stderr
+- Returns exit code 0/1/2 per the diagnostic severity contract
+
+Each generator is also a standalone executable that reads `SdkMetadata` JSON and emits a CLI project.
+
+The orchestrator (`cli-builder` CLI) calls adapters and generators as subprocesses. Currently the orchestrator is .NET; it will migrate to Rust in v2.0 for single-binary distribution.
+
+**Adapters are permanent.** They are never rewritten when the orchestrator migrates. A Python adapter written in Step 12 will still work when the orchestrator is Rust — the subprocess contract (JSON stdout) is the stable interface.
+
+### Rationale
+
+**Language runtimes don't compose.** .NET's MetadataLoadContext, Python's `inspect`, and Kotlin's `kotlinx-metadata` each require their own runtime. Subprocess isolation is the only way to use each natively without cross-runtime bridges.
+
+**`cli-builder inspect --json` already works.** The .NET adapter's subprocess interface is already implemented — it outputs `SdkMetadata` JSON to stdout. The Python adapter just needs to produce the same JSON schema.
+
+**Adapters rarely change.** Once a Python adapter correctly extracts metadata from `stripe-python`, it doesn't need to be rewritten when the orchestrator changes. The JSON contract is stable. Adapters evolve on their own cadence.
+
+**Rust orchestrator enables single-binary distribution.** `cargo install cli-builder` works everywhere without a .NET runtime. The Rust orchestrator calls `python -m cli_builder_adapter_python` and `dotnet cli-builder inspect` as subprocesses, reads JSON, and dispatches to generators.
+
+**Generators are the migration candidates, not adapters.** The C# generator (Scriban templates) can move to Rust (Tera templates) because it doesn't need a .NET runtime — it just reads JSON and writes files. Adapters need their native runtime and should stay native.
+
+### Consequences
+
+- **Positive:** Each adapter uses its language's best metadata tools (reflection, inspect, AST) natively.
+- **Positive:** Adapters are permanent and independently versioned. No rewrite cost when the orchestrator changes.
+- **Positive:** Clean process boundaries. A crashing Python adapter doesn't take down the orchestrator.
+- **Positive:** `SdkMetadata` JSON schema is the only integration contract. Easy to test, version, and evolve.
+- **Negative:** Subprocess overhead (process spawn, JSON serialization). Acceptable for a build-time tool.
+- **Negative:** Adapter must be installed separately (Python adapter needs Python + pip install). The orchestrator can't bundle adapters.
+- **Mitigated by:** Clear installation instructions per adapter. Future: the Rust orchestrator could auto-detect installed adapters via PATH or a registry.
