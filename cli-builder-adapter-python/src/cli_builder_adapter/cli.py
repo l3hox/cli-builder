@@ -43,6 +43,12 @@ def main() -> None:
     # Print JSON to stdout
     print(serialize_adapter_result(result))
 
-    # Exit code based on diagnostics
+    # Exit code: 2 for environment failure (import errors), 1 for extraction errors, 0 for success
+    has_env_failure = any(
+        d.severity == DiagnosticSeverity.ERROR and d.code == "CB600"
+        for d in result.diagnostics
+    )
+    if has_env_failure:
+        sys.exit(2)
     has_errors = any(d.severity == DiagnosticSeverity.ERROR for d in result.diagnostics)
     sys.exit(1 if has_errors else 0)

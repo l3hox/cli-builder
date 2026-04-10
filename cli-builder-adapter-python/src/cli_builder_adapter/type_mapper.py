@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import collections.abc
+import datetime as dt
 import inspect
+import types
 import typing
 from abc import ABC
 from enum import Enum as PyEnum
@@ -16,13 +19,20 @@ def map_type(annotation: Any, diagnostics: list[Diagnostic] | None = None) -> Ty
     if annotation is None or annotation is inspect.Parameter.empty:
         return TypeRef(kind=TypeKind.OTHER, name="object")
 
+    # typing.Any → Other (must check before isinstance(annotation, type))
+    if annotation is typing.Any:
+        return TypeRef(kind=TypeKind.OTHER, name="object")
+
     # Handle None / NoneType
     if annotation is type(None):
         return TypeRef(kind=TypeKind.PRIMITIVE, name="None")
 
-    # Handle Optional[T] and T | None — unwrap to inner type with IsNullable
+    # Normalize PEP 604 union (str | None) to typing.Union
     origin = get_origin(annotation)
     args = get_args(annotation)
+    if isinstance(annotation, types.UnionType):
+        origin = typing.Union
+        args = get_args(annotation)
 
     if origin is typing.Union:
         # Optional[T] is Union[T, None]
@@ -66,7 +76,7 @@ def map_type(annotation: Any, diagnostics: list[Diagnostic] | None = None) -> Ty
         return TypeRef(kind=TypeKind.ENUM, name="Literal", enum_values=values)
 
     # AsyncIterator[T] → Generic (streaming)
-    if origin is not None and hasattr(origin, "__name__") and "AsyncIterator" in origin.__name__:
+    if origin is collections.abc.AsyncIterator:
         if args:
             ga = [map_type(a, diagnostics) for a in args]
             return TypeRef(kind=TypeKind.GENERIC, name="AsyncIterator", generic_arguments=ga)
@@ -82,8 +92,7 @@ def map_type(annotation: Any, diagnostics: list[Diagnostic] | None = None) -> Ty
     if annotation in primitives:
         return TypeRef(kind=TypeKind.PRIMITIVE, name=primitives[annotation])
 
-    # datetime
-    import datetime as dt
+    # datetime types
     if annotation is dt.datetime:
         return TypeRef(kind=TypeKind.PRIMITIVE, name="datetime")
     if annotation is dt.date:

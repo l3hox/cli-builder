@@ -19,6 +19,7 @@ from .models import (
     Parameter,
     Resource,
     SdkMetadata,
+    TypeKind,
 )
 from .type_mapper import map_type
 
@@ -172,9 +173,7 @@ def _extract_operations(cls: type, diagnostics: list[Diagnostic]) -> list[Operat
         return_type = map_type(return_annotation, diagnostics)
 
         # Detect async
-        is_streaming = False
-        if return_type.kind.value == "generic" and return_type.name == "AsyncIterator":
-            is_streaming = True
+        is_streaming = (return_type.kind == TypeKind.GENERIC and return_type.name == "AsyncIterator")
 
         verb = _method_to_verb(name)
 
@@ -244,12 +243,17 @@ def _extract_constructor_params(cls: type, auth: AuthPattern | None) -> list[Con
             continue
         annotation = hints.get(name, param.annotation)
         type_name = annotation.__name__ if isinstance(annotation, type) else str(annotation)
+        type_module = (
+            annotation.__module__
+            if isinstance(annotation, type) and annotation.__module__ != "builtins"
+            else None
+        )
         is_auth = auth is not None and name == auth.parameter_name
 
         params.append(ConstructorParam(
             name=name,
             type_name=type_name,
-            type_module=None,
+            type_module=type_module,
             is_auth=is_auth,
             is_required=param.default is inspect.Parameter.empty,
         ))
