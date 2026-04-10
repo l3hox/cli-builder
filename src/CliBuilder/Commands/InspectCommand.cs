@@ -32,7 +32,7 @@ public static class InspectCommand
 
         if (json)
         {
-            var output = new { metadata = result.Metadata, diagnostics = result.Diagnostics };
+            var output = new { schemaVersion = "1", metadata = result.Metadata, diagnostics = result.Diagnostics };
             Console.WriteLine(JsonSerializer.Serialize(output, SdkMetadataJson.Options));
         }
         else

@@ -127,6 +127,8 @@ public class CliBuilderToolTests : IDisposable
             InspectCommand.Execute(new DotNetAdapter(), _testSdkPath, true));
 
         var json = JsonDocument.Parse(stdout);
+        Assert.True(json.RootElement.TryGetProperty("schemaVersion", out var version));
+        Assert.Equal("1", version.GetString());
         Assert.True(json.RootElement.TryGetProperty("metadata", out var metadata));
         Assert.True(json.RootElement.TryGetProperty("diagnostics", out _));
         Assert.True(metadata.TryGetProperty("resources", out var resources));
