@@ -817,3 +817,63 @@ The orchestrator (`cli-builder` CLI) calls adapters and generators as subprocess
 - **Negative:** Subprocess overhead (process spawn, JSON serialization). Acceptable for a build-time tool.
 - **Negative:** Adapter must be installed separately (Python adapter needs Python + pip install). The orchestrator can't bundle adapters.
 - **Mitigated by:** Clear installation instructions per adapter. Future: the Rust orchestrator could auto-detect installed adapters via PATH or a registry.
+
+---
+
+## ADR-017: All generators in Rust — shared ModelMapper, language-specific templates
+
+**Date:** 2026-04-10
+**Status:** Accepted
+
+### Context
+
+cli-builder needs generators for multiple target languages (C#, Python, Kotlin, Go, TypeScript). Each generator takes `SdkMetadata` JSON and emits a CLI project in the target language. Two approaches:
+
+1. **Each generator in its target language** — Python generator in Python (Jinja), Kotlin generator in Kotlin, etc. Natural template authoring. But ~80% of generator logic (ModelMapper, ParameterFlattener, IdentifierValidator) is language-agnostic and gets reimplemented in every language.
+
+2. **All generators in Rust** — shared ModelMapper/ParameterFlattener/IdentifierValidator in Rust, Tera templates per target language. One template engine, one test framework, one CI pipeline. Templates are the only per-language artifact (~500 lines each).
+
+### Decision
+
+**All generators in Rust with Tera templates.** The generator pipeline is:
+
+```
+SdkMetadata JSON → [Shared Rust ModelMapper] → [Language-specific Tera templates] → CLI project files
+```
+
+The shared Rust core (~1500 lines) provides:
+- `ModelMapper` — maps SdkMetadata → GeneratorModel (type name mapping, sanitization, namespace collection)
+- `ParameterFlattener` — flattens options class properties into CLI flags
+- `IdentifierValidator` — language-specific keyword checking (loaded from config, not hardcoded per generator)
+- Template rendering — Tera engine with custom filters
+
+Each target language adds ~500 lines of Tera templates. Adding a new target language means writing templates only — no new mapper code.
+
+**Migration path:**
+1. Step 13: Python generator in Rust (first Rust generator, builds shared ModelMapper)
+2. Step 14: Port C# generator from .NET/Scriban to Rust/Tera (validates shared code with existing test suite)
+3. Step 15: Rust orchestrator (single `cli-builder` binary, no .NET runtime needed)
+4. Later: Kotlin, Go, TypeScript generators (~500 lines of templates each)
+
+**Adapters stay native (per ADR-016).** Only generators and the orchestrator move to Rust.
+
+### Rationale
+
+**80% of generator code is language-agnostic.** The C# generator's `ModelMapper.cs` (652 lines), `ParameterFlattener.cs` (176 lines), and `IdentifierValidator.cs` (187 lines) do the same work regardless of target language. Only the templates and conversion expressions differ. Reimplementing this in 5 languages is ~4000 lines of duplicated logic. In Rust, it's written once.
+
+**Schema changes propagate instantly.** When `SdkMetadata` gains a field (e.g., `IsExtensibleEnum` in Step 9B), the Rust struct is updated once. All generators see it through the shared ModelMapper. In the native approach, 5 mappers in 5 languages must be updated independently.
+
+**Single-binary distribution.** All generators bundled in one Rust binary: `cli-builder generate --target python`. No separate installation per generator. The orchestrator and generators are one artifact.
+
+**Template authoring is slightly less natural.** Writing Python templates in Tera (from Rust) is less natural than Jinja (from Python). However, templates are ~500 lines of mostly static text with variable interpolation — the template engine differences are cosmetic, not structural.
+
+### Consequences
+
+- **Positive:** 80% code reuse across all generators. One ModelMapper serves 5+ target languages.
+- **Positive:** Schema changes are atomic — one Rust struct update, all generators consistent.
+- **Positive:** Single binary distribution for the orchestrator + all generators.
+- **Positive:** Consistent test framework (Rust's `cargo test`) for all generators.
+- **Negative:** Template authoring is less natural for non-Rust developers.
+- **Negative:** Contributor barrier is higher — must know Rust to modify generator logic.
+- **Negative:** The existing C# generator (Scriban, well-tested) must be ported to Rust.
+- **Mitigated by:** Pragmatic migration — C# generator stays in .NET until Rust port is validated against the same test suite. Templates are portable (Scriban syntax ≈ Tera syntax).

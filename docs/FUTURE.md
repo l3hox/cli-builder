@@ -41,15 +41,18 @@ Auth handler writes resolved credentials to config file for reuse.
 - **Go** — AST parsing, struct tags
 - **OpenAPI** — spec parsing (overlaps with existing tools — lower unique value)
 
-### Target language generators
-- **Python** — click-based CLI output
-- **Rust** — clap-based CLI output
+### Rust generator migration (ADR-017)
+
+All generators consolidated in Rust with shared ModelMapper + Tera templates:
+- **Step 13**: Python generator in Rust (first Rust generator, builds shared ModelMapper)
+- **Step 14**: Port C# generator from .NET/Scriban to Rust/Tera
+- **Step 15**: Rust orchestrator (single `cli-builder` binary, `cargo install cli-builder`)
+- Later: Kotlin, Go, TypeScript generators (~500 lines of templates each)
+
+Adapters stay native forever (ADR-016). Only generators + orchestrator move to Rust.
 
 ### Agent-assisted enrichment
 - `--enrich` flag with pluggable LLM provider (design approved, see ADR-014)
-
-### v2.0: Rust orchestrator migration
-Rewrite the `cli-builder` CLI in Rust (clap, single binary). Calls adapters as subprocesses, reads `SdkMetadata` JSON from stdout. Adapters remain in native languages permanently. C# generator optionally moves to Rust (Tera templates). Distribution: `cargo install cli-builder` — no .NET runtime needed for orchestration. See [ADR-016](ADR.md#adr-016-subprocess-based-adapter-architecture--rust-migration-path).
 
 ### Other
 - Incremental regeneration (detect SDK changes)

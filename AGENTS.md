@@ -48,4 +48,4 @@ Each piece of information exists in exactly one place:
 
 **v1.5** — Step 12 MVP: Python adapter (`cli-builder-adapter-python`). Cross-adapter architecture proof — Python JSON schema matches .NET. 397 .NET tests + Python adapter functional.
 
-**What's next:** Step 12b (Python adapter hardening — test files, JSON schema, Stripe validation). See [docs/FUTURE.md](docs/FUTURE.md).
+**What's next:** Step 13 (Python CLI generator in Rust — shared ModelMapper + Tera templates). See [ADR-017](docs/ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates) and [docs/FUTURE.md](docs/FUTURE.md).

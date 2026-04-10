@@ -408,3 +408,25 @@ cli-builder-adapter-python --package stripe --json
 - JSON schema matches `SdkMetadataJson.Options` (camelCase, enums as strings, indented)
 - Adapters are permanent — they stay in their native language when the orchestrator migrates to Rust
 - Each adapter is versioned independently (SemVer on the JSON schema version)
+
+## Generator architecture (ADR-017)
+
+All generators consolidated in Rust with shared core + language-specific Tera templates.
+
+**Shared Rust core (~1500 lines):**
+- `ModelMapper` — SdkMetadata → GeneratorModel (type name mapping, sanitization, namespace/module collection)
+- `ParameterFlattener` — flatten options class properties into CLI flags, detect `--json-input` scenarios
+- `IdentifierValidator` — language-specific keyword checking (loaded from config per target)
+- Template rendering — Tera engine with custom filters
+
+**Per-language templates (~500 lines each):**
+- C# templates: System.CommandLine commands, `Enum.Parse<T>()` conversions, `using` directives
+- Python templates: `click` commands, direct type constructors, `import` statements
+- Future: Kotlin (clikt), Go (cobra), TypeScript (commander)
+
+**Pipeline:**
+```
+SdkMetadata JSON → Shared ModelMapper → Tera templates → CLI project files
+```
+
+**Why Rust, not native per language:** 80% of generator code (ModelMapper, ParameterFlattener) is language-agnostic. Writing it once in Rust and sharing across all generators eliminates ~4000 lines of duplicated logic. Schema changes propagate to all generators via one Rust struct update. Single binary distribution: `cargo install cli-builder`.

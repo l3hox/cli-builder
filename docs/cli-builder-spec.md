@@ -451,7 +451,7 @@ See [docs/FUTURE.md](FUTURE.md) for the full prioritized roadmap.
 
 **v1.5 (Step 12):** Python adapter as standalone `cli-builder-adapter-python` package. Subprocess orchestration. Adapter invocation contract finalized (JSON stdout, stderr diagnostics, exit codes).
 
-**v2.0 (future):** Rust orchestrator replaces .NET CLI. Adapters remain in native languages. Language-specific generators added as subprocesses.
+**v2.0 (future):** All generators in Rust with shared ModelMapper + Tera templates ([ADR-017](ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates)). Rust orchestrator replaces .NET CLI. Single `cli-builder` binary. Adapters remain in native languages.
 
 ---
 
