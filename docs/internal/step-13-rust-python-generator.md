@@ -60,15 +60,19 @@ clap = { version = "4", features = ["derive"] }
 
 ### Shared core (cli-builder-core)
 
-Port from .NET, targeting language-agnostic logic only:
+Port from .NET, targeting language-agnostic logic only. **Council-reviewed naming rules:**
+
+- **No C#-specific field names in core.** `CSharpType` → `cli_type: String`, `ConversionExpression` → absent from core (populated by each generator's mapper). `OptionsClassName` → `options_type_name`.
+- **`SanitizeString` split.** Core does structural validation only (identifier safety, null guards, length limits). Template-engine escaping (Scriban `{{`/Tera `{{`) belongs in each generator, NOT in core.
+- **`MakeValueTypesNullable` is generator-side.** Core carries `requires_sentinel_nullability: bool` flag. Python generator ignores it. Future C# generator uses it to emit `?` suffixes.
 
 | .NET file | Rust equivalent | Lines (est.) |
 |-----------|----------------|-------------|
 | `SdkMetadata.cs` + all models | `models.rs` | ~200 (serde structs) |
 | `ModelMapper.cs` (language-agnostic parts) | `model_mapper.rs` | ~300 |
-| `ParameterFlattener.cs` | `parameter_flattener.rs` | ~150 |
+| `ParameterFlattener.cs` (without nullable logic) | `parameter_flattener.rs` | ~120 |
 | `IdentifierValidator.cs` (framework) | `identifier_validator.rs` | ~50 |
-| **Total shared core** | | **~700** |
+| **Total shared core** | | **~670** |
 
 ### Python generator (cli-builder-gen-python)
 
@@ -105,8 +109,8 @@ stripe-cli/
 
 ```python
 # commands/customer.py
+import json
 import click
-from stripe import Customer, CustomerCreateParams
 
 @click.group()
 def customer():
@@ -122,11 +126,13 @@ def get(ctx, id: str, use_json: bool):
     client = ctx.obj["client"]
     result = client.customers.retrieve(id)
     if use_json:
-        click.echo(json.dumps(result, indent=2))
+        click.echo(json.dumps(result.to_dict() if hasattr(result, 'to_dict') else result, indent=2))
     else:
         # table format
         ...
 ```
+
+Note: SDK result objects may not be plain dicts. Templates must handle `to_dict()` or similar serialization methods.
 
 ### Type mapping (Python SDK → Python CLI)
 
@@ -166,20 +172,22 @@ def get(ctx, id: str, use_json: bool):
 4. `resource.py.tera` — per-resource command group with operations
 5. `json_formatter.py.tera`, `table_formatter.py.tera`
 6. `handler.py.tera` — auth handler (env var, CLI flag)
+7. **Python syntax validation**: after rendering each `.py` template, run `python3 -c "import ast; ast.parse(open('file.py').read())"` to catch indentation errors, missing colons, unclosed brackets
 
 ### Phase 4: CLI entry point + template rendering
 
 1. `main.rs` — clap CLI: `cli-builder-gen-python --input metadata.json --output ./stripe-cli`
 2. Read SdkMetadata JSON → deserialize → ModelMapper → Tera render → write files
-3. Test: generate Python CLI from TestSdk metadata → verify file structure
+3. **Structural assertions** (not golden files): verify file existence, presence of `import click`, `@click.group()`, `@click.command()` decorators, correct file count
+4. Serde deserialization test: parse BOTH .NET fixture and Python adapter output, assert `resources.len() > 0`
 
-### Phase 5: End-to-end validation
+### Phase 5: End-to-end validation + golden files
 
 1. Python adapter → SdkMetadata JSON → Rust generator → Python CLI project
-2. Verify generated CLI structure (files, imports, click commands)
-3. Install generated CLI (`pip install -e ./generated-cli`)
-4. Run generated CLI against TestSdk: `stripe-cli customer get --id cust_123 --json`
-5. If the Python TestSdk is the target: full round-trip test
+2. **Golden file tests**: commit generated output snapshots for TestSdk, assert byte-for-byte stability (use `insta` crate)
+3. **Python syntax validation**: `ast.parse` on every generated `.py` file
+4. Install generated CLI (`pip install -e ./generated-cli`)
+5. Run generated CLI against TestSdk: `testsdk-cli customer get --id cust_123 --json`
 
 ### Phase 6: Documentation
 
