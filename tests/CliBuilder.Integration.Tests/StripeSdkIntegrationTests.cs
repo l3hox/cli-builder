@@ -105,6 +105,17 @@ public class StripeSdkIntegrationTests
     }
 
     [Fact]
+    public void ExtractStripe_StaticAuth_SerializesWithCorrectFieldNames()
+    {
+        var result = ExtractStripe();
+        var json = System.Text.Json.JsonSerializer.Serialize(result.Metadata, CliBuilder.Core.Json.SdkMetadataJson.Options);
+        Assert.Contains("\"staticAuth\":", json);
+        Assert.Contains("\"typeName\":", json);
+        Assert.Contains("\"typeModule\":", json);
+        Assert.Contains("\"propertyName\":", json);
+    }
+
+    [Fact]
     public void ExtractStripe_ServicesHaveParameterlessCtor()
     {
         var result = ExtractStripe();

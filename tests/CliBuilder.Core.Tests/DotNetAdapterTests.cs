@@ -622,8 +622,8 @@ public class DotNetAdapterTests
         Assert.DoesNotContain("\"sourceNamespace\"", json);
         Assert.DoesNotContain("\"typeNamespace\"", json);
 
-        // Verify new language-neutral names are present
-        Assert.Contains("\"sourceModule\"", json);
-        Assert.Contains("\"module\"", json);
+        // Verify new language-neutral names are present (with colon for key precision)
+        Assert.Contains("\"sourceModule\":", json);
+        Assert.Contains("\"module\":", json);
     }
 }

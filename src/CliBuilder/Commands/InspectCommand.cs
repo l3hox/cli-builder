@@ -40,7 +40,7 @@ public static class InspectCommand
             Console.WriteLine($"SDK: {result.Metadata.Name} {result.Metadata.Version}");
             Console.WriteLine($"Resources: {result.Metadata.Resources.Count}");
             Console.WriteLine($"Auth: {(result.Metadata.AuthPatterns.Count > 0 ? "detected" : "none")}");
-            Console.WriteLine($"Static auth: {(result.Metadata.StaticAuth is { } sa ? $"{sa.TypeModule}.{sa.TypeName}.{sa.PropertyName}" : "none")}");
+            Console.WriteLine($"Static auth: {result.Metadata.StaticAuth?.ToExpression() ?? "none"}");
             foreach (var r in result.Metadata.Resources.OrderBy(r => r.Name))
                 Console.WriteLine($"  {r.Name} ({r.Operations.Count} operations)");
         }

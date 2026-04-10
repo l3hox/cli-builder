@@ -15,10 +15,7 @@ public static partial class ModelMapper
         var diagnostics = new List<Diagnostic>();
         var cliName = options.CliName ?? DeriveCliName(metadata.Name);
 
-        // Construct C# expression from structured StaticAuthConfig
-        var staticAuthExpr = metadata.StaticAuth is { } sa
-            ? (sa.TypeModule.Length > 0 ? $"{sa.TypeModule}.{sa.TypeName}.{sa.PropertyName}" : $"{sa.TypeName}.{sa.PropertyName}")
-            : null;
+        var staticAuthExpr = metadata.StaticAuth?.ToExpression();
 
         var resources = metadata.Resources.Select(r =>
             MapResource(r, diagnostics, staticAuthExpr)).ToList();

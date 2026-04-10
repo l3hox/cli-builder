@@ -22,7 +22,7 @@ public static class ParameterFlattener
                 FlattenOptionsClass(param.Type, threshold,
                     flatParams, ref needsJsonInput, diagnostics);
             }
-            else if (param.Type.Kind is TypeKind.Generic or TypeKind.Array or TypeKind.Dictionary
+            else if (param.Type.Kind is TypeKind.Generic or TypeKind.Array or TypeKind.Dictionary or TypeKind.Other
                      || (param.Type.Kind == TypeKind.Class && param.Type.Properties == null)
                      || (param.Type.Kind == TypeKind.Enum && param.Type.IsExtensibleEnum))
             {
