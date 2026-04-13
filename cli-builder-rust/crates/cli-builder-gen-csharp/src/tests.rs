@@ -8,6 +8,7 @@ use cli_builder_core::models::*;
 
 use crate::csharp_keywords;
 use crate::csharp_mapper::CSharpProfile;
+use crate::csharp_model;
 use crate::csharp_model::*;
 
 fn tr(kind: TypeKind, name: &str) -> TypeRef {
@@ -628,4 +629,112 @@ fn testsdk_to_csharp_model() {
     // No errors
     let errors: Vec<_> = diags.iter().filter(|d| d.severity == DiagnosticSeverity::Error).collect();
     assert!(errors.is_empty(), "Unexpected errors: {:?}", errors);
+}
+
+// ================================================================
+// Phase 2: Renderer — structural tests
+// ================================================================
+
+fn generate_testsdk(output_dir: &std::path::Path) {
+    let json = std::fs::read_to_string(testsdk_fixture_path()).unwrap();
+    let envelope: AdapterResultEnvelope = serde_json::from_str(&json).unwrap();
+    let profile = CSharpProfile;
+    let (model, _) = model_mapper::build(
+        &envelope.metadata,
+        &MapperOptions { cli_name: Some("testsdk-cli".into()) },
+        &profile,
+    );
+    let mut diags = vec![];
+    let csharp_model = csharp_model::build_csharp_model(&model, &mut diags);
+    crate::renderer::generate(&csharp_model, output_dir).unwrap();
+}
+
+#[test]
+fn generates_csproj() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let csproj = std::fs::read_to_string(
+        dir.path().join("testsdk-cli/testsdk-cli.csproj"),
+    ).unwrap();
+    assert!(csproj.contains("net8.0"));
+    assert!(csproj.contains("System.CommandLine"));
+    assert!(csproj.contains("CliBuilder.TestSdk"));
+}
+
+#[test]
+fn generates_program_cs() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let program = std::fs::read_to_string(
+        dir.path().join("testsdk-cli/Program.cs"),
+    ).unwrap();
+    assert!(program.contains("RootCommand"));
+    assert!(program.contains("jsonOption"));
+    assert!(program.contains("apiKeyOption"));
+    assert!(program.contains("CustomerCommands.Build"));
+}
+
+#[test]
+fn generates_resource_command_files() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let customer = std::fs::read_to_string(
+        dir.path().join("testsdk-cli/Commands/CustomerCommands.cs"),
+    ).unwrap();
+    assert!(customer.contains("public static class CustomerCommands"));
+    assert!(customer.contains("new Command(\"customer\""));
+    assert!(customer.contains("new Command(\"get\""));
+    assert!(customer.contains("new Command(\"create\""));
+    assert!(customer.contains("AuthHandler.Resolve"));
+    assert!(customer.contains("CustomerService"));
+}
+
+#[test]
+fn generates_output_formatters() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let json_fmt = std::fs::read_to_string(
+        dir.path().join("testsdk-cli/Output/JsonFormatter.cs"),
+    ).unwrap();
+    assert!(json_fmt.contains("public static class JsonFormatter"));
+    assert!(json_fmt.contains("JsonSerializer.Serialize"));
+
+    let table_fmt = std::fs::read_to_string(
+        dir.path().join("testsdk-cli/Output/TableFormatter.cs"),
+    ).unwrap();
+    assert!(table_fmt.contains("public static class TableFormatter"));
+}
+
+#[test]
+fn generates_auth_handler() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let auth = std::fs::read_to_string(
+        dir.path().join("testsdk-cli/Auth/AuthHandler.cs"),
+    ).unwrap();
+    assert!(auth.contains("public static class AuthHandler"));
+    assert!(auth.contains("TESTSDK_APIKEY"));
+    assert!(auth.contains("Resolve"));
+    assert!(auth.contains("SanitizeMessage"));
+}
+
+#[test]
+fn generates_expected_file_count() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+
+    let cs_files: Vec<_> = walkdir::WalkDir::new(dir.path())
+        .into_iter()
+        .filter_map(|e| e.ok())
+        .filter(|e| {
+            e.path().extension().map_or(false, |ext| ext == "cs" || ext == "csproj")
+        })
+        .collect();
+
+    // testsdk-cli.csproj + Program.cs + 7 resource commands + JsonFormatter + TableFormatter + AuthHandler = 12
+    assert!(
+        cs_files.len() >= 12,
+        "Expected >= 12 .cs/.csproj files, got {}",
+        cs_files.len()
+    );
 }

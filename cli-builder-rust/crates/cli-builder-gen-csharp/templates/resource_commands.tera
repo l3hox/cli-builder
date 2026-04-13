@@ -1,0 +1,231 @@
+using System.CommandLine;
+using System.CommandLine.Invocation;
+using System.Text.Json;
+using {{ root_namespace }}.Output;
+{%- if has_auth %}
+using {{ root_namespace }}.Auth;
+{%- endif %}
+{%- for ns in resource.required_namespaces %}
+using {{ ns }};
+{%- endfor %}
+
+namespace {{ root_namespace }}.Commands;
+
+public static class {{ resource.class_name }}Commands
+{
+    private static readonly JsonSerializerOptions _jsonInputOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
+    public static Command Build(Option<bool> jsonOption{% if has_auth %}, Option<string?> apiKeyOption{% endif %})
+    {
+        var command = new Command("{{ resource.name }}", {{ resource.description | escape_csharp }});
+{%- for cp in resource.constructor_config_params %}
+        var {{ cp.var_name }}Option = new Option<{{ cp.csharp_type }}>("--{{ cp.cli_flag }}")
+        { IsRequired = {% if cp.is_required %}true{% else %}false{% endif %} };
+        command.AddGlobalOption({{ cp.var_name }}Option);
+{%- endfor %}
+{%- for op in resource.operations %}
+
+        // {{ op.name }}{% if op.is_streaming %} [streaming]{% endif %}
+
+        {
+            var cmd = new Command("{{ op.name }}", {{ op.description | escape_csharp }});
+{%- for param in op.parameters %}
+            var {{ param.cli_flag | to_var_name }}Option = new Option<{{ param.csharp_type }}>(
+                "--{{ param.cli_flag }}",
+                {{ param.description | escape_csharp }})
+            { IsRequired = {% if param.is_required %}true{% else %}false{% endif %} };
+{%- if param.default_value_literal %}
+            {{ param.cli_flag | to_var_name }}Option.SetDefaultValue({{ param.default_value_literal }});
+{%- endif %}
+{%- if param.enum_values %}
+            {{ param.cli_flag | to_var_name }}Option.FromAmong({% for val in param.enum_values %}{% if not loop.first %}, {% endif %}"{{ val }}"{% endfor %});
+{%- endif %}
+            cmd.AddOption({{ param.cli_flag | to_var_name }}Option);
+{%- endfor %}
+{%- if op.needs_json_input %}
+            var jsonInputOption = new Option<string?>("--json-input", "Full input as JSON. Flat flags override individual properties.");
+            cmd.AddOption(jsonInputOption);
+{%- endif %}
+            cmd.SetHandler(async (InvocationContext ctx) =>
+            {
+                try
+                {
+{%- if has_auth %}
+                    // Resolve credential (exit code 2 on auth failure)
+                    string credential;
+                    try
+                    {
+                        credential = AuthHandler.Resolve(ctx.ParseResult.GetValueForOption(apiKeyOption));
+                    }
+                    catch (InvalidOperationException authEx)
+                    {
+                        var authError = new { error = new { code = "auth_error", message = authEx.Message } };
+                        Console.Error.WriteLine(JsonSerializer.Serialize(authError));
+                        ctx.ExitCode = 2;
+                        return;
+                    }
+
+{%- endif %}
+                    // Read parameter values
+{%- for param in op.parameters %}
+                    var {{ param.cli_flag | to_var_name }}Value = ctx.ParseResult.GetValueForOption({{ param.cli_flag | to_var_name }}Option);
+{%- endfor %}
+{%- if op.needs_json_input %}
+
+                    // Flat flags take precedence; --json-input fills remaining nulls
+                    var jsonInputValue = ctx.ParseResult.GetValueForOption(jsonInputOption);
+{%- endif %}
+{%- if resource.can_construct and op.source_method_name and op.can_wire_sdk_call %}
+{%- for cp in resource.constructor_config_params %}
+                    var {{ cp.var_name }} = ctx.ParseResult.GetValueForOption({{ cp.var_name }}Option);
+{%- endfor %}
+
+                    // SDK call: {{ resource.source_class_name }}.{{ op.source_method_name }}
+{%- if static_auth_setup and has_auth %}
+                    {{ static_auth_setup }} = credential;
+{%- endif %}
+                    var client = new {{ resource.source_class_name }}({{ resource.constructor_expression }});
+{%- if op.has_json_direct_params %}
+                    // Parse --json-input once for direct param extraction
+                    System.Text.Json.JsonDocument? _jsonInputDocParsed = null;
+                    if (jsonInputValue is not null)
+                    {
+                        try
+                        {
+                            _jsonInputDocParsed = System.Text.Json.JsonDocument.Parse(jsonInputValue);
+                        }
+                        catch (System.Text.Json.JsonException ex)
+                        {
+                            var jsonError = new { error = new { code = "json_input_error", message = ex.Message } };
+                            Console.Error.WriteLine(JsonSerializer.Serialize(jsonError));
+                            ctx.ExitCode = 1;
+                            return;
+                        }
+                    }
+                    using var _jsonInputDoc = _jsonInputDocParsed;
+{%- endif %}
+{%- for mp in op.method_params %}
+{%- if mp.needs_json_deserialization %}
+                    {{ mp.deserialization_type_name }} {{ mp.arg_expression }} = default!;
+                    if (_jsonInputDoc is not null
+                        && _jsonInputDoc.RootElement.TryGetProperty("{{ mp.json_property_name }}", out var _{{ mp.json_property_name }}Prop))
+                    {
+                        try
+                        {
+                            {{ mp.arg_expression }} = JsonSerializer.Deserialize<{{ mp.deserialization_type_name }}>(_{{ mp.json_property_name }}Prop.GetRawText(), _jsonInputOptions)!;
+                        }
+                        catch (JsonException ex)
+                        {
+                            var jsonError = new { error = new { code = "json_input_error", message = $"Failed to deserialize '{{ mp.json_property_name }}': {ex.Message}" } };
+                            Console.Error.WriteLine(JsonSerializer.Serialize(jsonError));
+                            ctx.ExitCode = 1;
+                            return;
+                        }
+                    }
+{%- if mp.is_required %}
+                    if ({{ mp.arg_expression }} is null)
+                    {
+                        var missingError = new { error = new { code = "missing_required_param",
+                            message = "Required parameter '{{ mp.json_property_name }}' must be provided via --json-input" } };
+                        Console.Error.WriteLine(JsonSerializer.Serialize(missingError));
+                        ctx.ExitCode = 1;
+                        return;
+                    }
+{%- endif %}
+{%- elif mp.is_options_class %}
+                    var {{ mp.arg_expression }} = new {{ mp.type_name }}();
+{%- if op.needs_json_input %}
+                    if (jsonInputValue is not null)
+                    {
+                        try
+                        {
+                            {{ mp.arg_expression }} = JsonSerializer.Deserialize<{{ mp.type_name }}>(jsonInputValue, _jsonInputOptions) ?? {{ mp.arg_expression }};
+                        }
+                        catch (JsonException ex)
+                        {
+                            var jsonError = new { error = new { code = "json_input_error", message = ex.Message } };
+                            Console.Error.WriteLine(JsonSerializer.Serialize(jsonError));
+                            ctx.ExitCode = 1;
+                            return;
+                        }
+                    }
+{%- endif %}
+{%- for param in op.parameters %}
+{%- if param.source_options_class_name and param.source_options_class_name == mp.type_name %}
+{%- if op.needs_json_input %}
+                    if ({{ param.cli_flag | to_var_name }}Value is not null)
+                        {{ mp.arg_expression }}.{{ param.property_name }} = {{ param.cli_flag | to_var_name | apply_conversion(expr=param.conversion_expression) }};
+{%- else %}
+                    {{ mp.arg_expression }}.{{ param.property_name }} = {{ param.cli_flag | to_var_name | apply_conversion(expr=param.conversion_expression) }};
+{%- endif %}
+{%- endif %}
+{%- endfor %}
+{%- endif %}
+{%- endfor %}
+{%- if op.is_streaming %}
+                    var items = new List<object>();
+                    await foreach (var item in client.{{ op.source_method_name }}({% for mp in op.method_params %}{% if not loop.first %}, {% endif %}{{ mp.arg_expression }}{% endfor %}))
+                    {
+                        items.Add(item);
+                    }
+                    var result = (object)items;
+{%- elif op.return_type_name == "void" %}
+                    await client.{{ op.source_method_name }}({% for mp in op.method_params %}{% if not loop.first %}, {% endif %}{{ mp.arg_expression }}{% endfor %});
+                    Console.WriteLine("OK");
+{%- else %}
+                    var result = (object)await client.{{ op.source_method_name }}({% for mp in op.method_params %}{% if not loop.first %}, {% endif %}{{ mp.arg_expression }}{% endfor %});
+{%- endif %}
+{%- if op.return_type_name != "void" %}
+
+                    // Format output
+                    var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
+                    if (useJson)
+                        JsonFormatter.Write(result);
+                    else
+                        TableFormatter.Write(result);
+{%- endif %}
+{%- else %}
+                    // SDK client wiring not available (source class name unknown)
+                    await Task.CompletedTask;
+                    var result = new Dictionary<string, object?>
+                    {
+                        ["command"] = "{{ resource.name }} {{ op.name }}",
+                        ["parameters"] = new Dictionary<string, object?>
+                        {
+{%- for param in op.parameters %}
+                            ["{{ param.property_name }}"] = {{ param.cli_flag | to_var_name }}Value{% if not loop.last %},{% endif %}
+
+{%- endfor %}
+                        }
+                    };
+{%- if op.return_type_name == "void" %}
+                    Console.WriteLine("OK");
+{%- else %}
+                    var useJson = ctx.ParseResult.GetValueForOption(jsonOption);
+                    if (useJson)
+                        JsonFormatter.Write(result);
+                    else
+                        TableFormatter.Write(result);
+{%- endif %}
+{%- endif %}
+
+                    ctx.ExitCode = 0;
+                }
+                catch (Exception ex)
+                {
+                    var errorMessage = {% if has_auth %}AuthHandler.SanitizeMessage(ex.Message){% else %}ex.Message{% endif %};
+                    var error = new { error = new { code = "sdk_error", message = errorMessage } };
+                    Console.Error.WriteLine(JsonSerializer.Serialize(error));
+                    ctx.ExitCode = 3;
+                }
+            });
+            command.AddCommand(cmd);
+        }
+{%- endfor %}
+
+        return command;
+    }
+}
