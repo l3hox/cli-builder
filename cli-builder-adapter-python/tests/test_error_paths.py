@@ -66,28 +66,30 @@ def test_empty_module_no_errors():
 
 def test_signature_failure_emits_cb602():
     """When inspect.signature raises, CB602 should be emitted and method skipped."""
-    # Create a mock class with a method that can't be inspected
-    class BrokenClient:
-        pass
+    from cli_builder_adapter.extractor import _extract_operations
 
-    # Patch inspect.signature to fail for specific methods
+    class BrokenClient:
+        def working_method(self) -> str:
+            return "ok"
+
+    # Patch inspect.signature to fail for all methods on BrokenClient
     original_signature = __import__("inspect").signature
 
     def failing_signature(obj, **kwargs):
-        if hasattr(obj, "__name__") and obj.__name__ == "broken_method":
+        # Fail for the bound method on BrokenClient
+        if hasattr(obj, "__qualname__") and "BrokenClient" in getattr(obj, "__qualname__", ""):
             raise ValueError("Cannot inspect")
         return original_signature(obj, **kwargs)
 
-    # Add a method that will fail
-    def broken_method(self):
-        pass
-    BrokenClient.broken_method = broken_method
-
+    diagnostics = []
     with patch("cli_builder_adapter.extractor.inspect.signature", side_effect=failing_signature):
-        result = extract("test_sdk", "test_sdk.services")
-        # CB602 may or may not appear depending on which methods trigger
-        # The key assertion: extraction doesn't crash
-        assert result.metadata is not None
+        ops = _extract_operations(BrokenClient, diagnostics)
+
+    # CB602 should be emitted for the broken method
+    cb602 = [d for d in diagnostics if d.code == "CB602"]
+    assert len(cb602) >= 1, f"Expected CB602 diagnostic, got: {[d.code for d in diagnostics]}"
+    # The method should be skipped (not in operations)
+    assert all(op.source_method_name != "working_method" for op in ops)
 
 
 # ---- Version fallback ----
@@ -96,5 +98,4 @@ def test_version_fallback_when_missing():
     """Package without __version__ should default to 0.0.0."""
     # test_sdk.services module doesn't have __version__
     result = extract("test_sdk", "test_sdk.services")
-    # Should be "0.0.0" since test_sdk.services has no __version__
-    assert result.metadata.version is not None
+    assert result.metadata.version == "0.0.0"

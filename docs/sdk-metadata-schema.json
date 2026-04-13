@@ -161,7 +161,7 @@
     },
     "StaticAuthConfig": {
       "type": "object",
-      "required": ["typeName", "typeModule", "propertyName"],
+      "required": ["typeName", "typeModule", "propertyName", "style"],
       "properties": {
         "typeName": { "type": "string" },
         "typeModule": { "type": "string" },

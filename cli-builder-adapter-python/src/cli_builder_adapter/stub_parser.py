@@ -23,12 +23,7 @@ from .models import (
     TypeKind,
     TypeRef,
 )
-
-# Service class name suffixes (same as extractor)
-SERVICE_SUFFIXES = ("Client", "Service", "Api")
-
-# CRUD classmethod names for resource class detection
-RESOURCE_CRUD_METHODS = {"create", "retrieve", "list", "delete"}
+from ._utils import SERVICE_SUFFIXES, RESOURCE_CRUD_METHODS, class_to_noun, pascal_to_kebab
 
 # Primitive type name mapping
 PRIMITIVE_NAMES = {
@@ -107,9 +102,9 @@ def _extract_class(
 
     # Extract noun
     if is_service:
-        noun = _class_to_noun(name)
+        noun = class_to_noun(name)
     else:
-        noun = _pascal_to_kebab(name)
+        noun = pascal_to_kebab(name)
 
     # Extract operations
     operations = []
@@ -378,18 +373,3 @@ def _annotation_to_name(node: ast.expr | None) -> str:
     return "object"
 
 
-def _class_to_noun(class_name: str) -> str:
-    """Convert class name to CLI noun: CustomerClient → customer."""
-    for suffix in SERVICE_SUFFIXES:
-        if class_name.endswith(suffix) and len(class_name) > len(suffix):
-            class_name = class_name[:-len(suffix)]
-            break
-    return _pascal_to_kebab(class_name)
-
-
-def _pascal_to_kebab(name: str) -> str:
-    """Convert PascalCase to kebab-case."""
-    import re
-    s = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1-\2", name)
-    s = re.sub(r"([a-z0-9])([A-Z])", r"\1-\2", s)
-    return s.lower()

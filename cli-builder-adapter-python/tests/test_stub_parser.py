@@ -240,3 +240,41 @@ def test_skips_async_variants(tmp_path):
     ops = resources[0].operations
     assert len(ops) == 1
     assert ops[0].source_method_name == "get"
+
+
+# ---- Council fix: stub-path auth detection via extract() ----
+
+def test_stub_path_detects_auth(tmp_path):
+    """When extract() uses stubs, auth should still be detected from constructor params."""
+    import sys
+    from cli_builder_adapter.extractor import extract
+
+    # Create a fake package with .pyi stubs
+    pkg_dir = tmp_path / "fake_sdk"
+    pkg_dir.mkdir()
+    (pkg_dir / "__init__.py").write_text("")
+    (pkg_dir / "__init__.pyi").write_text(textwrap.dedent("""\
+        class CustomerClient:
+            def __init__(self, api_key: str) -> None: ...
+            def get(self, id: str) -> str: ...
+    """))
+
+    # Add to sys.path so importlib can find it
+    sys.path.insert(0, str(tmp_path))
+    try:
+        result = extract("fake_sdk")
+
+        # Should use stub path (CB605)
+        assert any(d.code == "CB605" for d in result.diagnostics)
+
+        # Auth should be detected from constructor params
+        assert len(result.metadata.auth_patterns) >= 1
+        assert result.metadata.auth_patterns[0].parameter_name == "api_key"
+
+        # Constructor param should have is_auth=True
+        customer = result.metadata.resources[0]
+        assert customer.constructor_params is not None
+        api_key_param = next(p for p in customer.constructor_params if p.name == "api_key")
+        assert api_key_param.is_auth is True
+    finally:
+        sys.path.remove(str(tmp_path))

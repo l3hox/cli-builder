@@ -8,10 +8,11 @@ import sys
 import typing
 from typing import Any
 
-from .auth_detector import detect_constructor_auth, detect_module_auth
+from .auth_detector import AUTH_PARAM_NAMES, detect_constructor_auth, detect_module_auth
 from .models import (
     AdapterResult,
     AuthPattern,
+    AuthType,
     ConstructorParam,
     Diagnostic,
     DiagnosticSeverity,
@@ -23,12 +24,7 @@ from .models import (
 )
 from .stub_parser import find_stubs, parse_stub_file
 from .type_mapper import map_type
-
-# Service class name suffixes (same as .NET adapter)
-SERVICE_SUFFIXES = ("Client", "Service", "Api")
-
-# CRUD classmethod names that indicate a resource class (e.g., stripe.Customer)
-RESOURCE_CRUD_METHODS = {"create", "retrieve", "list", "delete"}
+from ._utils import SERVICE_SUFFIXES, RESOURCE_CRUD_METHODS, class_to_noun, pascal_to_kebab
 
 
 def extract(package_name: str, module_name: str | None = None) -> AdapterResult:
@@ -55,11 +51,27 @@ def extract(package_name: str, module_name: str | None = None) -> AdapterResult:
                 f"Using .pyi stubs from {stub_dir} (no runtime import needed)",
             ))
             resources = parse_stub_file(pyi_path, target_module, diagnostics)
+
+            # Run auth detection on stub-derived constructor params
+            auth_patterns: list[AuthPattern] = []
+            for resource in resources:
+                if resource.constructor_params:
+                    auth = _detect_stub_constructor_auth(
+                        resource.constructor_params, resource.source_class_name or "",
+                        target_module, diagnostics,
+                    )
+                    if auth and auth not in auth_patterns:
+                        auth_patterns.append(auth)
+                        # Mark the auth param in constructor_params
+                        for cp in resource.constructor_params:
+                            if cp.name == auth.parameter_name:
+                                cp.is_auth = True
+
             metadata = SdkMetadata(
                 name=package_name,
                 version="0.0.0",  # Cannot determine version from stubs alone
                 resources=resources,
-                auth_patterns=[],
+                auth_patterns=auth_patterns,
             )
             return AdapterResult(metadata=metadata, diagnostics=diagnostics)
 
@@ -183,7 +195,7 @@ def _discover_services(module: Any, diagnostics: list[Diagnostic]) -> list[tuple
         if not obj_module.startswith(module_root):
             continue
 
-        noun = _class_to_noun(name) if is_service else _pascal_to_kebab(name)
+        noun = class_to_noun(name) if is_service else pascal_to_kebab(name)
         if noun in seen_nouns:
             diagnostics.append(Diagnostic(
                 DiagnosticSeverity.WARNING, "CB202",
@@ -197,21 +209,23 @@ def _discover_services(module: Any, diagnostics: list[Diagnostic]) -> list[tuple
     return services
 
 
-def _class_to_noun(class_name: str) -> str:
-    """Convert class name to CLI noun: CustomerClient → customer."""
-    for suffix in SERVICE_SUFFIXES:
-        if class_name.endswith(suffix) and len(class_name) > len(suffix):
-            class_name = class_name[:-len(suffix)]
-            break
-    return _pascal_to_kebab(class_name)
-
-
-def _pascal_to_kebab(name: str) -> str:
-    """Convert PascalCase to kebab-case."""
-    import re
-    s = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1-\2", name)
-    s = re.sub(r"([a-z0-9])([A-Z])", r"\1-\2", s)
-    return s.lower()
+def _detect_stub_constructor_auth(
+    constructor_params: list[ConstructorParam],
+    class_name: str,
+    module_name: str,
+    diagnostics: list[Diagnostic],
+) -> AuthPattern | None:
+    """Detect auth pattern from stub-derived constructor params (no runtime class)."""
+    for cp in constructor_params:
+        if cp.name.lower() in AUTH_PARAM_NAMES and cp.type_name in ("str", "string", "None"):
+            prefix = module_name.split(".")[0].upper()
+            env_var = f"{prefix}_{cp.name.upper()}"
+            return AuthPattern(
+                type=AuthType.API_KEY,
+                env_var=env_var,
+                parameter_name=cp.name,
+            )
+    return None
 
 
 def _extract_operations(cls: type, diagnostics: list[Diagnostic]) -> list[Operation]:
