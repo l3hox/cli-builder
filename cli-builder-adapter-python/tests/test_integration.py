@@ -5,11 +5,14 @@ import subprocess
 import sys
 from pathlib import Path
 
+import jsonschema
+
 from cli_builder_adapter.extractor import extract
 from cli_builder_adapter.json_output import serialize_adapter_result
 
 
 TESTS_DIR = Path(__file__).parent
+SCHEMA_PATH = TESTS_DIR.parent.parent / "docs" / "sdk-metadata-schema.json"
 
 
 # ---- Round-trip ----
@@ -57,6 +60,31 @@ def test_operations_have_return_types():
         for op in resource.operations:
             assert op.return_type is not None
             assert op.return_type.kind is not None
+
+
+# ---- Schema validation ----
+
+def test_python_output_validates_against_schema():
+    """Python adapter output must conform to the JSON schema contract."""
+    result = extract("test_sdk", "test_sdk.services")
+    json_str = serialize_adapter_result(result)
+    parsed = json.loads(json_str)
+
+    schema = json.loads(SCHEMA_PATH.read_text())
+    jsonschema.validate(parsed, schema)  # Raises on failure
+
+def test_dotnet_fixture_validates_against_schema():
+    """The .NET fixture must also conform to the same schema."""
+    import pytest
+    dotnet_fixture = TESTS_DIR.parent.parent / "tests" / "fixtures" / "testsdk-metadata.json"
+    if not dotnet_fixture.exists():
+        pytest.skip("No .NET fixture available")
+
+    data = json.loads(dotnet_fixture.read_text())
+    schema = json.loads(SCHEMA_PATH.read_text())
+
+    # .NET fixture may lack schemaVersion (pre-Step 12) — schema allows it optional
+    jsonschema.validate(data, schema)
 
 
 # ---- Cross-adapter shape ----

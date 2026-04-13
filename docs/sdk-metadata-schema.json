@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cli-builder/sdk-metadata-schema/v1",
+  "title": "SdkMetadata Adapter Result Envelope",
+  "description": "JSON envelope produced by cli-builder adapters (.NET, Python). Universal contract between all adapters and generators.",
+  "type": "object",
+  "required": ["metadata", "diagnostics"],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1",
+      "description": "Schema version. Optional for backward compat with pre-Step-12 fixtures."
+    },
+    "metadata": { "$ref": "#/$defs/SdkMetadata" },
+    "diagnostics": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Diagnostic" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "SdkMetadata": {
+      "type": "object",
+      "required": ["name", "version", "resources", "authPatterns"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "resources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Resource" }
+        },
+        "authPatterns": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/AuthPattern" }
+        },
+        "staticAuth": {
+          "oneOf": [
+            { "$ref": "#/$defs/StaticAuthConfig" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "Resource": {
+      "type": "object",
+      "required": ["name", "description", "operations"],
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "operations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Operation" }
+        },
+        "sourceClassName": { "type": ["string", "null"] },
+        "sourceModule": { "type": ["string", "null"] },
+        "constructorParams": {
+          "oneOf": [
+            { "type": "array", "items": { "$ref": "#/$defs/ConstructorParam" } },
+            { "type": "null" }
+          ]
+        },
+        "hasParameterlessCtor": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "Operation": {
+      "type": "object",
+      "required": ["name", "description", "parameters", "returnType"],
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "parameters": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Parameter" }
+        },
+        "returnType": { "$ref": "#/$defs/TypeRef" },
+        "isStreaming": { "type": "boolean" },
+        "sourceMethodName": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "Parameter": {
+      "type": "object",
+      "required": ["name", "type", "required"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "$ref": "#/$defs/TypeRef" },
+        "required": { "type": "boolean" },
+        "defaultValue": {},
+        "description": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "TypeRef": {
+      "type": "object",
+      "required": ["kind", "name"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["primitive", "enum", "class", "generic", "array", "dictionary", "other"]
+        },
+        "name": { "type": "string" },
+        "isNullable": { "type": "boolean" },
+        "isAbstract": { "type": "boolean" },
+        "isExtensibleEnum": { "type": "boolean" },
+        "genericArguments": {
+          "oneOf": [
+            { "type": "array", "items": { "$ref": "#/$defs/TypeRef" } },
+            { "type": "null" }
+          ]
+        },
+        "enumValues": {
+          "oneOf": [
+            { "type": "array", "items": { "type": "string" } },
+            { "type": "null" }
+          ]
+        },
+        "properties": {
+          "oneOf": [
+            { "type": "array", "items": { "$ref": "#/$defs/Parameter" } },
+            { "type": "null" }
+          ]
+        },
+        "elementType": {
+          "oneOf": [
+            { "$ref": "#/$defs/TypeRef" },
+            { "type": "null" }
+          ]
+        },
+        "module": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "ConstructorParam": {
+      "type": "object",
+      "required": ["name", "typeName", "isAuth", "isRequired"],
+      "properties": {
+        "name": { "type": "string" },
+        "typeName": { "type": "string" },
+        "typeModule": { "type": ["string", "null"] },
+        "isAuth": { "type": "boolean" },
+        "isRequired": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "AuthPattern": {
+      "type": "object",
+      "required": ["type", "envVar", "parameterName"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["apiKey", "bearerToken", "oAuth", "custom"]
+        },
+        "envVar": { "type": "string" },
+        "parameterName": { "type": "string" },
+        "headerName": { "type": ["string", "null"] },
+        "description": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "StaticAuthConfig": {
+      "type": "object",
+      "required": ["typeName", "typeModule", "propertyName"],
+      "properties": {
+        "typeName": { "type": "string" },
+        "typeModule": { "type": "string" },
+        "propertyName": { "type": "string" },
+        "style": {
+          "type": "string",
+          "enum": ["staticProperty", "moduleAttribute"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "Diagnostic": {
+      "type": "object",
+      "required": ["severity", "code", "message"],
+      "properties": {
+        "severity": {
+          "type": "string",
+          "enum": ["info", "warning", "error"]
+        },
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
