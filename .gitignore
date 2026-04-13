@@ -485,3 +485,12 @@ $RECYCLE.BIN/
 
 # Coverage reports
 coverage/
+
+# Python build artifacts
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
+# Rust build artifacts
+cli-builder-rust/target/
