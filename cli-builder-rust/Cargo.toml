@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/cli-builder-core", "crates/cli-builder-gen-python"]
+members = ["crates/cli-builder-core", "crates/cli-builder-gen-python", "crates/cli-builder-gen-csharp"]
 resolver = "2"
 
 [workspace.dependencies]

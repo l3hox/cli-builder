@@ -211,6 +211,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "cli-builder-gen-csharp"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "cli-builder-core",
+ "insta",
+ "regex",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "tera",
+ "walkdir",
+]
+
+[[package]]
 name = "cli-builder-gen-python"
 version = "0.1.0"
 dependencies = [
