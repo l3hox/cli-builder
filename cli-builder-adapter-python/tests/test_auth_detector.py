@@ -1,7 +1,13 @@
-"""Unit tests for auth_detector.detect_constructor_auth()."""
+"""Unit tests for auth_detector — constructor auth + module-level auth."""
 
-from cli_builder_adapter.auth_detector import detect_constructor_auth, _derive_env_var
-from cli_builder_adapter.models import AuthType
+import types
+
+from cli_builder_adapter.auth_detector import (
+    detect_constructor_auth,
+    detect_module_auth,
+    _derive_env_var,
+)
+from cli_builder_adapter.models import AuthSetupStyle, AuthType
 
 
 # ---- Auth detection ----
@@ -81,3 +87,60 @@ def test_env_var_from_class_name():
 
     result = _derive_env_var(FakeClient, "token")
     assert result == "FAKECLIENT_TOKEN"
+
+
+# ---- Module-level auth detection ----
+
+def _make_module(name: str, **attrs) -> types.ModuleType:
+    mod = types.ModuleType(name)
+    for k, v in attrs.items():
+        setattr(mod, k, v)
+    return mod
+
+def test_module_level_api_key_detected():
+    mod = _make_module("stripe", api_key=None)
+    auth_patterns = []
+    result = detect_module_auth(mod, auth_patterns, [])
+    assert result is not None
+    assert result.property_name == "api_key"
+    assert result.style == AuthSetupStyle.MODULE_ATTRIBUTE
+    assert result.type_module == "stripe"
+    # Also adds AuthPattern
+    assert len(auth_patterns) == 1
+    assert auth_patterns[0].env_var == "STRIPE_API_KEY"
+
+def test_module_level_api_key_with_string_value():
+    mod = _make_module("mylib", api_key="sk_test_123")
+    result = detect_module_auth(mod, [], [])
+    assert result is not None
+    assert result.property_name == "api_key"
+
+def test_module_level_secret_key_detected():
+    mod = _make_module("sdk", secret_key=None)
+    result = detect_module_auth(mod, [], [])
+    assert result is not None
+    assert result.property_name == "secret_key"
+
+def test_module_level_non_string_attr_ignored():
+    """Non-string module attribute (e.g., api_key = 42) should be ignored."""
+    mod = _make_module("sdk", api_key=42)
+    result = detect_module_auth(mod, [], [])
+    assert result is None
+
+def test_module_level_skips_if_constructor_auth_exists():
+    """If constructor auth already covers api_key, module-level should skip."""
+    mod = _make_module("sdk", api_key=None)
+    existing = [AuthType.API_KEY]
+    # Simulate existing auth pattern with same parameter_name
+    from cli_builder_adapter.models import AuthPattern
+    auth_patterns = [AuthPattern(type=AuthType.API_KEY, env_var="SDK_API_KEY", parameter_name="api_key")]
+    result = detect_module_auth(mod, auth_patterns, [])
+    assert result is None
+    # No duplicate added
+    assert len(auth_patterns) == 1
+
+def test_module_level_no_auth_attrs():
+    """Module without any known auth attributes returns None."""
+    mod = _make_module("plain_sdk", version="1.0")
+    result = detect_module_auth(mod, [], [])
+    assert result is None

@@ -8,7 +8,7 @@ import sys
 import typing
 from typing import Any
 
-from .auth_detector import detect_constructor_auth
+from .auth_detector import detect_constructor_auth, detect_module_auth
 from .models import (
     AdapterResult,
     AuthPattern,
@@ -82,6 +82,9 @@ def extract(package_name: str, module_name: str | None = None) -> AdapterResult:
             has_parameterless_ctor=_has_parameterless_init(cls),
         ))
 
+    # Detect module-level auth (e.g., stripe.api_key)
+    static_auth = detect_module_auth(module, auth_patterns, diagnostics)
+
     # Derive SDK version
     version = getattr(module, "__version__", "0.0.0")
 
@@ -90,6 +93,7 @@ def extract(package_name: str, module_name: str | None = None) -> AdapterResult:
         version=str(version),
         resources=resources,
         auth_patterns=auth_patterns,
+        static_auth=static_auth,
     )
 
     return AdapterResult(metadata=metadata, diagnostics=diagnostics)
