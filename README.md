@@ -1,53 +1,70 @@
 # cli-builder
 
-Generate agent-ready CLIs directly from .NET SDK assemblies.
+Generate agent-ready CLIs from SDK packages — any language in, any language out.
 
 ## Problem
 
 AI agents work best with CLI tools — structured output, discoverable commands, composable via pipes. But most SDKs ship without CLIs. Building a CLI by hand for each SDK is tedious, repetitive, and falls out of sync as SDKs evolve.
 
-cli-builder eliminates the manual step: point it at an SDK assembly, get a fully functional CLI back.
+cli-builder eliminates the manual step: point it at an SDK package, get a fully functional CLI back.
 
-## Try it now
+## Architecture
 
-**Prerequisites:** [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+```
+SDK package  -->  Native adapter  -->  SdkMetadata JSON  -->  Rust generator  -->  CLI project
+```
+
+**Adapters** extract metadata from SDKs in their native language (no cross-language FFI):
+- **.NET adapter** — reflection via `MetadataLoadContext` (no code execution)
+- **Python adapter** — `inspect` + `typing.get_type_hints()`, with `.pyi` stub fallback
+
+**Generators** produce CLI projects from the shared `SdkMetadata` JSON contract:
+- **Python generator** (Rust) — `click`-based CLI with auth, JSON/table output
+- **C# generator** (.NET) — `System.CommandLine` CLI with Scriban templates
+
+All generators share a Rust core: `ModelMapper`, `ParameterFlattener`, `IdentifierValidator` with a pluggable `LanguageProfile` trait. Adding a new target language requires ~500 lines of templates.
+
+See [ADR-016](docs/ADR.md#adr-016-subprocess-based-adapter-architecture--rust-migration-path) (adapter architecture) and [ADR-017](docs/ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates) (generator architecture).
+
+## Quick start
+
+**Prerequisites:** [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0), [Rust](https://rustup.rs/), Python 3.10+
+
+### Generate a C# CLI from a .NET SDK
 
 ```bash
-git clone https://github.com/your-org/cli-builder.git
-cd cli-builder
 dotnet build
-
-# Generate and run the TestSdk demo CLI:
-./scripts/demo.sh
-
-# Generate and run against Stripe (with test key):
-STRIPE_API_KEY=sk_test_... ./scripts/demo-stripe.sh
-
-# Generate and run against OpenAI:
-OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh
+./scripts/demo.sh                                    # TestSdk demo
+STRIPE_API_KEY=sk_test_... ./scripts/demo-stripe.sh  # Stripe CLI
+OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh        # OpenAI CLI
 ```
 
-> **Note:** cli-builder is currently a library. The `cli-builder generate --assembly X.dll` CLI entry point is in active development ([Step 10](docs/FUTURE.md)).
+### Generate a Python CLI from a Python SDK
 
-## How it works
+```bash
+# Extract metadata from a Python package
+cd cli-builder-adapter-python
+python -m cli_builder_adapter --package test_sdk --module test_sdk.services --json > /tmp/metadata.json
 
+# Generate click-based Python CLI
+cd ../cli-builder-rust
+cargo run -p cli-builder-gen-python -- --input /tmp/metadata.json --output /tmp/my-cli --cli-name my-cli
+
+# Install and run
+cd /tmp/my-cli && pip install -e .
+my-cli --help
+my-cli customer get --id-value cust_123 --json
 ```
-SDK Assembly (.dll)  ──>  cli-builder  ──>  Standalone CLI Project
-```
-
-1. **Extract** — The .NET reflection adapter reads the SDK assembly via `MetadataLoadContext` (no code execution) and produces structured `SdkMetadata`: resources, operations, parameters, auth patterns.
-
-2. **Generate** — The C# generator takes `SdkMetadata` and emits a complete CLI project using Scriban templates and System.CommandLine. The output is a standalone project with no cli-builder dependency.
-
-3. **Run** — The generated CLI compiles with `dotnet build` and runs immediately. Generated handlers make real SDK method calls.
 
 ## Validated SDKs
 
-| SDK | Resources | Operations wired | Live API tested |
-|-----|-----------|-----------------|----------------|
-| TestSdk | 6 | 100% | Yes (15 E2E tests) |
-| OpenAI 2.9.1 | 20 | 41/169 (24%) | Yes (`get-models`, `get-model`) |
-| Stripe.net 51.0.0 | 196 | ~93% | Yes (`payment-intent list`, `product create`, `price create`, etc.) |
+| SDK | Adapter | Resources | Operations wired | Live API tested |
+|-----|---------|-----------|-----------------|----------------|
+| TestSdk (.NET) | .NET | 7 | 100% | Yes (23 E2E tests) |
+| OpenAI 2.9.1 | .NET | 20 | 41/169 (24%) | Yes |
+| Stripe.net 51.0.0 | .NET | 196 | ~93% | Yes |
+| TestSdk (Python) | Python | 3 | 100% | Yes |
+| stripe-python 15.x | Python | 105 | Yes (classmethod extraction) | Metadata only |
 
 ## Agent-readiness
 
@@ -59,33 +76,43 @@ Every generated CLI satisfies:
 | Human-readable default | Table format when `--json` absent |
 | Discoverable commands | `--help` at root, noun, and verb levels |
 | Noun-verb structure | `<tool> <resource> <action> [--params]` |
-| Semantic exit codes | 0=success, 1=user error, 2=auth error, 3+=SDK error |
-| Structured errors | JSON error object to stderr |
-| Non-interactive auth | Env var > config file > `--api-key` flag |
+| Semantic exit codes | 0=success, 1=user error, 2=auth/env error |
+| Non-interactive auth | Env var > `--api-key` flag |
 | Pipe-friendly | No color when stdout is redirected |
 
 ## Test suite
 
-347 tests across 3 projects:
+| Component | Tests | Covers |
+|-----------|-------|--------|
+| .NET (xUnit) | 397 | Adapter, generator, model mapping, golden files, OpenAI/Stripe compile tests |
+| Rust (cargo test) | 90 | Shared core (ModelMapper, ParameterFlattener, IdentifierValidator), Python generator templates, golden file snapshots |
+| Python (pytest) | 108 | Type mapper, auth detector, extractor, error paths, integration, Stripe validation, stub parser |
+| **Total** | **595** | |
 
-| Project | Tests | Covers |
-|---------|-------|--------|
-| Generator Tests | 252 | Template rendering, model mapping, type conversion, sanitization, golden files, compile verification, nullable guards |
-| Core Tests | 52 | Adapter extraction, type resolution, constructor detection, collision resolution |
-| Integration Tests | 43 | OpenAI + Stripe extraction/compilation, TestSdk E2E, --json-input, namespace disambiguation |
+## Project structure
 
-93.4% line coverage, 96.4% method coverage. Run `./scripts/coverage.sh` for a full report.
+```
+cli-builder/
+  src/                          # .NET source (adapter, generator, orchestrator)
+  cli-builder-adapter-python/   # Python adapter (standalone package)
+  cli-builder-rust/             # Rust workspace (shared core + generators)
+    crates/
+      cli-builder-core/         # Shared: models, ModelMapper, ParameterFlattener
+      cli-builder-gen-python/   # Python CLI generator (click + Tera templates)
+  tests/                        # .NET test projects
+  docs/                         # Spec, ADRs, design notes, roadmap
+```
 
 ## Documentation
 
 | Document | Contents |
 |----------|----------|
-| [docs/cli-builder-spec.md](docs/cli-builder-spec.md) | Specification — interfaces, metadata model, config schema, test strategy |
-| [docs/FUTURE.md](docs/FUTURE.md) | Roadmap — prioritized next steps |
-| [docs/ADR.md](docs/ADR.md) | Architecture Decision Records (ADR-001 through ADR-015) |
-| [docs/design-notes.md](docs/design-notes.md) | Edge-case policies, behavioral rules, diagnostic codes |
 | [AGENTS.md](AGENTS.md) | Quick-start context for AI agents and contributors |
-| [CHANGELOG.md](CHANGELOG.md) | Version history |
+| [docs/cli-builder-spec.md](docs/cli-builder-spec.md) | Specification — interfaces, metadata model, config schema |
+| [docs/ADR.md](docs/ADR.md) | 17 Architecture Decision Records |
+| [docs/design-notes.md](docs/design-notes.md) | Edge-case policies, diagnostic codes, generator architecture |
+| [docs/FUTURE.md](docs/FUTURE.md) | Roadmap — next steps |
+| [docs/sdk-metadata-schema.json](docs/sdk-metadata-schema.json) | JSON Schema for the cross-adapter SdkMetadata contract |
 
 ## License
 
