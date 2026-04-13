@@ -21,6 +21,7 @@ from .models import (
     SdkMetadata,
     TypeKind,
 )
+from .stub_parser import find_stubs, parse_stub_file
 from .type_mapper import map_type
 
 # Service class name suffixes (same as .NET adapter)
@@ -38,6 +39,29 @@ def extract(package_name: str, module_name: str | None = None) -> AdapterResult:
         module_name: Optional specific module within the package
     """
     diagnostics: list[Diagnostic] = []
+
+    # Fallback chain: try .pyi stubs first (ADR-013 compliance)
+    stub_dir = find_stubs(package_name)
+    if stub_dir is not None:
+        target_module = module_name or package_name
+        # Look for a matching .pyi file
+        pyi_name = target_module.split(".")[-1] + ".pyi"
+        pyi_path = stub_dir / pyi_name
+        if not pyi_path.exists():
+            pyi_path = stub_dir / "__init__.pyi"
+        if pyi_path.exists():
+            diagnostics.append(Diagnostic(
+                DiagnosticSeverity.INFO, "CB605",
+                f"Using .pyi stubs from {stub_dir} (no runtime import needed)",
+            ))
+            resources = parse_stub_file(pyi_path, target_module, diagnostics)
+            metadata = SdkMetadata(
+                name=package_name,
+                version="0.0.0",  # Cannot determine version from stubs alone
+                resources=resources,
+                auth_patterns=[],
+            )
+            return AdapterResult(metadata=metadata, diagnostics=diagnostics)
 
     # Import the package (controlled import with diagnostic)
     try:
