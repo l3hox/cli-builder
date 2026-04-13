@@ -1,0 +1,27 @@
+"""Table output formatter."""
+
+
+def format_output(result):
+    """Format result as human-readable text."""
+    if result is None:
+        return "(no result)"
+    if hasattr(result, "to_dict"):
+        return _format_dict(result.to_dict())
+    if hasattr(result, "__dict__"):
+        return _format_dict(result.__dict__)
+    if isinstance(result, dict):
+        return _format_dict(result)
+    if isinstance(result, (list, tuple)):
+        return "\n".join(str(item) for item in result)
+    return str(result)
+
+
+def _format_dict(data):
+    """Format a dictionary as key-value pairs."""
+    if not data:
+        return "(empty)"
+    max_key = max(len(str(k)) for k in data.keys())
+    lines = []
+    for key, value in data.items():
+        lines.append(f"{str(key):<{max_key}}  {value}")
+    return "\n".join(lines)

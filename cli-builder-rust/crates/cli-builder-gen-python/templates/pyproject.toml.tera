@@ -1,0 +1,19 @@
+[project]
+name = "{{ cli_name }}"
+version = "0.1.0"
+description = "{{ cli_description }}"
+requires-python = ">=3.9"
+dependencies = [
+    "click>=8.0",
+    "{{ sdk_package_name }}",
+]
+
+[project.scripts]
+{{ cli_name }} = "{{ package_name }}.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[tool.setuptools.packages.find]
+where = ["src"]

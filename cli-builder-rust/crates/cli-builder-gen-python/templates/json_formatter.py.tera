@@ -1,0 +1,13 @@
+"""JSON output formatter."""
+import json
+
+
+def format_output(result):
+    """Format result as JSON string."""
+    if result is None:
+        return json.dumps(None)
+    if hasattr(result, "to_dict"):
+        return json.dumps(result.to_dict(), indent=2, default=str)
+    if hasattr(result, "__dict__"):
+        return json.dumps(result.__dict__, indent=2, default=str)
+    return json.dumps(result, indent=2, default=str)

@@ -1,0 +1,34 @@
+"""CLI entry point for {{ cli_name }}."""
+import click
+{% for resource in resources %}
+from .commands.{{ resource.name | replace(from="-", to="_") }} import {{ resource.name | replace(from="-", to="_") }}
+{% endfor %}
+
+
+@click.group()
+{% if has_auth %}
+@click.option("--api-key", default=None, envvar="{{ auth.env_var }}", help="API key")
+{% endif %}
+@click.option("--json", "use_json", is_flag=True, default=False, help="Output as JSON")
+@click.pass_context
+def cli(ctx{% if has_auth %}, api_key{% endif %}, use_json):
+    """{{ cli_description }}"""
+    ctx.ensure_object(dict)
+    ctx.obj["use_json"] = use_json
+{% if has_auth %}
+    ctx.obj["api_key"] = api_key
+{% endif %}
+
+
+{% for resource in resources %}
+cli.add_command({{ resource.name | replace(from="-", to="_") }})
+{% endfor %}
+
+
+def main():
+    """Entry point."""
+    cli()
+
+
+if __name__ == "__main__":
+    main()

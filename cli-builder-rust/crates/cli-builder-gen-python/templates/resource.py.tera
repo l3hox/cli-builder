@@ -1,0 +1,84 @@
+"""{{ resource.class_name }} commands."""
+import json as json_mod
+import click
+
+
+{% if resource.can_construct and resource.source_class_name and resource.source_module %}
+def _get_client(ctx):
+    """Create {{ resource.source_class_name }} instance."""
+    from {{ resource.source_module }} import {{ resource.source_class_name }}
+{% if resource.constructor_auth %}
+    from ..auth.handler import resolve_credential
+    credential = resolve_credential(ctx)
+{% if resource.constructor_auth.is_plain_string %}
+    return {{ resource.source_class_name }}(credential)
+{% else %}
+{% if resource.constructor_auth.type_module %}
+    from {{ resource.constructor_auth.type_module }} import {{ resource.constructor_auth.type_name }}
+{% endif %}
+    return {{ resource.source_class_name }}({{ resource.constructor_auth.type_name }}(credential))
+{% endif %}
+{% else %}
+    return {{ resource.source_class_name }}()
+{% endif %}
+{% endif %}
+
+
+@click.group()
+@click.pass_context
+def {{ resource.name | replace(from="-", to="_") }}(ctx):
+    """{% if resource.description %}{{ resource.description }}{% else %}{{ resource.class_name }} operations.{% endif %}"""
+    pass
+
+
+{% for op in resource.operations %}
+{% if op.can_wire_sdk_call %}
+@{{ resource.name | replace(from="-", to="_") }}.command(name="{{ op.name }}")
+{% for param in op.parameters %}
+@click.option("--{{ param.cli_flag }}"{% if param.is_required %}, required=True{% endif %}{% if param.cli_type == "bool" %}, is_flag=True, default=False{% elif param.cli_type == "int" %}, type=int{% elif param.cli_type == "float" %}, type=float{% endif %}{% if param.enum_values %}, type=click.Choice([{% for v in param.enum_values %}"{{ v }}"{% if not loop.last %}, {% endif %}{% endfor %}]){% endif %}{% if param.description %}, help="{{ param.description }}"{% endif %})
+{% endfor %}
+{% if op.needs_json_input %}
+@click.option("--json-input", default=None, help="JSON string for complex parameters")
+{% endif %}
+@click.pass_context
+def {{ op.name | replace(from="-", to="_") }}(ctx{% for param in op.parameters %}, {{ param.cli_flag | replace(from="-", to="_") }}{% endfor %}{% if op.needs_json_input %}, json_input{% endif %}):
+    """{% if op.description %}{{ op.description }}{% else %}{{ op.name }} operation.{% endif %}"""
+{% if resource.can_construct and resource.source_class_name and resource.source_module %}
+    client = _get_client(ctx)
+    kwargs = {}
+{% for param in op.parameters %}
+    if {{ param.cli_flag | replace(from="-", to="_") }} is not None:
+        kwargs["{{ param.property_name }}"] = {{ param.cli_flag | replace(from="-", to="_") }}
+{% endfor %}
+{% if op.needs_json_input %}
+    if json_input:
+        kwargs.update(json_mod.loads(json_input))
+{% endif %}
+{% if op.source_method_name %}
+    result = client.{{ op.source_method_name }}(**kwargs)
+{% else %}
+    result = client.{{ op.name | replace(from="-", to="_") }}(**kwargs)
+{% endif %}
+    _output(ctx, result)
+{% else %}
+    click.echo("{{ resource.name }} {{ op.name }}: client construction not available")
+{% endif %}
+{% else %}
+@{{ resource.name | replace(from="-", to="_") }}.command(name="{{ op.name }}")
+@click.pass_context
+def {{ op.name | replace(from="-", to="_") }}(ctx):
+    """{% if op.description %}{{ op.description }}{% else %}{{ op.name }} operation.{% endif %}"""
+    click.echo("{{ resource.name }} {{ op.name }}: not yet wired to SDK")
+{% endif %}
+
+
+{% endfor %}
+def _output(ctx, result):
+    """Format and print result."""
+    use_json = ctx.obj.get("use_json", False)
+    if use_json:
+        from ..output.json_formatter import format_output
+        click.echo(format_output(result))
+    else:
+        from ..output.table_formatter import format_output
+        click.echo(format_output(result))
