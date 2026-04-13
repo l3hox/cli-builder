@@ -147,6 +147,7 @@ fn map_parameter(
         sdk_type_name: Some(param.type_ref.name.clone()),
         sdk_type_kind: Some(param.type_ref.kind.clone()),
         sdk_type_is_nullable: param.type_ref.is_nullable,
+        sdk_type_is_extensible_enum: param.type_ref.is_extensible_enum,
         source_options_class_name: source_options_class_name.map(String::from),
     }
 }

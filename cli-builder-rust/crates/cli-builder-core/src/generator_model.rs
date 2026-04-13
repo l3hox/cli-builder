@@ -117,6 +117,7 @@ pub struct FlatParameter {
     pub sdk_type_name: Option<String>,
     pub sdk_type_kind: Option<TypeKind>,
     pub sdk_type_is_nullable: bool,
+    pub sdk_type_is_extensible_enum: bool,
     pub source_options_class_name: Option<String>,
 }
 

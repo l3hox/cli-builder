@@ -193,7 +193,7 @@ fn build_csharp_operation(
     }
 }
 
-fn build_csharp_flat_param(
+pub(crate) fn build_csharp_flat_param(
     param: &FlatParameter,
     diagnostics: &mut Vec<Diagnostic>,
 ) -> CSharpFlatParameter {
@@ -201,7 +201,9 @@ fn build_csharp_flat_param(
         param.sdk_type_kind.as_ref(),
         param.sdk_type_name.as_deref(),
         param.sdk_type_is_nullable,
-        param.cli_type == "string" && param.sdk_type_kind.as_ref() == Some(&TypeKind::Enum),
+        param.cli_type == "string"
+            && param.sdk_type_kind.as_ref() == Some(&TypeKind::Enum)
+            && !param.sdk_type_is_extensible_enum,
     );
 
     let default_literal = param

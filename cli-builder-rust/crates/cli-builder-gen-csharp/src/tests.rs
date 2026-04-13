@@ -241,6 +241,80 @@ fn conversion_plain_string_returns_none() {
     assert!(result.is_none());
 }
 
+// Council fixes: missing nullable conversion tests
+
+#[test]
+fn conversion_guid_nullable() {
+    let result = compute_conversion(Some(&TypeKind::Primitive), Some("Guid"), true, false);
+    let expr = result.unwrap();
+    assert!(expr.contains("Guid.Parse"));
+    assert!(expr.contains("(Guid?)null"));
+}
+
+#[test]
+fn conversion_datetimeoffset_non_nullable() {
+    let result = compute_conversion(Some(&TypeKind::Primitive), Some("DateTimeOffset"), false, false);
+    assert_eq!(result.as_deref(), Some("DateTimeOffset.Parse({0})"));
+}
+
+#[test]
+fn conversion_datetimeoffset_nullable() {
+    let result = compute_conversion(Some(&TypeKind::Primitive), Some("DateTimeOffset"), true, false);
+    let expr = result.unwrap();
+    assert!(expr.contains("DateTimeOffset.Parse"));
+    assert!(expr.contains("(DateTimeOffset?)null"));
+}
+
+// Council fix: extensible enum wiring test through build_csharp_flat_param
+
+#[test]
+fn extensible_enum_flat_param_has_no_conversion() {
+    let param = FlatParameter {
+        cli_flag: "voice".into(),
+        property_name: "Voice".into(),
+        cli_type: "string".into(),
+        is_required: false,
+        default_value: None,
+        description: None,
+        enum_values: Some(vec!["alloy".into(), "echo".into()]),
+        sdk_type_name: Some("GeneratedSpeechVoice".into()),
+        sdk_type_kind: Some(TypeKind::Enum),
+        sdk_type_is_nullable: false,
+        sdk_type_is_extensible_enum: true,
+        source_options_class_name: Some("SpeechOptions".into()),
+    };
+    let mut diags = vec![];
+    let csharp_param = build_csharp_flat_param(&param, &mut diags);
+    // Extensible enums should NOT get Enum.Parse — handled by JSON deserializer
+    assert!(
+        csharp_param.conversion_expression.is_none(),
+        "Extensible enum should have no conversion, got: {:?}",
+        csharp_param.conversion_expression
+    );
+}
+
+#[test]
+fn regular_enum_flat_param_has_enum_parse_conversion() {
+    let param = FlatParameter {
+        cli_flag: "status".into(),
+        property_name: "Status".into(),
+        cli_type: "string".into(),
+        is_required: false,
+        default_value: None,
+        description: None,
+        enum_values: Some(vec!["Active".into(), "Inactive".into()]),
+        sdk_type_name: Some("CustomerStatus".into()),
+        sdk_type_kind: Some(TypeKind::Enum),
+        sdk_type_is_nullable: false,
+        sdk_type_is_extensible_enum: false,
+        source_options_class_name: Some("CreateOptions".into()),
+    };
+    let mut diags = vec![];
+    let csharp_param = build_csharp_flat_param(&param, &mut diags);
+    assert!(csharp_param.conversion_expression.is_some());
+    assert!(csharp_param.conversion_expression.as_ref().unwrap().contains("Enum.Parse"));
+}
+
 // ================================================================
 // sanitize_default_value
 // ================================================================
@@ -345,6 +419,29 @@ fn nullable_bool_becomes_bool_question() {
     }];
     make_value_types_nullable(&mut params);
     assert_eq!(params[0].csharp_type, "bool?");
+    assert_eq!(params[0].conversion_expression.as_deref(), Some("{0}.Value"));
+}
+
+// Council fix: test non-bool value type
+
+#[test]
+fn nullable_int_becomes_int_question() {
+    let mut params = vec![CSharpFlatParameter {
+        cli_flag: "count".into(),
+        property_name: "Count".into(),
+        csharp_type: "int".into(),
+        is_required: false,
+        default_value_literal: None,
+        description: None,
+        enum_values: None,
+        sdk_type_name: None,
+        sdk_type_kind: None,
+        sdk_type_is_nullable: false,
+        conversion_expression: None,
+        source_options_class_name: Some("Opts".into()),
+    }];
+    make_value_types_nullable(&mut params);
+    assert_eq!(params[0].csharp_type, "int?");
     assert_eq!(params[0].conversion_expression.as_deref(), Some("{0}.Value"));
 }
 
