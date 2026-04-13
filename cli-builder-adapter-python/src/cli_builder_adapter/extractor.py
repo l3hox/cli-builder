@@ -26,6 +26,9 @@ from .type_mapper import map_type
 # Service class name suffixes (same as .NET adapter)
 SERVICE_SUFFIXES = ("Client", "Service", "Api")
 
+# CRUD classmethod names that indicate a resource class (e.g., stripe.Customer)
+RESOURCE_CRUD_METHODS = {"create", "retrieve", "list", "delete"}
+
 
 def extract(package_name: str, module_name: str | None = None) -> AdapterResult:
     """Extract SdkMetadata from a Python package.
@@ -100,19 +103,63 @@ def extract(package_name: str, module_name: str | None = None) -> AdapterResult:
 
 
 def _discover_services(module: Any, diagnostics: list[Diagnostic]) -> list[tuple[str, type]]:
-    """Find classes matching service naming patterns."""
+    """Find service and resource classes.
+
+    Discovery strategies (in order):
+    1. Classes matching *Client/*Service/*Api suffixes (standard pattern)
+    2. Classes with CRUD classmethods (resource pattern, e.g., stripe.Customer)
+
+    Uses dir(module) + lazy-load registries (e.g., _import_map) to handle
+    modules that use __getattr__ for deferred imports.
+    """
     services = []
     seen_nouns: set[str] = set()
 
-    for name, obj in inspect.getmembers(module, inspect.isclass):
-        if name.startswith("_"):
-            continue
-        if not any(name.endswith(suffix) for suffix in SERVICE_SUFFIXES):
-            continue
-        if obj.__module__ != module.__name__:
-            continue  # Skip imported classes
+    # Collect candidate names from dir() and any lazy-load registry
+    candidate_names: set[str] = set()
+    for name in dir(module):
+        if not name.startswith("_"):
+            candidate_names.add(name)
+    # Lazy-loaded modules (e.g., Stripe) may expose names via _import_map
+    import_map = getattr(module, "_import_map", None)
+    if isinstance(import_map, dict):
+        for name, entry in import_map.items():
+            if not name.startswith("_") and name[0:1].isupper():
+                # Only non-submodule entries (actual classes)
+                if isinstance(entry, tuple) and len(entry) == 2 and not entry[1]:
+                    candidate_names.add(name)
 
-        noun = _class_to_noun(name)
+    for name in sorted(candidate_names):
+        try:
+            obj = getattr(module, name)
+        except Exception:
+            continue
+
+        if not inspect.isclass(obj):
+            continue
+
+        # Strategy 1: service naming pattern (*Client, *Service, *Api)
+        is_service = any(name.endswith(suffix) for suffix in SERVICE_SUFFIXES)
+
+        # Strategy 2: resource class with CRUD classmethods
+        is_resource = False
+        if not is_service:
+            crud_count = sum(
+                1 for m in RESOURCE_CRUD_METHODS
+                if isinstance(inspect.getattr_static(obj, m, None), classmethod)
+            )
+            is_resource = crud_count >= 2  # At least 2 CRUD methods
+
+        if not is_service and not is_resource:
+            continue
+
+        # Module origin check — skip re-exports from other packages
+        obj_module = getattr(obj, "__module__", "")
+        module_root = module.__name__.split(".")[0]
+        if not obj_module.startswith(module_root):
+            continue
+
+        noun = _class_to_noun(name) if is_service else _pascal_to_kebab(name)
         if noun in seen_nouns:
             diagnostics.append(Diagnostic(
                 DiagnosticSeverity.WARNING, "CB202",
@@ -144,13 +191,39 @@ def _pascal_to_kebab(name: str) -> str:
 
 
 def _extract_operations(cls: type, diagnostics: list[Diagnostic]) -> list[Operation]:
-    """Extract public methods as operations."""
-    operations = []
+    """Extract public methods as operations.
 
-    for name, method in inspect.getmembers(cls, predicate=inspect.isfunction):
+    Handles both instance methods (inspect.isfunction) and classmethods
+    (for resource-class patterns like stripe.Customer.create).
+    Skips async variants (*_async) when the sync version exists.
+    """
+    operations = []
+    seen_verbs: set[str] = set()
+
+    # Collect both instance methods and classmethods
+    methods_to_process: list[tuple[str, Any]] = []
+
+    for name in dir(cls):
         if name.startswith("_"):
             continue
 
+        # Skip async variants — prefer sync methods
+        if name.endswith("_async"):
+            continue
+
+        raw = inspect.getattr_static(cls, name, None)
+        if raw is None:
+            continue
+
+        if isinstance(raw, classmethod):
+            # Classmethod — get the underlying function
+            bound = getattr(cls, name)
+            methods_to_process.append((name, bound))
+        elif inspect.isfunction(raw):
+            # Instance method
+            methods_to_process.append((name, raw))
+
+    for name, method in methods_to_process:
         try:
             sig = inspect.signature(method)
         except (ValueError, TypeError):
@@ -180,6 +253,11 @@ def _extract_operations(cls: type, diagnostics: list[Diagnostic]) -> list[Operat
         is_streaming = (return_type.kind == TypeKind.GENERIC and return_type.name == "AsyncIterator")
 
         verb = _method_to_verb(name)
+
+        # Deduplicate verbs (classmethods + instance methods may overlap)
+        if verb in seen_verbs:
+            continue
+        seen_verbs.add(verb)
 
         operations.append(Operation(
             name=verb,

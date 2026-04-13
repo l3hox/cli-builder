@@ -127,16 +127,17 @@ def test_module_level_non_string_attr_ignored():
     result = detect_module_auth(mod, [], [])
     assert result is None
 
-def test_module_level_skips_if_constructor_auth_exists():
-    """If constructor auth already covers api_key, module-level should skip."""
+def test_module_level_deduplicates_auth_pattern_but_still_returns_static_auth():
+    """If constructor auth already covers api_key, module-level should
+    still return StaticAuthConfig but NOT add a duplicate AuthPattern."""
     mod = _make_module("sdk", api_key=None)
-    existing = [AuthType.API_KEY]
-    # Simulate existing auth pattern with same parameter_name
     from cli_builder_adapter.models import AuthPattern
     auth_patterns = [AuthPattern(type=AuthType.API_KEY, env_var="SDK_API_KEY", parameter_name="api_key")]
     result = detect_module_auth(mod, auth_patterns, [])
-    assert result is None
-    # No duplicate added
+    # StaticAuthConfig is still returned (module-level auth exists)
+    assert result is not None
+    assert result.property_name == "api_key"
+    # No duplicate AuthPattern added
     assert len(auth_patterns) == 1
 
 def test_module_level_no_auth_attrs():

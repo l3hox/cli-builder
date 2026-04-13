@@ -70,10 +70,6 @@ def detect_module_auth(
 
     for attr_name in MODULE_AUTH_ATTRS:
         if hasattr(module, attr_name):
-            # Skip if constructor auth already covers this name
-            if attr_name in existing_param_names:
-                continue
-
             # Verify it's a string-typed attribute (or None — not yet set)
             value = getattr(module, attr_name)
             if value is not None and not isinstance(value, str):
@@ -83,12 +79,13 @@ def detect_module_auth(
             prefix = module_name.split(".")[0].upper()
             env_var = f"{prefix}_{attr_name.upper()}"
 
-            # Also add an AuthPattern so generators know about the env var
-            auth_patterns.append(AuthPattern(
-                type=AuthType.API_KEY,
-                env_var=env_var,
-                parameter_name=attr_name,
-            ))
+            # Add AuthPattern if not already covered by constructor auth
+            if attr_name not in existing_param_names:
+                auth_patterns.append(AuthPattern(
+                    type=AuthType.API_KEY,
+                    env_var=env_var,
+                    parameter_name=attr_name,
+                ))
 
             return StaticAuthConfig(
                 type_name=module_name,
