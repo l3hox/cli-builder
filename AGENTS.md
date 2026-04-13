@@ -46,6 +46,6 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-**v1.5** — Step 12 MVP: Python adapter (`cli-builder-adapter-python`). Cross-adapter architecture proof — Python JSON schema matches .NET. 397 .NET tests + Python adapter functional.
+**v1.6** — Step 13 complete: Python CLI generator in Rust (`cli-builder-rust/`). Shared core (ModelMapper, ParameterFlattener, IdentifierValidator) + click-based Python templates via Tera. 397 .NET tests + 90 Rust tests (64 core + 26 gen-python) + Python adapter functional.
 
-**What's next:** Step 13 (Python CLI generator in Rust — shared ModelMapper + Tera templates). See [ADR-017](docs/ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates) and [docs/FUTURE.md](docs/FUTURE.md).
+**What's next:** Step 14 (port C# generator from .NET/Scriban to Rust/Tera). See [ADR-017](docs/ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates) and [docs/FUTURE.md](docs/FUTURE.md).

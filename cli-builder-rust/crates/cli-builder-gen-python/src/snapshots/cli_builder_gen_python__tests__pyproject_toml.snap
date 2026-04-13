@@ -1,0 +1,23 @@
+---
+source: crates/cli-builder-gen-python/src/tests.rs
+expression: content
+---
+[project]
+name = "testsdk-cli"
+version = "0.1.0"
+description = "testsdk-cli — CLI for CliBuilder.TestSdk"
+requires-python = ">=3.9"
+dependencies = [
+    "click>=8.0",
+    "CliBuilder.TestSdk",
+]
+
+[project.scripts]
+testsdk-cli = "testsdk_cli.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[tool.setuptools.packages.find]
+where = ["src"]

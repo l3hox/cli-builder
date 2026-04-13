@@ -47,8 +47,12 @@ def {{ op.name | replace(from="-", to="_") }}(ctx{% for param in op.parameters %
     client = _get_client(ctx)
     kwargs = {}
 {% for param in op.parameters %}
+{% if param.is_required %}
+    kwargs["{{ param.property_name }}"] = {{ param.cli_flag | replace(from="-", to="_") }}
+{% else %}
     if {{ param.cli_flag | replace(from="-", to="_") }} is not None:
         kwargs["{{ param.property_name }}"] = {{ param.cli_flag | replace(from="-", to="_") }}
+{% endif %}
 {% endfor %}
 {% if op.needs_json_input %}
     if json_input:

@@ -1,0 +1,62 @@
+---
+source: crates/cli-builder-gen-python/src/tests.rs
+expression: content
+---
+"""CLI entry point for testsdk-cli."""
+import click
+
+from .commands.shipping_service import shipping_service
+
+from .commands.shipping_client import shipping_client
+
+from .commands.customer import customer
+
+from .commands.message import message
+
+from .commands.order import order
+
+from .commands.product import product
+
+from .commands.search import search
+
+
+
+@click.group()
+
+@click.option("--api-key", default=None, envvar="TESTSDK_APIKEY", help="API key")
+
+@click.option("--json", "use_json", is_flag=True, default=False, help="Output as JSON")
+@click.pass_context
+def cli(ctx, api_key, use_json):
+    """testsdk-cli — CLI for CliBuilder.TestSdk"""
+    ctx.ensure_object(dict)
+    ctx.obj["use_json"] = use_json
+
+    ctx.obj["api_key"] = api_key
+
+
+
+
+cli.add_command(shipping_service)
+
+cli.add_command(shipping_client)
+
+cli.add_command(customer)
+
+cli.add_command(message)
+
+cli.add_command(order)
+
+cli.add_command(product)
+
+cli.add_command(search)
+
+
+
+def main():
+    """Entry point."""
+    cli()
+
+
+if __name__ == "__main__":
+    main()

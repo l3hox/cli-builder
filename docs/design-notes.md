@@ -411,22 +411,23 @@ cli-builder-adapter-python --package stripe --json
 
 ## Generator architecture (ADR-017)
 
-All generators consolidated in Rust with shared core + language-specific Tera templates.
+All generators consolidated in Rust with shared core + language-specific Tera templates. Implemented in `cli-builder-rust/` workspace.
 
-**Shared Rust core (~1500 lines):**
-- `ModelMapper` — SdkMetadata → GeneratorModel (type name mapping, sanitization, namespace/module collection)
-- `ParameterFlattener` — flatten options class properties into CLI flags, detect `--json-input` scenarios
-- `IdentifierValidator` — language-specific keyword checking (loaded from config per target)
-- Template rendering — Tera engine with custom filters
+**Shared Rust core (`cli-builder-core`, ~900 lines, 64 tests):**
+- `ModelMapper` (~310 lines) — SdkMetadata → GeneratorModel via pluggable `LanguageProfile` trait
+- `ParameterFlattener` (~130 lines) — flatten options class properties into CLI flags, detect `--json-input` scenarios
+- `IdentifierValidator` (~175 lines) — case conversion, validation, `sanitize_parameter` with pluggable keyword/boilerplate checks
+- `GeneratorModel` (~130 lines) — language-neutral types with `Serialize` for Tera context. No C#-specific fields: `cli_type` not `CSharpType`, no `ConversionExpression`, `requires_sentinel_nullability` flag for generators to interpret.
+- Sanitization split: core strips control chars only; template-engine escaping (`{{ }}`) in generators
 
-**Per-language templates (~500 lines each):**
-- C# templates: System.CommandLine commands, `Enum.Parse<T>()` conversions, `using` directives
-- Python templates: `click` commands, direct type constructors, `import` statements
+**Per-language generators (standalone crate per language):**
+- Python (`cli-builder-gen-python`, ~250 lines code + ~250 lines templates, 26 tests): `PythonProfile` + 8 Tera templates for `click`-based CLI. Golden file snapshots via `insta`.
+- C# templates: System.CommandLine commands, `Enum.Parse<T>()` conversions, `using` directives (Step 14 — to be ported from .NET/Scriban)
 - Future: Kotlin (clikt), Go (cobra), TypeScript (commander)
 
 **Pipeline:**
 ```
-SdkMetadata JSON → Shared ModelMapper → Tera templates → CLI project files
+SDK → Native adapter (subprocess) → SdkMetadata JSON → Rust generator (ModelMapper + Tera) → CLI project
 ```
 
 **Why Rust, not native per language:** 80% of generator code (ModelMapper, ParameterFlattener) is language-agnostic. Writing it once in Rust and sharing across all generators eliminates ~4000 lines of duplicated logic. Schema changes propagate to all generators via one Rust struct update. Single binary distribution: `cargo install cli-builder`.

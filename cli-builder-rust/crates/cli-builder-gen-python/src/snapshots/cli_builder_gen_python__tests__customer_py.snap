@@ -1,0 +1,268 @@
+---
+source: crates/cli-builder-gen-python/src/tests.rs
+expression: content
+---
+"""Customer commands."""
+import json as json_mod
+import click
+
+
+
+def _get_client(ctx):
+    """Create CustomerService instance."""
+    from CliBuilder.TestSdk.Services import CustomerService
+
+    from ..auth.handler import resolve_credential
+    credential = resolve_credential(ctx)
+
+    return CustomerService(credential)
+
+
+
+
+
+@click.group()
+@click.pass_context
+def customer(ctx):
+    """Customer operations."""
+    pass
+
+
+
+
+@customer.command(name="create")
+
+@click.option("--credit-limit", type=int)
+
+@click.option("--currency")
+
+@click.option("--description")
+
+@click.option("--email")
+
+@click.option("--initial-status", type=click.Choice(["Active", "Inactive", "Suspended"]))
+
+@click.option("--locale")
+
+@click.option("--name")
+
+@click.option("--phone")
+
+@click.option("--preferred-contact", is_flag=True, default=False)
+
+@click.option("--tax-id")
+
+
+@click.pass_context
+def create(ctx, credit_limit, currency, description, email, initial_status, locale, name, phone, preferred_contact, tax_id):
+    """create operation."""
+
+    client = _get_client(ctx)
+    kwargs = {}
+
+
+    if credit_limit is not None:
+        kwargs["CreditLimit"] = credit_limit
+
+
+
+    if currency is not None:
+        kwargs["Currency"] = currency
+
+
+
+    if description is not None:
+        kwargs["Description"] = description
+
+
+
+    if email is not None:
+        kwargs["Email"] = email
+
+
+
+    if initial_status is not None:
+        kwargs["InitialStatus"] = initial_status
+
+
+
+    if locale is not None:
+        kwargs["Locale"] = locale
+
+
+
+    if name is not None:
+        kwargs["Name"] = name
+
+
+
+    if phone is not None:
+        kwargs["Phone"] = phone
+
+
+
+    if preferred_contact is not None:
+        kwargs["PreferredContact"] = preferred_contact
+
+
+
+    if tax_id is not None:
+        kwargs["TaxId"] = tax_id
+
+
+
+
+    result = client.CreateAsync(**kwargs)
+
+    _output(ctx, result)
+
+
+
+
+
+
+@customer.command(name="get")
+
+@click.option("--id-value", required=True)
+
+
+@click.pass_context
+def get(ctx, id_value):
+    """get operation."""
+
+    client = _get_client(ctx)
+    kwargs = {}
+
+
+    kwargs["id"] = id_value
+
+
+
+
+    result = client.GetAsync(**kwargs)
+
+    _output(ctx, result)
+
+
+
+
+
+
+@customer.command(name="list")
+
+@click.option("--limit", type=int)
+
+@click.option("--cursor")
+
+
+@click.pass_context
+def list(ctx, limit, cursor):
+    """list operation."""
+
+    client = _get_client(ctx)
+    kwargs = {}
+
+
+    if limit is not None:
+        kwargs["limit"] = limit
+
+
+
+    if cursor is not None:
+        kwargs["cursor"] = cursor
+
+
+
+
+    result = client.ListAsync(**kwargs)
+
+    _output(ctx, result)
+
+
+
+
+
+
+@customer.command(name="delete")
+
+@click.option("--id-value", required=True)
+
+
+@click.pass_context
+def delete(ctx, id_value):
+    """delete operation."""
+
+    client = _get_client(ctx)
+    kwargs = {}
+
+
+    kwargs["id"] = id_value
+
+
+
+
+    result = client.DeleteAsync(**kwargs)
+
+    _output(ctx, result)
+
+
+
+
+
+
+@customer.command(name="stream")
+
+
+@click.pass_context
+def stream(ctx):
+    """stream operation."""
+
+    client = _get_client(ctx)
+    kwargs = {}
+
+
+
+    result = client.StreamAsync(**kwargs)
+
+    _output(ctx, result)
+
+
+
+
+
+
+@customer.command(name="get-metadata")
+
+@click.option("--id-value", required=True)
+
+
+@click.pass_context
+def get_metadata(ctx, id_value):
+    """get-metadata operation."""
+
+    client = _get_client(ctx)
+    kwargs = {}
+
+
+    kwargs["id"] = id_value
+
+
+
+
+    result = client.GetMetadataAsync(**kwargs)
+
+    _output(ctx, result)
+
+
+
+
+
+def _output(ctx, result):
+    """Format and print result."""
+    use_json = ctx.obj.get("use_json", False)
+    if use_json:
+        from ..output.json_formatter import format_output
+        click.echo(format_output(result))
+    else:
+        from ..output.table_formatter import format_output
+        click.echo(format_output(result))

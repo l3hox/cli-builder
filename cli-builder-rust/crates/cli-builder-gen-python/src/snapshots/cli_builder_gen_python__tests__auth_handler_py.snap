@@ -1,0 +1,27 @@
+---
+source: crates/cli-builder-gen-python/src/tests.rs
+expression: content
+---
+"""Authentication handler for testsdk-cli."""
+import os
+import sys
+
+import click
+
+
+def resolve_credential(ctx):
+    """Resolve API credential from CLI flag or environment variable.
+
+    Priority: --api-key flag > TESTSDK_APIKEY environment variable.
+    """
+    api_key = ctx.obj.get("api_key")
+    if api_key:
+        return api_key
+    api_key = os.environ.get("TESTSDK_APIKEY")
+    if api_key:
+        return api_key
+    click.echo(
+        "Error: API key required. Use --api-key flag or set TESTSDK_APIKEY environment variable.",
+        err=True,
+    )
+    sys.exit(1)

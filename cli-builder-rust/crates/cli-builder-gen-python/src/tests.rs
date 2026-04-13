@@ -413,6 +413,62 @@ fn unwirable_operation_generates_echo_stub() {
 }
 
 // ================================================================
+// Phase 5: Golden file snapshots (insta)
+// ================================================================
+
+#[test]
+fn golden_pyproject_toml() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let content = std::fs::read_to_string(dir.path().join("pyproject.toml")).unwrap();
+    insta::assert_snapshot!("pyproject_toml", content);
+}
+
+#[test]
+fn golden_cli_py() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let content = std::fs::read_to_string(
+        dir.path().join("src/testsdk_cli/cli.py"),
+    )
+    .unwrap();
+    insta::assert_snapshot!("cli_py", content);
+}
+
+#[test]
+fn golden_customer_py() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let content = std::fs::read_to_string(
+        dir.path().join("src/testsdk_cli/commands/customer.py"),
+    )
+    .unwrap();
+    insta::assert_snapshot!("customer_py", content);
+}
+
+#[test]
+fn golden_auth_handler_py() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let content = std::fs::read_to_string(
+        dir.path().join("src/testsdk_cli/auth/handler.py"),
+    )
+    .unwrap();
+    insta::assert_snapshot!("auth_handler_py", content);
+}
+
+#[test]
+fn golden_json_formatter_py() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let content = std::fs::read_to_string(
+        dir.path().join("src/testsdk_cli/output/json_formatter.py"),
+    )
+    .unwrap();
+    insta::assert_snapshot!("json_formatter_py", content);
+}
+
+// ================================================================
 // Council fix: output/__init__.py is empty (not json_formatter copy)
 // ================================================================
 
