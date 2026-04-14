@@ -201,24 +201,19 @@ Port from the 6 Scriban `.sbn` files:
 | `sanitize_xml_value` | `&`→`&amp;`, `<`→`&lt;`, `"`→`&quot;` |
 | `apply_conversion` filter | with expr→substituted, without expr→passthrough |
 
-### Phase 2: Tera templates + renderer
+### Phase 2: Tera templates + renderer — DONE
 
-1. Port all 6 Scriban templates to Tera syntax
-2. Register custom filters (`escape_csharp`, `to_var_name`, `apply_conversion`)
-3. `renderer.rs` — template rendering with Tera escaping (same pattern as Python generator)
-4. Test: render TestSdk fixture, verify output file structure (file existence, correct paths)
+1. All 6 Scriban templates ported to Tera syntax
+2. Custom filters registered (`escape_csharp`, `to_var_name`, `apply_conversion`)
+3. `renderer.rs` with Tera escaping (ADR-017 pattern)
+4. Structural tests + insta golden file snapshots
+5. Council fixes: synthetic model tests for has_auth=false, void return, echo stub; insta snapshots for csproj/Program.cs/CustomerCommands.cs/AuthHandler.cs; enriched assertions for FromAmong + constructor config params
 
-### Phase 3: Compile gate + golden file snapshots
+### Phase 3: Compile gate (remaining)
 
-**Compile first, then snapshot** (council fix: reordered from original Phase 3/4).
-
-1. Generate C# CLI from TestSdk fixture using Rust generator
-2. **Compile test**: `dotnet build` on generated output — prerequisite: TestSdk must be packed as NuGet package (`dotnet pack` on `src/CliBuilder.TestSdk/`). OpenAI/Stripe are public packages.
-3. Named E2E test: `rust_generated_testsdk_compiles_with_dotnet` — required gate
-4. **After compilation succeeds**: seed insta snapshots from compiled-valid output
-5. Insta snapshots for key files: csproj, Program.cs, CustomerCommands.cs, AuthHandler.cs, JsonFormatter.cs
-6. Use .NET golden files (`tests/golden/testsdk-cli/`) as **semantic reference** — verify same operations, same parameter names, same type conversions. Not byte-for-byte oracle.
-7. Target byte-for-byte match where possible (Tera whitespace control `{%- -%}`). Document per-file allow-listed deviations.
+1. **Compile test**: `dotnet build` on Rust-generated output — prerequisite: `dotnet pack` on `src/CliBuilder.TestSdk/` to produce NuGet package
+2. Named E2E test: `rust_generated_testsdk_compiles_with_dotnet` — required gate
+3. Whitespace normalization: compare Rust output with .NET golden files as **semantic reference**. Insta snapshots (already done) lock the Tera output as canonical.
 
 ### Phase 4: Real SDK validation
 

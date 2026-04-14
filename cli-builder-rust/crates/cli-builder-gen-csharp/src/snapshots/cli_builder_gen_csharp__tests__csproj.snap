@@ -1,0 +1,25 @@
+---
+source: crates/cli-builder-gen-csharp/src/tests.rs
+expression: content
+---
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>TestsdkCli</RootNamespace>
+    <!-- Suppress warnings from generated handler code:
+         CS1998: async handler with no await (echo fallback operations)
+         CS8604/CS8601: nullable reference warnings from SDK call wiring
+         OPENAI001: OpenAI experimental API markers -->
+    <NoWarn>CS1998;CS8604;CS8601;OPENAI001</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CliBuilder.TestSdk" Version="1.0.0.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+  </ItemGroup>
+
+</Project>

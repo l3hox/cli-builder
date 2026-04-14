@@ -738,3 +738,259 @@ fn generates_expected_file_count() {
         cs_files.len()
     );
 }
+
+// ================================================================
+// P2: Insta golden file snapshots
+// ================================================================
+
+#[test]
+fn golden_csproj() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let content = std::fs::read_to_string(
+        dir.path().join("testsdk-cli/testsdk-cli.csproj"),
+    ).unwrap();
+    insta::assert_snapshot!("csproj", content);
+}
+
+#[test]
+fn golden_program_cs() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let content = std::fs::read_to_string(
+        dir.path().join("testsdk-cli/Program.cs"),
+    ).unwrap();
+    insta::assert_snapshot!("program_cs", content);
+}
+
+#[test]
+fn golden_customer_commands_cs() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let content = std::fs::read_to_string(
+        dir.path().join("testsdk-cli/Commands/CustomerCommands.cs"),
+    ).unwrap();
+    insta::assert_snapshot!("customer_commands_cs", content);
+}
+
+#[test]
+fn golden_auth_handler_cs() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let content = std::fs::read_to_string(
+        dir.path().join("testsdk-cli/Auth/AuthHandler.cs"),
+    ).unwrap();
+    insta::assert_snapshot!("auth_handler_cs", content);
+}
+
+// ================================================================
+// P1: Synthetic model tests — untested template branches
+// ================================================================
+
+fn make_minimal_csharp_model(
+    has_auth: bool,
+    resources: Vec<CSharpResourceModel>,
+) -> CSharpGeneratorModel {
+    CSharpGeneratorModel {
+        cli_name: "test-cli".into(),
+        sdk_name: "TestSdk".into(),
+        sdk_version: "1.0.0".into(),
+        sdk_package_name: "TestSdk".into(),
+        root_namespace: "TestCli".into(),
+        cli_description: "test".into(),
+        resources,
+        auth: if has_auth {
+            Some(AuthModel {
+                auth_type: "ApiKey".into(),
+                env_var: "TEST_KEY".into(),
+                parameter_name: "apiKey".into(),
+            })
+        } else {
+            None
+        },
+        static_auth_setup: None,
+        sdk_project_path: None,
+    }
+}
+
+#[test]
+fn renders_no_auth_path() {
+    let model = make_minimal_csharp_model(false, vec![CSharpResourceModel {
+        name: "thing".into(),
+        class_name: "Thing".into(),
+        description: Some("Thing resource".into()),
+        operations: vec![CSharpOperationModel {
+            name: "get".into(),
+            method_name: "Get".into(),
+            description: Some("Get a thing".into()),
+            parameters: vec![],
+            needs_json_input: false,
+            return_type_name: "Thing".into(),
+            is_streaming: false,
+            source_method_name: Some("GetAsync".into()),
+            options_type_name: None,
+            method_params: vec![],
+            can_wire_sdk_call: true,
+            has_json_direct_params: false,
+        }],
+        source_class_name: Some("ThingService".into()),
+        source_module: Some("Sdk".into()),
+        can_construct: true,
+        constructor_expression: Some("credential".into()),
+        constructor_config_params: vec![],
+        required_namespaces: vec!["Sdk".into()],
+    }]);
+
+    let dir = tempfile::tempdir().unwrap();
+    crate::renderer::generate(&model, dir.path()).unwrap();
+
+    // Program.cs should NOT contain apiKeyOption
+    let program = std::fs::read_to_string(
+        dir.path().join("test-cli/Program.cs"),
+    ).unwrap();
+    assert!(!program.contains("apiKeyOption"), "No-auth model should not have apiKeyOption");
+    assert!(program.contains("ThingCommands.Build(jsonOption)"));
+
+    // No Auth directory
+    assert!(!dir.path().join("test-cli/Auth").exists());
+
+    // Resource commands should not reference AuthHandler
+    let thing = std::fs::read_to_string(
+        dir.path().join("test-cli/Commands/ThingCommands.cs"),
+    ).unwrap();
+    assert!(!thing.contains("AuthHandler"), "No-auth resource should not reference AuthHandler");
+    assert!(!thing.contains("using TestCli.Auth"));
+}
+
+#[test]
+fn renders_void_return_type() {
+    let model = make_minimal_csharp_model(false, vec![CSharpResourceModel {
+        name: "item".into(),
+        class_name: "Item".into(),
+        description: None,
+        operations: vec![CSharpOperationModel {
+            name: "delete".into(),
+            method_name: "Delete".into(),
+            description: Some("Delete an item".into()),
+            parameters: vec![CSharpFlatParameter {
+                cli_flag: "id".into(),
+                property_name: "id".into(),
+                csharp_type: "string".into(),
+                is_required: true,
+                default_value_literal: None,
+                description: Some("Item ID".into()),
+                enum_values: None,
+                sdk_type_name: Some("string".into()),
+                sdk_type_kind: Some(TypeKind::Primitive),
+                sdk_type_is_nullable: false,
+                conversion_expression: None,
+                source_options_class_name: None,
+            }],
+            needs_json_input: false,
+            return_type_name: "void".into(),
+            is_streaming: false,
+            source_method_name: Some("DeleteAsync".into()),
+            options_type_name: None,
+            method_params: vec![CSharpMethodParam {
+                arg_expression: "idValue".into(),
+                type_name: None,
+                namespace: None,
+                is_options_class: false,
+                needs_json_deserialization: false,
+                deserialization_type_name: None,
+                json_property_name: None,
+                is_required: false,
+            }],
+            can_wire_sdk_call: true,
+            has_json_direct_params: false,
+        }],
+        source_class_name: Some("ItemService".into()),
+        source_module: Some("Sdk".into()),
+        can_construct: true,
+        constructor_expression: Some("credential".into()),
+        constructor_config_params: vec![],
+        required_namespaces: vec!["Sdk".into()],
+    }]);
+
+    let dir = tempfile::tempdir().unwrap();
+    crate::renderer::generate(&model, dir.path()).unwrap();
+
+    let item = std::fs::read_to_string(
+        dir.path().join("test-cli/Commands/ItemCommands.cs"),
+    ).unwrap();
+    // Void return: should have Console.WriteLine("OK"), NOT JsonFormatter.Write
+    assert!(item.contains("Console.WriteLine(\"OK\")"), "Void return should print OK");
+    assert!(!item.contains("JsonFormatter.Write"), "Void return should not format result");
+}
+
+#[test]
+fn renders_echo_stub_for_unwirable_operation() {
+    let model = make_minimal_csharp_model(false, vec![CSharpResourceModel {
+        name: "binary".into(),
+        class_name: "Binary".into(),
+        description: None,
+        operations: vec![CSharpOperationModel {
+            name: "upload".into(),
+            method_name: "Upload".into(),
+            description: Some("Upload binary data".into()),
+            parameters: vec![],
+            needs_json_input: false,
+            return_type_name: "string".into(),
+            is_streaming: false,
+            source_method_name: None,
+            options_type_name: None,
+            method_params: vec![],
+            can_wire_sdk_call: false, // Echo stub
+            has_json_direct_params: false,
+        }],
+        source_class_name: None,
+        source_module: None,
+        can_construct: false,
+        constructor_expression: None,
+        constructor_config_params: vec![],
+        required_namespaces: vec![],
+    }]);
+
+    let dir = tempfile::tempdir().unwrap();
+    crate::renderer::generate(&model, dir.path()).unwrap();
+
+    let binary = std::fs::read_to_string(
+        dir.path().join("test-cli/Commands/BinaryCommands.cs"),
+    ).unwrap();
+    // Echo stub: should have Dictionary fallback, not SDK client call
+    assert!(binary.contains("Dictionary<string, object?>"));
+    assert!(binary.contains("\"binary upload\""));
+    assert!(!binary.contains("new BinaryService"), "Echo stub should not construct client");
+}
+
+// ================================================================
+// P3: Enriched assertions on existing tests
+// ================================================================
+
+#[test]
+fn resource_commands_contain_enum_from_among() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let customer = std::fs::read_to_string(
+        dir.path().join("testsdk-cli/Commands/CustomerCommands.cs"),
+    ).unwrap();
+    // CustomerStatus enum should produce FromAmong
+    assert!(
+        customer.contains("FromAmong("),
+        "Enum parameters should generate FromAmong constraint"
+    );
+}
+
+#[test]
+fn search_resource_has_constructor_config_option() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let search = std::fs::read_to_string(
+        dir.path().join("testsdk-cli/Commands/SearchCommands.cs"),
+    ).unwrap();
+    // SearchClient has multi-arg constructor with --index config param
+    assert!(
+        search.contains("--index"),
+        "Search resource should have --index constructor config option"
+    );
+}
