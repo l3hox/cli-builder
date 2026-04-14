@@ -211,9 +211,16 @@ pub(crate) fn build_csharp_flat_param(
         .as_ref()
         .and_then(|v| sanitize_default_value(v, param.sdk_type_name.as_deref(), diagnostics));
 
+    // Prefix property_name with @ for C# keyword collision (e.g., "class" → "@class")
+    let property_name = if crate::csharp_keywords::is_keyword(&param.property_name.to_lowercase()) {
+        format!("@{}", param.property_name)
+    } else {
+        param.property_name.clone()
+    };
+
     CSharpFlatParameter {
         cli_flag: param.cli_flag.clone(),
-        property_name: param.property_name.clone(),
+        property_name,
         csharp_type: param.cli_type.clone(),
         is_required: param.is_required,
         default_value_literal: default_literal,
