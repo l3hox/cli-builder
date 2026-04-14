@@ -2,6 +2,8 @@
 
 Generate agent-ready CLIs from SDK packages — any language in, any language out.
 
+**v2.0** — Single Rust binary. Python + C# generators. .NET + Python adapters. 670 tests.
+
 ## Problem
 
 AI agents work best with CLI tools — structured output, discoverable commands, composable via pipes. But most SDKs ship without CLIs. Building a CLI by hand for each SDK is tedious, repetitive, and falls out of sync as SDKs evolve.
@@ -11,7 +13,7 @@ cli-builder eliminates the manual step: point it at an SDK package, get a fully 
 ## Architecture
 
 ```
-SDK package  -->  Native adapter  -->  SdkMetadata JSON  -->  Rust generator  -->  CLI project
+SDK package  -->  Native adapter (subprocess)  -->  SdkMetadata JSON  -->  Rust generator  -->  CLI project
 ```
 
 **Adapters** extract metadata from SDKs in their native language (no cross-language FFI):
@@ -20,7 +22,9 @@ SDK package  -->  Native adapter  -->  SdkMetadata JSON  -->  Rust generator  --
 
 **Generators** produce CLI projects from the shared `SdkMetadata` JSON contract:
 - **Python generator** (Rust) — `click`-based CLI with auth, JSON/table output
-- **C# generator** (.NET) — `System.CommandLine` CLI with Scriban templates
+- **C# generator** (Rust) — `System.CommandLine` CLI with Tera templates
+
+**Orchestrator** — a single Rust binary (`cli-builder`) that invokes adapters as subprocesses and calls generators as embedded library functions. Distributed via `cargo install cli-builder`.
 
 All generators share a Rust core: `ModelMapper`, `ParameterFlattener`, `IdentifierValidator` with a pluggable `LanguageProfile` trait. Adding a new target language requires ~500 lines of templates.
 
@@ -30,37 +34,34 @@ See [ADR-016](docs/ADR.md#adr-016-subprocess-based-adapter-architecture--rust-mi
 
 **Prerequisites:** [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0), [Rust](https://rustup.rs/), Python 3.10+
 
-### Generate a C# CLI from a .NET SDK
-
-```bash
-dotnet build
-./scripts/demo.sh                                    # TestSdk demo
-STRIPE_API_KEY=sk_test_... ./scripts/demo-stripe.sh  # Stripe CLI
-OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh        # OpenAI CLI
-```
-
-### Generate a Python CLI from a Python SDK (unified CLI)
+### Unified CLI
 
 ```bash
 cd cli-builder-rust
+cargo build
+
+# Generate a Python CLI from a Python SDK
 cargo run -p cli-builder -- generate \
   --adapter python --package stripe \
   --generator python --output /tmp/stripe-cli
 
-# Install and run
-cd /tmp/stripe-cli && pip install -e .
-stripe-cli --help
-```
-
-### Generate a C# CLI from a .NET SDK (unified CLI)
-
-```bash
+# Generate a C# CLI from a .NET SDK
 cargo run -p cli-builder -- generate \
   --adapter dotnet --assembly path/to/Sdk.dll \
   --generator csharp --output /tmp/my-cli
 
 # Inspect metadata without generating
 cargo run -p cli-builder -- inspect --adapter python --package stripe --json
+cargo run -p cli-builder -- inspect --adapter python --package stripe  # human-readable summary
+```
+
+### Legacy .NET scripts (demo)
+
+```bash
+dotnet build
+./scripts/demo.sh                                    # TestSdk demo
+STRIPE_API_KEY=sk_test_... ./scripts/demo-stripe.sh  # Stripe CLI
+OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh        # OpenAI CLI
 ```
 
 ## Validated SDKs
@@ -91,7 +92,7 @@ Every generated CLI satisfies:
 
 | Component | Tests | Covers |
 |-----------|-------|--------|
-| .NET (xUnit) | 397 | Adapter, generator, model mapping, golden files, OpenAI/Stripe compile tests |
+| .NET (xUnit) | 397 | Adapter, model mapping, golden files, OpenAI/Stripe compile tests |
 | Rust (cargo test) | 164 | Shared core (64), C# generator (63), Python generator (26), orchestrator (11) |
 | Python (pytest) | 109 | Type mapper, auth detector, extractor, error paths, integration, Stripe validation, stub parser |
 | **Total** | **670** | |
@@ -100,14 +101,16 @@ Every generated CLI satisfies:
 
 ```
 cli-builder/
-  src/                          # .NET source (adapter, generator, orchestrator)
-  cli-builder-adapter-python/   # Python adapter (standalone package)
-  cli-builder-rust/             # Rust workspace (shared core + generators)
+  cli-builder-rust/               # Rust workspace — orchestrator + generators
     crates/
-      cli-builder-core/         # Shared: models, ModelMapper, ParameterFlattener
-      cli-builder-gen-python/   # Python CLI generator (click + Tera templates)
-  tests/                        # .NET test projects
-  docs/                         # Spec, ADRs, design notes, roadmap
+      cli-builder/                # Orchestrator binary (main entry point)
+      cli-builder-core/           # Shared: models, ModelMapper, ParameterFlattener, IdentifierValidator
+      cli-builder-gen-python/     # Python CLI generator (click + Tera templates)
+      cli-builder-gen-csharp/     # C# CLI generator (System.CommandLine + Tera templates)
+  cli-builder-adapter-python/     # Python adapter (standalone package, subprocess)
+  src/                            # .NET source (adapter + legacy generator)
+  tests/                          # .NET test projects + fixtures
+  docs/                           # Spec, ADRs, design notes, roadmap, JSON schema
 ```
 
 ## Documentation

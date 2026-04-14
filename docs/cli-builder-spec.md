@@ -1,5 +1,5 @@
 # cli-builder — Project Specification
-*Last updated: 2026-04-04*
+*Last updated: 2026-04-14*
 
 ---
 
@@ -447,11 +447,11 @@ Optional/later:
 
 See [docs/FUTURE.md](FUTURE.md) for the full prioritized roadmap.
 
-**v1.4 (current):** .NET SDK adapter + C# CLI generator + CLI entry point + direct param deserialization + language-neutral metadata. Three SDKs validated (TestSdk E2E, OpenAI compile, Stripe compile). 397 tests.
+**v1.4:** .NET SDK adapter + C# CLI generator + CLI entry point + direct param deserialization + language-neutral metadata. Three SDKs validated (TestSdk E2E, OpenAI compile, Stripe compile). 397 .NET tests.
 
-**v1.5 (Step 12):** Python adapter as standalone `cli-builder-adapter-python` package. Subprocess orchestration. Adapter invocation contract finalized (JSON stdout, stderr diagnostics, exit codes).
+**v1.5:** Python adapter as standalone `cli-builder-adapter-python` package. Subprocess orchestration. Adapter invocation contract finalized (JSON stdout, stderr diagnostics, exit codes).
 
-**v2.0 (future):** All generators in Rust with shared ModelMapper + Tera templates ([ADR-017](ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates)). Rust orchestrator replaces .NET CLI. Single `cli-builder` binary. Adapters remain in native languages.
+**v2.0 (current):** All generators in Rust with shared ModelMapper + Tera templates ([ADR-017](ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates)). Rust orchestrator replaces .NET CLI. Single `cli-builder` binary. Adapters remain in native languages. Python adapter hardened (109 pytest tests, Stripe validation, .pyi stubs). 670 total tests.
 
 ---
 

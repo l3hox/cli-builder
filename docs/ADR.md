@@ -770,7 +770,7 @@ When cli-builder runs as a CLI tool, diagnostics map to exit codes:
 ## ADR-016: Subprocess-based adapter architecture + Rust migration path
 
 **Date:** 2026-04-10
-**Status:** Accepted
+**Status:** Accepted and implemented (Step 15, April 2026)
 
 ### Context
 
@@ -792,7 +792,7 @@ Three approaches were considered:
 
 Each generator is also a standalone executable that reads `SdkMetadata` JSON and emits a CLI project.
 
-The orchestrator (`cli-builder` CLI) calls adapters and generators as subprocesses. Currently the orchestrator is .NET; it will migrate to Rust in v2.0 for single-binary distribution.
+The orchestrator (`cli-builder` Rust binary) calls adapters as subprocesses and generators as embedded library calls. Migrated from .NET to Rust in v2.0 (Step 15).
 
 **Adapters are permanent.** They are never rewritten when the orchestrator migrates. A Python adapter written in Step 12 will still work when the orchestrator is Rust — the subprocess contract (JSON stdout) is the stable interface.
 
@@ -823,7 +823,7 @@ The orchestrator (`cli-builder` CLI) calls adapters and generators as subprocess
 ## ADR-017: All generators in Rust — shared ModelMapper, language-specific templates
 
 **Date:** 2026-04-10
-**Status:** Accepted
+**Status:** Accepted and implemented (Steps 13-15, April 2026)
 
 ### Context
 
@@ -849,10 +849,10 @@ The shared Rust core (~1500 lines) provides:
 
 Each target language adds ~500 lines of Tera templates. Adding a new target language means writing templates only — no new mapper code.
 
-**Migration path:**
-1. Step 13: Python generator in Rust (first Rust generator, builds shared ModelMapper)
-2. Step 14: Port C# generator from .NET/Scriban to Rust/Tera (validates shared code with existing test suite)
-3. Step 15: Rust orchestrator (single `cli-builder` binary, no .NET runtime needed)
+**Migration path (all completed):**
+1. Step 13: Python generator in Rust — **DONE** (shared core + click templates)
+2. Step 14: C# generator ported to Rust/Tera — **DONE** (compile-validated, matches .NET output)
+3. Step 15: Rust orchestrator — **DONE** (single binary, adapter subprocesses, embedded generators)
 4. Later: Kotlin, Go, TypeScript generators (~500 lines of templates each)
 
 **Adapters stay native (per ADR-016).** Only generators and the orchestrator move to Rust.
