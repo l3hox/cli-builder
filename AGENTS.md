@@ -46,6 +46,6 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-**v1.7** — Step 14 complete: C# generator ported to Rust/Tera (`cli-builder-gen-csharp`). Both Python and C# generators now use the shared Rust core. Compile-validated: `dotnet build` passes on generated output. 397 .NET tests + 152 Rust tests (64 core + 62 gen-csharp + 26 gen-python) + 109 Python tests.
+**v2.0** — Step 15 complete: single `cli-builder` Rust binary. Orchestrates adapter subprocesses + embedded generators. `cli-builder generate --adapter python --package stripe --output ./output`. 397 .NET tests + 164 Rust tests + 109 Python tests = 670 total.
 
-**What's next:** Step 15 (Rust orchestrator — single `cli-builder` binary). See [ADR-017](docs/ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates) and [docs/FUTURE.md](docs/FUTURE.md).
+**What's next:** CI/CD pipeline, package publishing, new language generators. See [docs/FUTURE.md](docs/FUTURE.md).

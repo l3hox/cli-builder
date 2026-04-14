@@ -39,21 +39,28 @@ STRIPE_API_KEY=sk_test_... ./scripts/demo-stripe.sh  # Stripe CLI
 OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh        # OpenAI CLI
 ```
 
-### Generate a Python CLI from a Python SDK
+### Generate a Python CLI from a Python SDK (unified CLI)
 
 ```bash
-# Extract metadata from a Python package
-cd cli-builder-adapter-python
-python -m cli_builder_adapter --package test_sdk --module test_sdk.services --json > /tmp/metadata.json
-
-# Generate click-based Python CLI
-cd ../cli-builder-rust
-cargo run -p cli-builder-gen-python -- --input /tmp/metadata.json --output /tmp/my-cli --cli-name my-cli
+cd cli-builder-rust
+cargo run -p cli-builder -- generate \
+  --adapter python --package stripe \
+  --generator python --output /tmp/stripe-cli
 
 # Install and run
-cd /tmp/my-cli && pip install -e .
-my-cli --help
-my-cli customer get --id-value cust_123 --json
+cd /tmp/stripe-cli && pip install -e .
+stripe-cli --help
+```
+
+### Generate a C# CLI from a .NET SDK (unified CLI)
+
+```bash
+cargo run -p cli-builder -- generate \
+  --adapter dotnet --assembly path/to/Sdk.dll \
+  --generator csharp --output /tmp/my-cli
+
+# Inspect metadata without generating
+cargo run -p cli-builder -- inspect --adapter python --package stripe --json
 ```
 
 ## Validated SDKs
@@ -85,9 +92,9 @@ Every generated CLI satisfies:
 | Component | Tests | Covers |
 |-----------|-------|--------|
 | .NET (xUnit) | 397 | Adapter, generator, model mapping, golden files, OpenAI/Stripe compile tests |
-| Rust (cargo test) | 152 | Shared core (64), C# generator (62), Python generator (26) — model mapping, templates, golden snapshots |
+| Rust (cargo test) | 164 | Shared core (64), C# generator (63), Python generator (26), orchestrator (11) |
 | Python (pytest) | 109 | Type mapper, auth detector, extractor, error paths, integration, Stripe validation, stub parser |
-| **Total** | **658** | |
+| **Total** | **670** | |
 
 ## Project structure
 
