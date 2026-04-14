@@ -783,6 +783,16 @@ fn golden_auth_handler_cs() {
     insta::assert_snapshot!("auth_handler_cs", content);
 }
 
+#[test]
+fn golden_search_commands_cs() {
+    let dir = tempfile::tempdir().unwrap();
+    generate_testsdk(dir.path());
+    let content = std::fs::read_to_string(
+        dir.path().join("testsdk-cli/Commands/SearchCommands.cs"),
+    ).unwrap();
+    insta::assert_snapshot!("search_commands_cs", content);
+}
+
 // ================================================================
 // P1: Synthetic model tests — untested template branches
 // ================================================================

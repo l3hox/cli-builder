@@ -212,7 +212,8 @@ pub(crate) fn build_csharp_flat_param(
         .and_then(|v| sanitize_default_value(v, param.sdk_type_name.as_deref(), diagnostics));
 
     // Prefix property_name with @ for C# keyword collision (e.g., "class" → "@class")
-    let property_name = if crate::csharp_keywords::is_keyword(&param.property_name.to_lowercase()) {
+    // is_keyword handles lowercasing internally — pass original case directly
+    let property_name = if crate::csharp_keywords::is_keyword(&param.property_name) {
         format!("@{}", param.property_name)
     } else {
         param.property_name.clone()
@@ -269,6 +270,10 @@ static NUMERIC_RE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^-?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?$").unwrap()
 });
 
+/// C# value types that need `?` suffix for sentinel nullability.
+/// Must stay in sync with `CSharpProfile::map_primitive_type` — only types
+/// that map_primitive_type returns as non-"string" value types belong here.
+/// (TimeSpan/DateTime/Guid map to "string" so they're NOT value types for CLI.)
 const VALUE_TYPES: &[&str] = &[
     "bool", "int", "long", "short", "byte", "float", "double", "decimal",
 ];

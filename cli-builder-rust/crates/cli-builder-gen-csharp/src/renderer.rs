@@ -22,6 +22,7 @@ pub(crate) fn tera_escape(value: &str) -> String {
 /// Escape user-provided strings in the model before template rendering.
 fn escape_model(model: &mut CSharpGeneratorModel) {
     model.cli_description = tera_escape(&model.cli_description);
+    model.static_auth_setup = model.static_auth_setup.as_ref().map(|s| tera_escape(s));
     if let Some(ref mut auth) = model.auth {
         auth.env_var = tera_escape(&auth.env_var);
         auth.parameter_name = tera_escape(&auth.parameter_name);
