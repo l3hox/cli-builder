@@ -422,7 +422,7 @@ All generators consolidated in Rust with shared core + language-specific Tera te
 
 **Per-language generators (standalone crate per language):**
 - Python (`cli-builder-gen-python`, ~250 lines code + ~250 lines templates, 26 tests): `PythonProfile` + 8 Tera templates for `click`-based CLI. Golden file snapshots via `insta`.
-- C# templates: System.CommandLine commands, `Enum.Parse<T>()` conversions, `using` directives (Step 14 — to be ported from .NET/Scriban)
+- C# (`cli-builder-gen-csharp`, ~500 lines code + ~500 lines templates, 62 tests): `CSharpProfile` + 6 Tera templates for System.CommandLine CLI. C#-specific post-processing: `ComputeConversion`, `SanitizeDefaultValue`, `MakeValueTypesNullable`, `BuildConstructorExpression`. Compile-validated (`dotnet build`). Golden file snapshots via `insta`.
 - Future: Kotlin (clikt), Go (cobra), TypeScript (commander)
 
 **Pipeline:**

@@ -85,9 +85,9 @@ Every generated CLI satisfies:
 | Component | Tests | Covers |
 |-----------|-------|--------|
 | .NET (xUnit) | 397 | Adapter, generator, model mapping, golden files, OpenAI/Stripe compile tests |
-| Rust (cargo test) | 90 | Shared core (ModelMapper, ParameterFlattener, IdentifierValidator), Python generator templates, golden file snapshots |
-| Python (pytest) | 108 | Type mapper, auth detector, extractor, error paths, integration, Stripe validation, stub parser |
-| **Total** | **595** | |
+| Rust (cargo test) | 152 | Shared core (64), C# generator (62), Python generator (26) — model mapping, templates, golden snapshots |
+| Python (pytest) | 109 | Type mapper, auth detector, extractor, error paths, integration, Stripe validation, stub parser |
+| **Total** | **658** | |
 
 ## Project structure
 

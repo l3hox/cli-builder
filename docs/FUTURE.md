@@ -45,7 +45,7 @@ Auth handler writes resolved credentials to config file for reuse.
 
 All generators consolidated in Rust with shared ModelMapper + Tera templates:
 - **Step 13**: Python generator in Rust — **DONE** (shared core + click templates, 90 Rust tests, golden files)
-- **Step 14**: Port C# generator from .NET/Scriban to Rust/Tera
+- **Step 14**: C# generator ported to Rust/Tera — **DONE** (CSharpProfile, 6 Tera templates, compile-validated, 62 gen-csharp tests, golden snapshots)
 - **Step 15**: Rust orchestrator (single `cli-builder` binary, `cargo install cli-builder`)
 - Later: Kotlin, Go, TypeScript generators (~500 lines of templates each)
 
@@ -73,7 +73,8 @@ Adapters stay native forever (ADR-016). Only generators + orchestrator move to R
 - Step 11: SdkMetadata abstraction — StaticAuthSetup→StaticAuthConfig (structured record), AssemblyPath→ArtifactPath, XmlDocPath→DocsPath, Namespace→Module renames, TypeKind.Other added
 - Step 12 MVP: Python adapter (`cli-builder-adapter-python`) — extracts SdkMetadata from Python TestSdk, JSON schema compatible with .NET adapter. Architecture proof: cross-adapter key structure match.
 - Step 13: Python CLI generator in Rust (`cli-builder-rust/`) — shared core (ModelMapper, ParameterFlattener, IdentifierValidator with LanguageProfile trait) + click-based Python templates via Tera. Council-reviewed with fixes: static_auth validation, auth.env_var escaping, sentinel nullability decoupling. Golden file snapshots via insta.
-- 397 .NET tests (all pass) + 90 Rust tests (64 core + 26 gen-python) + Python adapter functional
+- Step 14: C# generator ported to Rust/Tera (`cli-builder-gen-csharp`) — CSharpProfile + 6 Tera templates + 6 post-processing transforms. Compile-validated (dotnet build passes). OpenAI 20 resources, Stripe 196 resources — matching .NET generator.
+- 397 .NET tests + 152 Rust tests (64 core + 62 gen-csharp + 26 gen-python) + 109 Python tests
 
 **Deferred from Step 11 council (Step 12 prerequisites):**
 - StaticAuthConfig Style discriminator (`StaticProperty` vs `ModuleAttribute`) for Python auth patterns

@@ -46,6 +46,6 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-**v1.6** — Step 13 complete: Python CLI generator in Rust (`cli-builder-rust/`). Shared core (ModelMapper, ParameterFlattener, IdentifierValidator) + click-based Python templates via Tera. 397 .NET tests + 90 Rust tests (64 core + 26 gen-python) + Python adapter functional.
+**v1.7** — Step 14 complete: C# generator ported to Rust/Tera (`cli-builder-gen-csharp`). Both Python and C# generators now use the shared Rust core. Compile-validated: `dotnet build` passes on generated output. 397 .NET tests + 152 Rust tests (64 core + 62 gen-csharp + 26 gen-python) + 109 Python tests.
 
-**What's next:** Step 14 (port C# generator from .NET/Scriban to Rust/Tera). See [ADR-017](docs/ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates) and [docs/FUTURE.md](docs/FUTURE.md).
+**What's next:** Step 15 (Rust orchestrator — single `cli-builder` binary). See [ADR-017](docs/ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates) and [docs/FUTURE.md](docs/FUTURE.md).
