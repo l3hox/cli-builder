@@ -8,6 +8,7 @@ using CliBuilder.Generator.CSharp;
 
 namespace CliBuilder.Integration.Tests;
 
+[Collection("StdoutCapture")]
 public class CliBuilderToolTests : IDisposable
 {
     private readonly string _testSdkPath;
@@ -242,19 +243,24 @@ public class CliBuilderToolTests : IDisposable
 
     // --- Helpers ---
 
+    private static readonly object StdoutLock = new();
+
     private static string CaptureStdout(Action action)
     {
-        var original = Console.Out;
-        var writer = new StringWriter();
-        Console.SetOut(writer);
-        try
+        lock (StdoutLock)
         {
-            action();
-            return writer.ToString();
-        }
-        finally
-        {
-            Console.SetOut(original);
+            var original = Console.Out;
+            var writer = new StringWriter();
+            Console.SetOut(writer);
+            try
+            {
+                action();
+                return writer.ToString();
+            }
+            finally
+            {
+                Console.SetOut(original);
+            }
         }
     }
 }
