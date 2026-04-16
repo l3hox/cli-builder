@@ -1,0 +1,15 @@
+# Enforce LF line endings for source files — prevents CRLF-related
+# test failures on Windows (insta snapshots, Tera templates).
+*.rs text eol=lf
+*.cs text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.tera text eol=lf
+*.snap text eol=lf
+*.sln text eol=lf
+*.csproj text eol=lf
+*.props text eol=lf
