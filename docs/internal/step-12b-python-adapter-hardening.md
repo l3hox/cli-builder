@@ -138,9 +138,9 @@ Create a JSON Schema (draft 2020-12) that formally defines the SdkMetadata envel
 ```
 
 Derive from existing models in:
-- `cli-builder-adapter-python/src/cli_builder_adapter/models.py`
+- `python/src/cli_builder_adapter/models.py`
 - `src/CliBuilder.Core/Models/SdkMetadata.cs`
-- `cli-builder-rust/crates/cli-builder-core/src/models.rs`
+- `crates/core/src/models.rs`
 
 Add schema validation to `test_integration.py` using `pathlib.Path` for reliable path resolution:
 ```python
@@ -250,7 +250,7 @@ Add fallback extraction from `.pyi` type stubs via `ast.parse`:
 
 ```bash
 # Phase 1: test suite
-cd cli-builder-adapter-python
+cd python
 pip install -e ".[test]"
 pytest -v --cov=cli_builder_adapter --cov-fail-under=85
 

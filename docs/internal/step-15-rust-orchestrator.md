@@ -144,7 +144,7 @@ Color when stderr is a TTY (red=error, yellow=warning, dim=info). No color when 
 
 ### Phase 1: Orchestrator crate + generate command + adapter tests
 
-1. Create `cli-builder-rust/crates/cli-builder/` crate (the main binary)
+1. Create `crates/cli/` crate (the main binary)
 2. Add to workspace `Cargo.toml`
 3. Depends on: `cli-builder-core`, `cli-builder-gen-python`, `cli-builder-gen-csharp`, `clap`, `serde_json`
 4. `src/main.rs` — clap CLI with `generate` and `inspect` subcommands
@@ -211,7 +211,7 @@ Color when stderr is a TTY (red=error, yellow=warning, dim=info). No color when 
 
 ```bash
 # Build
-cd cli-builder-rust && cargo build
+cd crates && cargo build
 
 # Generate C# CLI from .NET SDK
 cli-builder generate --adapter dotnet --assembly path/to/Sdk.dll --generator csharp --output ./output

@@ -37,7 +37,7 @@ See [ADR-016](docs/ADR.md#adr-016-subprocess-based-adapter-architecture--rust-mi
 ### Unified CLI
 
 ```bash
-cd cli-builder-rust
+cd crates
 cargo build
 
 # Generate a Python CLI from a Python SDK
@@ -58,7 +58,7 @@ cargo run -p cli-builder -- inspect --adapter python --package stripe  # human-r
 ### Legacy .NET scripts (demo)
 
 ```bash
-dotnet build
+cd dotnet && dotnet build
 ./scripts/demo.sh                                    # TestSdk demo
 STRIPE_API_KEY=sk_test_... ./scripts/demo-stripe.sh  # Stripe CLI
 OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh        # OpenAI CLI
@@ -101,16 +101,18 @@ Every generated CLI satisfies:
 
 ```
 cli-builder/
-  cli-builder-rust/               # Rust workspace — orchestrator + generators
-    crates/
-      cli-builder/                # Orchestrator binary (main entry point)
-      cli-builder-core/           # Shared: models, ModelMapper, ParameterFlattener, IdentifierValidator
-      cli-builder-gen-python/     # Python CLI generator (click + Tera templates)
-      cli-builder-gen-csharp/     # C# CLI generator (System.CommandLine + Tera templates)
-  cli-builder-adapter-python/     # Python adapter (standalone package, subprocess)
-  src/                            # .NET source (adapter + legacy generator)
-  tests/                          # .NET test projects + fixtures
-  docs/                           # Spec, ADRs, design notes, roadmap, JSON schema
+  crates/                           # Rust workspace — orchestrator + generators
+    cli/                            # Orchestrator binary (main entry point)
+    core/                           # Shared: models, ModelMapper, ParameterFlattener, IdentifierValidator
+    gen-python/                     # Python CLI generator (click + Tera templates)
+    gen-csharp/                     # C# CLI generator (System.CommandLine + Tera templates)
+    mock-adapter/                   # Cross-platform test fixture binary
+  dotnet/                           # .NET adapter + legacy generator + tests
+    src/                            # CliBuilder.Core, Adapter.DotNet, Generator.CSharp
+    tests/                          # xUnit test projects + golden files
+  python/                           # Python adapter (standalone package, subprocess)
+  tests/fixtures/                   # Shared JSON metadata fixtures (Rust + .NET)
+  docs/                             # Spec, ADRs, design notes, roadmap, JSON schema
 ```
 
 ## Documentation

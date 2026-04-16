@@ -27,9 +27,9 @@ Windows `make` proves painful.
 
 Targets:
 - `make ci` — runs everything CI runs (test-rust + test-dotnet + test-python)
-- `make test-rust` — `cargo test --workspace` in `cli-builder-rust/`
+- `make test-rust` — `cargo test --workspace` in `crates/`
 - `make test-dotnet` — `dotnet test` at repo root
-- `make test-python` — `pytest` in `cli-builder-adapter-python/`
+- `make test-python` — `pytest` in `python/`
 - `make build` — release build of the Rust orchestrator
 - `make fmt` — cargo fmt + dotnet format (optional, best-effort)
 - `make clean` — remove target/, bin/, obj/, __pycache__
@@ -42,12 +42,12 @@ would defeat the purpose.
 ### 3. Windows integration-test strategy: Rust-native binary fixtures
 **Council consensus — replace shell scripts with a Rust fixture crate.**
 
-Current state (`cli-builder-rust/crates/cli-builder/test_fixtures/*.sh`):
+Current state (`crates/cli/test_fixtures/*.sh`):
 5 shell scripts used by 11 integration tests in
-`cli-builder-rust/crates/cli-builder/tests/integration.rs`. These scripts
+`crates/cli/tests/integration.rs`. These scripts
 emit canned JSON on stdout and exit with specific codes.
 
-New design: a `cli-builder-rust/crates/mock-adapter/` binary crate with
+New design: a `crates/mock-adapter/` binary crate with
 subcommands `ok`, `degraded`, `fail`, `bad-json`, `empty`. The integration
 tests set `CLI_BUILDER_*_ADAPTER` env vars to point at the compiled
 `mock-adapter` binary (picked up automatically by cargo's `CARGO_BIN_EXE_*`
@@ -76,7 +76,7 @@ Unchanged.
 ### 6. Rust version: pin now via `rust-toolchain.toml`
 **Council correction — pin at implementation, not later.** Dev was right:
 matrix CI without a pinned toolchain chases a moving stable, and each OS
-runner upgrades on its own schedule. Add at repo root or under `cli-builder-rust/`:
+runner upgrades on its own schedule. Add at repo root or under `crates/`:
 
 ```toml
 [toolchain]
@@ -114,7 +114,7 @@ Add `.github/CODEOWNERS` with:
 So workflow changes require explicit owner review.
 
 ### 12. Hazard C (Python path separators) — closed
-Dev verified `cli-builder-adapter-python/tests/test_integration.py` already
+Dev verified `python/tests/test_integration.py` already
 uses `pathlib.Path`. No code changes needed. Remove from open items.
 
 ### 13. Phase 1 green-bar meaning — explicit disclaimer
@@ -136,14 +136,14 @@ understand the gate's scope.
 4. `Makefile` — local CI target
 5. `.gitattributes` — line-ending normalization
 6. `rust-toolchain.toml` — pin Rust version
-7. `cli-builder-rust/crates/mock-adapter/` — new binary crate
+7. `crates/mock-adapter/` — new binary crate
    - `Cargo.toml`
    - `src/main.rs` with subcommands `ok`, `degraded`, `fail`, `bad-json`, `empty`
-8. Delete: `cli-builder-rust/crates/cli-builder/test_fixtures/*.sh`
-9. Update: `cli-builder-rust/crates/cli-builder/tests/integration.rs` to
+8. Delete: `crates/cli/test_fixtures/*.sh`
+9. Update: `crates/cli/tests/integration.rs` to
    resolve the `mock-adapter` binary via `env!("CARGO_BIN_EXE_mock-adapter")`
    (or the workspace equivalent)
-10. Update: `cli-builder-rust/Cargo.toml` workspace members list
+10. Update: `crates/Cargo.toml` workspace members list
 
 ## Workflow structure (target shape)
 
@@ -168,7 +168,7 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
-    defaults: { run: { working-directory: cli-builder-rust } }
+    defaults: { run: { working-directory: crates } }
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
@@ -199,7 +199,7 @@ jobs:
         python: ['3.10', '3.11', '3.12']
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
-    defaults: { run: { working-directory: cli-builder-adapter-python } }
+    defaults: { run: { working-directory: python } }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

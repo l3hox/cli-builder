@@ -16,7 +16,7 @@ The Python adapter (Step 12) extracts SdkMetadata from Python SDKs but there's n
 ### Rust workspace structure
 
 ```
-cli-builder-rust/
+crates/
   Cargo.toml                    # Workspace root
   crates/
     cli-builder-core/           # Shared core (ModelMapper, ParameterFlattener, models)
@@ -152,7 +152,7 @@ Note: SDK result objects may not be plain dicts. Templates must handle `to_dict(
 
 ### Phase 1: Rust workspace + shared core models
 
-1. Create `cli-builder-rust/` workspace at repo root
+1. Create `crates/` workspace at repo root
 2. `cli-builder-core` crate with `models.rs` — serde structs mirroring SdkMetadata
 3. JSON deserialization test: parse the .NET TestSdk fixture (`tests/fixtures/testsdk-metadata.json`)
 4. JSON deserialization test: parse the Python adapter output
@@ -200,12 +200,12 @@ Note: SDK result objects may not be plain dicts. Templates must handle `to_dict(
 
 | File | Purpose |
 |------|---------|
-| `cli-builder-rust/Cargo.toml` | Workspace definition |
-| `cli-builder-rust/crates/cli-builder-core/src/models.rs` | SdkMetadata serde structs |
-| `cli-builder-rust/crates/cli-builder-core/src/model_mapper.rs` | Shared model mapping |
-| `cli-builder-rust/crates/cli-builder-core/src/parameter_flattener.rs` | Shared parameter flattening |
-| `cli-builder-rust/crates/cli-builder-gen-python/src/main.rs` | Generator CLI |
-| `cli-builder-rust/crates/cli-builder-gen-python/templates/` | Tera templates |
+| `crates/Cargo.toml` | Workspace definition |
+| `crates/core/src/models.rs` | SdkMetadata serde structs |
+| `crates/core/src/model_mapper.rs` | Shared model mapping |
+| `crates/core/src/parameter_flattener.rs` | Shared parameter flattening |
+| `crates/gen-python/src/main.rs` | Generator CLI |
+| `crates/gen-python/templates/` | Tera templates |
 
 ---
 
@@ -213,7 +213,7 @@ Note: SDK result objects may not be plain dicts. Templates must handle `to_dict(
 
 ```bash
 # Build Rust workspace
-cd cli-builder-rust && cargo build
+cd crates && cargo build
 
 # Run tests (fixture deserialization, model mapping, template rendering)
 cargo test

@@ -170,7 +170,7 @@ Port from the 6 Scriban `.sbn` files:
 
 ### Phase 1: CSharpProfile + C#-specific model wrapper
 
-1. Create `cli-builder-rust/crates/cli-builder-gen-csharp/` crate
+1. Create `crates/gen-csharp/` crate
 2. Add to workspace `Cargo.toml`
 3. `csharp_keywords.rs` — C# keyword/contextual/boilerplate lists (from IdentifierValidator.cs)
 4. `csharp_mapper.rs` — `CSharpProfile` implementing `LanguageProfile` trait
@@ -249,7 +249,7 @@ Port from the 6 Scriban `.sbn` files:
 
 ```bash
 # Build
-cd cli-builder-rust && cargo build
+cd crates && cargo build
 
 # Run unit + structural tests
 cargo test

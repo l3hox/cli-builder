@@ -1,7 +1,7 @@
 # Step 12: Python Adapter — Standalone Subprocess
 
 **Prerequisite:** Steps 1-11 complete. SdkMetadata is language-neutral. `cli-builder inspect --json` serves as the .NET adapter's subprocess interface. 397 tests, 0 failures.
-**Output:** `cli-builder-adapter-python` is a standalone Python package that extracts `SdkMetadata` JSON from Python SDK packages using type annotations and `.pyi` stubs (no runtime import). Validated against a purpose-built TestSdk. Architecture proof: Python JSON → .NET deserialization round-trip.
+**Output:** `python` is a standalone Python package that extracts `SdkMetadata` JSON from Python SDK packages using type annotations and `.pyi` stubs (no runtime import). Validated against a purpose-built TestSdk. Architecture proof: Python JSON → .NET deserialization round-trip.
 
 **Requires Python 3.10+** (stable `get_type_hints`, `X | Y` union syntax, `match` statements).
 
@@ -51,7 +51,7 @@ public enum AuthSetupStyle { StaticProperty, ModuleAttribute }
 ### Package structure
 
 ```
-cli-builder-adapter-python/
+python/
   pyproject.toml              # Package metadata, entry point, requires-python >= 3.10
   src/
     cli_builder_adapter/
@@ -153,7 +153,7 @@ Note: camelCase serialization from Python dataclasses requires a custom recursiv
 
 ### Phase 1: Project scaffold + models + JSON schema
 
-1. Create `cli-builder-adapter-python/` directory at repo root
+1. Create `python/` directory at repo root
 2. `pyproject.toml` with entry point, `requires-python = ">=3.10"`
 3. `models.py` — Python dataclasses mirroring all `SdkMetadata` types
 4. `json_output.py` — recursive camelCase serializer (stdlib only)
@@ -250,13 +250,13 @@ These are explicitly cut from MVP to keep Step 12 focused on the architecture pr
 | File | Purpose |
 |------|---------|
 | `docs/sdk-metadata-schema.json` | NEW: formal JSON schema for cross-adapter contract |
-| `cli-builder-adapter-python/pyproject.toml` | Package definition (Python 3.10+) |
-| `cli-builder-adapter-python/src/cli_builder_adapter/extractor.py` | Core extraction (ast.parse, no runtime import) |
-| `cli-builder-adapter-python/src/cli_builder_adapter/type_mapper.py` | Python type → TypeRef |
-| `cli-builder-adapter-python/src/cli_builder_adapter/models.py` | SdkMetadata dataclasses |
-| `cli-builder-adapter-python/src/cli_builder_adapter/json_output.py` | camelCase JSON + schemaVersion |
-| `cli-builder-adapter-python/tests/test_sdk/` | Purpose-built Python SDK |
-| `cli-builder-adapter-python/tests/test_error_paths.py` | Error handling tests |
+| `python/pyproject.toml` | Package definition (Python 3.10+) |
+| `python/src/cli_builder_adapter/extractor.py` | Core extraction (ast.parse, no runtime import) |
+| `python/src/cli_builder_adapter/type_mapper.py` | Python type → TypeRef |
+| `python/src/cli_builder_adapter/models.py` | SdkMetadata dataclasses |
+| `python/src/cli_builder_adapter/json_output.py` | camelCase JSON + schemaVersion |
+| `python/tests/test_sdk/` | Purpose-built Python SDK |
+| `python/tests/test_error_paths.py` | Error handling tests |
 | `src/CliBuilder.Core/Json/SdkMetadataJson.cs` | Add schemaVersion to envelope |
 | `src/CliBuilder.Core/Models/StaticAuthConfig.cs` | Add Style discriminator (prerequisite P3) |
 
@@ -279,7 +279,7 @@ These are explicitly cut from MVP to keep Step 12 focused on the architecture pr
 
 ```bash
 # Python adapter standalone
-cd cli-builder-adapter-python
+cd python
 pip install -e .
 python -m cli_builder_adapter --package tests.test_sdk --json | python -m json.tool
 

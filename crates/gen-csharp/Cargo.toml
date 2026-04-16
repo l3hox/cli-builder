@@ -1,0 +1,19 @@
+[package]
+name = "cli-builder-gen-csharp"
+version = "0.1.0"
+edition = "2021"
+description = "C# CLI generator for cli-builder — System.CommandLine output from SdkMetadata JSON"
+license = "EUPL-1.2"
+
+[dependencies]
+cli-builder-core = { path = "../core" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tera = { workspace = true }
+clap = { workspace = true }
+regex = "1"
+
+[dev-dependencies]
+tempfile = "3"
+walkdir = "2"
+insta = "1"

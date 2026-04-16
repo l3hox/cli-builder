@@ -27,12 +27,12 @@ jobs:
     timeout-minutes: 45
     defaults:
       run:
-        working-directory: cli-builder-rust
+        working-directory: crates
     steps:
       - uses: actions/checkout@v6
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: cli-builder-rust -> target
+          workspaces: crates -> target
       - run: cargo test --workspace --all-features
 
   dotnet:
@@ -43,11 +43,14 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: dotnet
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-dotnet@v5
         with:
-          global-json-file: global.json
+          global-json-file: dotnet/global.json
       - uses: actions/cache@v5
         with:
           path: ~/.nuget/packages
@@ -67,13 +70,13 @@ jobs:
     timeout-minutes: 20
     defaults:
       run:
-        working-directory: cli-builder-adapter-python
+        working-directory: python
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
           cache: pip
-          cache-dependency-path: cli-builder-adapter-python/pyproject.toml
+          cache-dependency-path: python/pyproject.toml
       - run: pip install -e ".[test]"
       - run: pytest
