@@ -1,22 +1,21 @@
 //! Tests for the cli-builder orchestrator.
+//!
+//! These tests invoke the compiled `cli-builder` binary as a subprocess
+//! and point it at the `mock-adapter` binary (a workspace crate that
+//! emits canned JSON) via the `CLI_BUILDER_*_ADAPTER` env vars. Requires
+//! the full workspace to be built — run `cargo test --workspace`.
 
 use std::path::PathBuf;
 use std::process::Command;
 
 fn cli_binary() -> PathBuf {
-    // The built binary is at target/debug/cli-builder
-    let manifest_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
-    PathBuf::from(manifest_dir)
-        .join("../../target/debug/cli-builder")
+    PathBuf::from(env!("CARGO_BIN_EXE_cli-builder"))
 }
 
-fn fixture_path(name: &str) -> String {
-    let manifest_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
-    PathBuf::from(manifest_dir)
-        .join("test_fixtures")
-        .join(name)
-        .to_string_lossy()
-        .to_string()
+fn mock_adapter_binary() -> PathBuf {
+    let mut path = cli_binary();
+    path.set_file_name(format!("mock-adapter{}", std::env::consts::EXE_SUFFIX));
+    path
 }
 
 /// Return a non-existing output path within a tempdir.
@@ -25,7 +24,7 @@ fn output_dir(dir: &tempfile::TempDir) -> String {
 }
 
 // ================================================================
-// Adapter invocation tests (via fixture scripts)
+// Adapter invocation tests (via mock-adapter binary)
 // ================================================================
 
 #[test]
@@ -39,7 +38,8 @@ fn adapter_ok_returns_exit_0() {
             "--generator", "python",
             "--output", &output_dir(&dir),
         ])
-        .env("CLI_BUILDER_PYTHON_ADAPTER", fixture_path("adapter_ok.sh"))
+        .env("CLI_BUILDER_PYTHON_ADAPTER", &mock_adapter_binary())
+        .env("MOCK_ADAPTER_MODE", "ok")
         .output()
         .expect("Failed to run cli-builder");
 
@@ -50,7 +50,6 @@ fn adapter_ok_returns_exit_0() {
         String::from_utf8_lossy(&output.stderr)
     );
 
-    // Output files should exist
     let py_files: Vec<_> = walkdir::WalkDir::new(dir.path().join("out"))
         .into_iter()
         .filter_map(|e| e.ok())
@@ -70,11 +69,11 @@ fn adapter_degraded_exit_1_still_generates() {
             "--generator", "python",
             "--output", &output_dir(&dir),
         ])
-        .env("CLI_BUILDER_PYTHON_ADAPTER", fixture_path("adapter_degraded.sh"))
+        .env("CLI_BUILDER_PYTHON_ADAPTER", &mock_adapter_binary())
+        .env("MOCK_ADAPTER_MODE", "degraded")
         .output()
         .expect("Failed to run cli-builder");
 
-    // Exit code 1 (errors present) but generation still attempted
     assert_eq!(output.status.code(), Some(1));
     let stderr = String::from_utf8_lossy(&output.stderr);
     assert!(stderr.contains("CB100"), "Should contain error diagnostic");
@@ -91,13 +90,14 @@ fn adapter_fail_exit_2_aborts() {
             "--generator", "python",
             "--output", &output_dir(&dir),
         ])
-        .env("CLI_BUILDER_PYTHON_ADAPTER", fixture_path("adapter_fail.sh"))
+        .env("CLI_BUILDER_PYTHON_ADAPTER", &mock_adapter_binary())
+        .env("MOCK_ADAPTER_MODE", "fail")
         .output()
         .expect("Failed to run cli-builder");
 
     assert_eq!(output.status.code(), Some(2));
     let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(stderr.contains("CB600") || stderr.contains("environment failure"));
+    assert!(stderr.contains("CB600"), "Should contain CB600 diagnostic, got: {}", stderr);
 }
 
 #[test]
@@ -111,7 +111,8 @@ fn adapter_bad_json_returns_error() {
             "--generator", "python",
             "--output", &output_dir(&dir),
         ])
-        .env("CLI_BUILDER_PYTHON_ADAPTER", fixture_path("adapter_bad_json.sh"))
+        .env("CLI_BUILDER_PYTHON_ADAPTER", &mock_adapter_binary())
+        .env("MOCK_ADAPTER_MODE", "bad-json")
         .output()
         .expect("Failed to run cli-builder");
 
@@ -135,7 +136,8 @@ fn adapter_empty_stdout_returns_error() {
             "--generator", "python",
             "--output", &output_dir(&dir),
         ])
-        .env("CLI_BUILDER_PYTHON_ADAPTER", fixture_path("adapter_empty.sh"))
+        .env("CLI_BUILDER_PYTHON_ADAPTER", &mock_adapter_binary())
+        .env("MOCK_ADAPTER_MODE", "empty")
         .output()
         .expect("Failed to run cli-builder");
 
@@ -151,6 +153,11 @@ fn adapter_empty_stdout_returns_error() {
 #[test]
 fn adapter_not_found_returns_error() {
     let dir = tempfile::tempdir().unwrap();
+    let nonexistent = if cfg!(windows) {
+        "C:\\nonexistent\\binary.exe"
+    } else {
+        "/nonexistent/binary"
+    };
     let output = Command::new(cli_binary())
         .args([
             "generate",
@@ -159,17 +166,21 @@ fn adapter_not_found_returns_error() {
             "--generator", "python",
             "--output", &output_dir(&dir),
         ])
-        .env("CLI_BUILDER_PYTHON_ADAPTER", "/nonexistent/binary")
+        .env("CLI_BUILDER_PYTHON_ADAPTER", nonexistent)
         .output()
         .expect("Failed to run cli-builder");
 
     assert!(!output.status.success());
     let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(stderr.contains("not found") || stderr.contains("Not found"));
+    assert!(
+        stderr.contains("not found") || stderr.contains("Not found") || stderr.contains("cannot find"),
+        "Should report adapter not found, got: {}",
+        stderr
+    );
 }
 
 // ================================================================
-// E2E: generate command with fixture adapter
+// E2E: generate command with mock adapter
 // ================================================================
 
 #[test]
@@ -184,13 +195,13 @@ fn e2e_generate_python_cli() {
             "--output", &output_dir(&dir),
             "--cli-name", "test-cli",
         ])
-        .env("CLI_BUILDER_PYTHON_ADAPTER", fixture_path("adapter_ok.sh"))
+        .env("CLI_BUILDER_PYTHON_ADAPTER", &mock_adapter_binary())
+        .env("MOCK_ADAPTER_MODE", "ok")
         .output()
         .expect("Failed to run cli-builder");
 
     assert!(output.status.success());
 
-    // Verify generated project structure
     assert!(dir.path().join("out/pyproject.toml").exists());
     assert!(dir.path().join("out/src/test_cli/cli.py").exists());
     assert!(dir.path().join("out/src/test_cli/commands/customer.py").exists());
@@ -208,13 +219,13 @@ fn e2e_generate_csharp_cli() {
             "--output", &output_dir(&dir),
             "--cli-name", "test-cli",
         ])
-        .env("CLI_BUILDER_DOTNET_ADAPTER", fixture_path("adapter_ok.sh"))
+        .env("CLI_BUILDER_DOTNET_ADAPTER", &mock_adapter_binary())
+        .env("MOCK_ADAPTER_MODE", "ok")
         .output()
         .expect("Failed to run cli-builder");
 
     assert!(output.status.success());
 
-    // Verify generated C# project structure
     assert!(dir.path().join("out/test-cli/test-cli.csproj").exists());
     assert!(dir.path().join("out/test-cli/Program.cs").exists());
     assert!(dir.path().join("out/test-cli/Commands/CustomerCommands.cs").exists());
@@ -233,7 +244,8 @@ fn inspect_json_passes_through() {
             "--package", "fake",
             "--json",
         ])
-        .env("CLI_BUILDER_PYTHON_ADAPTER", fixture_path("adapter_ok.sh"))
+        .env("CLI_BUILDER_PYTHON_ADAPTER", &mock_adapter_binary())
+        .env("MOCK_ADAPTER_MODE", "ok")
         .output()
         .expect("Failed to run cli-builder");
 
@@ -251,7 +263,8 @@ fn inspect_summary_shows_resources() {
             "--adapter", "python",
             "--package", "fake",
         ])
-        .env("CLI_BUILDER_PYTHON_ADAPTER", fixture_path("adapter_ok.sh"))
+        .env("CLI_BUILDER_PYTHON_ADAPTER", &mock_adapter_binary())
+        .env("MOCK_ADAPTER_MODE", "ok")
         .output()
         .expect("Failed to run cli-builder");
 
@@ -274,15 +287,14 @@ fn dotnet_adapter_defaults_to_csharp_generator() {
             "generate",
             "--adapter", "dotnet",
             "--assembly", "fake.dll",
-            // No --generator flag — should default to csharp
             "--output", &output_dir(&dir),
             "--cli-name", "test-cli",
         ])
-        .env("CLI_BUILDER_DOTNET_ADAPTER", fixture_path("adapter_ok.sh"))
+        .env("CLI_BUILDER_DOTNET_ADAPTER", &mock_adapter_binary())
+        .env("MOCK_ADAPTER_MODE", "ok")
         .output()
         .expect("Failed to run cli-builder");
 
     assert!(output.status.success());
-    // C# generator produces .csproj
     assert!(dir.path().join("out/test-cli/test-cli.csproj").exists());
 }
