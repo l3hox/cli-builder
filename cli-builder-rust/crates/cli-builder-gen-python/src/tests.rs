@@ -265,18 +265,18 @@ fn all_generated_python_files_pass_ast_parse() {
 
     assert!(!py_files.is_empty(), "No .py files found");
 
-    // Run ast.parse on each file
+    // Run ast.parse on each file — pass path via sys.argv to avoid
+    // backslash-as-unicode-escape issues on Windows temp paths.
     for path in &py_files {
-        let output = std::process::Command::new("python3")
+        let python = if cfg!(windows) { "python" } else { "python3" };
+        let output = std::process::Command::new(python)
             .args([
                 "-c",
-                &format!(
-                    "import ast; ast.parse(open('{}').read())",
-                    path.display()
-                ),
+                "import ast, sys; ast.parse(open(sys.argv[1]).read())",
+                &path.to_string_lossy(),
             ])
             .output()
-            .expect("Failed to run python3");
+            .expect("Failed to run python");
 
         assert!(
             output.status.success(),
@@ -404,11 +404,16 @@ fn unwirable_operation_generates_echo_stub() {
     assert!(thing_py.contains(".command(name=\"upload\")"));
 
     // Must still be valid Python
-    let output = std::process::Command::new("python3")
-        .args(["-c", &format!("import ast; ast.parse(open('{}').read())",
-            dir.path().join("src/stub_cli/commands/thing.py").display())])
+    let python = if cfg!(windows) { "python" } else { "python3" };
+    let stub_path = dir.path().join("src/stub_cli/commands/thing.py");
+    let output = std::process::Command::new(python)
+        .args([
+            "-c",
+            "import ast, sys; ast.parse(open(sys.argv[1]).read())",
+            &stub_path.to_string_lossy(),
+        ])
         .output()
-        .expect("Failed to run python3");
+        .expect("Failed to run python");
     assert!(output.status.success(), "Echo stub file failed ast.parse");
 }
 

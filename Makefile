@@ -6,7 +6,8 @@ test-rust:
 	cd cli-builder-rust && cargo test --workspace
 
 test-dotnet:
-	dotnet test --configuration Release
+	dotnet build --configuration Release
+	dotnet test --configuration Release --no-build
 
 test-python:
 	cd cli-builder-adapter-python && pip install -q -e ".[test]" && pytest

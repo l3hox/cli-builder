@@ -53,7 +53,8 @@ jobs:
           path: ~/.nuget/packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
           restore-keys: nuget-${{ runner.os }}-
-      - run: dotnet test --configuration Release
+      - run: dotnet build --configuration Release
+      - run: dotnet test --configuration Release --no-build
 
   python:
     name: Python ${{ matrix.python }} (${{ matrix.os }})
