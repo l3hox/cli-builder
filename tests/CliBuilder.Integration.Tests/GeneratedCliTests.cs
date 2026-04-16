@@ -14,19 +14,20 @@ namespace CliBuilder.Integration.Tests;
 public class GeneratedCliFixture : IDisposable
 {
     public string ProjectDir { get; }
+    private string Configuration { get; }
 
     public GeneratedCliFixture()
     {
         var testDir = Path.GetDirectoryName(typeof(GeneratedCliFixture).Assembly.Location)!;
         var repoRoot = Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", ".."));
         var outputDir = Path.Combine(Path.GetTempPath(), "cli-builder-e2e", Guid.NewGuid().ToString());
+        Configuration = testDir.Contains(Path.Combine("bin", "Release")) ? "Release" : "Debug";
 
         // Extract metadata
         var adapter = new DotNetAdapter();
         var sdkPath = Path.Combine(repoRoot,
             "tests", "CliBuilder.TestSdk", "bin",
-            testDir.Contains(Path.Combine("bin", "Release")) ? "Release" : "Debug",
-            "net8.0", "CliBuilder.TestSdk.dll");
+            Configuration, "net8.0", "CliBuilder.TestSdk.dll");
         var adapterResult = adapter.Extract(new AdapterOptions(sdkPath));
 
         // Generate with ProjectReference so it compiles against the real TestSdk
@@ -37,7 +38,7 @@ public class GeneratedCliFixture : IDisposable
         ProjectDir = result.ProjectDirectory;
 
         // Build once — shared across all tests
-        var buildResult = RunProcess("dotnet", $"build \"{ProjectDir}\" --verbosity quiet");
+        var buildResult = RunProcess("dotnet", $"build \"{ProjectDir}\" --configuration {Configuration} --verbosity quiet");
         if (buildResult.ExitCode != 0)
             throw new InvalidOperationException(
                 $"dotnet build failed (exit {buildResult.ExitCode}):\n{buildResult.Stdout}\n{buildResult.Stderr}");
@@ -45,7 +46,7 @@ public class GeneratedCliFixture : IDisposable
 
     public (int ExitCode, string Stdout, string Stderr) RunCli(string args)
     {
-        return RunProcess("dotnet", $"run --project \"{ProjectDir}\" --no-build -- {args}");
+        return RunProcess("dotnet", $"run --project \"{ProjectDir}\" --configuration {Configuration} --no-build -- {args}");
     }
 
     private static (int ExitCode, string Stdout, string Stderr) RunProcess(string fileName, string arguments)
