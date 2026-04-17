@@ -197,13 +197,13 @@ Color when stderr is a TTY (red=error, yellow=warning, dim=info). No color when 
 
 | File | Purpose |
 |------|---------|
-| `cli-builder/Cargo.toml` | Main binary crate, depends on core + both generators |
-| `cli-builder/src/main.rs` | clap CLI with generate/inspect subcommands |
-| `cli-builder/src/adapter.rs` | Subprocess adapter invocation + env-var override |
-| `cli-builder/src/generate.rs` | Generate command orchestration |
-| `cli-builder/src/inspect.rs` | Inspect command |
-| `cli-builder/src/diagnostics.rs` | Colored stderr diagnostics formatter |
-| `cli-builder/test_fixtures/` | Mock adapter scripts for testing |
+| `crates/cli/Cargo.toml` | Main binary crate (package `cli-builder`), depends on core + both generators |
+| `crates/cli/src/main.rs` | clap CLI with generate/inspect subcommands |
+| `crates/cli/src/adapter.rs` | Subprocess adapter invocation + env-var override |
+| `crates/cli/src/generate.rs` | Generate command orchestration |
+| `crates/cli/src/inspect.rs` | Inspect command |
+| `crates/cli/src/diagnostics.rs` | Colored stderr diagnostics formatter |
+| `crates/mock-adapter/` | Cross-platform mock adapter binary used by integration tests |
 
 ---
 

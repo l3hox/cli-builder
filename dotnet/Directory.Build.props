@@ -1,0 +1,18 @@
+<Project>
+
+  <!--
+    Injected into every C# project under dotnet/.
+    `$(RepoRoot)` resolves to the absolute path of the repo root (the parent
+    directory of this file — i.e. the parent of `dotnet/`). Test code reads it
+    via AssemblyMetadata → see dotnet/tests/TestPaths.cs.
+  -->
+  <PropertyGroup>
+    <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..'))</RepoRoot>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <AssemblyMetadata Include="RepoRoot" Value="$(RepoRoot)" />
+    <Compile Include="$(MSBuildThisFileDirectory)tests\TestPaths.cs" Link="TestPaths.cs" />
+  </ItemGroup>
+
+</Project>

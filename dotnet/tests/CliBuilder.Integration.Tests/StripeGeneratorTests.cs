@@ -24,18 +24,9 @@ public class StripeGeneratorTests : IDisposable
             Directory.Delete(_outputDir, recursive: true);
     }
 
-    private static string RepoRoot
-    {
-        get
-        {
-            var testDir = Path.GetDirectoryName(typeof(StripeGeneratorTests).Assembly.Location)!;
-            return Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "..", ".."));
-        }
-    }
-
     private static SdkMetadata LoadStripeMetadata()
     {
-        var fixturePath = Path.Combine(RepoRoot, "tests", "fixtures", "stripe-metadata.json");
+        var fixturePath = Path.Combine(CliBuilder.Tests.TestPaths.Fixtures, "stripe-metadata.json");
         if (!File.Exists(fixturePath))
             throw new InvalidOperationException(
                 $"Stripe fixture not found at: {fixturePath}. Run StripeSdkIntegrationTests.ExtractStripe_WritesFixture first.");

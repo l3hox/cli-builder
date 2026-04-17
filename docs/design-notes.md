@@ -398,7 +398,7 @@ Each adapter is a standalone CLI executable. The orchestrator calls it as a subp
 cli-builder inspect --assembly /path/to/Stripe.net.dll --json
 
 # Python adapter (Step 12)
-cli-builder-adapter-python --package stripe --json
+cli-builder inspect --adapter python --package stripe --json
 
 # Future: Kotlin, Go, OpenAPI adapters follow same pattern
 ```
@@ -411,7 +411,7 @@ cli-builder-adapter-python --package stripe --json
 
 ## Generator architecture (ADR-017)
 
-All generators consolidated in Rust with shared core + language-specific Tera templates. Implemented in `cli-builder-rust/` workspace.
+All generators consolidated in Rust with shared core + language-specific Tera templates. Implemented in `crates/` workspace.
 
 **Shared Rust core (`cli-builder-core`, ~900 lines, 64 tests):**
 - `ModelMapper` (~310 lines) — SdkMetadata → GeneratorModel via pluggable `LanguageProfile` trait

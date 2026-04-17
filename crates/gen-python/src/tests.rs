@@ -5,16 +5,14 @@ use std::path::PathBuf;
 use cli_builder_core::generator_model::LanguageProfile;
 use cli_builder_core::model_mapper::{self, MapperOptions};
 use cli_builder_core::models::*;
+use cli_builder_core::test_support;
 
 use crate::python_keywords;
 use crate::python_mapper::PythonProfile;
 use crate::renderer;
 
 fn testsdk_fixture_path() -> PathBuf {
-    let manifest_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
-    PathBuf::from(manifest_dir)
-        .join("../..")
-        .join("tests/fixtures/testsdk-metadata.json")
+    test_support::fixtures_dir().join("testsdk-metadata.json")
 }
 
 fn generate_testsdk(output_dir: &std::path::Path) {

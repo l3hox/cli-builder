@@ -5,6 +5,7 @@ using CliBuilder.Commands;
 using CliBuilder.Core.Generators;
 using CliBuilder.Core.Models;
 using CliBuilder.Generator.CSharp;
+using CliBuilder.Tests;
 
 namespace CliBuilder.Integration.Tests;
 
@@ -16,11 +17,7 @@ public class CliBuilderToolTests : IDisposable
 
     public CliBuilderToolTests()
     {
-        var testDir = Path.GetDirectoryName(typeof(CliBuilderToolTests).Assembly.Location)!;
-        var repoRoot = Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "..", ".."));
-        var configuration = testDir.Contains(Path.Combine("bin", "Release")) ? "Release" : "Debug";
-        _testSdkPath = Path.Combine(repoRoot,
-            "dotnet", "tests", "CliBuilder.TestSdk", "bin", configuration, "net8.0", "CliBuilder.TestSdk.dll");
+        _testSdkPath = TestPaths.TestSdkAssembly;
         _tempDir = Path.Combine(Path.GetTempPath(), "cli-builder-tool-tests", Guid.NewGuid().ToString());
         Directory.CreateDirectory(_tempDir);
     }
@@ -277,13 +274,10 @@ public class CliBuilderBinaryFixture
     public CliBuilderBinaryFixture()
     {
         var testDir = Path.GetDirectoryName(typeof(CliBuilderBinaryFixture).Assembly.Location)!;
-        var repoRoot = Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "..", ".."));
-        var configuration = testDir.Contains(Path.Combine("bin", "Release")) ? "Release" : "Debug";
 
         // CliBuilder binary is copied to test output dir via ProjectReference
         BinaryPath = Path.Combine(testDir, "CliBuilder.dll");
-        TestSdkPath = Path.Combine(repoRoot,
-            "dotnet", "tests", "CliBuilder.TestSdk", "bin", configuration, "net8.0", "CliBuilder.TestSdk.dll");
+        TestSdkPath = TestPaths.TestSdkAssembly;
 
         if (!File.Exists(BinaryPath))
             throw new InvalidOperationException($"CliBuilder binary not found at: {BinaryPath}");

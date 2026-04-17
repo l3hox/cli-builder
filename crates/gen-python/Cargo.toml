@@ -13,6 +13,7 @@ tera = { workspace = true }
 clap = { workspace = true }
 
 [dev-dependencies]
+cli-builder-core = { path = "../core", features = ["test-support"] }
 tempfile = "3"
 walkdir = "2"
 insta = "1"

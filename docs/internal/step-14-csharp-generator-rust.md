@@ -233,15 +233,15 @@ Port from the 6 Scriban `.sbn` files:
 
 | File | Purpose |
 |------|---------|
-| `cli-builder-gen-csharp/Cargo.toml` | Crate config, depends on cli-builder-core |
-| `cli-builder-gen-csharp/src/lib.rs` | Module declarations |
-| `cli-builder-gen-csharp/src/csharp_keywords.rs` | C# keyword/boilerplate lists |
-| `cli-builder-gen-csharp/src/csharp_mapper.rs` | CSharpProfile (LanguageProfile impl) |
-| `cli-builder-gen-csharp/src/csharp_model.rs` | C#-specific wrapper types + post-processing |
-| `cli-builder-gen-csharp/src/renderer.rs` | Tera rendering + custom filters |
-| `cli-builder-gen-csharp/src/main.rs` | CLI entry point (clap) |
-| `cli-builder-gen-csharp/src/tests.rs` | Unit + structural + E2E tests |
-| `cli-builder-gen-csharp/templates/*.tera` | 6 Tera template files |
+| `crates/gen-csharp/Cargo.toml` | Crate config, depends on cli-builder-core |
+| `crates/gen-csharp/src/lib.rs` | Module declarations |
+| `crates/gen-csharp/src/csharp_keywords.rs` | C# keyword/boilerplate lists |
+| `crates/gen-csharp/src/csharp_mapper.rs` | CSharpProfile (LanguageProfile impl) |
+| `crates/gen-csharp/src/csharp_model.rs` | C#-specific wrapper types + post-processing |
+| `crates/gen-csharp/src/renderer.rs` | Tera rendering + custom filters |
+| `crates/gen-csharp/src/main.rs` | CLI entry point (clap) |
+| `crates/gen-csharp/src/tests.rs` | Unit + structural + E2E tests |
+| `crates/gen-csharp/templates/*.tera` | 6 Tera template files |
 
 ---
 

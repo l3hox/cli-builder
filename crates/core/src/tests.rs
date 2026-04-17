@@ -4,13 +4,11 @@ use crate::generator_model::*;
 use crate::identifier_validator::*;
 use crate::model_mapper::{self, MapperOptions};
 use crate::models::*;
+use crate::test_support;
 
-/// Path to the .NET TestSdk fixture (relative to workspace root).
+/// Path to the .NET TestSdk fixture (shared fixtures dir).
 fn testsdk_fixture_path() -> std::path::PathBuf {
-    let manifest_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
-    std::path::PathBuf::from(manifest_dir)
-        .join("../..")
-        .join("tests/fixtures/testsdk-metadata.json")
+    test_support::fixtures_dir().join("testsdk-metadata.json")
 }
 
 #[test]

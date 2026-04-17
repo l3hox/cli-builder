@@ -4,6 +4,7 @@ using CliBuilder.Adapter.DotNet;
 using CliBuilder.Core.Json;
 using CliBuilder.Core.Models;
 using CliBuilder.Generator.CSharp;
+using CliBuilder.Tests;
 
 namespace CliBuilder.Integration.Tests;
 
@@ -18,20 +19,15 @@ public class GeneratedCliFixture : IDisposable
 
     public GeneratedCliFixture()
     {
-        var testDir = Path.GetDirectoryName(typeof(GeneratedCliFixture).Assembly.Location)!;
-        var repoRoot = Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "..", ".."));
         var outputDir = Path.Combine(Path.GetTempPath(), "cli-builder-e2e", Guid.NewGuid().ToString());
-        Configuration = testDir.Contains(Path.Combine("bin", "Release")) ? "Release" : "Debug";
+        Configuration = TestPaths.Configuration;
 
         // Extract metadata
         var adapter = new DotNetAdapter();
-        var sdkPath = Path.Combine(repoRoot,
-            "dotnet", "tests", "CliBuilder.TestSdk", "bin",
-            Configuration, "net8.0", "CliBuilder.TestSdk.dll");
-        var adapterResult = adapter.Extract(new AdapterOptions(sdkPath));
+        var adapterResult = adapter.Extract(new AdapterOptions(TestPaths.TestSdkAssembly));
 
         // Generate with ProjectReference so it compiles against the real TestSdk
-        var testSdkCsproj = Path.Combine(repoRoot, "dotnet", "tests", "CliBuilder.TestSdk", "CliBuilder.TestSdk.csproj");
+        var testSdkCsproj = TestPaths.TestSdkCsproj;
         var generator = new CSharpCliGenerator();
         var result = generator.Generate(adapterResult.Metadata,
             new GeneratorOptions(outputDir, "testsdk-cli", SdkProjectPath: testSdkCsproj));

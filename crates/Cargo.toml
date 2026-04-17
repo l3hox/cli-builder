@@ -1,4 +1,8 @@
 [workspace]
+# Directory names are short ("cli", "core", "gen-python", …) but package names
+# keep the `cli-builder-*` prefix (e.g. the binary package `cli-builder` lives
+# in the `cli/` directory). Run `cargo run -p cli-builder` — the `-p` flag
+# takes the package name, not the directory.
 members = ["core", "gen-python", "gen-csharp", "cli", "mock-adapter"]
 resolver = "2"
 

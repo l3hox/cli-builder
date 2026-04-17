@@ -2,13 +2,14 @@ using System.Text.Json;
 using CliBuilder.Adapter.DotNet;
 using CliBuilder.Core.Json;
 using CliBuilder.Core.Models;
+using CliBuilder.Tests;
 
 namespace CliBuilder.Integration.Tests;
 
 public class StripeSdkIntegrationTests
 {
     private static readonly string StripeAssemblyPath = GetStripeAssemblyPath();
-    private static readonly string FixturesDir = GetFixturesDir();
+    private static readonly string FixturesDir = TestPaths.Fixtures;
 
     private static string GetStripeAssemblyPath()
     {
@@ -21,13 +22,6 @@ public class StripeSdkIntegrationTests
                 $"Stripe.net.dll not found at: {sdkPath}. Ensure the project has the Stripe.net NuGet package.");
 
         return sdkPath;
-    }
-
-    private static string GetFixturesDir()
-    {
-        var testDir = Path.GetDirectoryName(typeof(StripeSdkIntegrationTests).Assembly.Location)!;
-        var repoRoot = Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "..", ".."));
-        return Path.Combine(repoRoot, "tests", "fixtures");
     }
 
     private AdapterResult ExtractStripe()

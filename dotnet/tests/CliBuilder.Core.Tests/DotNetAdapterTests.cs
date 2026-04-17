@@ -1,5 +1,6 @@
 using CliBuilder.Adapter.DotNet;
 using CliBuilder.Core.Models;
+using CliBuilder.Tests;
 
 namespace CliBuilder.Core.Tests;
 
@@ -9,18 +10,10 @@ public class DotNetAdapterTests
 
     private static string GetTestSdkAssemblyPath()
     {
-        // TestSdk is built as part of the solution but NOT referenced by tests.
-        // Find it relative to the test output directory, handling Debug/Release.
-        var testDir = Path.GetDirectoryName(typeof(DotNetAdapterTests).Assembly.Location)!;
-        var repoRoot = Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "..", ".."));
-        var configuration = testDir.Contains(Path.Combine("bin", "Release")) ? "Release" : "Debug";
-        var sdkPath = Path.Combine(repoRoot,
-            "dotnet", "tests", "CliBuilder.TestSdk", "bin", configuration, "net8.0", "CliBuilder.TestSdk.dll");
-
+        var sdkPath = TestPaths.TestSdkAssembly;
         if (!File.Exists(sdkPath))
             throw new InvalidOperationException(
                 $"TestSdk assembly not found at: {sdkPath}. Ensure the solution is built before running tests.");
-
         return sdkPath;
     }
 

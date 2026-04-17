@@ -24,18 +24,9 @@ public class OpenAiGeneratorTests : IDisposable
             Directory.Delete(_outputDir, recursive: true);
     }
 
-    private static string RepoRoot
-    {
-        get
-        {
-            var testDir = Path.GetDirectoryName(typeof(OpenAiGeneratorTests).Assembly.Location)!;
-            return Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "..", ".."));
-        }
-    }
-
     private static SdkMetadata LoadOpenAiMetadata()
     {
-        var fixturePath = Path.Combine(RepoRoot, "tests", "fixtures", "openai-metadata.json");
+        var fixturePath = Path.Combine(CliBuilder.Tests.TestPaths.Fixtures, "openai-metadata.json");
         var json = File.ReadAllText(fixturePath);
         var adapterResult = JsonSerializer.Deserialize<AdapterResult>(json, SdkMetadataJson.Options)!;
         return adapterResult.Metadata;

@@ -2,34 +2,22 @@ using System.Text.Json;
 using CliBuilder.Adapter.DotNet;
 using CliBuilder.Core.Json;
 using CliBuilder.Core.Models;
+using CliBuilder.Tests;
 
 namespace CliBuilder.Integration.Tests;
 
 public class TestSdkIntegrationTests
 {
     private static readonly string TestSdkAssemblyPath = GetTestSdkAssemblyPath();
-    private static readonly string FixturesDir = GetFixturesDir();
+    private static readonly string FixturesDir = TestPaths.Fixtures;
 
     private static string GetTestSdkAssemblyPath()
     {
-        var testDir = Path.GetDirectoryName(typeof(TestSdkIntegrationTests).Assembly.Location)!;
-        var repoRoot = Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "..", ".."));
-        var configuration = testDir.Contains(Path.Combine("bin", "Release")) ? "Release" : "Debug";
-        var sdkPath = Path.Combine(repoRoot,
-            "dotnet", "tests", "CliBuilder.TestSdk", "bin", configuration, "net8.0", "CliBuilder.TestSdk.dll");
-
+        var sdkPath = TestPaths.TestSdkAssembly;
         if (!File.Exists(sdkPath))
             throw new InvalidOperationException(
                 $"TestSdk assembly not found at: {sdkPath}. Ensure the solution is built before running tests.");
-
         return sdkPath;
-    }
-
-    private static string GetFixturesDir()
-    {
-        var testDir = Path.GetDirectoryName(typeof(TestSdkIntegrationTests).Assembly.Location)!;
-        var repoRoot = Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "..", ".."));
-        return Path.Combine(repoRoot, "tests", "fixtures");
     }
 
     [Fact]

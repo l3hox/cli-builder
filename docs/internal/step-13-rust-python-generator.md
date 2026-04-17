@@ -18,34 +18,33 @@ The Python adapter (Step 12) extracts SdkMetadata from Python SDKs but there's n
 ```
 crates/
   Cargo.toml                    # Workspace root
-  crates/
-    cli-builder-core/           # Shared core (ModelMapper, ParameterFlattener, models)
-      Cargo.toml
-      src/
-        lib.rs
-        models.rs               # SdkMetadata structs (serde)
-        model_mapper.rs         # SdkMetadata → GeneratorModel
-        parameter_flattener.rs  # Flatten options into CLI flags
-        identifier_validator.rs # Language-specific keyword checking
-    cli-builder-gen-python/     # Python CLI generator
-      Cargo.toml
-      src/
-        main.rs                 # CLI entry point (reads JSON stdin/file)
-        lib.rs
-        python_mapper.rs        # Python-specific type mapping (str→str, int→int)
-        python_keywords.rs      # Python keyword list
-      templates/
-        project/                # Tera templates for Python CLI
-          pyproject.toml.tera
-          __main__.py.tera
-          cli.py.tera           # click-based CLI entry point
-          commands/
-            resource.py.tera    # Per-resource command group
-          output/
-            json_formatter.py.tera
-            table_formatter.py.tera
-          auth/
-            handler.py.tera
+  core/                         # Shared core (ModelMapper, ParameterFlattener, models)
+    Cargo.toml
+    src/
+      lib.rs
+      models.rs                 # SdkMetadata structs (serde)
+      model_mapper.rs           # SdkMetadata → GeneratorModel
+      parameter_flattener.rs    # Flatten options into CLI flags
+      identifier_validator.rs   # Language-specific keyword checking
+  gen-python/                   # Python CLI generator
+    Cargo.toml
+    src/
+      main.rs                   # CLI entry point (reads JSON stdin/file)
+      lib.rs
+      python_mapper.rs          # Python-specific type mapping (str→str, int→int)
+      python_keywords.rs        # Python keyword list
+    templates/
+      project/                  # Tera templates for Python CLI
+        pyproject.toml.tera
+        __main__.py.tera
+        cli.py.tera             # click-based CLI entry point
+        commands/
+          resource.py.tera      # Per-resource command group
+        output/
+          json_formatter.py.tera
+          table_formatter.py.tera
+        auth/
+          handler.py.tera
 ```
 
 ### Dependencies (Cargo.toml)

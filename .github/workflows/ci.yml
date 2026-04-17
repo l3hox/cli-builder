@@ -50,6 +50,8 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-dotnet@v5
         with:
+          # global-json-file path is repo-root-relative, even though the job's
+          # working-directory is `dotnet`. Don't "correct" this to `global.json`.
           global-json-file: dotnet/global.json
       - uses: actions/cache@v5
         with:

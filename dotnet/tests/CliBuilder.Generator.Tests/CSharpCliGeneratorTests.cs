@@ -3,6 +3,7 @@ using System.Text.Json;
 using CliBuilder.Core.Json;
 using CliBuilder.Core.Models;
 using CliBuilder.Generator.CSharp;
+using CliBuilder.Tests;
 
 namespace CliBuilder.Generator.Tests;
 
@@ -26,9 +27,7 @@ public class CSharpCliGeneratorTests : IDisposable
 
     private static SdkMetadata LoadTestSdkMetadata()
     {
-        var testDir = Path.GetDirectoryName(typeof(CSharpCliGeneratorTests).Assembly.Location)!;
-        var repoRoot = Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "..", ".."));
-        var fixturePath = Path.Combine(repoRoot, "tests", "fixtures", "testsdk-metadata.json");
+        var fixturePath = Path.Combine(TestPaths.Fixtures, "testsdk-metadata.json");
         var json = File.ReadAllText(fixturePath);
         var adapterResult = JsonSerializer.Deserialize<AdapterResult>(json, SdkMetadataJson.Options)!;
         return adapterResult.Metadata;
@@ -540,19 +539,10 @@ public class CSharpCliGeneratorTests : IDisposable
     // Phase 6D: Compile verification
     // -----------------------------------------------------------
 
-    private static string RepoRoot
-    {
-        get
-        {
-            var testDir = Path.GetDirectoryName(typeof(CSharpCliGeneratorTests).Assembly.Location)!;
-            return Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "..", ".."));
-        }
-    }
-
     [Fact]
     public async Task Generate_TestSdk_CompilesWithDotnetBuild()
     {
-        var testSdkCsproj = Path.Combine(RepoRoot, "dotnet", "tests", "CliBuilder.TestSdk", "CliBuilder.TestSdk.csproj");
+        var testSdkCsproj = TestPaths.TestSdkCsproj;
         var generator = new CSharpCliGenerator();
         var options = new GeneratorOptions(_outputDir, "testsdk-cli", SdkProjectPath: testSdkCsproj);
         var result = generator.Generate(_testSdkMetadata, options);
@@ -639,7 +629,7 @@ public class CSharpCliGeneratorTests : IDisposable
     {
         var result = Generate();
         var generatedPath = Path.Combine(result.ProjectDirectory, relativePath);
-        var goldenPath = Path.Combine(RepoRoot, "dotnet", "tests", "golden", "testsdk-cli", relativePath);
+        var goldenPath = Path.Combine(TestPaths.Golden, "testsdk-cli", relativePath);
 
         // UPDATE_GOLDEN=1 → write/overwrite golden files instead of comparing
         if (Environment.GetEnvironmentVariable("UPDATE_GOLDEN") == "1")
