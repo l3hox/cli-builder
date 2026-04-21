@@ -35,7 +35,23 @@ def {{ resource.name | replace(from="-", to="_") }}(ctx):
 {% if op.can_wire_sdk_call %}
 @{{ resource.name | replace(from="-", to="_") }}.command(name="{{ op.name }}")
 {% for param in op.parameters %}
-@click.option("--{{ param.cli_flag }}"{% if param.is_required %}, required=True{% endif %}{% if param.enum_values %}, type=click.Choice([{% for v in param.enum_values %}"{{ v }}"{% if not loop.last %}, {% endif %}{% endfor %}]){% elif param.cli_type == "bool" %}{% if param.is_required %}, is_flag=True, default=False{% else %}, type=click.BOOL, default=None{% endif %}{% elif param.cli_type == "int" %}, type=int{% elif param.cli_type == "float" %}, type=float{% endif %}{% if param.description %}, help="{{ param.description }}"{% endif %})
+{%- set_global required_clause = "" %}{% if param.is_required %}{% set_global required_clause = ", required=True" %}{% endif -%}
+{%- set_global type_clause = "" -%}
+{%- if param.enum_values -%}
+    {%- set enum_joined = param.enum_values | join(sep='", "') -%}
+    {%- set_global type_clause = ', type=click.Choice(["' ~ enum_joined ~ '"])' -%}
+{%- elif param.cli_type == "bool" and param.is_required -%}
+    {%- set_global type_clause = ", is_flag=True, default=False" -%}
+{%- elif param.cli_type == "bool" -%}
+    {%- set_global type_clause = ", type=click.BOOL, default=None" -%}
+{%- elif param.cli_type == "int" -%}
+    {%- set_global type_clause = ", type=int" -%}
+{%- elif param.cli_type == "float" -%}
+    {%- set_global type_clause = ", type=float" -%}
+{%- endif -%}
+{%- set_global help_clause = "" -%}
+{%- if param.description %}{% set_global help_clause = ', help="' ~ param.description ~ '"' %}{% endif %}
+@click.option("--{{ param.cli_flag }}"{{ required_clause }}{{ type_clause }}{{ help_clause }})
 {% endfor %}
 {% if op.needs_json_input %}
 @click.option("--json-input", default=None, help="JSON string for complex parameters")
