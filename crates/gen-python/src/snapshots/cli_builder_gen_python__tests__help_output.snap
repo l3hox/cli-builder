@@ -1,0 +1,21 @@
+---
+source: gen-python/src/tests.rs
+expression: stdout
+---
+Usage: python -m testsdk_cli [OPTIONS] COMMAND [ARGS]...
+
+  testsdk-cli — CLI for CliBuilder.TestSdk
+
+Options:
+  --api-key TEXT  API key
+  --json          Output as JSON
+  --help          Show this message and exit.
+
+Commands:
+  customer          Customer operations.
+  message           Message operations.
+  order             Order operations.
+  product           Product operations.
+  search            search operation.
+  shipping-client   ShippingClient operations.
+  shipping-service  ShippingService operations.

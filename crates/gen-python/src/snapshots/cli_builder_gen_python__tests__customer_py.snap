@@ -1,5 +1,5 @@
 ---
-source: crates/cli-builder-gen-python/src/tests.rs
+source: gen-python/src/tests.rs
 expression: content
 ---
 """Customer commands."""
@@ -48,7 +48,7 @@ def customer(ctx):
 
 @click.option("--phone")
 
-@click.option("--preferred-contact", is_flag=True, default=False)
+@click.option("--preferred-contact", type=click.BOOL, default=None)
 
 @click.option("--tax-id")
 

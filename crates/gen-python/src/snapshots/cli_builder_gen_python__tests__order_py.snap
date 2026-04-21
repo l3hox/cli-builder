@@ -1,0 +1,238 @@
+---
+source: gen-python/src/tests.rs
+expression: content
+---
+"""Order commands."""
+import json as json_mod
+import click
+
+
+
+def _get_client(ctx):
+    """Create OrderClient instance."""
+    from CliBuilder.TestSdk.Services import OrderClient
+
+    from ..auth.handler import resolve_credential
+    credential = resolve_credential(ctx)
+
+    return OrderClient(credential)
+
+
+
+
+
+@click.group()
+@click.pass_context
+def order(ctx):
+    """Order operations."""
+    pass
+
+
+
+
+@order.command(name="create")
+
+@click.option("--amount", type=float)
+
+@click.option("--coupon-code")
+
+@click.option("--currency")
+
+@click.option("--customer-id")
+
+@click.option("--description")
+
+@click.option("--gift-message")
+
+@click.option("--gift-wrap", type=click.BOOL, default=None)
+
+@click.option("--is-priority", type=click.BOOL, default=None)
+
+@click.option("--notes")
+
+@click.option("--product-id")
+
+
+@click.option("--json-input", default=None, help="JSON string for complex parameters")
+
+@click.pass_context
+def create(ctx, amount, coupon_code, currency, customer_id, description, gift_message, gift_wrap, is_priority, notes, product_id, json_input):
+    """create operation."""
+
+    client = _get_client(ctx)
+    kwargs = {}
+
+
+    if amount is not None:
+        kwargs["Amount"] = amount
+
+
+
+    if coupon_code is not None:
+        kwargs["CouponCode"] = coupon_code
+
+
+
+    if currency is not None:
+        kwargs["Currency"] = currency
+
+
+
+    if customer_id is not None:
+        kwargs["CustomerId"] = customer_id
+
+
+
+    if description is not None:
+        kwargs["Description"] = description
+
+
+
+    if gift_message is not None:
+        kwargs["GiftMessage"] = gift_message
+
+
+
+    if gift_wrap is not None:
+        kwargs["GiftWrap"] = gift_wrap
+
+
+
+    if is_priority is not None:
+        kwargs["IsPriority"] = is_priority
+
+
+
+    if notes is not None:
+        kwargs["Notes"] = notes
+
+
+
+    if product_id is not None:
+        kwargs["ProductId"] = product_id
+
+
+
+    if json_input:
+        kwargs.update(json_mod.loads(json_input))
+
+
+    result = client.CreateAsync(**kwargs)
+
+    _output(ctx, result)
+
+
+
+
+
+
+@order.command(name="get")
+
+@click.option("--id-value", required=True)
+
+
+@click.pass_context
+def get(ctx, id_value):
+    """get operation."""
+
+    client = _get_client(ctx)
+    kwargs = {}
+
+
+    kwargs["id"] = id_value
+
+
+
+
+    result = client.GetAsync(**kwargs)
+
+    _output(ctx, result)
+
+
+
+
+
+
+@order.command(name="update")
+
+@click.option("--name")
+
+
+@click.option("--json-input", default=None, help="JSON string for complex parameters")
+
+@click.pass_context
+def update(ctx, name, json_input):
+    """update operation."""
+
+    client = _get_client(ctx)
+    kwargs = {}
+
+
+    if name is not None:
+        kwargs["Name"] = name
+
+
+
+    if json_input:
+        kwargs.update(json_mod.loads(json_input))
+
+
+    result = client.UpdateAsync(**kwargs)
+
+    _output(ctx, result)
+
+
+
+
+
+
+@order.command(name="process")
+
+@click.option("--normal-param")
+
+@click.option("--class-value")
+
+@click.option("--event")
+
+
+@click.pass_context
+def process(ctx, normal_param, class_value, event):
+    """process operation."""
+
+    client = _get_client(ctx)
+    kwargs = {}
+
+
+    if normal_param is not None:
+        kwargs["NormalParam"] = normal_param
+
+
+
+    if class_value is not None:
+        kwargs["class"] = class_value
+
+
+
+    if event is not None:
+        kwargs["event"] = event
+
+
+
+
+    result = client.ProcessAsync(**kwargs)
+
+    _output(ctx, result)
+
+
+
+
+
+def _output(ctx, result):
+    """Format and print result."""
+    use_json = ctx.obj.get("use_json", False)
+    if use_json:
+        from ..output.json_formatter import format_output
+        click.echo(format_output(result))
+    else:
+        from ..output.table_formatter import format_output
+        click.echo(format_output(result))
