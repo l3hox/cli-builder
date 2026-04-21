@@ -491,209 +491,330 @@ fn output_init_py_is_empty() {
 // Step 13b: optional-bool kwargs overwrite fix + coverage
 // ================================================================
 
-/// Golden snapshot for the order resource — locks IsPriority and GiftWrap
-/// (both optional bools) against regression of the click-tri-state fix.
-#[test]
-fn golden_order_py() {
-    let dir = tempfile::tempdir().unwrap();
-    generate_testsdk(dir.path());
-    let content = std::fs::read_to_string(
-        dir.path().join("src/testsdk_cli/commands/order.py"),
-    )
-    .unwrap();
-    insta::assert_snapshot!("order_py", content);
-}
+mod step_13b_bool_fix {
+    use super::*;
+    use cli_builder_core::generator_model::{
+        GeneratorModel, OperationModel, ResourceModel,
+    };
 
-/// Class-level regression gate: no SDK-parameter rendering under `commands/`
-/// may contain an unguarded `is_flag=True, default=False` (the optional-bool
-/// overwrite bug). Required bools are allowed — they carry `required=True` on
-/// the same line. Global CLI flags (e.g. `--json` in `cli.py`) are excluded —
-/// they are not SDK kwargs and cannot clobber SDK defaults.
-#[test]
-fn no_generated_sdk_param_has_unguarded_is_flag_default_false() {
-    let dir = tempfile::tempdir().unwrap();
-    generate_testsdk(dir.path());
+    /// Golden snapshot for the order resource — locks IsPriority and GiftWrap
+    /// (both optional bools) against regression of the click-tri-state fix.
+    #[test]
+    fn golden_order_py() {
+        let dir = tempfile::tempdir().unwrap();
+        generate_testsdk(dir.path());
+        let content = std::fs::read_to_string(
+            dir.path().join("src/testsdk_cli/commands/order.py"),
+        )
+        .unwrap();
+        insta::assert_snapshot!("order_py", content);
+    }
 
-    let py_files: Vec<_> = walkdir::WalkDir::new(dir.path().join("src/testsdk_cli/commands"))
-        .into_iter()
-        .filter_map(|e| e.ok())
-        .filter(|e| e.path().extension().map_or(false, |ext| ext == "py"))
-        .map(|e| e.path().to_path_buf())
-        .collect();
+    /// Class-level regression gate: no SDK-parameter rendering under
+    /// `commands/` may contain an `is_flag=True` without a co-located
+    /// `required=True`. Required bools are allowed; global CLI flags
+    /// (e.g. `--json` in `cli.py`) live outside `commands/` and are excluded.
+    ///
+    /// Uses a count-based check (total `is_flag=True` occurrences vs.
+    /// occurrences on lines with `required=True`) so a future formatter
+    /// that splits the `@click.option(...)` call across multiple lines
+    /// will still trip the assertion.
+    #[test]
+    fn no_generated_sdk_param_has_unguarded_is_flag() {
+        let dir = tempfile::tempdir().unwrap();
+        generate_testsdk(dir.path());
 
-    assert!(!py_files.is_empty(), "No command .py files found under commands/");
+        let py_files: Vec<_> =
+            walkdir::WalkDir::new(dir.path().join("src/testsdk_cli/commands"))
+                .into_iter()
+                .filter_map(|e| e.ok())
+                .filter(|e| e.path().extension().map_or(false, |ext| ext == "py"))
+                .map(|e| e.path().to_path_buf())
+                .collect();
 
-    for path in &py_files {
-        let content = std::fs::read_to_string(path).unwrap();
-        for (lineno, line) in content.lines().enumerate() {
-            if line.contains("is_flag=True, default=False") && !line.contains("required=True") {
-                panic!(
-                    "unguarded `is_flag=True, default=False` at {}:{} — \
-                     optional bools must render as `type=click.BOOL, default=None`:\n  {}",
-                    path.display(),
-                    lineno + 1,
-                    line
-                );
+        assert!(!py_files.is_empty(), "No command .py files found under commands/");
+
+        for path in &py_files {
+            let content = std::fs::read_to_string(path).unwrap();
+            let total = content.matches("is_flag=True").count();
+            let guarded = content
+                .lines()
+                .filter(|l| l.contains("is_flag=True") && l.contains("required=True"))
+                .count();
+            assert_eq!(
+                total, guarded,
+                "{} has {} occurrences of `is_flag=True` but only {} on lines \
+                 with `required=True` — optional bools must render as \
+                 `type=click.BOOL, default=None`, not `is_flag=True, default=False`",
+                path.display(),
+                total,
+                guarded
+            );
+
+            // Same-line contradictory pair: is_flag=True + type=click.BOOL
+            // cannot both appear on a single `@click.option(...)` call.
+            for (lineno, line) in content.lines().enumerate() {
+                if line.contains("is_flag=True") && line.contains("type=click.BOOL") {
+                    panic!(
+                        "contradictory `is_flag=True` + `type=click.BOOL` at {}:{}:\n  {}",
+                        path.display(),
+                        lineno + 1,
+                        line
+                    );
+                }
             }
         }
     }
-}
 
-/// Synthetic model proof: an optional bool parameter renders as the tri-state
-/// `type=click.BOOL, default=None`, not the buggy `is_flag=True, default=False`.
-#[test]
-fn optional_bool_renders_as_click_bool_tristate() {
-    let content = render_single_param_resource(FlatParameter {
-        cli_flag: "enabled".into(),
-        property_name: "Enabled".into(),
-        cli_type: "bool".into(),
-        is_required: false,
-        default_value: None,
-        description: None,
-        enum_values: None,
-        sdk_type_name: None,
-        sdk_type_kind: None,
-        sdk_type_is_nullable: false,
-        sdk_type_is_extensible_enum: false,
-        source_options_class_name: None,
-    });
+    /// Synthetic model proof: an optional bool parameter renders as the
+    /// tri-state `type=click.BOOL, default=None`, AND the kwargs block
+    /// uses the `is not None` guard so the param is skipped when absent.
+    #[test]
+    fn optional_bool_renders_as_click_bool_tristate() {
+        let content = render_single_param_resource(optional_bool("enabled", "Enabled"));
 
-    assert!(
-        content.contains(r#"@click.option("--enabled", type=click.BOOL, default=None)"#),
-        "optional bool should render as tri-state; got:\n{}",
-        content
-    );
-    assert!(
-        !content.contains("is_flag=True"),
-        "optional bool must not use is_flag=True; got:\n{}",
-        content
-    );
-}
+        assert!(
+            content.contains(r#"@click.option("--enabled", type=click.BOOL, default=None)"#),
+            "optional bool should render as tri-state; got:\n{}",
+            content
+        );
+        assert!(
+            !content.contains("is_flag=True"),
+            "optional bool must not use is_flag=True; got:\n{}",
+            content
+        );
+        // Kwargs guard: absent value must NOT be written to kwargs.
+        assert!(
+            content.contains("if enabled is not None:"),
+            "kwargs guard missing — absent optional bool would clobber SDK default; got:\n{}",
+            content
+        );
+        assert!(
+            content.contains(r#"kwargs["Enabled"] = enabled"#),
+            "kwargs assignment missing inside guard; got:\n{}",
+            content
+        );
+    }
 
-/// Synthetic model proof: a required bool parameter keeps `is_flag=True,
-/// default=False` with `required=True`. Required semantics mean the user must
-/// pass the flag to enable.
-#[test]
-fn required_bool_renders_as_is_flag_true() {
-    let content = render_single_param_resource(FlatParameter {
-        cli_flag: "dry-run".into(),
-        property_name: "DryRun".into(),
-        cli_type: "bool".into(),
-        is_required: true,
-        default_value: None,
-        description: None,
-        enum_values: None,
-        sdk_type_name: None,
-        sdk_type_kind: None,
-        sdk_type_is_nullable: false,
-        sdk_type_is_extensible_enum: false,
-        source_options_class_name: None,
-    });
-
-    assert!(
-        content.contains(r#"@click.option("--dry-run", required=True, is_flag=True, default=False)"#),
-        "required bool should render with is_flag=True; got:\n{}",
-        content
-    );
-}
-
-/// Synthetic model proof: an optional float parameter renders with `type=float`.
-/// Float branch of the template is uncovered by any fixture snapshot.
-#[test]
-fn optional_float_renders_as_type_float() {
-    let content = render_single_param_resource(FlatParameter {
-        cli_flag: "ratio".into(),
-        property_name: "Ratio".into(),
-        cli_type: "float".into(),
-        is_required: false,
-        default_value: None,
-        description: None,
-        enum_values: None,
-        sdk_type_name: None,
-        sdk_type_kind: None,
-        sdk_type_is_nullable: false,
-        sdk_type_is_extensible_enum: false,
-        source_options_class_name: None,
-    });
-
-    assert!(
-        content.contains(r#"@click.option("--ratio", type=float)"#),
-        "optional float should render with type=float; got:\n{}",
-        content
-    );
-}
-
-/// Runtime anchor: spawn `python -m testsdk_cli --help` against the generated
-/// CLI and snapshot the stdout. Catches click semantic drift (8→9) that pure
-/// string scans can miss. Uses PYTHONPATH — no pip install / venv needed.
-#[test]
-fn help_output_snapshot() {
-    let dir = tempfile::tempdir().unwrap();
-    generate_testsdk(dir.path());
-
-    let python = if cfg!(windows) { "python" } else { "python3" };
-    let src_dir = dir.path().join("src");
-    let output = std::process::Command::new(python)
-        .env("PYTHONPATH", &src_dir)
-        .args(["-m", "testsdk_cli", "--help"])
-        .output()
-        .expect("Failed to invoke python");
-
-    assert!(
-        output.status.success(),
-        "python -m testsdk_cli --help failed (exit {:?}):\nstderr: {}",
-        output.status.code(),
-        String::from_utf8_lossy(&output.stderr)
-    );
-
-    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
-    insta::assert_snapshot!("help_output", stdout);
-}
-
-/// Helper: build a minimal GeneratorModel with one resource + one operation
-/// carrying the given parameter, render it, and return the generated
-/// `commands/<resource>.py` content for assertion.
-fn render_single_param_resource(param: FlatParameter) -> String {
-    use cli_builder_core::generator_model::*;
-
-    let model = GeneratorModel {
-        cli_name: "probe-cli".into(),
-        sdk_name: "ProbeSdk".into(),
-        sdk_version: "1.0.0".into(),
-        sdk_package_name: "probesdk".into(),
-        root_namespace: "ProbeCli".into(),
-        cli_description: "test".into(),
-        resources: vec![ResourceModel {
-            name: "probe".into(),
-            class_name: "Probe".into(),
+    /// Synthetic model proof: a required bool keeps `is_flag=True, default=False`
+    /// with `required=True`, and MUST NOT also emit `type=click.BOOL` (the two
+    /// forms are contradictory).
+    #[test]
+    fn required_bool_renders_as_is_flag_true() {
+        let content = render_single_param_resource(FlatParameter {
+            cli_flag: "dry-run".into(),
+            property_name: "DryRun".into(),
+            cli_type: "bool".into(),
+            is_required: true,
+            default_value: None,
             description: None,
-            operations: vec![OperationModel {
-                name: "run".into(),
-                method_name: "Run".into(),
-                description: None,
-                parameters: vec![param],
-                needs_json_input: false,
-                return_type_name: "None".into(),
-                is_streaming: false,
-                source_method_name: Some("Run".into()),
-                options_type_name: None,
-                method_params: vec![],
-                can_wire_sdk_call: true,
-                has_json_direct_params: false,
-                requires_sentinel_nullability: false,
-            }],
-            source_class_name: Some("ProbeService".into()),
-            source_module: Some("probesdk.services".into()),
-            can_construct: true,
-            constructor_auth: None,
-            constructor_config_params: vec![],
-            required_modules: vec![],
-        }],
-        auth: None,
-        static_auth_setup: None,
-    };
+            enum_values: None,
+            sdk_type_name: None,
+            sdk_type_kind: None,
+            sdk_type_is_nullable: false,
+            sdk_type_is_extensible_enum: false,
+            source_options_class_name: None,
+        });
 
-    let dir = tempfile::tempdir().unwrap();
-    renderer::generate(&model, dir.path()).unwrap();
-    std::fs::read_to_string(dir.path().join("src/probe_cli/commands/probe.py")).unwrap()
+        assert!(
+            content.contains(
+                r#"@click.option("--dry-run", required=True, is_flag=True, default=False)"#
+            ),
+            "required bool should render with is_flag=True; got:\n{}",
+            content
+        );
+        assert!(
+            !content.contains("type=click.BOOL"),
+            "required bool must not also emit type=click.BOOL; got:\n{}",
+            content
+        );
+    }
+
+    /// Synthetic model proof: optional float renders with `type=float`.
+    /// Float branch of the template is uncovered by any fixture snapshot.
+    #[test]
+    fn optional_float_renders_as_type_float() {
+        let content = render_single_param_resource(FlatParameter {
+            cli_flag: "ratio".into(),
+            property_name: "Ratio".into(),
+            cli_type: "float".into(),
+            is_required: false,
+            default_value: None,
+            description: None,
+            enum_values: None,
+            sdk_type_name: None,
+            sdk_type_kind: None,
+            sdk_type_is_nullable: false,
+            sdk_type_is_extensible_enum: false,
+            source_options_class_name: None,
+        });
+
+        assert!(
+            content.contains(r#"@click.option("--ratio", type=float)"#),
+            "optional float should render with type=float; got:\n{}",
+            content
+        );
+    }
+
+    /// A param with `enum_values` AND a `cli_type` that also emits `type=...`
+    /// (e.g. bool) must not produce two `type=` arguments on the same
+    /// `@click.option(...)` call — that would be a Python TypeError at import.
+    /// The enum branch takes precedence over the cli_type branch.
+    #[test]
+    fn bool_with_enum_values_does_not_emit_double_type_arg() {
+        let content = render_single_param_resource(FlatParameter {
+            cli_flag: "mode".into(),
+            property_name: "Mode".into(),
+            cli_type: "bool".into(),
+            is_required: false,
+            default_value: None,
+            description: None,
+            enum_values: Some(vec!["On".into(), "Off".into()]),
+            sdk_type_name: None,
+            sdk_type_kind: None,
+            sdk_type_is_nullable: false,
+            sdk_type_is_extensible_enum: false,
+            source_options_class_name: None,
+        });
+
+        // Find the decorator line and assert it has exactly one `type=` arg.
+        let decorator_line = content
+            .lines()
+            .find(|l| l.contains("--mode"))
+            .expect("decorator line for --mode missing");
+        let type_count = decorator_line.matches("type=").count();
+        assert_eq!(
+            type_count, 1,
+            "bool + enum_values emitted {} `type=` args (should be exactly 1): {}",
+            type_count, decorator_line
+        );
+        assert!(
+            decorator_line.contains("type=click.Choice"),
+            "enum_values should win, emitting type=click.Choice; got: {}",
+            decorator_line
+        );
+        assert!(
+            !decorator_line.contains("type=click.BOOL"),
+            "bool cli_type must not leak through when enum_values is set; got: {}",
+            decorator_line
+        );
+    }
+
+    /// Runtime anchor: spawn `python -m testsdk_cli --help` against the generated
+    /// CLI and snapshot the stdout. Catches click semantic drift (8→9) that pure
+    /// string scans can miss. Uses PYTHONPATH — no pip install / venv needed.
+    ///
+    /// Skips gracefully when the ambient python interpreter is missing or has
+    /// no click installed. PR3 (Step 13b) will add `setup-python` + click to
+    /// the Rust CI job; until then this test is a no-op on clean runners.
+    #[test]
+    fn help_output_snapshot() {
+        let python = if cfg!(windows) { "python" } else { "python3" };
+
+        // Skip gracefully if python or click is unavailable — no hard panic.
+        match std::process::Command::new(python)
+            .args(["-c", "import click"])
+            .output()
+        {
+            Err(_) => {
+                eprintln!("help_output_snapshot: `{}` not in PATH — skipping", python);
+                return;
+            }
+            Ok(out) if !out.status.success() => {
+                eprintln!(
+                    "help_output_snapshot: `{}` has no `click` module — skipping",
+                    python
+                );
+                return;
+            }
+            _ => {}
+        }
+
+        let dir = tempfile::tempdir().unwrap();
+        generate_testsdk(dir.path());
+        let src_dir = dir.path().join("src");
+        let output = std::process::Command::new(python)
+            .env("PYTHONPATH", &src_dir)
+            .args(["-m", "testsdk_cli", "--help"])
+            .output()
+            .expect("Failed to invoke python despite probe success");
+
+        assert!(
+            output.status.success(),
+            "python -m testsdk_cli --help failed (exit {:?}):\nstderr: {}",
+            output.status.code(),
+            String::from_utf8_lossy(&output.stderr)
+        );
+
+        let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+        insta::assert_snapshot!("help_output", stdout);
+    }
+
+    /// Builder: optional bool parameter.
+    fn optional_bool(cli_flag: &str, property_name: &str) -> FlatParameter {
+        FlatParameter {
+            cli_flag: cli_flag.into(),
+            property_name: property_name.into(),
+            cli_type: "bool".into(),
+            is_required: false,
+            default_value: None,
+            description: None,
+            enum_values: None,
+            sdk_type_name: None,
+            sdk_type_kind: None,
+            sdk_type_is_nullable: false,
+            sdk_type_is_extensible_enum: false,
+            source_options_class_name: None,
+        }
+    }
+
+    /// Helper: build a minimal GeneratorModel with one resource + one operation
+    /// carrying the given parameter, render it, and return the generated
+    /// `commands/<resource>.py` content for assertion.
+    ///
+    /// Hardcoded context: `can_construct: true`, `can_wire_sdk_call: true`,
+    /// no auth, no enum (unless `param.enum_values` is set by the caller).
+    /// Use the fixture-based golden snapshots for broader context coverage.
+    fn render_single_param_resource(param: FlatParameter) -> String {
+        let model = GeneratorModel {
+            cli_name: "probe-cli".into(),
+            sdk_name: "ProbeSdk".into(),
+            sdk_version: "1.0.0".into(),
+            sdk_package_name: "probesdk".into(),
+            root_namespace: "ProbeCli".into(),
+            cli_description: "test".into(),
+            resources: vec![ResourceModel {
+                name: "probe".into(),
+                class_name: "Probe".into(),
+                description: None,
+                operations: vec![OperationModel {
+                    name: "run".into(),
+                    method_name: "Run".into(),
+                    description: None,
+                    parameters: vec![param],
+                    needs_json_input: false,
+                    return_type_name: "None".into(),
+                    is_streaming: false,
+                    source_method_name: Some("Run".into()),
+                    options_type_name: None,
+                    method_params: vec![],
+                    can_wire_sdk_call: true,
+                    has_json_direct_params: false,
+                    requires_sentinel_nullability: false,
+                }],
+                source_class_name: Some("ProbeService".into()),
+                source_module: Some("probesdk.services".into()),
+                can_construct: true,
+                constructor_auth: None,
+                constructor_config_params: vec![],
+                required_modules: vec![],
+            }],
+            auth: None,
+            static_auth_setup: None,
+        };
+
+        let dir = tempfile::tempdir().unwrap();
+        renderer::generate(&model, dir.path()).unwrap();
+        std::fs::read_to_string(dir.path().join("src/probe_cli/commands/probe.py")).unwrap()
+    }
 }
