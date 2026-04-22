@@ -750,6 +750,117 @@ mod step_13b_bool_fix {
         insta::assert_snapshot!("help_output", stdout);
     }
 
+    /// Regression anchor for the template refactor (PR2 + PR2b). Exercises
+    /// every rendering branch in a single operation, in this order:
+    ///
+    ///   1. required str                     → required_clause set, type/help empty
+    ///   2. optional int + description       → type_clause set, help_clause set
+    ///   3. optional float                   → type_clause set
+    ///   4. required bool                    → compound: required + is_flag
+    ///   5. optional bool                    → type=click.BOOL, default=None
+    ///   6. optional enum + description      → enum via join + help_clause
+    ///
+    /// Snapshotting the entire rendered file closes four gaps at once:
+    ///   - help_clause branch (no fixture param has a description)
+    ///   - required-str + optional-int transition (iteration-leakage gate)
+    ///   - required-bool + optional-bool transition (compound-branch reset)
+    ///   - enum combined with description (unwitnessed pairing)
+    ///
+    /// If a future refactor claims "byte-for-byte identical output", this
+    /// snapshot is the proof.
+    #[test]
+    fn comprehensive_param_shapes_render_snapshot() {
+        let params = vec![
+            FlatParameter {
+                cli_flag: "name".into(),
+                property_name: "Name".into(),
+                cli_type: "str".into(),
+                is_required: true,
+                default_value: None,
+                description: None,
+                enum_values: None,
+                sdk_type_name: None,
+                sdk_type_kind: None,
+                sdk_type_is_nullable: false,
+                sdk_type_is_extensible_enum: false,
+                source_options_class_name: None,
+            },
+            FlatParameter {
+                cli_flag: "limit".into(),
+                property_name: "Limit".into(),
+                cli_type: "int".into(),
+                is_required: false,
+                default_value: None,
+                description: Some("Maximum number of items to return".into()),
+                enum_values: None,
+                sdk_type_name: None,
+                sdk_type_kind: None,
+                sdk_type_is_nullable: false,
+                sdk_type_is_extensible_enum: false,
+                source_options_class_name: None,
+            },
+            FlatParameter {
+                cli_flag: "ratio".into(),
+                property_name: "Ratio".into(),
+                cli_type: "float".into(),
+                is_required: false,
+                default_value: None,
+                description: None,
+                enum_values: None,
+                sdk_type_name: None,
+                sdk_type_kind: None,
+                sdk_type_is_nullable: false,
+                sdk_type_is_extensible_enum: false,
+                source_options_class_name: None,
+            },
+            FlatParameter {
+                cli_flag: "dry-run".into(),
+                property_name: "DryRun".into(),
+                cli_type: "bool".into(),
+                is_required: true,
+                default_value: None,
+                description: None,
+                enum_values: None,
+                sdk_type_name: None,
+                sdk_type_kind: None,
+                sdk_type_is_nullable: false,
+                sdk_type_is_extensible_enum: false,
+                source_options_class_name: None,
+            },
+            FlatParameter {
+                cli_flag: "verbose".into(),
+                property_name: "Verbose".into(),
+                cli_type: "bool".into(),
+                is_required: false,
+                default_value: None,
+                description: None,
+                enum_values: None,
+                sdk_type_name: None,
+                sdk_type_kind: None,
+                sdk_type_is_nullable: false,
+                sdk_type_is_extensible_enum: false,
+                source_options_class_name: None,
+            },
+            FlatParameter {
+                cli_flag: "mode".into(),
+                property_name: "Mode".into(),
+                cli_type: "str".into(),
+                is_required: false,
+                default_value: None,
+                description: Some("Execution mode".into()),
+                enum_values: Some(vec!["Fast".into(), "Safe".into()]),
+                sdk_type_name: None,
+                sdk_type_kind: None,
+                sdk_type_is_nullable: false,
+                sdk_type_is_extensible_enum: false,
+                source_options_class_name: None,
+            },
+        ];
+
+        let content = render_resource_with_params(params);
+        insta::assert_snapshot!("comprehensive_params", content);
+    }
+
     /// Builder: optional bool parameter.
     fn optional_bool(cli_flag: &str, property_name: &str) -> FlatParameter {
         FlatParameter {
@@ -769,13 +880,20 @@ mod step_13b_bool_fix {
     }
 
     /// Helper: build a minimal GeneratorModel with one resource + one operation
-    /// carrying the given parameter, render it, and return the generated
+    /// carrying a single parameter. Convenience wrapper around
+    /// [`render_resource_with_params`].
+    fn render_single_param_resource(param: FlatParameter) -> String {
+        render_resource_with_params(vec![param])
+    }
+
+    /// Helper: build a minimal GeneratorModel with one resource + one operation
+    /// carrying the given parameters, render it, and return the generated
     /// `commands/<resource>.py` content for assertion.
     ///
     /// Hardcoded context: `can_construct: true`, `can_wire_sdk_call: true`,
-    /// no auth, no enum (unless `param.enum_values` is set by the caller).
-    /// Use the fixture-based golden snapshots for broader context coverage.
-    fn render_single_param_resource(param: FlatParameter) -> String {
+    /// no auth. Use the fixture-based golden snapshots for broader context
+    /// coverage.
+    fn render_resource_with_params(params: Vec<FlatParameter>) -> String {
         let model = GeneratorModel {
             cli_name: "probe-cli".into(),
             sdk_name: "ProbeSdk".into(),
@@ -791,7 +909,7 @@ mod step_13b_bool_fix {
                     name: "run".into(),
                     method_name: "Run".into(),
                     description: None,
-                    parameters: vec![param],
+                    parameters: params,
                     needs_json_input: false,
                     return_type_name: "None".into(),
                     is_streaming: false,

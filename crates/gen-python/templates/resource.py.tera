@@ -35,7 +35,10 @@ def {{ resource.name | replace(from="-", to="_") }}(ctx):
 {% if op.can_wire_sdk_call %}
 @{{ resource.name | replace(from="-", to="_") }}.command(name="{{ op.name }}")
 {% for param in op.parameters %}
-{%- set_global required_clause = "" %}{% if param.is_required %}{% set_global required_clause = ", required=True" %}{% endif -%}
+{%- set_global required_clause = "" -%}
+{%- if param.is_required -%}
+    {%- set_global required_clause = ", required=True" -%}
+{%- endif -%}
 {%- set_global type_clause = "" -%}
 {%- if param.enum_values -%}
     {%- set enum_joined = param.enum_values | join(sep='", "') -%}
@@ -50,7 +53,9 @@ def {{ resource.name | replace(from="-", to="_") }}(ctx):
     {%- set_global type_clause = ", type=float" -%}
 {%- endif -%}
 {%- set_global help_clause = "" -%}
-{%- if param.description %}{% set_global help_clause = ', help="' ~ param.description ~ '"' %}{% endif %}
+{%- if param.description -%}
+    {%- set_global help_clause = ', help="' ~ param.description ~ '"' -%}
+{%- endif %}
 @click.option("--{{ param.cli_flag }}"{{ required_clause }}{{ type_clause }}{{ help_clause }})
 {% endfor %}
 {% if op.needs_json_input %}

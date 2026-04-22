@@ -1,0 +1,97 @@
+---
+source: gen-python/src/tests.rs
+expression: content
+---
+"""Probe commands."""
+import json as json_mod
+import click
+
+
+
+def _get_client(ctx):
+    """Create ProbeService instance."""
+    from probesdk.services import ProbeService
+
+    return ProbeService()
+
+
+
+
+@click.group()
+@click.pass_context
+def probe(ctx):
+    """Probe operations."""
+    pass
+
+
+
+
+@probe.command(name="run")
+
+@click.option("--name", required=True)
+
+@click.option("--limit", type=int, help="Maximum number of items to return")
+
+@click.option("--ratio", type=float)
+
+@click.option("--dry-run", required=True, is_flag=True, default=False)
+
+@click.option("--verbose", type=click.BOOL, default=None)
+
+@click.option("--mode", type=click.Choice(["Fast", "Safe"]), help="Execution mode")
+
+
+@click.pass_context
+def run(ctx, name, limit, ratio, dry_run, verbose, mode):
+    """run operation."""
+
+    client = _get_client(ctx)
+    kwargs = {}
+
+
+    kwargs["Name"] = name
+
+
+
+    if limit is not None:
+        kwargs["Limit"] = limit
+
+
+
+    if ratio is not None:
+        kwargs["Ratio"] = ratio
+
+
+
+    kwargs["DryRun"] = dry_run
+
+
+
+    if verbose is not None:
+        kwargs["Verbose"] = verbose
+
+
+
+    if mode is not None:
+        kwargs["Mode"] = mode
+
+
+
+
+    result = client.Run(**kwargs)
+
+    _output(ctx, result)
+
+
+
+
+
+def _output(ctx, result):
+    """Format and print result."""
+    use_json = ctx.obj.get("use_json", False)
+    if use_json:
+        from ..output.json_formatter import format_output
+        click.echo(format_output(result))
+    else:
+        from ..output.table_formatter import format_output
+        click.echo(format_output(result))
