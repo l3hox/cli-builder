@@ -733,8 +733,13 @@ mod step_13b_bool_fix {
         let dir = tempfile::tempdir().unwrap();
         generate_testsdk(dir.path());
         let src_dir = dir.path().join("src");
+        // PYTHONIOENCODING=utf-8 forces Python stdout/stderr to UTF-8 on all
+        // platforms. Without it, Windows Python uses the console code page
+        // (cp1252) and non-ASCII characters in the CLI description (e.g. the
+        // em dash in `model_mapper.rs`) come back as mojibake.
         let output = std::process::Command::new(python)
             .env("PYTHONPATH", &src_dir)
+            .env("PYTHONIOENCODING", "utf-8")
             .args(["-m", "testsdk_cli", "--help"])
             .output()
             .expect("Failed to invoke python despite probe success");
