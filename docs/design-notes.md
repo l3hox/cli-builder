@@ -368,6 +368,32 @@ The generator converts metadata strings into three distinct output formats, each
 
 **Template model contract:** All Scriban template models must use typed records (e.g., `GeneratorModel`, `CommandFileModel`), not anonymous types. Scriban's `ScriptObject.Import` applies a custom `MemberRenamer` (PascalCase → snake_case) only to the top-level object. Anonymous types work by naming coincidence but break if the renamer diverges. Typed records make the template contract explicit and testable.
 
+### Python generator — click conventions and sanitization
+
+The Python generator (`crates/gen-python`) uses Tera templates + click as the CLI runtime. Two conventions are load-bearing:
+
+**Optional bool parameters render as `type=click.BOOL, default=None` — NOT `is_flag=True, default=False`.** The older flag-style rendering silently overrode SDK defaults: when the user omitted `--some-flag`, click delivered `False`, the kwargs guard (`if x is not None`) let the `False` through, and the SDK's own default was clobbered. Tri-state (`type=click.BOOL, default=None`) gives click `None` when absent, a real bool only when the user explicitly passes `--x true` / `--x false`. Required bools still use `is_flag=True, default=False, required=True` — required means the user must pass something, and flag ergonomics are fine there. Enforced by the class-level scan in `tests/e2e.rs::no_generated_sdk_param_has_unguarded_is_flag` (rendered as a top-of-file test in the `template_rendering` module before it was moved).
+
+**`py_str` Tera filter escapes backslashes and double quotes.** Parameter descriptions flow into click's `help="..."` argument. An SDK whose parameter documentation contains `"` or `\` (common for real APIs) would otherwise produce unterminated Python string literals. The filter runs `.replace('\\', '\\\\').replace('"', '\\"')` — order matters so backslashes added by the second step don't get re-escaped. Registered in `crates/gen-python/src/renderer.rs` and invoked in the template as `{{ param.description | py_str }}`.
+
+**Template clauses use `{% set_global %}`, not Tera macros.** The `@click.option(...)` line is built from four clause variables (`required_clause`, `type_clause`, `help_clause`, plus an intermediate `enum_joined` for the enum branch). Tera's plain `{% set %}` scopes to the enclosing `{% if %}` block; the clause wouldn't survive to the decorator line. `{% set_global %}` is the correct tool. Tera macros were considered and rejected — they require `{% import %}` wiring in `renderer.rs` and are overkill for a single template.
+
+**`cli_description` uses ASCII `-`, not the em dash `—`.** `model_mapper.rs` formats the description as `"{cli_name} - CLI for {sdk_name}"`. The em dash would survive in UTF-8 pipelines but Windows Python defaults stdout to cp1252 and the byte sequence comes back as mojibake — breaking the generated `--help` output on any default Windows console.
+
+### Python generator — test organization and runtime anchor
+
+The Python generator has two test layers:
+
+1. **Unit + golden tests (`crates/gen-python/src/tests.rs`)** — the `#[cfg(test)]` module covers model mapping, template rendering branches, and `insta` golden snapshots for the generated output. 35 tests, fast, no subprocesses.
+
+2. **Runtime anchor (`crates/gen-python/tests/e2e.rs`)** — a cargo integration test binary. `help_output_snapshot` generates the TestSdk CLI, spawns `python -m testsdk_cli --help` via `PYTHONPATH`, and snapshots the stdout. Catches click semantic drift (e.g. 8 → 9 formatting changes) and generated-CLI import regressions that pure string scans can miss.
+
+The e2e test uses **PYTHONPATH + `python -m`**, not `venv + pip install`. Rationale:
+- `python/tests/test_sdk/` has no `pyproject.toml` — `pip install` would fail at step 1.
+- PYTHONPATH runs in ~1s vs ~30s for venv creation + pip install.
+- Eliminates three cross-platform failure modes (PyPI network, `pyproject.toml` parsing, Windows `Scripts/` vs `bin/` venv layout).
+- Gap accepted: `python -m` bypasses the `[project.scripts]` console-script entry point. That gap is tracked as a `#[ignore]`'d placeholder test and a `docs/FUTURE.md` entry; CI has a `grep -q` step that fails if the tracking entry is removed.
+
 ---
 
 ## Platform-specific notes

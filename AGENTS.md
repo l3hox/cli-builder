@@ -51,6 +51,7 @@ Each piece of information exists in exactly one place:
 - Adapters: .NET (subprocess) + Python (subprocess)
 - Generators: C# + Python (embedded Rust library calls, Tera templates)
 - `cli-builder generate --adapter {dotnet,python} --generator {csharp,python} --output ./output`
-- 397 .NET + 164 Rust + 109 Python = **670 tests**, 0 failures
+- 397 .NET + 177 Rust + 109 Python = **683 tests**, 0 failures
+- CI/CD: 15-job matrix (3 OS × Rust + .NET + Python 3.10/3.11/3.12) green on every push
 
-**What's next:** CI/CD integration, incremental streaming, Kotlin/Go generators, `--enrich` flag. See [docs/FUTURE.md](docs/FUTURE.md).
+**What's next:** package publishing (`cargo install`, PyPI), incremental streaming, DI/factory pattern for Stripe, Kotlin/Go generators, `--enrich` flag. See [docs/FUTURE.md](docs/FUTURE.md).

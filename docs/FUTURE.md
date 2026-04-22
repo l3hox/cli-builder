@@ -8,9 +8,6 @@ Production roadmap for cli-builder — generate agent-ready CLIs from SDK packag
 
 ## Next up
 
-### CI/CD integration
-GitHub Action, Docker image, output stability guarantees. Automated test runs for all 670 tests across Rust, .NET, and Python.
-
 ### Package publishing
 - `cargo install cli-builder` — Rust binary distribution
 - Generated C# CLIs: `dotnet tool install` packaging
@@ -50,11 +47,13 @@ Kotlin (clikt), Go (cobra), TypeScript (commander) — each ~500 lines of Tera t
 
 ## Completed
 
-### v2.0 — Rust migration (Steps 12b-15)
+### v2.0 — Rust migration + infrastructure (Steps 12b-16 + 13b)
 - **Step 12b**: Python adapter hardening — 109 pytest tests, JSON schema contract (`docs/sdk-metadata-schema.json`), module-level auth detection, Stripe validation (105 resources), `.pyi` stub parser (ADR-013 compliance)
 - **Step 13**: Python CLI generator in Rust — shared core (`ModelMapper`, `ParameterFlattener`, `IdentifierValidator` with `LanguageProfile` trait) + click-based Python templates via Tera. Council-reviewed. Golden file snapshots via insta.
 - **Step 14**: C# generator ported to Rust/Tera — `CSharpProfile` + 6 Tera templates + 6 post-processing transforms. Compile-validated (`dotnet build`). OpenAI 20 resources, Stripe 196 resources.
 - **Step 15**: Rust orchestrator — single `cli-builder` binary with `generate`/`inspect` commands, adapter subprocess management, embedded Python + C# generators.
+- **Step 16**: CI/CD — 15-job matrix (3 OS × Rust + .NET + Python 3.10/3.11/3.12), `fail-fast: false`, `concurrency` groups, Dependabot on four ecosystems, polyglot repo layout (`crates/` + `dotnet/` + `python/`), centralized test paths (`$(RepoRoot)` + `workspace_root()`), mock-adapter Rust crate replacing shell-script fixtures. See ADRs [018](ADR.md#adr-018-polyglot-repo-layout--crates--dotnet--python-at-root)–[021](ADR.md#adr-021-dependabot-cadence--weekly-pip-and-actions-monthly-cargo-and-nuget).
+- **Step 13b**: Python generator follow-up. Optional-bool kwargs overwrite fix (`type=click.BOOL, default=None` tri-state), em-dash product bug (Windows cp1252 mojibake), `py_str` Tera filter for description escaping, template refactor to `{% set_global %}` clauses, `tests/e2e.rs` runtime anchor with PYTHONPATH, supply-chain pin (`click==8.*`), FUTURE.md ↔ `tests/e2e.rs` link enforcement in CI. Three PRs, three council follow-ups.
 - All generators share Rust core. Adapters stay native forever (ADR-016).
 
 ### v1.x — .NET foundation (Steps 1-12)
@@ -72,4 +71,4 @@ Kotlin (clikt), Go (cobra), TypeScript (commander) — each ~500 lines of Tera t
 - stripe-python 15.x: 105 resources, classmethod extraction
 
 ### Test totals
-397 .NET + 164 Rust + 109 Python = **670 tests**, 0 failures
+397 .NET + 177 Rust + 109 Python = **683 tests**, 0 failures. 15-job CI matrix green on every push.

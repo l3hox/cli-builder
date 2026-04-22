@@ -1,5 +1,5 @@
 # cli-builder — Project Specification
-*Last updated: 2026-04-14*
+*Last updated: 2026-04-22*
 
 ---
 
@@ -56,43 +56,56 @@ All architectural decisions are documented with full rationale in [docs/ADR.md](
 | [013](docs/ADR.md#adr-013-package-artifacts-over-raw-source-code--per-language-native-metadata) | Package artifacts over raw source code |
 | [014](docs/ADR.md#adr-014-agent-assisted-metadata-enrichment-with-pluggable-llm-provider) | Agent-assisted enrichment with pluggable LLM (future) |
 | [015](docs/ADR.md#adr-015-diagnostics-collection-pattern-for-error-handling) | Diagnostics collection for error handling |
+| [016](docs/ADR.md#adr-016-subprocess-based-adapter-architecture--rust-migration-path) | Subprocess-based adapter architecture — Rust migration path |
+| [017](docs/ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates) | All generators in Rust with shared ModelMapper + language-specific templates |
+| [018](docs/ADR.md#adr-018-polyglot-repo-layout--crates--dotnet--python-at-root) | Polyglot repo layout — `crates/` + `dotnet/` + `python/` at root |
+| [019](docs/ADR.md#adr-019-test-path-centralization--reporoot-and-workspace_root) | Test path centralization — `$(RepoRoot)` and `workspace_root()` |
+| [020](docs/ADR.md#adr-020-cicd--15-job-matrix-with-per-language-segmentation) | CI/CD — 15-job matrix with per-language segmentation |
+| [021](docs/ADR.md#adr-021-dependabot-cadence--weekly-pip-and-actions-monthly-cargo-and-nuget) | Dependabot cadence — weekly pip and actions, monthly cargo and nuget |
 
 ### Component Overview
 
 ```
 ┌───────────────────────────────────────────────────────────────┐
-│                     cli-builder (.NET 8)                       │
+│                       cli-builder (Rust)                       │
+│                    orchestrator + generators                   │
 │                                                               │
 │  ┌──────────────┐  ┌───────────────┐  ┌─────────────────────┐│
-│  │  ISdkAdapter  │─▶│  SdkMetadata  │─▶│    ICliGenerator    ││
-│  │  (extract)    │  │  (JSON-ready) │  │    (emit)           ││
+│  │  Adapter      │─▶│  SdkMetadata  │─▶│     Generator       ││
+│  │  (subprocess) │  │  (JSON)       │  │     (in-process)    ││
 │  └──────┬───────┘  └───────┬───────┘  └──────────┬──────────┘│
-│         │        ▲ future  │ process boundary ▲   │           │
-│  ┌──────▼───────┐  ┌──────▼────────┐  ┌─────────▼──────────┐│
-│  │ DotNetAdapter │  │ IMetadata     │  │  CSharpCli         ││
-│  │ (reflection)  │  │ Enricher      │  │  Generator         ││
-│  └──────────────┘  │ (optional,    │  └──────────┬──────────┘│
-│                    │  --enrich)     │             │           │
-│                    └──────┬────────┘  ┌──────────▼──────────┐│
-│                           │           │  Output Project      ││
-│                    ┌──────▼────────┐  │  (standalone)        ││
-│                    │ LLM Provider  │  └─────────────────────┘│
-│                    │ (pluggable)   │                          │
-│                    └───────────────┘                          │
-└───────────────────────────────────────────────────────────────┘
+│         │                   │                     │           │
+│         │        process boundary (JSON over      │           │
+│         │        stdout from native adapter)      │           │
+└─────────┼──────────────────────────────────────────┼──────────┘
+          │                                          │
+┌─────────▼──────────┐                   ┌───────────▼──────────┐
+│  Native adapters   │                   │  Rust generators     │
+│  (one process per  │                   │  (shared core +      │
+│   language)        │                   │   Tera templates)    │
+│                    │                   │                       │
+│  • .NET adapter    │                   │  • Python generator  │
+│    (MetadataLoad-  │                   │    (click)           │
+│     Context)       │                   │  • C# generator      │
+│  • Python adapter  │                   │    (System.Command-  │
+│    (inspect + .pyi │                   │     Line)            │
+│     stubs)         │                   │                       │
+└────────────────────┘                   └──────────────────────┘
 
 Future source adapters (subprocess, emit SdkMetadata JSON):
-┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│  Python Adapter  │  │ Kotlin Adapter  │  │  OpenAPI Adapter │
-│  (AST/inspect)   │  │  (reflection)   │  │  (spec parsing)  │
-└─────────────────┘  └─────────────────┘  └─────────────────┘
+┌─────────────────┐  ┌─────────────────┐
+│ Kotlin Adapter  │  │ OpenAPI Adapter │
+│  (reflection)   │  │  (spec parsing) │
+└─────────────────┘  └─────────────────┘
 
 Future target generators (in-process, no target runtime needed):
 ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│ Python CLI output│  │  Rust CLI output │  │ Kotlin CLI out  │
-│  (click-based)   │  │  (clap-based)    │  │  (clikt-based)  │
+│  Go CLI output  │  │  Kotlin CLI out │  │  TypeScript CLI │
+│  (cobra)        │  │  (clikt)        │  │  (commander)    │
 └─────────────────┘  └─────────────────┘  └─────────────────┘
 ```
+
+**Current implementation (v2.0):** `cli-builder` is a single Rust binary (`crates/cli`) that invokes native adapters as subprocesses and embeds the Python and C# generators as Rust libraries with Tera templates. The .NET and Python adapters are shipped. The C# and Python generators are shipped. Shared core (`crates/core`) provides `ModelMapper`, `ParameterFlattener`, and `IdentifierValidator` — see ADR-016 and ADR-017.
 
 ### Interface Signatures
 
@@ -368,29 +381,36 @@ Two separate binaries, two separate contracts:
 
 ---
 
-## v1 Scope Boundary
+## Scope Boundary (v2.0)
 
-### In scope
-- .NET reflection adapter
-- CLI code generator (C# output, System.CommandLine-based)
+### In scope (shipped)
+- **.NET reflection adapter** — `MetadataLoadContext` metadata extraction
+- **Python adapter** — `inspect` + `typing.get_type_hints()` with `.pyi` stub fallback
+- **C# generator** — System.CommandLine output (Rust + Tera templates)
+- **Python generator** — click output (Rust + Tera templates)
+- **Rust orchestrator** — single `cli-builder` binary with `generate` / `inspect` subcommands
 - Config override file support
 - Agent-readiness features (table above)
-- Two reference SDKs working end-to-end:
-  - **OpenAI .NET SDK** — headline demo (no official CLI exists)
-  - **Stripe.net** — scale proof (340M+ downloads, huge typed surface)
-- README with architecture explanation and judgment calls
-- ADR for the core design decision (reflection vs static analysis vs schema)
-- [FUTURE.md](FUTURE.md) listing out-of-scope ideas
+- Reference SDKs working end-to-end:
+  - **OpenAI .NET SDK 2.9.1** — 20 resources, 41/169 ops wired, live API
+  - **Stripe.net 51.0.0** — 196 resources, compile-validated
+  - **TestSdk (.NET)** — 23 E2E tests with live API calls
+  - **stripe-python 15.x** — 105 resources, metadata extraction validated
+- README, AGENTS.md, ADR.md (21 ADRs), design notes, FUTURE.md
+- Cross-platform CI (15-job matrix, Windows/macOS/Linux × Rust/.NET/Python 3.10–3.12)
 
 ### Out of scope (see [FUTURE.md](FUTURE.md))
-- **Source adapters:** Python (AST/inspect), Kotlin (reflection), OpenAPI spec (would overlap with existing tools — intentionally deferred)
-- **Target language emitters:** Python (click-based), Rust (clap-based), Kotlin (clikt-based) — v1 emits C#/System.CommandLine only
+- **Source adapters:** Kotlin (JVM reflection), OpenAPI spec
+- **Target generators:** Kotlin (clikt), Go (cobra), TypeScript (commander)
 - Runtime wrapper mode (interpret SDK at runtime instead of generating code)
 - GUI / web interface
-- Package publishing (NuGet tool, Homebrew, etc.)
+- Package publishing (`cargo install cli-builder`, PyPI, Homebrew) — planned
 - Incremental regeneration (detect SDK changes and update CLI)
 - Test generation for generated CLIs
-- Agent-assisted metadata enrichment (`--enrich` flag, pluggable LLM provider)
+- Agent-assisted metadata enrichment (`--enrich` flag, pluggable LLM provider — ADR-014)
+- DI/factory pattern support for Stripe services without parameterless constructors
+- Incremental streaming output (`IAsyncEnumerable<T>` → NDJSON)
+- Full venv+pip console-script E2E for generated Python CLI (placeholder test + tracking entry exist)
 
 ---
 
@@ -445,13 +465,12 @@ Optional/later:
 
 ## Roadmap
 
-See [docs/FUTURE.md](FUTURE.md) for the full prioritized roadmap.
+**v2.0 is current.** See [docs/FUTURE.md](FUTURE.md) for the full prioritized roadmap going forward. The spec does not mirror it — that would just drift.
 
-**v1.4:** .NET SDK adapter + C# CLI generator + CLI entry point + direct param deserialization + language-neutral metadata. Three SDKs validated (TestSdk E2E, OpenAI compile, Stripe compile). 397 .NET tests.
-
-**v1.5:** Python adapter as standalone `cli-builder-adapter-python` package. Subprocess orchestration. Adapter invocation contract finalized (JSON stdout, stderr diagnostics, exit codes).
-
-**v2.0 (current):** All generators in Rust with shared ModelMapper + Tera templates ([ADR-017](ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates)). Rust orchestrator replaces .NET CLI. Single `cli-builder` binary. Adapters remain in native languages. Python adapter hardened (109 pytest tests, Stripe validation, .pyi stubs). 670 total tests.
+Milestones to date:
+- **v1.4:** .NET adapter + C# generator + CLI entry + direct param deserialization + language-neutral metadata. Three SDKs validated.
+- **v1.5:** Python adapter as standalone `cli-builder-adapter-python` package. Subprocess orchestration. Adapter invocation contract finalized.
+- **v2.0:** All generators in Rust with shared ModelMapper + Tera templates ([ADR-017](ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates)). Rust orchestrator replaces .NET CLI. Single `cli-builder` binary. Adapters remain in native languages. Polyglot repo layout ([ADR-018](ADR.md#adr-018-polyglot-repo-layout--crates--dotnet--python-at-root)), centralized test paths ([ADR-019](ADR.md#adr-019-test-path-centralization--reporoot-and-workspace_root)), CI/CD across 15 jobs ([ADR-020](ADR.md#adr-020-cicd--15-job-matrix-with-per-language-segmentation)). 673 total tests.
 
 ---
 

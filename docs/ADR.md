@@ -877,3 +877,156 @@ Each target language adds ~500 lines of Tera templates. Adding a new target lang
 - **Negative:** Contributor barrier is higher — must know Rust to modify generator logic.
 - **Negative:** The existing C# generator (Scriban, well-tested) must be ported to Rust.
 - **Mitigated by:** Pragmatic migration — C# generator stays in .NET until Rust port is validated against the same test suite. Templates are portable (Scriban syntax ≈ Tera syntax).
+
+---
+
+## ADR-018: Polyglot repo layout — `crates/` + `dotnet/` + `python/` at root
+
+**Date:** 2026-04-20
+**Status:** Accepted and implemented (restructure commit, April 2026)
+
+### Context
+
+After Step 15 the repo had a `src/` folder mixing .NET projects alongside a top-level `cli-builder-rust/` and `cli-builder-adapter-python/`. The naming was redundant (the repo is already `cli-builder`) and the layout did not make the polyglot structure obvious. Three conventions were considered:
+
+1. **Everything under `src/`** — `src/dotnet/`, `src/rust/`, `src/python/`. Single "source" root.
+2. **Language-named top-level directories** — `crates/` for the Rust workspace, `dotnet/` for the .NET solution, `python/` for the Python adapter.
+3. **Flat with prefixes** — `cli-builder-rust/`, `cli-builder-dotnet/`, `cli-builder-python/` (the pre-restructure state).
+
+### Decision
+
+**Language-named top-level directories.** The Rust workspace lives at `crates/` (matching Cargo's convention). The .NET solution lives at `dotnet/`. The Python adapter lives at `python/`. Shared test fixtures remain at `tests/fixtures/` (consumed by both Rust and .NET tests).
+
+### Rationale
+
+**This is the dominant convention in polyglot Rust-backed repos.** Polars (`crates/` + `py-polars/`), Ruff (`crates/` + `python/`), Turborepo (`crates/` + `packages/`), and Tauri (`crates/` + frontend dirs) all use it. A Rust developer encountering the project sees `crates/` and knows immediately where the workspace root is. A .NET developer sees `dotnet/` with `cli-builder.sln` at its root.
+
+**`src/dotnet/src/`** (the nested alternative) produces double-nesting that no tooling expects. .NET `Directory.Build.props` has to traverse with `$(MSBuildThisFileDirectory)../../`, and `dotnet build` invoked from a nested `src/` confuses people.
+
+**Prefixed dirs are self-referential.** `cli-builder-rust/` inside a `cli-builder/` repo is noise — the prefix repeats information already encoded in the URL. Dropping the prefix shortens every path and matches what tooling already assumes (`cargo build` from `crates/` just works).
+
+**Shared fixtures stay at root.** `tests/fixtures/` is consumed by both Rust integration tests and .NET test projects via `TestPaths.RepoRoot` and `workspace_root()` (see ADR-019). Keeping the fixtures at the repo root — language-neutral — avoids duplicating large JSON files or teaching both languages to reach into each other's trees.
+
+### Consequences
+
+- **Positive:** Layout is immediately legible to contributors familiar with the Polars/Ruff convention — effectively a common-language.
+- **Positive:** Each language's canonical tool (`cargo`, `dotnet`, `pytest`) runs from its own directory without path flags.
+- **Positive:** CI workflow `defaults.run.working-directory` cleanly segments per-language jobs.
+- **Positive:** Fixture sharing via `tests/fixtures/` proven to work across both Rust and .NET with one helper per language.
+- **Negative:** Restructure required touching ~20 files (workspace `Cargo.toml`, test-path traversal constants, CI config, Makefile, docs). One-time cost.
+- **Mitigated by:** `git mv` preserves blame; the restructure landed in one commit (`affdc44`) with all tests passing.
+
+---
+
+## ADR-019: Test path centralization — `$(RepoRoot)` and `workspace_root()`
+
+**Date:** 2026-04-20
+**Status:** Accepted and implemented
+
+### Context
+
+Test code in both .NET and Rust needed absolute paths to shared fixtures (`tests/fixtures/testsdk-metadata.json`) and language-specific test resources. Before the restructure, each test file computed the repo root with a hardcoded relative traversal — the .NET side had 9 duplicated `Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "..", ".."))` calls, the Rust side had `PathBuf::from(manifest_dir).join("../../..")` duplicated per crate. Any restructure broke all of them in lockstep; a typo in any one silently resolved to the wrong directory.
+
+Three centralization approaches were considered:
+
+1. **A single constants file per language** — read by every test.
+2. **MSBuild / Cargo metadata injection** — the build system records the repo root at compile time; tests read it at runtime.
+3. **Environment-variable handshake** — the test runner sets `REPO_ROOT=...` before invoking tests.
+
+### Decision
+
+**Build-system metadata injection with a `.git` sentinel check.** On the .NET side, `dotnet/Directory.Build.props` computes `$(RepoRoot)` from MSBuild's own path variables and emits it as an `AssemblyMetadata` attribute. `dotnet/tests/TestPaths.cs` (auto-included in every test project) reads the attribute at runtime. On the Rust side, `crates/core/src/test_support.rs` (gated behind a `test-support` feature) exposes `workspace_root()` that derives the repo root from `CARGO_MANIFEST_DIR`. Both implementations assert that `.git` exists at the resolved path and panic with a diagnostic message if it does not.
+
+### Rationale
+
+**Single source of truth per language.** `$(RepoRoot)` lives in one `Directory.Build.props` file; `workspace_root()` lives in one Rust module. Nine duplicated traversals collapse to nine call sites of one helper.
+
+**Build systems already know where the repo root is.** MSBuild's `$(MSBuildThisFileDirectory)` resolves relative to the `.props` file, which is under `dotnet/`, so `..` gets us to the repo root with one computation. Cargo sets `CARGO_MANIFEST_DIR` for every test run. Reusing the build system's own metadata is more robust than recomputing paths at runtime.
+
+**The `.git` sentinel catches path breakage immediately.** If a future restructure moves `Directory.Build.props` or changes the Rust workspace layout and the traversal stops hitting the repo root, the test fails with a clear "expected `.git` at `<path>`, got `<actual>`" message rather than trying to read a non-existent fixture and failing downstream with a confusing `FileNotFoundException`.
+
+**Environment variables were rejected.** They require the test runner to know the repo root (not always true — `cargo test` and `dotnet test` invoked directly from different cwds), and silently fail open if unset.
+
+### Consequences
+
+- **Positive:** A restructure changes one file per language instead of ~12.
+- **Positive:** Breakage fails loudly and locally with a diagnostic pointing at the exact misconfigured path.
+- **Positive:** The helper composes — `TestPaths.Fixtures`, `TestPaths.Golden`, `workspace_root().join("tests/fixtures")` are derived from the one root.
+- **Positive:** Zero runtime cost — the lookup happens once per test class, cached.
+- **Negative:** The .NET side requires `IsTestProject` to be set correctly for `Directory.Build.props` to inject the attribute. Documented in the `.props` file itself.
+- **Mitigated by:** The `.git` sentinel panic with a diagnostic message guides a contributor to the missing `IsTestProject` setting on the first failing test run.
+
+---
+
+## ADR-020: CI/CD — 15-job matrix with per-language segmentation
+
+**Date:** 2026-04-20
+**Status:** Accepted and implemented
+
+### Context
+
+v2.0 needed CI/CD across three languages (Rust, .NET, Python) and three OSes (Linux, macOS, Windows). Several matrix designs were considered:
+
+1. **Single job per OS** — install all three language toolchains, run everything serially.
+2. **One job per language × OS** — 3 × 3 = 9 jobs, Python expanded to 3 versions = 3 × 3 × 3 = 15.
+3. **Linux-only fast path + a nightly full matrix** — cheaper per-commit CI, risk-accepts multi-OS regressions.
+
+### Decision
+
+**One job per language × OS, Python expanded to 3.10/3.11/3.12.** Total 15 jobs per run: 3 Rust + 3 .NET + 9 Python. `fail-fast: false` so one OS regression doesn't cancel the rest. `concurrency:` group cancels previous in-flight runs on the same ref. All jobs gate merges — no soft failures.
+
+### Rationale
+
+**Per-language jobs isolate failure modes.** A Rust refactor doesn't wait for .NET or Python tests. A Python 3.10 compatibility break surfaces on its exact matrix cell rather than as a monolithic "something failed on Linux."
+
+**`fail-fast: false` matters for cross-platform debugging.** A macOS-only regression (configuration propagation, stdout race, em dash in cp1252 — all real bugs we've hit) is invisible if the other OSes short-circuit the matrix.
+
+**Python 3.10–3.12 covers the current supported range.** 3.10 is the minimum declared in `python/pyproject.toml`; 3.12 is the current default; 3.11 is in between. Adding 3.9 would also add the pain of `from __future__ import annotations` gymnastics that we've decided not to pay.
+
+**Python + click installed in the Rust job** (not separately) so the generator's runtime anchor test (`tests/e2e.rs::help_output_snapshot`) actually runs rather than skipping gracefully on runners without click. Click is pinned to `8.*` — a breaking 9.x release would otherwise invalidate the `--help` snapshot, and an unpinned transitive install is a real supply-chain surface.
+
+**The `grep -q` FUTURE.md link-enforcement step** gates the orphaned-`#[ignore]` risk Ops raised in the PR3 council review. If the tracking entry for the deferred venv+pip console-script E2E disappears from `docs/FUTURE.md`, CI fails on every push until either the entry is restored or the `#[ignore]`'d test is deleted. A placeholder without a tracking entry is dead weight; we enforce the link.
+
+### Consequences
+
+- **Positive:** Failures surface with narrow blast radius — "Rust (windows-latest)" tells you exactly which cell broke.
+- **Positive:** Total wall time ~3 min (parallelizes across runners), acceptable for every-PR CI.
+- **Positive:** The FUTURE.md link check prevents a real rot pattern (orphaned ignore blocks).
+- **Positive:** Dependabot on four ecosystems (github-actions, cargo, nuget, pip) keeps the toolchain current without flooding PRs (ADR-021 covers the cadence).
+- **Negative:** 15 jobs consume free-tier minutes faster than a single-job design would. Well within solo-developer limits, but worth tracking.
+- **Negative:** Matrix expansion is tempting — adding Rust toolchain versions or more Python versions quickly doubles cost.
+- **Mitigated by:** Pin Python 3.12 in the Rust job (single version — the runtime anchor doesn't need matrix coverage). The Python job already covers 3.10/3.11/3.12.
+
+---
+
+## ADR-021: Dependabot cadence — weekly pip and actions, monthly cargo and nuget
+
+**Date:** 2026-04-20
+**Status:** Accepted and implemented
+
+### Context
+
+Four ecosystems need Dependabot coverage: GitHub Actions, cargo, NuGet, pip. Each has different upgrade frequencies and blast radius. A single cadence across all four would either flood with noise (weekly for everything) or miss security updates (monthly for everything).
+
+### Decision
+
+- **GitHub Actions:** weekly — actions change frequently and the matrix is CI-centric.
+- **pip (Python adapter + test dependencies):** weekly — the Python ecosystem moves fast.
+- **cargo:** monthly — Rust crates move slowly and updates are usually safe.
+- **NuGet:** monthly — .NET SDK packages for tests/adapter rarely have security-sensitive updates.
+- **All ecosystems:** `open-pull-requests-limit: 3` — caps PR-review load when multiple upgrades queue up.
+
+### Rationale
+
+**Weekly for the ecosystems that actually move.** Python packages release patches frequently; GitHub Actions add features monthly. Monthly cadence would leave real-world updates stale for weeks.
+
+**Monthly for the slow-moving ecosystems.** Cargo and NuGet update less frequently and their upgrades are typically safer. Weekly would just flood the queue.
+
+**`open-pull-requests-limit: 3` is calibrated for a solo-developer project.** A real backlog of 10 Dependabot PRs on a side project means none get merged. Three is a comfortable batch to review in a single sitting.
+
+### Consequences
+
+- **Positive:** The noisy ecosystems (actions, pip) stay current without overwhelming the slower ones.
+- **Positive:** The PR limit prevents queue buildup.
+- **Negative:** Security-sensitive cargo/nuget updates might sit for up to a month. Acceptable — this is a build tool, not a runtime service.
+- **Mitigated by:** GitHub's Dependabot alerts surface security issues independently of the update cadence; manual bumps are always possible.
