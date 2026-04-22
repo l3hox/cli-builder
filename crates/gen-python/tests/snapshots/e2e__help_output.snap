@@ -1,5 +1,5 @@
 ---
-source: gen-python/src/tests.rs
+source: gen-python/tests/e2e.rs
 expression: stdout
 ---
 Usage: python -m testsdk_cli [OPTIONS] COMMAND [ARGS]...

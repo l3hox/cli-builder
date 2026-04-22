@@ -1,4 +1,4 @@
-.PHONY: ci test-rust test-dotnet test-python test-e2e-python build fmt clean
+.PHONY: ci test-rust test-dotnet test-python test-e2e-python test-e2e-full build fmt clean
 
 # Absolute path to this Makefile's directory — the repo root. Lets targets
 # work regardless of where `make` is invoked from.
@@ -16,14 +16,28 @@ test-dotnet:
 test-python:
 	cd $(ROOT)/python && pip install -q -e ".[test]" && pytest
 
-# End-to-end runtime anchor for the Python generator: installs click into the
-# ambient Python, generates a CLI from the TestSdk fixture, spawns
-# `python -m testsdk_cli --help` via PYTHONPATH, and snapshots the stdout.
-# Separate from test-rust because it requires Python+click on PATH; test-rust
-# must stay runnable on machines with no Python.
+# End-to-end runtime anchor for the Python generator: generates a CLI from
+# the TestSdk fixture, spawns `python -m testsdk_cli --help` via PYTHONPATH,
+# and snapshots the stdout. Lives in `crates/gen-python/tests/e2e.rs` as a
+# cargo integration test. Separate from test-rust because it requires
+# Python+click on PATH; test-rust must stay runnable on machines with no
+# Python.
+#
+# Uses a venv under /tmp to avoid PEP 668 (externally-managed-environment)
+# failures on modern Debian/Ubuntu/WSL. Click pinned to 8.x to match CI.
+E2E_VENV := /tmp/cli-builder-e2e-venv
+
 test-e2e-python:
-	python3 -m pip install -q --user click || pip install -q --user click
-	cd $(ROOT)/crates && cargo test --package cli-builder-gen-python -- help_output_snapshot --nocapture
+	python3 -m venv $(E2E_VENV)
+	$(E2E_VENV)/bin/pip install -q "click==8.*"
+	cd $(ROOT)/crates && PATH=$(E2E_VENV)/bin:$$PATH cargo test --package cli-builder-gen-python --test e2e -- --nocapture
+
+# Stub for the full venv+pip+console-script E2E, not yet implemented.
+# When implemented, this target will replace the #[ignore] gate in
+# tests/e2e.rs::console_script_entry_point_end_to_end. See docs/FUTURE.md.
+test-e2e-full:
+	@echo "test-e2e-full not yet implemented — see docs/FUTURE.md (Other → Full venv+pip console-script E2E)"
+	@exit 1
 
 build:
 	cd $(ROOT)/crates && cargo build --release

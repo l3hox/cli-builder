@@ -786,55 +786,10 @@ mod template_rendering {
         );
     }
 
-    /// Runtime anchor: spawn `python -m testsdk_cli --help` against the generated
-    /// CLI and snapshot the stdout. Catches click semantic drift (8→9) that pure
-    /// string scans can miss. Uses PYTHONPATH — no pip install / venv needed.
-    ///
-    /// Skips gracefully when the ambient python interpreter is missing or has
-    /// no click installed. PR3 (Step 13b) will add `setup-python` + click to
-    /// the Rust CI job; until then this test is a no-op on clean runners.
-    #[test]
-    fn help_output_snapshot() {
-        let python = if cfg!(windows) { "python" } else { "python3" };
-
-        // Skip gracefully if python or click is unavailable — no hard panic.
-        match std::process::Command::new(python)
-            .args(["-c", "import click"])
-            .output()
-        {
-            Err(_) => {
-                eprintln!("help_output_snapshot: `{}` not in PATH — skipping", python);
-                return;
-            }
-            Ok(out) if !out.status.success() => {
-                eprintln!(
-                    "help_output_snapshot: `{}` has no `click` module — skipping",
-                    python
-                );
-                return;
-            }
-            _ => {}
-        }
-
-        let dir = tempfile::tempdir().unwrap();
-        generate_testsdk(dir.path());
-        let src_dir = dir.path().join("src");
-        let output = std::process::Command::new(python)
-            .env("PYTHONPATH", &src_dir)
-            .args(["-m", "testsdk_cli", "--help"])
-            .output()
-            .expect("Failed to invoke python despite probe success");
-
-        assert!(
-            output.status.success(),
-            "python -m testsdk_cli --help failed (exit {:?}):\nstderr: {}",
-            output.status.code(),
-            String::from_utf8_lossy(&output.stderr)
-        );
-
-        let stdout = String::from_utf8_lossy(&output.stdout).to_string();
-        insta::assert_snapshot!("help_output", stdout);
-    }
+    // help_output_snapshot moved to tests/e2e.rs to co-locate runtime anchors
+    // (subprocess + real Python execution) in one discoverable location.
+    // CI guarantees click is installed; local dev without click still gets a
+    // graceful skip. See crates/gen-python/tests/e2e.rs.
 
     /// Regression anchor for the template refactor (PR2 + PR2b). Exercises
     /// every rendering branch in a single operation, in this order:

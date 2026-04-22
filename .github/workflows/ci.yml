@@ -39,8 +39,20 @@ jobs:
       # actually RUN in CI, not silently no-op.
       - uses: actions/setup-python@v6
         with:
+          # bump when 3.12 reaches EOL (October 2028)
           python-version: '3.12'
-      - run: pip install click
+      # Pin click to 8.x so a future breaking release (help-text format
+      # changes) can't invalidate the `help_output_snapshot` anchor. Also
+      # constrains the supply-chain surface for this CI dependency.
+      - run: pip install "click==8.*"
+        # `shell: bash` is load-bearing on windows-latest (default is pwsh).
+        # pwsh's PATH propagation after setup-python is inconsistent for
+        # bare `pip` invocations; bash resolves pip correctly.
+        shell: bash
+      # FUTURE.md ↔ tests/e2e.rs link enforcement. The placeholder
+      # `#[ignore]`'d test in tests/e2e.rs references this tracking entry;
+      # if it's removed, the orphaned #[ignore] rots silently. Fail fast.
+      - run: grep -q "Full venv+pip console-script E2E" ../docs/FUTURE.md
         shell: bash
       - run: cargo test --workspace --all-features
 
