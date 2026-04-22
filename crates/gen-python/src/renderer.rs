@@ -1,10 +1,11 @@
 //! Template rendering — loads Tera templates, builds context, writes output files.
 
+use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
 use cli_builder_core::generator_model::GeneratorModel;
-use tera::{Context, Tera};
+use tera::{Context, Tera, Value};
 
 /// Escape strings that may contain Tera template syntax.
 /// Generator-side escaping per ADR-017 council decision.
@@ -14,6 +15,22 @@ pub(crate) fn tera_escape(value: &str) -> String {
         .replace("}}", "} }")
         .replace("{%", "{ %")
         .replace("%}", "% }")
+}
+
+/// Escape a string so it's safe inside a Python double-quoted string literal.
+/// Backslashes first, then double quotes — order matters so backslashes added
+/// by the second step don't get re-escaped by the first.
+pub(crate) fn python_str_escape(value: &str) -> String {
+    value.replace('\\', "\\\\").replace('"', "\\\"")
+}
+
+/// Tera filter wrapping [`python_str_escape`] for use in templates as
+/// `{{ foo | py_str }}`.
+fn py_str_filter(value: &Value, _args: &HashMap<String, Value>) -> tera::Result<Value> {
+    let s = value
+        .as_str()
+        .ok_or_else(|| tera::Error::msg("py_str filter expects a string"))?;
+    Ok(Value::String(python_str_escape(s)))
 }
 
 /// Escape user-provided strings in the model before template rendering.
@@ -41,6 +58,7 @@ pub fn generate(model: &GeneratorModel, output_dir: &Path) -> Result<(), Box<dyn
 
     let mut tera = Tera::default();
     tera.autoescape_on(vec![]); // Disable HTML auto-escaping
+    tera.register_filter("py_str", py_str_filter);
 
     // Register embedded templates
     tera.add_raw_template("pyproject.toml", include_str!("../templates/pyproject.toml.tera"))?;

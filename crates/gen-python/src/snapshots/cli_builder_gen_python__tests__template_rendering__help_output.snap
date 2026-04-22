@@ -4,7 +4,7 @@ expression: stdout
 ---
 Usage: python -m testsdk_cli [OPTIONS] COMMAND [ARGS]...
 
-  testsdk-cli — CLI for CliBuilder.TestSdk
+  testsdk-cli - CLI for CliBuilder.TestSdk
 
 Options:
   --api-key TEXT  API key

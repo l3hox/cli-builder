@@ -488,10 +488,11 @@ fn output_init_py_is_empty() {
 }
 
 // ================================================================
-// Step 13b: optional-bool kwargs overwrite fix + coverage
+// Template rendering regression gates (Step 13b coverage sweep).
+// Exercises every @click.option branch plus the kwargs-guard contract.
 // ================================================================
 
-mod step_13b_bool_fix {
+mod template_rendering {
     use super::*;
     use cli_builder_core::generator_model::{
         GeneratorModel, OperationModel, ResourceModel,
@@ -656,6 +657,91 @@ mod step_13b_bool_fix {
         );
     }
 
+    /// Synthetic model proof: a required enum param renders BOTH
+    /// `required=True` and `type=click.Choice([...])` on the same decorator
+    /// line. Covers the combination that no fixture exercises (fixture only
+    /// has optional-enum via `initial_status`).
+    #[test]
+    fn required_enum_renders_required_and_choice() {
+        let content = render_single_param_resource(FlatParameter {
+            cli_flag: "tier".into(),
+            property_name: "Tier".into(),
+            cli_type: "str".into(),
+            is_required: true,
+            default_value: None,
+            description: None,
+            enum_values: Some(vec!["Gold".into(), "Silver".into()]),
+            sdk_type_name: None,
+            sdk_type_kind: None,
+            sdk_type_is_nullable: false,
+            sdk_type_is_extensible_enum: false,
+            source_options_class_name: None,
+        });
+
+        assert!(
+            content.contains(
+                r#"@click.option("--tier", required=True, type=click.Choice(["Gold", "Silver"]))"#
+            ),
+            "required enum should render required=True + type=click.Choice; got:\n{}",
+            content
+        );
+    }
+
+    /// Synthetic model proof: a description containing `"` and `\` is
+    /// escaped into valid Python string-literal syntax. Without escaping,
+    /// the generated code would have an unterminated string literal.
+    /// Exercises the `py_str` Tera filter on the help clause.
+    #[test]
+    fn description_with_quotes_and_backslash_is_escaped() {
+        let content = render_single_param_resource(FlatParameter {
+            cli_flag: "note".into(),
+            property_name: "Note".into(),
+            cli_type: "str".into(),
+            is_required: false,
+            default_value: None,
+            description: Some(r#"Use "quotes" and \backslash"#.into()),
+            enum_values: None,
+            sdk_type_name: None,
+            sdk_type_kind: None,
+            sdk_type_is_nullable: false,
+            sdk_type_is_extensible_enum: false,
+            source_options_class_name: None,
+        });
+
+        // Expected Python source fragment: help="Use \"quotes\" and \\backslash"
+        assert!(
+            content.contains(r#"help="Use \"quotes\" and \\backslash""#),
+            "description with quotes/backslash should be python-escaped; got:\n{}",
+            content
+        );
+
+        // The rendered file must still parse as Python.
+        let python = if cfg!(windows) { "python" } else { "python3" };
+        let probe = std::process::Command::new(python)
+            .args(["-c", "pass"])
+            .output();
+        if probe.is_err() {
+            return; // python not available — skip ast.parse guard
+        }
+
+        let dir = tempfile::tempdir().unwrap();
+        std::fs::write(dir.path().join("probe.py"), &content).unwrap();
+        let parse = std::process::Command::new(python)
+            .args([
+                "-c",
+                "import ast, sys; ast.parse(open(sys.argv[1]).read())",
+                &dir.path().join("probe.py").to_string_lossy(),
+            ])
+            .output()
+            .expect("failed to invoke python for ast.parse");
+        assert!(
+            parse.status.success(),
+            "ast.parse failed: {}\n---content---\n{}",
+            String::from_utf8_lossy(&parse.stderr),
+            content
+        );
+    }
+
     /// A param with `enum_values` AND a `cli_type` that also emits `type=...`
     /// (e.g. bool) must not produce two `type=` arguments on the same
     /// `@click.option(...)` call — that would be a Python TypeError at import.
@@ -733,13 +819,8 @@ mod step_13b_bool_fix {
         let dir = tempfile::tempdir().unwrap();
         generate_testsdk(dir.path());
         let src_dir = dir.path().join("src");
-        // PYTHONIOENCODING=utf-8 forces Python stdout/stderr to UTF-8 on all
-        // platforms. Without it, Windows Python uses the console code page
-        // (cp1252) and non-ASCII characters in the CLI description (e.g. the
-        // em dash in `model_mapper.rs`) come back as mojibake.
         let output = std::process::Command::new(python)
             .env("PYTHONPATH", &src_dir)
-            .env("PYTHONIOENCODING", "utf-8")
             .args(["-m", "testsdk_cli", "--help"])
             .output()
             .expect("Failed to invoke python despite probe success");

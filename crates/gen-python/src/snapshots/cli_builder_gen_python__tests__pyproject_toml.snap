@@ -1,11 +1,11 @@
 ---
-source: crates/cli-builder-gen-python/src/tests.rs
+source: gen-python/src/tests.rs
 expression: content
 ---
 [project]
 name = "testsdk-cli"
 version = "0.1.0"
-description = "testsdk-cli — CLI for CliBuilder.TestSdk"
+description = "testsdk-cli - CLI for CliBuilder.TestSdk"
 requires-python = ">=3.9"
 dependencies = [
     "click>=8.0",

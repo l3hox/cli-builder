@@ -77,7 +77,10 @@ pub fn build(
 
     let sdk_name = sanitize_string(Some(&metadata.name)).unwrap_or_default();
     let model = GeneratorModel {
-        cli_description: sanitize_string(Some(&format!("{} — CLI for {}", &cli_name, &sdk_name)))
+        // Use ASCII hyphen instead of em dash — keeps the generated CLI's
+        // --help output readable on Windows consoles that default to cp1252,
+        // where non-ASCII bytes produce mojibake.
+        cli_description: sanitize_string(Some(&format!("{} - CLI for {}", &cli_name, &sdk_name)))
             .unwrap_or_default(),
         cli_name: cli_name.clone(),
         sdk_name: sdk_name.clone(),

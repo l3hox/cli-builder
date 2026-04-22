@@ -54,7 +54,10 @@ def {{ resource.name | replace(from="-", to="_") }}(ctx):
 {%- endif -%}
 {%- set_global help_clause = "" -%}
 {%- if param.description -%}
-    {%- set_global help_clause = ', help="' ~ param.description ~ '"' -%}
+    {# py_str escapes backslashes and double quotes so a description with
+       literal " or \ doesn't break Python syntax on the help="..." clause. #}
+    {%- set desc_esc = param.description | py_str -%}
+    {%- set_global help_clause = ', help="' ~ desc_esc ~ '"' -%}
 {%- endif %}
 @click.option("--{{ param.cli_flag }}"{{ required_clause }}{{ type_clause }}{{ help_clause }})
 {% endfor %}

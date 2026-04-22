@@ -1,5 +1,5 @@
 ---
-source: crates/cli-builder-gen-python/src/tests.rs
+source: gen-python/src/tests.rs
 expression: content
 ---
 """CLI entry point for testsdk-cli."""
@@ -28,7 +28,7 @@ from .commands.search import search
 @click.option("--json", "use_json", is_flag=True, default=False, help="Output as JSON")
 @click.pass_context
 def cli(ctx, api_key, use_json):
-    """testsdk-cli — CLI for CliBuilder.TestSdk"""
+    """testsdk-cli - CLI for CliBuilder.TestSdk"""
     ctx.ensure_object(dict)
     ctx.obj["use_json"] = use_json
 

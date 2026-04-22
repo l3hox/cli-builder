@@ -1,11 +1,11 @@
 ---
-source: crates/cli-builder-gen-csharp/src/tests.rs
+source: gen-csharp/src/tests.rs
 expression: content
 ---
 using System.CommandLine;
 using TestsdkCli.Commands;
 
-var rootCommand = new RootCommand(@"testsdk-cli — CLI for CliBuilder.TestSdk");
+var rootCommand = new RootCommand(@"testsdk-cli - CLI for CliBuilder.TestSdk");
 
 // Global --json option available on all commands
 var jsonOption = new Option<bool>("--json", "Output as JSON instead of table format");
