@@ -44,6 +44,7 @@ Kotlin (clikt), Go (cobra), TypeScript (commander) — each ~500 lines of Tera t
 - Config file (`cli-builder.toml`) per-SDK customization
 - Token caching (auth handler writes credentials to config)
 - GUI / VS Code plugin
+- **Full venv+pip console-script E2E for generated Python CLI**. Current `help_output_snapshot` test uses PYTHONPATH + `python -m testsdk_cli` — bypasses the `[project.scripts]` entry point. A nightly job could: create venv → `pip install -e python/tests/test_sdk` (needs minimal `pyproject.toml` added) → `pip install -e <generated-cli-dir>` → invoke `testsdk-cli customer get --id-value cust_123 --json` → assert exit 0 + JSON shape. Placeholder `#[ignore]`'d test at `crates/gen-python/tests/e2e.rs::console_script_entry_point_end_to_end`.
 
 ---
 

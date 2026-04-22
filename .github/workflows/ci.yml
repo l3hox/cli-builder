@@ -33,6 +33,15 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: crates -> target
+      # Python + click are required by the generator's runtime anchor test
+      # (help_output_snapshot spawns `python -m testsdk_cli --help`). The
+      # test skips gracefully if click isn't importable, but we want it to
+      # actually RUN in CI, not silently no-op.
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: pip install click
+        shell: bash
       - run: cargo test --workspace --all-features
 
   dotnet:
