@@ -6,6 +6,10 @@ using CliBuilder.Tests;
 
 namespace CliBuilder.Integration.Tests;
 
+// Tests here also write progress to Console.Out — join the StdoutCapture
+// collection so they don't race with CaptureStdout-using tests in
+// CliBuilderToolTests. See OpenAiSdkIntegrationTests for the failure mode.
+[Collection("StdoutCapture")]
 public class TestSdkIntegrationTests
 {
     private static readonly string TestSdkAssemblyPath = GetTestSdkAssemblyPath();

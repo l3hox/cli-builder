@@ -6,6 +6,13 @@ using CliBuilder.Tests;
 
 namespace CliBuilder.Integration.Tests;
 
+// Tests in this class write to Console.Out (e.g. "OpenAI SDK: ..." progress
+// lines). Without the collection, they run in parallel with stdout-capturing
+// tests in CliBuilderToolTests and leak into their CaptureStdout buffer —
+// breaking JSON parsing of the captured output with errors like "'O' is an
+// invalid start of a value". Same StdoutCapture collection forces serial
+// execution across every stdout-touching test in the assembly.
+[Collection("StdoutCapture")]
 public class OpenAiSdkIntegrationTests
 {
     private static readonly string OpenAiAssemblyPath = GetOpenAiAssemblyPath();
