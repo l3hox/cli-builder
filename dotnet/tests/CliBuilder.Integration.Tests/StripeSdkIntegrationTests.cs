@@ -6,6 +6,12 @@ using CliBuilder.Tests;
 
 namespace CliBuilder.Integration.Tests;
 
+// Reads/writes tests/fixtures/stripe-metadata.json. StripeGeneratorTests
+// reads the same file in its ctor — on Windows, concurrent File.WriteAllText
+// against a file held open by another File.ReadAllText fails with
+// "file is being used by another process". Shared collection serializes the
+// two classes; safe on Linux/macOS too (no behavior change there).
+[Collection("StripeFixture")]
 public class StripeSdkIntegrationTests
 {
     private static readonly string StripeAssemblyPath = GetStripeAssemblyPath();

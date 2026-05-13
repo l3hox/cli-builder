@@ -6,6 +6,10 @@ using CliBuilder.Generator.CSharp;
 
 namespace CliBuilder.Integration.Tests;
 
+// Reads tests/fixtures/stripe-metadata.json in the constructor (per test
+// method). Shares the StripeFixture collection with StripeSdkIntegrationTests
+// to avoid the Windows file-lock race where its writer hits "file in use".
+[Collection("StripeFixture")]
 public class StripeGeneratorTests : IDisposable
 {
     private readonly string _outputDir;
