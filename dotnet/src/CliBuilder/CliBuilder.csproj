@@ -18,7 +18,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>cli-builder</ToolCommandName>
     <PackageId>cli-builder</PackageId>
-    <Version>1.0.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Jakub Lehotsky</Authors>
     <Description>Generates agent-ready CLIs from .NET SDK assemblies</Description>
   </PropertyGroup>

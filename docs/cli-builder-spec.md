@@ -105,7 +105,7 @@ Future target generators (in-process, no target runtime needed):
 └─────────────────┘  └─────────────────┘  └─────────────────┘
 ```
 
-**Current implementation (v2.0):** `cli-builder` is a single Rust binary (`crates/cli`) that invokes native adapters as subprocesses and embeds the Python and C# generators as Rust libraries with Tera templates. The .NET and Python adapters are shipped. The C# and Python generators are shipped. Shared core (`crates/core`) provides `ModelMapper`, `ParameterFlattener`, and `IdentifierValidator` — see ADR-016 and ADR-017.
+**Current implementation (v0.2):** `cli-builder` is a single Rust binary (`crates/cli`) that invokes native adapters as subprocesses and embeds the Python and C# generators as Rust libraries with Tera templates. The .NET and Python adapters are shipped. The C# and Python generators are shipped. Shared core (`crates/core`) provides `ModelMapper`, `ParameterFlattener`, and `IdentifierValidator` — see ADR-016 and ADR-017.
 
 ### Interface Signatures
 
@@ -381,7 +381,7 @@ Two separate binaries, two separate contracts:
 
 ---
 
-## Scope Boundary (v2.0)
+## Scope Boundary (v0.2)
 
 ### In scope (shipped)
 - **.NET reflection adapter** — `MetadataLoadContext` metadata extraction
@@ -465,12 +465,12 @@ Optional/later:
 
 ## Roadmap
 
-**v2.0 is current.** See [docs/FUTURE.md](FUTURE.md) for the full prioritized roadmap going forward. The spec does not mirror it — that would just drift.
+**v0.2 is current.** See [docs/FUTURE.md](FUTURE.md) for the full prioritized roadmap going forward. The spec does not mirror it — that would just drift.
 
 Milestones to date:
-- **v1.4:** .NET adapter + C# generator + CLI entry + direct param deserialization + language-neutral metadata. Three SDKs validated.
-- **v1.5:** Python adapter as standalone `cli-builder-adapter-python` package. Subprocess orchestration. Adapter invocation contract finalized.
-- **v2.0:** All generators in Rust with shared ModelMapper + Tera templates ([ADR-017](ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates)). Rust orchestrator replaces .NET CLI. Single `cli-builder` binary. Adapters remain in native languages. Polyglot repo layout ([ADR-018](ADR.md#adr-018-polyglot-repo-layout--crates--dotnet--python-at-root)), centralized test paths ([ADR-019](ADR.md#adr-019-test-path-centralization--reporoot-and-workspace_root)), CI/CD across 15 jobs ([ADR-020](ADR.md#adr-020-cicd--15-job-matrix-with-per-language-segmentation)). 673 total tests.
+- **v0.1.4:** .NET adapter + C# generator + CLI entry + direct param deserialization + language-neutral metadata. Three SDKs validated.
+- **v0.1.5:** Python adapter as standalone `cli-builder-adapter-python` package. Subprocess orchestration. Adapter invocation contract finalized.
+- **v0.2:** All generators in Rust with shared ModelMapper + Tera templates ([ADR-017](ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates)). Rust orchestrator replaces .NET CLI. Single `cli-builder` binary. Adapters remain in native languages. Polyglot repo layout ([ADR-018](ADR.md#adr-018-polyglot-repo-layout--crates--dotnet--python-at-root)), centralized test paths ([ADR-019](ADR.md#adr-019-test-path-centralization--reporoot-and-workspace_root)), CI/CD across 15 jobs ([ADR-020](ADR.md#adr-020-cicd--15-job-matrix-with-per-language-segmentation)). 673 total tests.
 
 ---
 

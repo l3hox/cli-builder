@@ -47,7 +47,7 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-**v2.0 (current)** — Single `cli-builder` Rust binary orchestrating the full pipeline:
+**v0.2 (current)** — Single `cli-builder` Rust binary orchestrating the full pipeline:
 - Adapters: .NET (subprocess) + Python (subprocess)
 - Generators: C# + Python (embedded Rust library calls, Tera templates)
 - `cli-builder generate --adapter {dotnet,python} --generator {csharp,python} --output ./output`

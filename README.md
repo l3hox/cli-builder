@@ -2,7 +2,7 @@
 
 Generate agent-ready CLIs from SDK packages — any language in, any language out.
 
-**v2.0** — Single Rust binary. Python + C# generators. .NET + Python adapters. 670 tests.
+**v0.2** — Single Rust binary. Python + C# generators. .NET + Python adapters. 670 tests.
 
 ## Problem
 

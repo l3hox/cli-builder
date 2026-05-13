@@ -1,6 +1,6 @@
 [package]
 name = "mock-adapter"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Cross-platform mock SDK adapter for cli-builder integration tests"
 license = "EUPL-1.2"

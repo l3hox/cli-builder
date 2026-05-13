@@ -1,11 +1,11 @@
-# cli-builder v2.0 — Build Summary
+# cli-builder v0.2 — Build Summary
 
 **Date logged**: 2026-04-15
 
 ## Timeline
 
 - **Started**: 2026-03-26 (first commit)
-- **Reached v2.0**: 2026-04-14
+- **Reached v0.2**: 2026-04-14
 - **Calendar elapsed**: ~20 days
 - **Active dev days** (days with commits): **15**
 - **Mode**: Evenings + weekends, alongside day job, family, and delve-ward (primary focus)

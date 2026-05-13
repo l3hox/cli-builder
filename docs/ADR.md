@@ -792,7 +792,7 @@ Three approaches were considered:
 
 Each generator is also a standalone executable that reads `SdkMetadata` JSON and emits a CLI project.
 
-The orchestrator (`cli-builder` Rust binary) calls adapters as subprocesses and generators as embedded library calls. Migrated from .NET to Rust in v2.0 (Step 15).
+The orchestrator (`cli-builder` Rust binary) calls adapters as subprocesses and generators as embedded library calls. Migrated from .NET to Rust in v0.2 (Step 15).
 
 **Adapters are permanent.** They are never rewritten when the orchestrator migrates. A Python adapter written in Step 12 will still work when the orchestrator is Rust — the subprocess contract (JSON stdout) is the stable interface.
 
@@ -965,7 +965,7 @@ Three centralization approaches were considered:
 
 ### Context
 
-v2.0 needed CI/CD across three languages (Rust, .NET, Python) and three OSes (Linux, macOS, Windows). Several matrix designs were considered:
+v0.2 needed CI/CD across three languages (Rust, .NET, Python) and three OSes (Linux, macOS, Windows). Several matrix designs were considered:
 
 1. **Single job per OS** — install all three language toolchains, run everything serially.
 2. **One job per language × OS** — 3 × 3 = 9 jobs, Python expanded to 3 versions = 3 × 3 × 3 = 15.

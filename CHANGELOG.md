@@ -2,7 +2,7 @@
 
 All notable changes to cli-builder.
 
-## v2.0.0 — 2026-04-22
+## v0.2.0 — 2026-04-22
 
 Multi-language rewrite. The orchestrator moves to Rust, a Python adapter and Python CLI generator ship, the C# generator is re-implemented in Rust with Tera templates. Single binary distribution is now possible.
 
@@ -36,10 +36,10 @@ Multi-language rewrite. The orchestrator moves to Rust, a Python adapter and Pyt
 
 - 683 tests total (397 .NET + 177 Rust + 109 Python), 0 failures
 - 15-job CI matrix green on every push
-- 21 ADRs (ADR-016 through ADR-021 added in v2.0)
+- 21 ADRs (ADR-016 through ADR-021 added in v0.2.0)
 - 2 step plans added: `docs/internal/step-13b-python-generator-finalize.md`, `docs/internal/step-16-ci-cd.md`
 
-## v1.1.0 — 2026-04-04
+## v0.1.1 — 2026-04-04
 
 ### Features
 - **`--json-input` deserialization** — JSON deserialized into options classes, flat flags override on top. Nested SDK objects (Stripe `Recurring`, `ProductData`, `ShippingAddress`) now populatable.
@@ -51,7 +51,7 @@ Multi-language rewrite. The orchestrator moves to Rust, a Python adapter and Pyt
 - 93.4% line coverage, 96.4% method coverage
 - Stripe: 196 resources (was 136)
 
-## v1.0.0 — 2026-04-04
+## v0.1.0 — 2026-04-04
 
 First release. .NET SDK adapter + C# CLI generator.
 

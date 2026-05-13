@@ -2,7 +2,7 @@
 
 Production roadmap for cli-builder — generate agent-ready CLIs from SDK packages in any language.
 
-**Current version: v2.0** — Single Rust binary, Python + C# generators, .NET + Python adapters.
+**Current version: v0.2** — Single Rust binary, Python + C# generators, .NET + Python adapters.
 
 ---
 
@@ -47,7 +47,7 @@ Kotlin (clikt), Go (cobra), TypeScript (commander) — each ~500 lines of Tera t
 
 ## Completed
 
-### v2.0 — Rust migration + infrastructure (Steps 12b-16 + 13b)
+### v0.2 — Rust migration + infrastructure (Steps 12b-16 + 13b)
 - **Step 12b**: Python adapter hardening — 109 pytest tests, JSON schema contract (`docs/sdk-metadata-schema.json`), module-level auth detection, Stripe validation (105 resources), `.pyi` stub parser (ADR-013 compliance)
 - **Step 13**: Python CLI generator in Rust — shared core (`ModelMapper`, `ParameterFlattener`, `IdentifierValidator` with `LanguageProfile` trait) + click-based Python templates via Tera. Council-reviewed. Golden file snapshots via insta.
 - **Step 14**: C# generator ported to Rust/Tera — `CSharpProfile` + 6 Tera templates + 6 post-processing transforms. Compile-validated (`dotnet build`). OpenAI 20 resources, Stripe 196 resources.
@@ -56,7 +56,7 @@ Kotlin (clikt), Go (cobra), TypeScript (commander) — each ~500 lines of Tera t
 - **Step 13b**: Python generator follow-up. Optional-bool kwargs overwrite fix (`type=click.BOOL, default=None` tri-state), em-dash product bug (Windows cp1252 mojibake), `py_str` Tera filter for description escaping, template refactor to `{% set_global %}` clauses, `tests/e2e.rs` runtime anchor with PYTHONPATH, supply-chain pin (`click==8.*`), FUTURE.md ↔ `tests/e2e.rs` link enforcement in CI. Three PRs, three council follow-ups.
 - All generators share Rust core. Adapters stay native forever (ADR-016).
 
-### v1.x — .NET foundation (Steps 1-12)
+### v0.1.x — .NET foundation (Steps 1-12)
 - Steps 1-9: Architecture, .NET adapter, C# generator, real SDK calls, multi-arg constructors, static auth, --json-input deserialization, noun collision resolution
 - Step 9B: Direct param deserialization (IEnumerable, Dictionary, Array, bare Class via --json-input)
 - Step 10: CLI entry point (`cli-builder generate`, `cli-builder inspect`), `dotnet tool` packaging
