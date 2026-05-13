@@ -8,21 +8,32 @@ Production roadmap for cli-builder — generate agent-ready CLIs from SDK packag
 
 ## Next up
 
-### Package publishing
-- `cargo install cli-builder` — Rust binary distribution
-- Generated C# CLIs: `dotnet tool install` packaging
-- Generated Python CLIs: PyPI publishing guide
-- Homebrew formula, self-contained single-file binaries
+### Broaden + deepen SDK coverage
+Focus on the tool itself before public release. Multiple sub-tracks:
+- **Stripe Python service pattern** — `StripeClient.v1.customers.list(params: Optional[X])` surface (modern Stripe API). Different from the legacy `**kwargs: Unpack[X]` surface that Step 17 covered.
+- **OpenAI Python E2E** — `NotGiven`/`Omit` sentinel defaults need handling; bring OpenAI to the same end-to-end validation level as Stripe.
+- **Stripe .NET DI/factory support** — 34 services without parameterless constructors currently fall back to echo. Needs `IStripeClient` injection.
+- **Add 1–2 new SDKs** for broader validation surface (Anthropic Python is the natural candidate for the agent-tooling theme).
+
+### Rough edges
+- Generated flag names mixing hyphens and underscores (`--api_key-value` reads oddly — should be uniform `--api-key-value`)
+- Generated CLI missing `--version` and other UX polish
+- Auth-handler precedence and error messages on missing keys
 
 ### Incremental streaming output
 Streaming operations (`IAsyncEnumerable<T>`) currently collect all items before formatting. True incremental streaming (emit each item as it arrives). NDJSON for pipe-friendly output.
 
-### DI/factory pattern support
-34 Stripe services without parameterless constructors need `IStripeClient` injection.
-
 ---
 
 ## Later
+
+### Package publishing (deferred until tool maturity warrants it)
+Cli-builder is currently distributed only via clone + `cargo run`. Public release needs:
+- `cargo install cli-builder` — crates.io publish for the Rust binary
+- `pip install cli-builder-adapter-python` — PyPI publish for the Python adapter
+- `dotnet tool install -g cli-builder` — NuGet publish
+- Maybe Homebrew formula / self-contained single-file binaries
+**Deferred 2026-05-13** — first publish is irreversible (versions are immutable on all three registries), so we hold until SDK coverage + UX polish make the tool credible to strangers. Name-availability check showed `cli-builder-adapter-python` is free on PyPI; crates.io returned a rate-limit response.
 
 ### New adapters
 - **Kotlin** — JVM reflection or kotlinx-metadata

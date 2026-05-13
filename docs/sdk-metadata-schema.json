@@ -38,6 +38,11 @@
             { "$ref": "#/$defs/StaticAuthConfig" },
             { "type": "null" }
           ]
+        },
+        "discoveryMode": {
+          "type": "string",
+          "enum": ["multi_service", "single_client"],
+          "description": "Which adapter discovery path produced this metadata. See ADR-023. Default 'multi_service' preserves round-trip compat for existing emissions."
         }
       },
       "additionalProperties": false

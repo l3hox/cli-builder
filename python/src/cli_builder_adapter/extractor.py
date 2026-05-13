@@ -29,17 +29,32 @@ from .models import (
     TypeKind,
     TypeRef,
 )
+from ._naming import (
+    MIN_ENTRY_CLASS_METHODS,
+    noun_to_resource_name,
+    parse_verb_noun,
+    skip_reason,
+)
 from .stub_parser import find_stubs, parse_stub_file
 from .type_mapper import map_type
 from ._utils import SERVICE_SUFFIXES, RESOURCE_CRUD_METHODS, class_to_noun, pascal_to_kebab
 
 
-def extract(package_name: str, module_name: str | None = None) -> AdapterResult:
+def extract(
+    package_name: str,
+    module_name: str | None = None,
+    entry_class: str | None = None,
+) -> AdapterResult:
     """Extract SdkMetadata from a Python package.
 
     Args:
-        package_name: Name of the installed Python package
-        module_name: Optional specific module within the package
+        package_name: Name of the installed Python package.
+        module_name: Optional specific module within the package.
+        entry_class: Optional explicit entry-class name for single-client
+            discovery mode (ADR-023). When provided, multi-service discovery
+            is skipped entirely and the named class is used as the single
+            entry. When None, the adapter falls back to single-client
+            discovery only if multi-service finds zero candidates.
     """
     diagnostics: list[Diagnostic] = []
 
@@ -103,13 +118,48 @@ def extract(package_name: str, module_name: str | None = None) -> AdapterResult:
         f"Package '{package_name}' imported at runtime — side effects may occur",
     ))
 
-    # Discover service classes
-    service_classes = _discover_services(module, diagnostics)
+    # Collect candidate classes once — shared between multi-service and
+    # single-client discovery paths. See ADR-023.
+    candidate_classes = _collect_candidate_classes(module)
 
-    # Extract resources
-    resources: list[Resource] = []
+    # Discover service classes (multi-service mode — the default).
+    # Skipped entirely when `entry_class` is explicitly provided.
+    service_classes: list[tuple[str, type]]
+    if entry_class is None:
+        service_classes = _discover_services(module, candidate_classes, diagnostics)
+    else:
+        service_classes = []
+
+    discovery_mode = "multi_service"
     auth_patterns: list[AuthPattern] = []
+    resources: list[Resource] = []
 
+    if entry_class is not None or not service_classes:
+        # Single-client mode (ADR-023): either explicitly requested via
+        # `entry_class`, or multi-service discovery found nothing and we
+        # fall back. Picks one entry class via name/method-count heuristic
+        # (or by explicit name when provided) and walks its methods.
+        entry_cls = _discover_single_client(
+            module, candidate_classes, package_name, entry_class, diagnostics,
+        )
+        if entry_cls is not None:
+            discovery_mode = "single_client"
+            diagnostics.append(Diagnostic(
+                DiagnosticSeverity.INFO, "CB611",
+                f"Single-client discovery mode engaged on entry class "
+                f"'{entry_cls.__name__}' ({entry_cls.__module__})",
+            ))
+            auth = detect_constructor_auth(entry_cls, diagnostics)
+            if auth and auth not in auth_patterns:
+                auth_patterns.append(auth)
+            ctor_params = _extract_constructor_params(entry_cls, auth)
+            resources.extend(_extract_single_client_resources(
+                entry_cls, ctor_params, diagnostics,
+            ))
+
+    # Multi-service path (when service_classes is non-empty AND no explicit
+    # entry_class was passed). Each `*Service`/`*Client`/`*Api` class becomes
+    # a resource; each public method becomes an operation.
     for noun, cls in service_classes:
         auth = detect_constructor_auth(cls, diagnostics)
         if auth and auth not in auth_patterns:
@@ -140,30 +190,27 @@ def extract(package_name: str, module_name: str | None = None) -> AdapterResult:
         resources=resources,
         auth_patterns=auth_patterns,
         static_auth=static_auth,
+        discovery_mode=discovery_mode,
     )
 
     return AdapterResult(metadata=metadata, diagnostics=diagnostics)
 
 
-def _discover_services(module: Any, diagnostics: list[Diagnostic]) -> list[tuple[str, type]]:
-    """Find service and resource classes.
+def _collect_candidate_classes(module: Any) -> list[tuple[str, type]]:
+    """Return all top-level candidate classes from a module, sorted by name.
 
-    Discovery strategies (in order):
-    1. Classes matching *Client/*Service/*Api suffixes (standard pattern)
-    2. Classes with CRUD classmethods (resource pattern, e.g., stripe.Customer)
+    Used by both `_discover_services` (multi-service mode) and
+    `_discover_single_client` (single-client mode). Walks `dir(module)` plus
+    any lazy-load registry (`_import_map`) so modules with `__getattr__`-based
+    deferred imports (Stripe-style) surface their classes correctly.
 
-    Uses dir(module) + lazy-load registries (e.g., _import_map) to handle
-    modules that use __getattr__ for deferred imports.
+    Returns `(name, class)` tuples. Filtering by name pattern / suffix is the
+    caller's responsibility.
     """
-    services = []
-    seen_nouns: set[str] = set()
-
-    # Collect candidate names from dir() and any lazy-load registry
     candidate_names: set[str] = set()
     for name in dir(module):
         if not name.startswith("_"):
             candidate_names.add(name)
-    # Lazy-loaded modules (e.g., Stripe) may expose names via _import_map
     import_map = getattr(module, "_import_map", None)
     if isinstance(import_map, dict):
         for name, entry in import_map.items():
@@ -172,15 +219,40 @@ def _discover_services(module: Any, diagnostics: list[Diagnostic]) -> list[tuple
                 if isinstance(entry, tuple) and len(entry) == 2 and not entry[1]:
                     candidate_names.add(name)
 
+    out: list[tuple[str, type]] = []
+    module_root = module.__name__.split(".")[0]
     for name in sorted(candidate_names):
         try:
             obj = getattr(module, name)
         except Exception:
             continue
-
         if not inspect.isclass(obj):
             continue
+        # Module-origin check — skip classes re-exported from other packages
+        obj_module = getattr(obj, "__module__", "")
+        if not obj_module.startswith(module_root):
+            continue
+        out.append((name, obj))
+    return out
 
+
+def _discover_services(
+    module: Any,
+    candidate_classes: list[tuple[str, type]],
+    diagnostics: list[Diagnostic],
+) -> list[tuple[str, type]]:
+    """Find service and resource classes (multi-service discovery mode).
+
+    Discovery strategies (in order):
+    1. Classes matching *Client/*Service/*Api suffixes (standard pattern)
+    2. Classes with CRUD classmethods (resource pattern, e.g., stripe.Customer)
+
+    `candidate_classes` is the output of `_collect_candidate_classes(module)`.
+    """
+    services = []
+    seen_nouns: set[str] = set()
+
+    for name, obj in candidate_classes:
         # Strategy 1: service naming pattern (*Client, *Service, *Api)
         is_service = any(name.endswith(suffix) for suffix in SERVICE_SUFFIXES)
 
@@ -196,12 +268,6 @@ def _discover_services(module: Any, diagnostics: list[Diagnostic]) -> list[tuple
         if not is_service and not is_resource:
             continue
 
-        # Module origin check — skip re-exports from other packages
-        obj_module = getattr(obj, "__module__", "")
-        module_root = module.__name__.split(".")[0]
-        if not obj_module.startswith(module_root):
-            continue
-
         noun = class_to_noun(name) if is_service else pascal_to_kebab(name)
         if noun in seen_nouns:
             diagnostics.append(Diagnostic(
@@ -214,6 +280,259 @@ def _discover_services(module: Any, diagnostics: list[Diagnostic]) -> list[tuple
         services.append((noun, obj))
 
     return services
+
+
+def _discover_single_client(
+    module: Any,
+    candidate_classes: list[tuple[str, type]],
+    package_name: str,
+    explicit_name: str | None,
+    diagnostics: list[Diagnostic],
+) -> type | None:
+    """Select an entry class for single-client discovery mode (ADR-023).
+
+    When `explicit_name` is provided, returns the class with that exact name
+    if it meets the method-count threshold, otherwise emits CB609 + None.
+
+    When `explicit_name` is None, auto-detects: candidate classes matching
+    the entry-class name pattern (`<package>`, `<Package>`, `Client`, `Api`,
+    `*Client`, `*Api`) AND having `>= MIN_ENTRY_CLASS_METHODS` public methods
+    are entries. If exactly one match, returns it. Zero or multiple → CB609.
+    """
+    if explicit_name is not None:
+        match = next((cls for name, cls in candidate_classes if name == explicit_name), None)
+        if match is None:
+            diagnostics.append(Diagnostic(
+                DiagnosticSeverity.WARNING, "CB609",
+                f"--entry-class '{explicit_name}' not found in module "
+                f"'{module.__name__}' (class not found)",
+            ))
+            return None
+        method_count = _count_public_methods(match)
+        if method_count < MIN_ENTRY_CLASS_METHODS:
+            diagnostics.append(Diagnostic(
+                DiagnosticSeverity.WARNING, "CB609",
+                f"--entry-class '{explicit_name}' has {method_count} public methods, "
+                f"below threshold ({MIN_ENTRY_CLASS_METHODS}). Refusing to use as entry class.",
+            ))
+            return None
+        return match
+
+    # Auto-detection: filter candidates by name pattern + method count.
+    pkg_capitalized = package_name.capitalize()
+    matches: list[type] = []
+    for name, cls in candidate_classes:
+        if not _matches_entry_class_pattern(name, pkg_capitalized):
+            continue
+        if _count_public_methods(cls) < MIN_ENTRY_CLASS_METHODS:
+            continue
+        matches.append(cls)
+
+    if not matches:
+        # Note: we don't emit CB609 here. The "no entry class found" case is
+        # only an error when the user EXPECTED single-client discovery. The
+        # caller (extract()) decided to try single-client because multi-service
+        # found nothing — if THIS also finds nothing, the SDK isn't supported.
+        return None
+
+    if len(matches) > 1:
+        names = ", ".join(c.__name__ for c in matches)
+        diagnostics.append(Diagnostic(
+            DiagnosticSeverity.WARNING, "CB609",
+            f"Single-client discovery is ambiguous: multiple entry-class candidates "
+            f"meet the heuristic ({names}). Pass --entry-class <Name> to disambiguate.",
+        ))
+        return None
+
+    return matches[0]
+
+
+def _matches_entry_class_pattern(name: str, package_capitalized: str) -> bool:
+    """Whether `name` matches the entry-class name heuristic (ADR-023).
+
+    Matches in order:
+      1. equals package-capitalized name (PyGithub-style: `github` → `Github`)
+      2. literally 'Client' or 'Api' (no namespacing)
+      3. ends in 'Client' or 'Api' (catches `NotionClient`, `SlackApi`)
+      4. starts with package-capitalized AND does NOT end in any multi-service
+         suffix (catches `GithubMain`/`NotionAdmin` — single-client patterns
+         that wouldn't be picked up by multi-service strategy 1)
+    """
+    if name == package_capitalized:
+        return True
+    if name in ("Client", "Api"):
+        return True
+    if name.endswith("Client") or name.endswith("Api"):
+        return True
+    if (
+        package_capitalized
+        and name.startswith(package_capitalized)
+        and not any(name.endswith(suf) for suf in SERVICE_SUFFIXES)
+    ):
+        return True
+    return False
+
+
+def _count_public_methods(cls: type) -> int:
+    """Count public methods on a class — includes def, classmethod, async def.
+
+    Used by the entry-class threshold check. Must not silently undercount
+    `@classmethod` or `async def` methods — both are first-class CLI op
+    candidates on real SDKs (Slack, async HTTP clients).
+    """
+    count = 0
+    for name in dir(cls):
+        if name.startswith("_"):
+            continue
+        # `getattr_static` avoids descriptors that might fire on bound access.
+        raw = inspect.getattr_static(cls, name, None)
+        if raw is None:
+            continue
+        if isinstance(raw, classmethod) or inspect.isfunction(raw):
+            count += 1
+            continue
+        # Async methods come through as functions when defined via `async def`.
+        if callable(raw) and inspect.iscoroutinefunction(raw):
+            count += 1
+    return count
+
+
+def _extract_single_client_resources(
+    entry_cls: type,
+    ctor_params: list[ConstructorParam],
+    diagnostics: list[Diagnostic],
+) -> list[Resource]:
+    """Walk entry class's public methods → group into Resources by noun.
+
+    Per ADR-023: single-client mode. This does NOT reuse `_extract_operations`
+    because `_method_to_verb` flattens verb+noun into one CLI op name. Here we
+    need the opposite — split verb from noun so each becomes its own dimension
+    in the CLI (`github-cli repo get owner/name`).
+
+    Shares `_extract_params` with multi-service mode (preserves Step 17
+    Unpack[TypedDict] resolution).
+    """
+    resources_by_noun: dict[str, dict[str, Any]] = {}
+    cls_source_module = getattr(entry_cls, "__module__", "")
+
+    for name in sorted(dir(entry_cls)):
+        if name.startswith("_"):
+            continue
+        # Async variants skipped — prefer sync (same convention as multi-service)
+        if name.endswith("_async"):
+            continue
+        raw = inspect.getattr_static(entry_cls, name, None)
+        if raw is None:
+            continue
+
+        # Resolve to the underlying function for signature inspection.
+        if isinstance(raw, classmethod):
+            method = getattr(entry_cls, name)
+        elif inspect.isfunction(raw) or (callable(raw) and inspect.iscoroutinefunction(raw)):
+            method = raw
+        else:
+            continue
+        method = inspect.unwrap(method)
+
+        parsed = parse_verb_noun(name)
+        if parsed is None:
+            diagnostics.append(Diagnostic(
+                DiagnosticSeverity.WARNING, "CB610",
+                f"Skipped '{entry_cls.__name__}.{name}': {skip_reason(name)}",
+            ))
+            continue
+        verb, noun = parsed
+
+        try:
+            sig = inspect.signature(method)
+        except (ValueError, TypeError):
+            diagnostics.append(Diagnostic(
+                DiagnosticSeverity.WARNING, "CB602",
+                f"Could not inspect signature of '{entry_cls.__name__}.{name}' — skipping",
+            ))
+            continue
+
+        # Rule 4: skip if any positional parameter (other than self/cls) has a
+        # `type[T]` or `Type[T]` annotation — factory method, not a CLI op.
+        if _has_type_param(sig):
+            diagnostics.append(Diagnostic(
+                DiagnosticSeverity.WARNING, "CB610",
+                f"Skipped '{entry_cls.__name__}.{name}': "
+                f"first param is `type[T]` (factory method, not a CLI operation)",
+            ))
+            continue
+
+        hints: dict[str, Any] = {}
+        try:
+            hints = typing.get_type_hints(method)
+        except Exception:
+            pass
+
+        params = _extract_params(method, sig, hints, diagnostics)
+        return_annotation = hints.get("return", sig.return_annotation)
+        return_type = map_type(return_annotation, diagnostics)
+        is_streaming = (
+            return_type.kind == TypeKind.GENERIC and return_type.name == "AsyncIterator"
+        )
+
+        resource_name = noun_to_resource_name(noun)
+        resource_entry = resources_by_noun.setdefault(resource_name, {
+            "operations": [],
+            "source_methods": [],
+        })
+        resource_entry["operations"].append(Operation(
+            name=verb,
+            description=inspect.getdoc(method),
+            parameters=params,
+            return_type=return_type,
+            is_streaming=is_streaming,
+            source_method_name=name,
+        ))
+        resource_entry["source_methods"].append(name)
+
+    # Build Resource list deterministically (sorted by resource name)
+    resources = []
+    for resource_name in sorted(resources_by_noun):
+        entry = resources_by_noun[resource_name]
+        resources.append(Resource(
+            name=resource_name,
+            description=None,  # Inferred from entry class — no per-resource doc
+            operations=entry["operations"],
+            source_class_name=entry_cls.__name__,
+            source_module=cls_source_module,
+            # Constructor params are attached to the first resource only — all
+            # resources share the same single-client entry. Generator wires
+            # auth once.
+            constructor_params=ctor_params if (ctor_params and resource_name == sorted(resources_by_noun)[0]) else None,
+            has_parameterless_ctor=_has_parameterless_init(entry_cls),
+        ))
+    return resources
+
+
+def _has_type_param(sig: inspect.Signature) -> bool:
+    """Whether any non-self parameter has a `type`, `type[T]`, or `Type[T]` annotation.
+
+    These are factory-style methods (`register_class(klass: type, ...)`,
+    `create_from_raw_data(klass: type[T], ...)`), not CLI operations. Filter
+    them out before extraction.
+    """
+    for pname, param in sig.parameters.items():
+        if pname in ("self", "cls"):
+            continue
+        ann = param.annotation
+        if ann is inspect.Parameter.empty:
+            continue
+        # Bare `type` annotation (`klass: type`)
+        if ann is type:
+            return True
+        # `type[T]` (PEP 585) and `Type[T]` (typing) — both have `type` as origin
+        origin = typing.get_origin(ann)
+        if origin is type:
+            return True
+        # Pre-3.9 / explicit `typing.Type` fallback
+        if hasattr(ann, "__origin__") and getattr(ann, "__origin__", None) is type:
+            return True
+    return False
 
 
 def _detect_stub_constructor_auth(

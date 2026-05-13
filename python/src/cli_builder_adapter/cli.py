@@ -18,6 +18,13 @@ def main() -> None:
     parser.add_argument("--package", required=True, help="Python package name to inspect")
     parser.add_argument("--module", default=None, help="Specific module within the package")
     parser.add_argument("--json", action="store_true", help="Output as JSON (required)")
+    parser.add_argument(
+        "--entry-class",
+        default=None,
+        help="Force single-client discovery mode with this class as the entry "
+             "(ADR-023). When omitted, the adapter tries multi-service first "
+             "and falls back to single-client auto-detection.",
+    )
 
     args = parser.parse_args()
 
@@ -26,7 +33,7 @@ def main() -> None:
         sys.exit(2)
 
     try:
-        result = extract(args.package, args.module)
+        result = extract(args.package, args.module, entry_class=args.entry_class)
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(2)

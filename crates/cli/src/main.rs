@@ -42,6 +42,10 @@ enum Commands {
         #[arg(long)]
         module: Option<String>,
 
+        /// Force single-client discovery on this class (python adapter, ADR-023)
+        #[arg(long)]
+        entry_class: Option<String>,
+
         /// Generator target language
         #[arg(long, value_enum)]
         generator: Option<GeneratorArg>,
@@ -81,6 +85,10 @@ enum Commands {
         #[arg(long)]
         module: Option<String>,
 
+        /// Force single-client discovery on this class (python adapter, ADR-023)
+        #[arg(long)]
+        entry_class: Option<String>,
+
         /// Output raw JSON envelope instead of human-readable summary
         #[arg(long)]
         json: bool,
@@ -108,13 +116,14 @@ fn main() {
             assembly,
             package,
             module,
+            entry_class,
             generator,
             output,
             cli_name,
             overwrite,
             sdk_project_path,
         } => {
-            let adapter_kind = build_adapter_kind(&adapter, assembly, package, module);
+            let adapter_kind = build_adapter_kind(&adapter, assembly, package, module, entry_class);
             let generator_target = match generator {
                 Some(GeneratorArg::Csharp) => GeneratorTarget::CSharp,
                 Some(GeneratorArg::Python) => GeneratorTarget::Python,
@@ -139,9 +148,10 @@ fn main() {
             assembly,
             package,
             module,
+            entry_class,
             json,
         } => {
-            let adapter_kind = build_adapter_kind(&adapter, assembly, package, module);
+            let adapter_kind = build_adapter_kind(&adapter, assembly, package, module, entry_class);
             inspect::run(InspectOptions {
                 adapter: adapter_kind,
                 json,
@@ -157,6 +167,7 @@ fn build_adapter_kind(
     assembly: Option<String>,
     package: Option<String>,
     module: Option<String>,
+    entry_class: Option<String>,
 ) -> AdapterKind {
     match adapter {
         AdapterArg::Dotnet => AdapterKind::DotNet {
@@ -165,6 +176,7 @@ fn build_adapter_kind(
         AdapterArg::Python => AdapterKind::Python {
             package: package.expect("--package required for python adapter"),
             module,
+            entry_class,
         },
     }
 }

@@ -118,6 +118,10 @@ class SdkMetadata:
     resources: list[Resource]
     auth_patterns: list[AuthPattern]
     static_auth: StaticAuthConfig | None = None
+    # Discovery-mode provenance — which adapter discovery path produced this
+    # metadata. See ADR-023. Default keeps existing Stripe-derived JSON
+    # consumers round-tripping unchanged.
+    discovery_mode: str = "multi_service"
 
 
 @dataclass

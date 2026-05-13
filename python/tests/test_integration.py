@@ -109,8 +109,14 @@ def test_json_structure_matches_dotnet_fixture():
     assert "diagnostics" in dotnet_keys
     assert "diagnostics" in python_keys
 
-    # Same metadata keys
-    assert set(dotnet_data["metadata"].keys()) == set(python_data["metadata"].keys())
+    # All .NET metadata keys must be present in Python output (Python may emit
+    # extra fields the .NET adapter doesn't yet produce — e.g. `discoveryMode`
+    # added in v0.2.2 / ADR-023 for single-client discovery provenance).
+    dotnet_meta_keys = set(dotnet_data["metadata"].keys())
+    python_meta_keys = set(python_data["metadata"].keys())
+    assert dotnet_meta_keys.issubset(python_meta_keys), (
+        f"Python adapter is missing keys present in .NET: {dotnet_meta_keys - python_meta_keys}"
+    )
 
     # Both have resources with same shape
     if dotnet_data["metadata"]["resources"] and python_data["metadata"]["resources"]:

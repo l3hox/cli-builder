@@ -9,7 +9,12 @@ use cli_builder_core::models::{AdapterResultEnvelope, Diagnostic};
 #[derive(Debug, Clone)]
 pub enum AdapterKind {
     DotNet { assembly: String },
-    Python { package: String, module: Option<String> },
+    Python {
+        package: String,
+        module: Option<String>,
+        /// Single-client discovery entry class (ADR-023).
+        entry_class: Option<String>,
+    },
 }
 
 /// Result of invoking an adapter subprocess.
@@ -104,7 +109,7 @@ fn build_command(kind: &AdapterKind) -> (String, Vec<String>) {
             ];
             (program, args)
         }
-        AdapterKind::Python { package, module } => {
+        AdapterKind::Python { package, module, entry_class } => {
             let program = std::env::var("CLI_BUILDER_PYTHON_ADAPTER")
                 .unwrap_or_else(|_| "python3".to_string());
             let mut args = vec![
@@ -117,6 +122,10 @@ fn build_command(kind: &AdapterKind) -> (String, Vec<String>) {
             if let Some(m) = module {
                 args.push("--module".to_string());
                 args.push(m.clone());
+            }
+            if let Some(ec) = entry_class {
+                args.push("--entry-class".to_string());
+                args.push(ec.clone());
             }
             (program, args)
         }
