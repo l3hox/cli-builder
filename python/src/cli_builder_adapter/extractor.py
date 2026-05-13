@@ -27,6 +27,7 @@ from .models import (
     Resource,
     SdkMetadata,
     TypeKind,
+    TypeRef,
 )
 from .stub_parser import find_stubs, parse_stub_file
 from .type_mapper import map_type
@@ -447,60 +448,67 @@ def _try_resolve_unpack_kwargs(
 
     Reads `param.annotation` directly (NOT a precomputed `hints` dict), because
     `typing.get_type_hints()` is exactly what fails on these ForwardRefs.
+
+    Composed from three single-responsibility helpers (per ADR-022):
+    1. `_inspect_unpack_annotation` — pure annotation inspection.
+    2. `_collect_type_checking_imports` — pure AST walk (cached).
+    3. `_resolve_class` — importlib.import_module + getattr.
     """
-    ann = param.annotation
-    if ann is inspect.Parameter.empty:
-        return None
-    if get_origin(ann) is not Unpack:
+    inner = _inspect_unpack_annotation(param.annotation)
+    if inner is None:
+        return None  # not an Unpack[...] annotation; preserve plain-kwargs skip
+
+    # If inner is already a real class, validate and walk it directly.
+    if inspect.isclass(inner):
+        if not hasattr(inner, "__required_keys__"):
+            diagnostics.append(Diagnostic(
+                DiagnosticSeverity.WARNING, "CB607",
+                f"Unpack[{inner!r}] on {_method_label(method)} resolved to a non-TypedDict class; skipping",
+            ))
+            return None
+        return _walk_typed_dict(method, inner, diagnostics)
+
+    # Inner is a ForwardRef — discover where it's imported from, then import it.
+    if not isinstance(inner, ForwardRef):
+        diagnostics.append(Diagnostic(
+            DiagnosticSeverity.WARNING, "CB607",
+            f"Unpack[?] has an unexpected annotation shape on {_method_label(method)}: {inner!r}",
+        ))
         return None
 
-    args = get_args(ann)
-    if not args:
-        return None
-    target = args[0]
-
-    td_cls = _resolve_unpack_target(method, target, diagnostics)
+    td_cls = _resolve_class_from_method(method, inner, diagnostics)
     if td_cls is None:
-        return None  # CB607 already emitted by _resolve_unpack_target
-
+        return None  # CB607 already emitted
     return _walk_typed_dict(method, td_cls, diagnostics)
 
 
-def _resolve_unpack_target(
+def _inspect_unpack_annotation(annotation: Any) -> Any | None:
+    """Pure annotation inspection. Returns Unpack's inner target, or None.
+
+    No I/O, no diagnostics, no module lookup — just structural pattern matching
+    on the annotation. Caller decides what to do with the result.
+    """
+    if annotation is inspect.Parameter.empty:
+        return None
+    if get_origin(annotation) is not Unpack:
+        return None
+    args = get_args(annotation)
+    if not args:
+        return None
+    return args[0]
+
+
+def _resolve_class_from_method(
     method: Any,
-    target: Any,
+    forward: ForwardRef,
     diagnostics: list[Diagnostic],
 ) -> type | None:
-    """Resolve `Unpack[X]`'s inner type to a concrete TypedDict class.
+    """Resolve a `ForwardRef` referenced by `method`'s annotations.
 
-    `X` may be the class itself (rare — only when imported eagerly) or a
-    `ForwardRef`. For ForwardRef, look up the name in the defining module's
-    `if TYPE_CHECKING:` import table and `importlib.import_module` the target.
+    Looks up the name in the defining module's `if TYPE_CHECKING:` import
+    table and dynamically imports the target. Emits CB607 on failure.
     """
-    # Already a class? Validate it's TypedDict-shaped.
-    if inspect.isclass(target):
-        if hasattr(target, "__required_keys__"):
-            return target
-        diagnostics.append(Diagnostic(
-            DiagnosticSeverity.WARNING, "CB607",
-            f"Unpack[{target!r}] resolved to a non-TypedDict class; skipping",
-        ))
-        return None
-
-    # ForwardRef case: dig out the name and resolve via the module AST.
-    name: str | None = None
-    if isinstance(target, ForwardRef):
-        name = target.__forward_arg__
-    elif isinstance(target, str):
-        name = target
-
-    if name is None:
-        diagnostics.append(Diagnostic(
-            DiagnosticSeverity.WARNING, "CB607",
-            f"Unpack[?] has an unexpected annotation shape on {_method_label(method)}: {target!r}",
-        ))
-        return None
-
+    name = forward.__forward_arg__
     module_name = getattr(method, "__module__", None) or ""
     module = sys.modules.get(module_name)
     module_file = getattr(module, "__file__", None) if module is not None else None
@@ -521,18 +529,16 @@ def _resolve_unpack_target(
         ))
         return None
 
-    try:
-        mod = importlib.import_module(target_module)
-        cls = getattr(mod, name, None)
-    except ImportError as e:
+    cls = _resolve_class(target_module, name)
+    if cls is None:
         diagnostics.append(Diagnostic(
             DiagnosticSeverity.WARNING, "CB607",
             f"Unpack[ForwardRef({name!r})] on {_method_label(method)}: "
-            f"failed to import {target_module}: {e}",
+            f"failed to import {target_module}.{name}",
         ))
         return None
 
-    if cls is None or not hasattr(cls, "__required_keys__"):
+    if not hasattr(cls, "__required_keys__"):
         diagnostics.append(Diagnostic(
             DiagnosticSeverity.WARNING, "CB607",
             f"Unpack[ForwardRef({name!r})] on {_method_label(method)}: "
@@ -541,6 +547,19 @@ def _resolve_unpack_target(
         return None
 
     return cls
+
+
+def _resolve_class(module_path: str, name: str) -> type | None:
+    """importlib.import_module + getattr, returning None on any failure.
+
+    Pure resolution mechanic — no diagnostics. Caller wraps with the right
+    error message for its context.
+    """
+    try:
+        mod = importlib.import_module(module_path)
+    except ImportError:
+        return None
+    return getattr(mod, name, None)
 
 
 def _walk_typed_dict(
@@ -556,10 +575,12 @@ def _walk_typed_dict(
     Field annotations may not be on the direct class dict (parent classes
     contribute too), so look up names walking `__mro__` as a fallback.
 
-    Field-level ForwardRef resolution (e.g., `NotRequired[ForwardRef('str')]`)
-    lands in PR 2 — for now, unwrapped types pass through `map_type` directly
-    and unresolvable shapes fall back to `TypeKind.Other` via the existing
-    map_type behavior.
+    Each field's annotation is resolved independently — a single bad
+    annotation (recursive type, missing import, malformed ForwardRef) emits
+    CB608 and falls back to TypeKind.Other, but does NOT abort the whole walk.
+    Nested TypedDicts are intentionally NOT recursed into: emitted as
+    TypeKind.Other + CB608 so the user routes them through `--json-input`
+    (mirrors C# ADR-007 flattening policy).
     """
     required_keys = getattr(td_cls, "__required_keys__", frozenset())
     optional_keys = getattr(td_cls, "__optional_keys__", frozenset())
@@ -572,8 +593,13 @@ def _walk_typed_dict(
     params: list[Parameter] = []
     for field_name in all_keys:
         raw_ann = annotations.get(field_name, Any)
-        unwrapped = _strip_required_marker(raw_ann)
-        type_ref = map_type(unwrapped, diagnostics)
+        type_ref = _resolve_field_type(
+            field_name=field_name,
+            raw_ann=raw_ann,
+            td_cls=td_cls,
+            method=method,
+            diagnostics=diagnostics,
+        )
         params.append(Parameter(
             name=field_name,
             type=type_ref,
@@ -587,6 +613,88 @@ def _walk_typed_dict(
         f"into {len(params)} parameter(s)",
     ))
     return params
+
+
+def _resolve_field_type(
+    field_name: str,
+    raw_ann: Any,
+    td_cls: type,
+    method: Any,
+    diagnostics: list[Diagnostic],
+) -> "TypeRef":
+    """Resolve a single TypedDict field's annotation to a `TypeRef`.
+
+    Each call is wrapped — failures emit CB608 and return TypeKind.Other so
+    a single bad field doesn't poison the whole TypedDict's parameter list.
+
+    Resolution pipeline:
+    1. Strip `Required[X]` / `NotRequired[X]` wrappers.
+    2. If inner is a ForwardRef or string, eval against the TypedDict's
+       defining-module namespace.
+    3. If the resolved type is itself a TypedDict, fall back to TypeKind.Other
+       (don't recurse — see ADR-022 + C# ADR-007 alignment).
+    4. Otherwise pass to `map_type`, which is pure and stays pure.
+    """
+    try:
+        unwrapped = _strip_required_marker(raw_ann)
+        resolved, ok = _try_eval_forward(unwrapped, td_cls)
+        if not ok:
+            _emit_cb608(field_name, td_cls, method, unwrapped, diagnostics)
+            return TypeRef(kind=TypeKind.OTHER, name=str(unwrapped))
+
+        if inspect.isclass(resolved) and hasattr(resolved, "__required_keys__"):
+            # Nested TypedDict — by design, don't recurse. User routes via --json-input.
+            _emit_cb608(
+                field_name, td_cls, method,
+                f"nested TypedDict {resolved.__name__} — use --json-input",
+                diagnostics,
+            )
+            return TypeRef(kind=TypeKind.OTHER, name=resolved.__name__)
+
+        return map_type(resolved, diagnostics)
+    except Exception as e:  # defensive — never let one field crash extraction
+        _emit_cb608(field_name, td_cls, method, f"exception: {e}", diagnostics)
+        return TypeRef(kind=TypeKind.OTHER, name=str(raw_ann))
+
+
+def _try_eval_forward(annotation: Any, td_cls: type) -> tuple[Any, bool]:
+    """Evaluate string / ForwardRef annotations against td_cls's defining module.
+
+    Returns (resolved_or_original, ok). `ok=False` when evaluation was needed
+    but failed; caller treats that as the CB608 fallback path.
+    """
+    if isinstance(annotation, ForwardRef):
+        name = annotation.__forward_arg__
+    elif isinstance(annotation, str):
+        name = annotation
+    else:
+        return annotation, True  # already a real type; nothing to do
+
+    mod = sys.modules.get(getattr(td_cls, "__module__", "") or "")
+    if mod is None:
+        return annotation, False
+
+    try:
+        # Evaluate in the TypedDict's defining-module namespace. This handles
+        # `'str'`, `'int | None'`, `'NestedClass'`, `'List[str]'`, etc.
+        return eval(name, mod.__dict__, None), True
+    except Exception:
+        return annotation, False
+
+
+def _emit_cb608(
+    field_name: str,
+    td_cls: type,
+    method: Any,
+    detail: Any,
+    diagnostics: list[Diagnostic],
+) -> None:
+    diagnostics.append(Diagnostic(
+        DiagnosticSeverity.WARNING, "CB608",
+        f"TypedDict field '{td_cls.__name__}.{field_name}' on "
+        f"{_method_label(method)}: could not resolve ({detail}); "
+        f"emitted as TypeKind.Other — pass value via --json-input.",
+    ))
 
 
 def _strip_required_marker(annotation: Any) -> Any:

@@ -137,6 +137,71 @@ def test_unpack_resolves_alongside_normal_parameters():
     assert names == {"limit", "starting_after"}
 
 
+# ---- PR 2: field-level ForwardRef resolution -------------------------------
+
+
+def test_typed_dict_field_forwardref_resolves_to_str():
+    """`name: NotRequired["str"]` on CustomerCreateParams becomes a bare
+    `ForwardRef('str')` after the NotRequired wrapper is stripped. PR 2
+    evaluates that against the TypedDict's defining module and produces a
+    real `str` type — not `TypeKind.OTHER`."""
+    from cli_builder_adapter.models import TypeKind
+
+    params, diagnostics = _extract(CustomerService.create)
+    by_name = {p.name: p for p in params}
+
+    assert by_name["name"].type.kind == TypeKind.PRIMITIVE
+    assert by_name["name"].type.name == "str"
+    # No CB608 on this field — it resolved cleanly.
+    cb608_for_name = [
+        d for d in diagnostics
+        if d.code == "CB608" and "'CustomerCreateParams.name'" in d.message
+    ]
+    assert cb608_for_name == []
+
+
+def test_typed_dict_field_union_with_none_renders_optional():
+    """`description: NotRequired["str | None"]` (Stripe's literal pattern)
+    must produce an optional/nullable string, not TypeKind.OTHER. The
+    ForwardRef eval returns `str | None` (PEP 604 union); `map_type` then
+    flattens Optional[str] to nullable PRIMITIVE str."""
+    from cli_builder_adapter.models import TypeKind
+
+    params, diagnostics = _extract(CustomerService.create)
+    by_name = {p.name: p for p in params}
+
+    desc = by_name["description"]
+    assert desc.type.kind == TypeKind.PRIMITIVE, (
+        f"expected PRIMITIVE str, got {desc.type.kind} (name={desc.type.name})"
+    )
+    assert desc.type.name == "str"
+    assert desc.type.is_nullable is True, "Optional[str] must surface as nullable"
+
+
+def test_typed_dict_nested_typed_dict_falls_back_to_other_with_diagnostic():
+    """`address: NotRequired["NestedAddressParams"]` resolves to a real
+    TypedDict class — but by design we DO NOT recurse into nested
+    TypedDicts. The field must emit TypeKind.OTHER + CB608 so the user
+    routes the value through `--json-input`. Mirrors C# ADR-007 flattening
+    policy: keep generator surface area honest, avoid combinatorial flag
+    explosion on multi-level nested params."""
+    from cli_builder_adapter.models import TypeKind
+
+    params, diagnostics = _extract(CustomerService.create)
+    by_name = {p.name: p for p in params}
+
+    addr = by_name["address"]
+    assert addr.type.kind == TypeKind.OTHER, (
+        f"nested TypedDict must be OTHER (not recursed), got {addr.type.kind}"
+    )
+    cb608_for_addr = [
+        d for d in diagnostics
+        if d.code == "CB608" and "'CustomerCreateParams.address'" in d.message
+    ]
+    assert cb608_for_addr, "expected CB608 on nested-TypedDict field"
+    assert cb608_for_addr[0].severity == DiagnosticSeverity.WARNING
+
+
 # ---- Cross-version Unpack origin normalization -----------------------------
 
 

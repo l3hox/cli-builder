@@ -34,11 +34,19 @@ class CustomerCreateParams(TypedDict):
 
     `total=True` (default) makes everything required UNLESS wrapped in
     `NotRequired[X]`. Stripe and OpenAI both use this pattern.
+
+    Field annotations deliberately mix three shapes to exercise PR 2's
+    field-level ForwardRef resolution:
+    - `Required[str]` — real type, resolves directly.
+    - `NotRequired["str"]` — bare ForwardRef, must be eval'd against module.
+    - `NotRequired["str | None"]` — Stripe's literal pattern, ForwardRef wrapping a union.
+    - `NotRequired["NestedAddressParams"]` — nested TypedDict, resolves but
+      must be reported as TypeKind.Other + CB608 (not recursed into).
     """
 
     email: Required[str]
-    name: NotRequired[str]
-    description: NotRequired[str]
+    name: NotRequired["str"]
+    description: NotRequired["str | None"]
     metadata: NotRequired[dict]
     address: NotRequired["NestedAddressParams"]
 
