@@ -15,7 +15,6 @@ pub enum AdapterKind {
 /// Result of invoking an adapter subprocess.
 pub struct AdapterOutput {
     pub envelope: AdapterResultEnvelope,
-    pub stderr_output: String,
 }
 
 /// Error from adapter invocation.
@@ -29,8 +28,6 @@ pub enum AdapterError {
     EnvironmentFailure { stderr: String, diagnostics: Vec<Diagnostic> },
     /// Adapter produced invalid/empty JSON
     InvalidOutput(String),
-    /// Adapter timed out
-    Timeout,
 }
 
 impl std::fmt::Display for AdapterError {
@@ -40,7 +37,6 @@ impl std::fmt::Display for AdapterError {
             Self::SpawnFailed(e) => write!(f, "Failed to start adapter: {}", e),
             Self::EnvironmentFailure { stderr, .. } => write!(f, "Adapter environment failure: {}", stderr),
             Self::InvalidOutput(msg) => write!(f, "Adapter produced invalid output: {}", msg),
-            Self::Timeout => write!(f, "Adapter timed out"),
         }
     }
 }
@@ -67,11 +63,11 @@ pub fn invoke(kind: &AdapterKind) -> Result<AdapterOutput, AdapterError> {
             }
         })?;
 
-    let stderr = String::from_utf8_lossy(&output.stderr).to_string();
     let stdout = String::from_utf8_lossy(&output.stdout).to_string();
 
     // Exit code 2: environment failure — abort
     if output.status.code() == Some(2) {
+        let stderr = String::from_utf8_lossy(&output.stderr).to_string();
         // Try to parse diagnostics from stdout even on failure
         let diagnostics = serde_json::from_str::<AdapterResultEnvelope>(&stdout)
             .map(|e| e.diagnostics)
@@ -90,10 +86,7 @@ pub fn invoke(kind: &AdapterKind) -> Result<AdapterOutput, AdapterError> {
     let envelope: AdapterResultEnvelope = serde_json::from_str(&stdout)
         .map_err(|e| AdapterError::InvalidOutput(format!("Failed to parse adapter JSON: {}", e)))?;
 
-    Ok(AdapterOutput {
-        envelope,
-        stderr_output: stderr,
-    })
+    Ok(AdapterOutput { envelope })
 }
 
 /// Build the command + args for an adapter invocation.
