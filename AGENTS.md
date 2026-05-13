@@ -47,11 +47,11 @@ Each piece of information exists in exactly one place:
 
 ## Start here
 
-**v0.2 (current)** — Single `cli-builder` Rust binary orchestrating the full pipeline:
+**v0.2.1 (current)** — Single `cli-builder` Rust binary orchestrating the full pipeline. Python adapter resolves PEP 692 `Unpack[TypedDict]` kwargs ([ADR-022](docs/ADR.md#adr-022-pep-692-unpacktypeddict-resolution-via-ast-walk-of-type_checking-imports)). Pipeline:
 - Adapters: .NET (subprocess) + Python (subprocess)
 - Generators: C# + Python (embedded Rust library calls, Tera templates)
 - `cli-builder generate --adapter {dotnet,python} --generator {csharp,python} --output ./output`
-- 397 .NET + 177 Rust + 109 Python = **683 tests**, 0 failures
+- 397 .NET + 177 Rust + 119 Python (109 + 10 PEP 692 tests) = **693 tests**, 0 failures
 - CI/CD: 15-job matrix (3 OS × Rust + .NET + Python 3.10/3.11/3.12) green on every push
 
 **What's next:** package publishing (`cargo install`, PyPI), incremental streaming, DI/factory pattern for Stripe, Kotlin/Go generators, `--enrich` flag. See [docs/FUTURE.md](docs/FUTURE.md).

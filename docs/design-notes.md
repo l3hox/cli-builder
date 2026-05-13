@@ -211,6 +211,17 @@ Expanding the ranges from ADR-015 with specific codes:
 - `CB502` — Enrichment cache miss (re-enriching)
 - `CB503` — Enriched text failed sanitization
 
+**CB6xx — Python adapter (extraction + PEP 692 resolution):**
+- `CB600` — Error: cannot import package
+- `CB601` — Info: package imported at runtime — side effects may occur
+- `CB602` — Warning: cannot inspect signature, skipping method
+- `CB603` — Info: could not resolve type hints — using signatures only
+- `CB604` — Warning: malformed `.pyi` stub file
+- `CB605` — Info: using `.pyi` stubs (no runtime import needed)
+- `CB606` — Info: `Unpack[TypedDict]` successfully resolved via `TYPE_CHECKING` AST walk (ADR-022)
+- `CB607` — Warning: `Unpack[ForwardRef(X)]` could not be resolved; param dropped (ADR-022)
+- `CB608` — Warning: TypedDict field's ForwardRef could not be resolved; emitted as `TypeKind.Other` (route via `--json-input`)
+
 ---
 
 ## Test SDK assembly manifest
@@ -393,6 +404,22 @@ The e2e test uses **PYTHONPATH + `python -m`**, not `venv + pip install`. Ration
 - PYTHONPATH runs in ~1s vs ~30s for venv creation + pip install.
 - Eliminates three cross-platform failure modes (PyPI network, `pyproject.toml` parsing, Windows `Scripts/` vs `bin/` venv layout).
 - Gap accepted: `python -m` bypasses the `[project.scripts]` console-script entry point. That gap is tracked as a `#[ignore]`'d placeholder test and a `docs/FUTURE.md` entry; CI has a `grep -q` step that fails if the tracking entry is removed.
+
+### Python adapter — PEP 692 `Unpack[TypedDict]` resolution (ADR-022)
+
+The Python adapter resolves `**kwargs: Unpack[TypedDict]` annotations (PEP 692) by AST-walking the defining module's `if TYPE_CHECKING:` blocks to discover where each `ForwardRef` is imported from, then `importlib.import_module` + `getattr` to materialize the class. Without this path, every Stripe (and structurally similar) SDK's CRUD methods generate zero CLI flags because `typing.get_type_hints()` cannot resolve TYPE_CHECKING-only imports at runtime. Four conventions are load-bearing:
+
+**`map_type` purity contract.** `python/src/cli_builder_adapter/type_mapper.py::map_type` accepts only fully resolved type objects — never raw `ForwardRef`s, never quoted strings. ForwardRef resolution is the caller's responsibility (specifically `_resolve_field_type` in `extractor.py`, which evaluates against the TypedDict's defining-module namespace). Extending `map_type` with a `globals=` resolution context is explicitly declined — see ADR-022 alternatives. Future contributors: if you find yourself wanting to thread `globals` through `map_type`, resolve at the call site instead.
+
+**`if TYPE_CHECKING:` AST walk scope.** `_collect_type_checking_imports` parses only top-level `ast.ImportFrom` nodes inside `if TYPE_CHECKING:` blocks. `ast.Import`, star imports (`from x import *`), and nested conditional blocks are intentionally ignored — names from those shapes surface as not-found and emit `CB607` (warning) instead of trying to be clever. Relative imports (`from .params import X`) are resolved to absolute module paths using the host module's `__name__` as anchor.
+
+**`functools.lru_cache` on `_collect_type_checking_imports`.** Stripe has ~41 `TYPE_CHECKING` imports per resource module, and the adapter touches each module once per operation (~300+ operation extractions across 100+ resources in a single `extract()` call). Without caching, the AST parser would re-run hundreds of times against the same file. Keyed by `(module_file, module_name)` — module name is needed to resolve relative imports correctly; file path alone is insufficient.
+
+**TypedDict source-of-truth for required/optional.** Iterate `__required_keys__ | __optional_keys__`. PEP 589's `_TypedDictMeta` aggregates inherited keys into those frozensets at class-creation time — no manual MRO walk needed for the *key set*. Field annotations may live on parent classes, so `__annotations__` IS walked across `__mro__` for name → annotation lookup. Per-field resolution is wrapped in try/except so a single bad annotation (recursive type, missing import, malformed `ForwardRef`) emits `CB608` and falls back to `TypeKind.Other` without aborting the rest of the walk.
+
+**Nested TypedDicts route through `--json-input`, not recursion.** When a field's resolved annotation is itself a TypedDict (`hasattr(__required_keys__)`), the field is emitted as `TypeKind.Other` + `CB608` regardless of resolution success. This is intentional — recursive flattening would produce combinatorial CLI flag explosions on multi-level nested params (Stripe's `customer create` has `address`, `payment_method_data`, `shipping`, each with their own nested shapes). Mirrors C# ADR-007 flattening policy.
+
+**`typing_extensions` is a hard runtime dependency.** Python 3.10 ships only `typing_extensions.Unpack`; 3.11+ adds `typing.Unpack`. The adapter standardizes on `typing_extensions.Unpack` / `get_origin` / `get_args` for cross-version normalization. Declared in `python/pyproject.toml` under `[project.dependencies]`, not `[project.optional-dependencies]` — leaving it optional would let 3.10 CI pass locally and fail on clean install.
 
 ---
 

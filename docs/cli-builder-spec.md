@@ -62,6 +62,7 @@ All architectural decisions are documented with full rationale in [docs/ADR.md](
 | [019](docs/ADR.md#adr-019-test-path-centralization--reporoot-and-workspace_root) | Test path centralization — `$(RepoRoot)` and `workspace_root()` |
 | [020](docs/ADR.md#adr-020-cicd--15-job-matrix-with-per-language-segmentation) | CI/CD — 15-job matrix with per-language segmentation |
 | [021](docs/ADR.md#adr-021-dependabot-cadence--weekly-pip-and-actions-monthly-cargo-and-nuget) | Dependabot cadence — weekly pip and actions, monthly cargo and nuget |
+| [022](docs/ADR.md#adr-022-pep-692-unpacktypeddict-resolution-via-ast-walk-of-type_checking-imports) | PEP 692 `Unpack[TypedDict]` resolution via AST walk of `TYPE_CHECKING` imports |
 
 ### Component Overview
 
@@ -465,12 +466,13 @@ Optional/later:
 
 ## Roadmap
 
-**v0.2 is current.** See [docs/FUTURE.md](FUTURE.md) for the full prioritized roadmap going forward. The spec does not mirror it — that would just drift.
+**v0.2.1 is current.** See [docs/FUTURE.md](FUTURE.md) for the full prioritized roadmap going forward. The spec does not mirror it — that would just drift.
 
 Milestones to date:
 - **v0.1.4:** .NET adapter + C# generator + CLI entry + direct param deserialization + language-neutral metadata. Three SDKs validated.
 - **v0.1.5:** Python adapter as standalone `cli-builder-adapter-python` package. Subprocess orchestration. Adapter invocation contract finalized.
 - **v0.2:** All generators in Rust with shared ModelMapper + Tera templates ([ADR-017](ADR.md#adr-017-all-generators-in-rust--shared-modelmapper-language-specific-templates)). Rust orchestrator replaces .NET CLI. Single `cli-builder` binary. Adapters remain in native languages. Polyglot repo layout ([ADR-018](ADR.md#adr-018-polyglot-repo-layout--crates--dotnet--python-at-root)), centralized test paths ([ADR-019](ADR.md#adr-019-test-path-centralization--reporoot-and-workspace_root)), CI/CD across 15 jobs ([ADR-020](ADR.md#adr-020-cicd--15-job-matrix-with-per-language-segmentation)). 673 total tests.
+- **v0.2.1:** PEP 692 `Unpack[TypedDict]` resolution in the Python adapter ([ADR-022](ADR.md#adr-022-pep-692-unpacktypeddict-resolution-via-ast-walk-of-type_checking-imports)). AST walk of `if TYPE_CHECKING:` blocks + per-field ForwardRef eval; nested TypedDicts route through `--json-input`. Stripe `customer list` / `customer create` now expose typed flags (pre-v0.2.1: zero flags on every Stripe CRUD method). 693 total tests.
 
 ---
 

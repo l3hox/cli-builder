@@ -268,6 +268,50 @@ if [[ -s "$WORK_DIR/help-root.out" ]]; then
     fi
 fi
 
+# ---- Phase 7b — flag-presence gate (Stripe-specific, ADR-022 regression guard) -------
+#
+# Pre-Step-17, stripe-cli `customer list --help` printed zero flags. Catching a
+# silent regression of that bug is the whole point of this script. For Stripe,
+# we assert specific flag names are present in customer list / customer create
+# --help output. For other SDKs, this phase is SKIPped (we don't know the API).
+
+if [[ "$SDK_NAME" == "stripe" ]]; then
+    heading "Phase 7b — Stripe flag-presence regression gate (ADR-022)"
+    EXPECTED_LIST_FLAGS=("--limit" "--email" "--starting_after" "--ending_before")
+    EXPECTED_CREATE_FLAGS=("--email" "--name" "--description" "--phone")
+    FLAG_FAILURES=0
+
+    # Run customer list / create --help and capture
+    for cmd_args in "customer list" "customer create"; do
+        out_file="$WORK_DIR/flagcheck-$(echo "$cmd_args" | tr ' ' '-').out"
+        if ! "$CLI_EXEC" $cmd_args --help > "$out_file" 2>&1; then
+            fail "$CLI_NAME $cmd_args --help did not exit cleanly"
+            FLAG_FAILURES=$((FLAG_FAILURES + 1))
+            continue
+        fi
+    done
+
+    for flag in "${EXPECTED_LIST_FLAGS[@]}"; do
+        if ! grep -q -- "$flag" "$WORK_DIR/flagcheck-customer-list.out" 2>/dev/null; then
+            fail "expected $flag in 'customer list --help'; not found (regression of ADR-022 / Step 17 bug)"
+            FLAG_FAILURES=$((FLAG_FAILURES + 1))
+        fi
+    done
+    for flag in "${EXPECTED_CREATE_FLAGS[@]}"; do
+        if ! grep -q -- "$flag" "$WORK_DIR/flagcheck-customer-create.out" 2>/dev/null; then
+            fail "expected $flag in 'customer create --help'; not found"
+            FLAG_FAILURES=$((FLAG_FAILURES + 1))
+        fi
+    done
+
+    if [[ $FLAG_FAILURES -eq 0 ]]; then
+        ok "all expected Stripe customer flags present"
+        record "flags-stripe" "PASS" "list+create expected flags found"
+    else
+        record "flags-stripe" "FAIL" "$FLAG_FAILURES flag(s) missing"
+    fi
+fi
+
 # ---- Phase 8 — live API call (optional) ------------------------------------
 
 heading "Phase 8 — live API call"

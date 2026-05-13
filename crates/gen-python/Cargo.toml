@@ -1,6 +1,6 @@
 [package]
 name = "cli-builder-gen-python"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 description = "Python CLI generator for cli-builder — click-based output from SdkMetadata JSON"
 license = "EUPL-1.2"

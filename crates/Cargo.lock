@@ -204,7 +204,7 @@ checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
 
 [[package]]
 name = "cli-builder"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "clap",
  "cli-builder-core",
@@ -218,7 +218,7 @@ dependencies = [
 
 [[package]]
 name = "cli-builder-core"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "serde",
  "serde_json",
@@ -226,7 +226,7 @@ dependencies = [
 
 [[package]]
 name = "cli-builder-gen-csharp"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "clap",
  "cli-builder-core",
@@ -241,7 +241,7 @@ dependencies = [
 
 [[package]]
 name = "cli-builder-gen-python"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "clap",
  "cli-builder-core",
@@ -600,7 +600,7 @@ checksum = "f8ca58f447f06ed17d5fc4043ce1b10dd205e060fb3ce5b979b8ed8e59ff3f79"
 
 [[package]]
 name = "mock-adapter"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "cli-builder-core",
  "serde_json",

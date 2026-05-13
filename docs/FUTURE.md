@@ -2,7 +2,7 @@
 
 Production roadmap for cli-builder — generate agent-ready CLIs from SDK packages in any language.
 
-**Current version: v0.2** — Single Rust binary, Python + C# generators, .NET + Python adapters.
+**Current version: v0.2.1** — Single Rust binary, Python + C# generators, .NET + Python adapters. Python adapter resolves PEP 692 `Unpack[TypedDict]` kwargs (ADR-022).
 
 ---
 
@@ -47,6 +47,9 @@ Kotlin (clikt), Go (cobra), TypeScript (commander) — each ~500 lines of Tera t
 
 ## Completed
 
+### v0.2.1 — PEP 692 Unpack[TypedDict] resolution (Step 17)
+- **Step 17**: Python adapter learns to resolve `**kwargs: Unpack[TypedDict]` (PEP 692). Strategy: AST-walk `if TYPE_CHECKING:` blocks, `importlib.import_module` the target, walk `__required_keys__` / `__optional_keys__` / `__annotations__`. Per-field ForwardRef evaluation against the TypedDict's defining-module namespace. Nested TypedDicts route through `--json-input` (no recursive flattening). Stripe `customer list --help` exposes 11 typed flags + `--json-input`; `customer create --help` exposes 17. Pre-v0.2.1: zero flags on every Stripe CRUD method. Council-reviewed plan in [docs/internal/step-17-pep692-unpack.md](internal/step-17-pep692-unpack.md), formalized as [ADR-022](ADR.md#adr-022-pep-692-unpacktypeddict-resolution-via-ast-walk-of-type_checking-imports). Three PRs (detection skeleton + synthetic fixture; field-level resolution + helper refactor; docs + ADR + validation).
+
 ### v0.2 — Rust migration + infrastructure (Steps 12b-16 + 13b)
 - **Step 12b**: Python adapter hardening — 109 pytest tests, JSON schema contract (`docs/sdk-metadata-schema.json`), module-level auth detection, Stripe validation (105 resources), `.pyi` stub parser (ADR-013 compliance)
 - **Step 13**: Python CLI generator in Rust — shared core (`ModelMapper`, `ParameterFlattener`, `IdentifierValidator` with `LanguageProfile` trait) + click-based Python templates via Tera. Council-reviewed. Golden file snapshots via insta.
@@ -68,7 +71,7 @@ Kotlin (clikt), Go (cobra), TypeScript (commander) — each ~500 lines of Tera t
 - OpenAI 2.9.1: 20 resources, 169 ops, 41 wired
 - Stripe.net 51.0.0: 196 resources, compile validated
 - TestSdk (Python): 3 resources
-- stripe-python 15.x: 105 resources, classmethod extraction
+- stripe-python 15.x: 105 resources, PEP 692 `Unpack[TypedDict]` resolved (v0.2.1, ADR-022); `customer list` / `customer create` validated end-to-end
 
 ### Test totals
-397 .NET + 177 Rust + 109 Python = **683 tests**, 0 failures. 15-job CI matrix green on every push.
+397 .NET + 177 Rust + 119 Python = **693 tests**, 0 failures. 15-job CI matrix green on every push.

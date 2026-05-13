@@ -2,6 +2,30 @@
 
 All notable changes to cli-builder.
 
+## v0.2.1 — 2026-05-13
+
+### Features
+
+- **PEP 692 `Unpack[TypedDict]` resolution in the Python adapter** ([ADR-022](docs/ADR.md#adr-022-pep-692-unpacktypeddict-resolution-via-ast-walk-of-type_checking-imports)). Methods with `def f(**params: Unpack[X])` now extract one structured `Parameter` per TypedDict field. Strategy: AST-walk the defining module's `if TYPE_CHECKING:` blocks to discover where X is imported from, then `importlib.import_module` + read `__required_keys__` / `__optional_keys__` / `__annotations__`. Per-field ForwardRefs (e.g. Stripe's `NotRequired[ForwardRef('str | None')]`) resolve against the TypedDict's defining module — `str | None` flattens to nullable `str`, not `TypeKind.Other`. Nested TypedDicts emit as `TypeKind.Other` + `CB608` and route through `--json-input` (mirrors C# ADR-007 flattening policy).
+- **Diagnostic codes `CB606` / `CB607` / `CB608`** in the `CB6xx` Python-adapter namespace, documented in `docs/design-notes.md`. `CB606` info when Unpack resolution succeeded, `CB607` warning when an Unpack `ForwardRef` could not be resolved, `CB608` warning for per-field resolution failures (recursive types, missing imports, malformed `ForwardRef`s).
+
+### Bug fixes
+
+- Pre-v0.2.1, every Python SDK using PEP 692 (Stripe, increasingly OpenAI, many modern libraries) rendered zero CLI flags on every CRUD method — 313 of 922 Stripe operations were functionally empty. The Python adapter at `extractor.py:324-329` was unconditionally skipping `**kwargs`. Now structured.
+
+### Dependencies
+
+- `typing_extensions >= 4.6` is a hard runtime dependency of the Python adapter (was optional). Python 3.10 requires it for `Unpack` / `Required` / `NotRequired`; declaring as hard prevents clean-install regressions on the CI matrix.
+
+### Stats
+
+- Python adapter: 109 → 119 tests (+10 in `tests/test_extractor_unpack.py`)
+- Total: 693 tests across all three languages (397 .NET + 177 Rust + 119 Python)
+- Stripe 15.x end-to-end:
+  - Pre-v0.2.1: `stripe-cli customer list --help` → 0 flags + `--json-input`
+  - v0.2.1: 11 typed flags (`--limit`, `--email`, `--starting_after`, `--ending_before`, `--stripe_version`, …) + `--json-input` for nested
+  - `customer create --help`: 17 typed scalar flags + `--json-input` for nested address/metadata/payment_method_data
+
 ## v0.2.0 — 2026-04-22
 
 Multi-language rewrite. The orchestrator moves to Rust, a Python adapter and Python CLI generator ship, the C# generator is re-implemented in Rust with Tera templates. Single binary distribution is now possible.

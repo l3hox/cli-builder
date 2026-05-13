@@ -1,6 +1,6 @@
 [package]
 name = "cli-builder"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 description = "Generate agent-ready CLIs from SDK packages — any language in, any language out"
 license = "EUPL-1.2"

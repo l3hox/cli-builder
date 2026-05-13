@@ -2,7 +2,7 @@
 
 Generate agent-ready CLIs from SDK packages — any language in, any language out.
 
-**v0.2** — Single Rust binary. Python + C# generators. .NET + Python adapters. 670 tests.
+**v0.2.1** — Single Rust binary. Python + C# generators. .NET + Python adapters. PEP 692 `Unpack[TypedDict]` resolution. 693 tests.
 
 ## Problem
 
@@ -72,7 +72,7 @@ OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh        # OpenAI CLI
 | OpenAI 2.9.1 | .NET | 20 | 41/169 (24%) | Yes |
 | Stripe.net 51.0.0 | .NET | 196 | ~93% | Yes |
 | TestSdk (Python) | Python | 3 | 100% | Yes |
-| stripe-python 15.x | Python | 105 | Yes (classmethod extraction) | Metadata only |
+| stripe-python 15.x | Python | 105 | PEP 692 `Unpack[TypedDict]` resolved (ADR-022) | `customer list --help` / `customer create --help` validated; nested params via `--json-input` |
 
 ## Agent-readiness
 

@@ -1030,3 +1030,82 @@ Four ecosystems need Dependabot coverage: GitHub Actions, cargo, NuGet, pip. Eac
 - **Positive:** The PR limit prevents queue buildup.
 - **Negative:** Security-sensitive cargo/nuget updates might sit for up to a month. Acceptable — this is a build tool, not a runtime service.
 - **Mitigated by:** GitHub's Dependabot alerts surface security issues independently of the update cadence; manual bumps are always possible.
+
+---
+
+## ADR-022: PEP 692 `Unpack[TypedDict]` resolution via AST walk of `TYPE_CHECKING` imports
+
+**Date:** 2026-05-13
+**Status:** Accepted and implemented (Step 17)
+
+### Context
+
+PEP 692 is now the dominant typing idiom for Python SDK kwargs. Stripe's class-method surface, increasingly OpenAI's request-shape modules, and the broader Python typing ecosystem express `**params` shapes as `def f(**params: Unpack[SomeTypedDict])`. The `TypedDict` typically lives in a separate `params/` sub-package and is imported only under `if TYPE_CHECKING:` — Python never evaluates that import at runtime.
+
+The cli-builder Python adapter relies on signature inspection (`inspect.signature` + `typing.get_type_hints`) to extract structured `Parameter` lists from SDK methods. On any method with `**params: Unpack[X]`:
+
+1. `inspect.signature` reports `params` as `VAR_KEYWORD` — historically skipped unconditionally at `python/src/cli_builder_adapter/extractor.py:324-329`.
+2. `typing.get_type_hints` fails to resolve the `ForwardRef('X')` because X isn't in the module's runtime namespace (TYPE_CHECKING never executed).
+3. Even with that fixed, the adapter has no way to *find* X without inspecting the module's source.
+
+Real-world impact: against `stripe-python 15.x`, 313 of 922 operations (34%) extracted zero parameters. Every CRUD method (`list`, `create`, `retrieve`, `update`, `delete`) on every Stripe resource generated a CLI with no flags. The "Stripe validated" claim in the previous CHANGELOG was metadata-extraction-only validation — the generated CLI was functionally empty.
+
+### Decision
+
+**Primary strategy:** AST-walk the defining module's top-level `if TYPE_CHECKING:` blocks, build a name → absolute-module table for each `ImportFrom` statement, then `importlib.import_module(target) + getattr(mod, name)` to materialize the class. Required/optional classification reads `__required_keys__` / `__optional_keys__` (PEP 589's `_TypedDictMeta` aggregates inherited keys into those frozensets automatically). Per-field annotations may themselves be `ForwardRef`s or quoted strings (e.g. Stripe's literal `NotRequired[ForwardRef('str|None')]`); each is `eval`'d against the TypedDict's defining-module namespace, wrapped in per-field try/except so a single bad annotation emits `CB608` + falls back to `TypeKind.Other` without aborting the rest of the walk.
+
+**Documented fallback path: `.pyi` stub parsing.** Not implemented in Step 17 — Stripe's TypedDicts ship in real `.py` files, not stubs. If a future SDK forces stub-only TypedDicts, the adapter's existing `.pyi` reader (`python/src/cli_builder_adapter/stub_parser.py`) is the natural extension point. ADR-022 records this so the design space isn't accidentally closed.
+
+**Explicit out-of-scope:**
+- Service-pattern discovery (e.g., `StripeClient.v1.customers.list(params: Optional[X])`) — different extraction surface, separate concern.
+- Recursive flattening of nested TypedDicts — nested params emit as `TypeKind.Other` + `CB608` and route through `--json-input` via the existing `ParameterFlattener` threshold (mirrors C# ADR-007 policy).
+- OpenAI `NotGiven` / `Omit` sentinel defaults — orthogonal to kwargs shape resolution.
+- `map_type` signature extension with a `globals=` resolution context — declined; resolve ForwardRefs upstream and pass concrete types in.
+
+**Diagnostic codes (CB6xx — Python adapter namespace):**
+- `CB606` (info) — `Unpack[TypedDict]` successfully resolved.
+- `CB607` (warning) — `Unpack[ForwardRef(X)]` could not be resolved; param dropped.
+- `CB608` (warning) — TypedDict field's ForwardRef could not be resolved; emitted as `TypeKind.Other`.
+
+### Rationale
+
+**AST walk is the only honest resolution path.** Brute-force walking the SDK package looking for any class matching the ForwardRef name is O(n) modules and collision-prone (Stripe has `CustomerListParams`, `AccountListParams`, etc. — most names appear once but the assumption is fragile). A Stripe-specific convention (`stripe.params._<x>_params`) would couple the adapter to one SDK. Parsing `.pyi` stubs costs additional I/O and isn't needed when the TypedDicts live in real `.py`. The `if TYPE_CHECKING:` block IS the SDK's authoritative answer to "where does this name come from" — the cost is one `ast.parse` per source file (cached via `functools.lru_cache`).
+
+**`__required_keys__` / `__optional_keys__` is the source of truth, not `__annotations__`.** PEP 589's metaclass aggregates inheritance and processes `Required[X]`/`NotRequired[X]` markers at class-creation time. Iterating `__annotations__` directly would miss inherited fields and miscount required/optional. The two frozensets are authoritative; `__annotations__` is for name → type lookup only.
+
+**Per-field try/except prevents silent total failure.** A recursive type, missing import, or malformed `ForwardRef` in one field of a 30-field TypedDict must not erase the other 29 fields. CB608 surfaces the failure; the rest of the walk continues.
+
+**`map_type` stays pure.** Threading a `globals=` parameter through a pure type-mapping function conflates two concerns (type interpretation, import resolution) at a boundary that's already correct. The TypedDict field walker resolves ForwardRefs against the right namespace and passes concrete types into `map_type`. This boundary is locked in `docs/design-notes.md` so future contributors don't repeat the temptation.
+
+**Nested TypedDicts do not recurse.** Recursive flattening would explode the CLI surface (Stripe's `customer create` has 3+ levels of nested params; the leaf-flag count would be combinatorial). The existing `ParameterFlattener` in `crates/core/src/parameter_flattener.rs` already handles overflow by routing past-threshold scalars to `--json-input`. Nested TypedDicts fit the same pattern: emit as `TypeKind.Other`, let the user pass the nested shape via `--json-input`. Mirrors C# ADR-007.
+
+**`typing_extensions` becomes a hard runtime dependency.** Python 3.10 (in the CI matrix) only ships `typing_extensions.Unpack`; 3.11+ also has `typing.Unpack`. Standardizing on `typing_extensions.{Unpack,get_origin,get_args}` normalizes behavior across versions. Declaring it as a hard dependency (not optional) prevents the "passes locally on 3.12, fails on clean 3.10 install" failure mode.
+
+### Alternatives considered
+
+| Alternative | Why rejected |
+|---|---|
+| (a) Brute-force walk the SDK's package looking for any class matching the `ForwardRef` name | O(n) modules; collision-prone when same name appears in multiple submodules. |
+| (b) Stripe-specific namespace convention (`stripe.params._<x>_params`) | Couples adapter to one SDK; no other library follows this convention. |
+| (c) Parse `.pyi` stubs primary | Unnecessary I/O for SDKs that ship TypedDicts in real `.py`. Kept as documented fallback path. |
+| (d) Require SDKs to opt into a metadata-friendly shape (e.g., expose params explicitly) | Won't fly — we don't control SDK design. |
+| (e) Extend `map_type(annotation, *, globals=None)` | Conflates type mapping with import resolution; every future caller has to know whether to pass `globals`. Resolve upstream instead. |
+| (f) Recursively flatten nested TypedDicts | Combinatorial flag explosion; ParameterFlattener + `--json-input` is the established pattern (C# ADR-007). |
+| (g) `inspect.get_type_hints(method, globalns=mod.__dict__)` for the Unpack target | Doesn't work — TYPE_CHECKING imports aren't in `mod.__dict__` at runtime, which is the whole point of the bug. The probe at investigation time confirmed this. |
+
+### Consequences
+
+- **Positive:** Stripe `customer list --help` now exposes `--limit`, `--email`, `--starting_after`, `--ending_before`, plus auth/infrastructure fields (`--api_key-value`, `--stripe_version`, `--idempotency_key`, etc.). `customer create --help` shows 17 typed scalar flags + `--json-input` fallback for nested params. Pre-Step-17, both produced zero flags.
+- **Positive:** The resolution path is fully generic — any SDK following the PEP 692 + `TYPE_CHECKING` import idiom benefits without per-SDK tuning.
+- **Positive:** `map_type` boundary is locked, preventing future temptation to thread `globals` through it.
+- **Positive:** `functools.lru_cache` on `_collect_type_checking_imports` makes the AST cost amortize cleanly — Stripe's ~100 resource modules parse once each, regardless of operation count.
+- **Negative:** Adapter now reads SDK source files (`module.__file__`) and AST-parses them. Sandboxed environments where Python imports succeed but file reads don't (rare; not in our threat model) will degrade to `CB607` warnings.
+- **Negative:** Generated CLI flag count grows substantially (Stripe `customer create` now shows 17 flags vs 0). The existing `ParameterFlattener` threshold (~10 scalars before `--json-input` fallback) already moderates this, but the surface is wider than v0.2.0.
+- **Negative:** `typing_extensions` is now a hard runtime dep. Cost is trivial (pure-Python, broadly installed already), but it's one more transitive dependency.
+- **Mitigated by:** Diagnostic codes `CB606` (resolved) / `CB607` (unresolvable Unpack) / `CB608` (unresolvable field) make every resolution decision auditable. Silent fallback — the root-cause class for the original bug — is impossible.
+
+### Verification
+
+Synthetic fixture: `python/tests/test_sdk/unpack_sdk/` — service classes with `**kwargs: Unpack[X]` where X lives under `params/` and is imported only under `TYPE_CHECKING`. 10 tests in `python/tests/test_extractor_unpack.py` cover total=False, mixed Required/NotRequired, inheritance, unresolvable ForwardRef diagnostic emission, plain-kwargs backward-compat, field-level ForwardRef resolution, union-with-None nullability, nested-TypedDict fallback, and cross-version `typing.Unpack` vs `typing_extensions.Unpack` origin normalization.
+
+End-to-end: `scripts/manual-test-python-sdk.sh` against `stripe-python 15.x` exercises the full pipeline (build → inspect → generate → pip install → `--help` exit-zero). Live API call (Phase 8) requires `STRIPE_API_KEY=sk_test_...` and is a developer pre-merge gate, never a CI requirement.
