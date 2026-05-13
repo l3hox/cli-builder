@@ -6,9 +6,11 @@ NotRequired markers and breaks the TypedDict metaclass's required/optional
 classification. Stripe's real param modules follow the same convention.
 """
 
-from typing import List, Literal, TypedDict
+from typing import List, Literal
 
-from typing_extensions import NotRequired, Required
+# Import TypedDict from typing_extensions — see `_base_params.py` for the
+# rationale (PEP 655 on 3.10 only works through typing_extensions.TypedDict).
+from typing_extensions import NotRequired, Required, TypedDict
 
 from ._base_params import BaseListParams
 
