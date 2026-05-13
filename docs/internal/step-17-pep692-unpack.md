@@ -47,8 +47,8 @@ Specialists: SoftwareDeveloper, QaTester, SystemArchitect. Each round forced exp
 | **No `sk_test_` key in CI** | Secrets in CI for a public portfolio repo is a non-starter. Live Stripe is a developer pre-merge gate. | This file + PR 3 manual-test script |
 | **Parameter flattening is out of scope (already-handled)** | `ParameterFlattener` is generic via `LanguageProfile`; Python inherits it through `model_mapper::build`. Threshold at `model_mapper.rs:287` already triggers `--json-input` fallback past ~10 flags. Stripe `CustomerCreateParams` will not explode the CLI surface. | Council retracted CRITICAL flag in R2 after Architect investigated; no plan action |
 | **`map_type` stays pure — no resolution-context parameter** | `map_type` is a pure type-mapper. Threading `globals` through it conflates type mapping with import resolution. Resolve all ForwardRefs in `_try_resolve_unpack_kwargs` upstream; pass concrete types into `map_type`. Architectural boundary worth locking. | design-notes.md (added in PR 3): "Python adapter — `map_type` purity contract" |
-| **Diagnostic codes are `CB6xx`, not `CB1xx`** | Python adapter already emits `CB600` / `CB601` / `CB605` (extractor.py:49-96). `CB1xx` is the C# adapter range (design-notes.md:179-213). Free slots in `CB6xx`: `CB604`, `CB606`, `CB607`. | design-notes.md update + assignment in PR 1 |
-| **`CB606` = D-UnpackResolved (info); `CB607` = D-UnpackUnresolved (warning); `CB604` = D-UnpackFieldUnresolved (warning, PR 2)** | Silent fallback is what caused the original bug. Warning level for unresolvable cases is non-negotiable. Codes must be reserved before PR 1 merges. | design-notes.md updates in PR 1 + PR 2 |
+| **Diagnostic codes are `CB6xx`, not `CB1xx`** | Python adapter already emits `CB600`–`CB605` (extractor.py + stub_parser.py:73). `CB1xx` is the C# adapter range (design-notes.md:179-213). Next free triplet: `CB606`, `CB607`, `CB608`. | design-notes.md update + assignment in PR 1 |
+| **`CB606` = D-UnpackResolved (info); `CB607` = D-UnpackUnresolved (warning); `CB608` = D-UnpackFieldUnresolved (warning, PR 2)** | Silent fallback is what caused the original bug. Warning level for unresolvable cases is non-negotiable. Codes must be reserved before PR 1 merges. (`CB604` is already taken by `stub_parser.py:73` for malformed-stub diagnostics — third code is `CB608`, skipping the gap.) | design-notes.md updates in PR 1 + PR 2 |
 | **`typing_extensions` is a hard dependency, not optional** | Python 3.10 in our CI matrix requires `typing_extensions.Unpack`; `typing.Unpack` only ships from 3.11. `get_origin(Unpack[X])` behavior differs across versions; `typing_extensions.get_origin` normalizes. Leaving it optional means 3.10 CI can pass locally and fail on a clean install. | `python/pyproject.toml` `[project.dependencies]` in PR 1 |
 | **`inspect.unwrap()` is applied at the operation-walking boundary, not inside the new helper** | Decorated methods (`@classmethod` etc.) must be unwrapped once at the entry point where signature inspection begins (~`extractor.py:270`), not threaded through every downstream function. Defensive unwrapping at the boundary, not at every call site. | PR 1 implementation; noted in design-notes.md update |
 | **MRO walk is not coded manually** | PEP 589 metaclass aggregates `__required_keys__` / `__optional_keys__` across inheritance at class creation time. Iterating those frozensets is the source-of-truth path. MRO walk is only a fallback for name→annotation lookup. Inheritance **test** still required — silent regression is the failure vector. | PR 1 implementation + test |
@@ -72,11 +72,11 @@ Specialists: SoftwareDeveloper, QaTester, SystemArchitect. Each round forced exp
 
 **1a. Diagnostic-code reservation** (do first, before any other code in PR 1)
 
-Read `python/src/cli_builder_adapter/extractor.py:49-96` to confirm `CB600`/`CB601`/`CB603`/`CB605` are taken and `CB604`/`CB606`/`CB607` are free. Add to the diagnostic-code table:
+Confirmed taken (across `extractor.py` + `stub_parser.py:73`): `CB600`, `CB601`, `CB602`, `CB603`, `CB604`, `CB605`. Free triplet to claim: `CB606`, `CB607`, `CB608`. Add to the diagnostic-code table:
 
 - `CB606` — `D-UnpackResolved` — INFO — Successfully resolved `Unpack[TypedDict]` for a method's `**kwargs`.
 - `CB607` — `D-UnpackUnresolved` — WARNING — `Unpack[ForwardRef(X)]` could not be resolved; falling back to zero-param skip.
-- `CB604` — `D-UnpackFieldUnresolved` — WARNING — A TypedDict field's annotation couldn't be resolved; emitted as `TypeKind.Other`. *(Reserved here; emission lands in PR 2.)*
+- `CB608` — `D-UnpackFieldUnresolved` — WARNING — A TypedDict field's annotation couldn't be resolved; emitted as `TypeKind.Other`. *(Reserved here; emission lands in PR 2.)*
 
 If any of those slots is already used in the file, pick the next-free `CB6xx` triplet and document in the design-notes update.
 
@@ -201,7 +201,7 @@ Re-run `scripts/manual-test-python-sdk.sh` (no API key needed for this check). E
 - 6 new tests green
 - 109 existing pytest tests green
 - `make ci` green
-- Diagnostic codes `CB604`/`CB606`/`CB607` reserved in design-notes.md (added in this PR, even though `CB604` is only emitted in PR 2)
+- Diagnostic codes `CB608`/`CB606`/`CB607` reserved in design-notes.md (added in this PR, even though `CB608` is only emitted in PR 2)
 - `typing_extensions` declared as hard dep in `python/pyproject.toml`
 - PR description includes a copy of the local `stripe-cli customer list --help` output proving at least one flag emitted
 
@@ -213,7 +213,7 @@ Re-run `scripts/manual-test-python-sdk.sh` (no API key needed for this check). E
 
 **2a. Field-level ForwardRef resolution in `_walk_typed_dict`**
 
-Use `inspect.get_annotations(td_cls, eval_str=True, globals=sys.modules[td_cls.__module__].__dict__)` to evaluate string ForwardRefs against the TypedDict's defining module. Wrap each field's resolution in its own try/except — a single bad field annotation must not abort the entire TypedDict walk. On per-field failure, emit `CB604` (warning) and emit the parameter as `TypeKind.Other` (so the user can still pass it via `--json-input`).
+Use `inspect.get_annotations(td_cls, eval_str=True, globals=sys.modules[td_cls.__module__].__dict__)` to evaluate string ForwardRefs against the TypedDict's defining module. Wrap each field's resolution in its own try/except — a single bad field annotation must not abort the entire TypedDict walk. On per-field failure, emit `CB608` (warning) and emit the parameter as `TypeKind.Other` (so the user can still pass it via `--json-input`).
 
 **2b. Helper split (refactor only — same behavior)**
 
@@ -229,7 +229,7 @@ Pure refactor — gate on byte-for-byte test output (no diagnostic changes, no n
 
 - `test_typed_dict_field_forwardref_resolves_to_str` — `NotRequired[ForwardRef('str')]` → `TypeKind.String`, `required=False`.
 - `test_typed_dict_field_union_with_none_renders_optional` — `NotRequired[str | None]` (the exact Stripe shape) → optional string, not `TypeKind.Other`.
-- `test_typed_dict_nested_typed_dict_falls_back_to_other_with_diagnostic` — `NotRequired[NestedAddressParams]` → `TypeKind.Other` + `CB604` diagnostic. Both assertions required.
+- `test_typed_dict_nested_typed_dict_falls_back_to_other_with_diagnostic` — `NotRequired[NestedAddressParams]` → `TypeKind.Other` + `CB608` diagnostic. Both assertions required.
 
 **2d. Developer-local Stripe sanity check** (NOT a CI gate)
 
@@ -297,7 +297,7 @@ Append to the diagnostic-code table:
 
 | Code | Severity | Source | Meaning |
 |---|---|---|---|
-| `CB604` | warning | python adapter | TypedDict field ForwardRef unresolvable; emitted as `TypeKind.Other` |
+| `CB608` | warning | python adapter | TypedDict field ForwardRef unresolvable; emitted as `TypeKind.Other` |
 | `CB606` | info | python adapter | `Unpack[TypedDict]` successfully resolved via TYPE_CHECKING walk |
 | `CB607` | warning | python adapter | `Unpack[ForwardRef(X)]` could not be resolved; param dropped |
 
@@ -352,7 +352,7 @@ Per `CONTRIBUTING.md`, "every piece of information should exist in exactly one p
 | `map_type` purity contract | `docs/design-notes.md` new subsection | PR 3 |
 | TYPE_CHECKING walk scope rules (top-level `ImportFrom` only, star-import diagnostic, lru_cache) | `docs/design-notes.md` new subsection | PR 3 |
 | TypedDict source-of-truth for required/optional | `docs/design-notes.md` new subsection | PR 3 |
-| Diagnostic codes `CB604`/`CB606`/`CB607` | `docs/design-notes.md` diagnostic-code table | PR 1 (`CB606`/`CB607` actively emit; `CB604` reserved); PR 2 (`CB604` actively emits) |
+| Diagnostic codes `CB608`/`CB606`/`CB607` | `docs/design-notes.md` diagnostic-code table | PR 1 (`CB606`/`CB607` actively emit; `CB608` reserved); PR 2 (`CB608` actively emits) |
 | `typing_extensions` as hard dep | `python/pyproject.toml` + mentioned in ADR-022 consequences | PR 1 |
 | v0.2.1 release notes | `CHANGELOG.md` | PR 3 |
 | Validated-SDKs honesty | `README.md`, `AGENTS.md`, `docs/FUTURE.md` | PR 3 |
@@ -366,7 +366,7 @@ Per `CONTRIBUTING.md`, "every piece of information should exist in exactly one p
 | File | Change | PR |
 |---|---|---|
 | `python/src/cli_builder_adapter/extractor.py` | Wire VAR_KEYWORD branch, add `_try_resolve_unpack_kwargs`, `_collect_type_checking_imports`, `_resolve_unpack_target`, `_walk_typed_dict`; apply `inspect.unwrap()` at `_extract_operations` boundary; pass `method` through `_extract_params` signature | PR 1 |
-| `python/src/cli_builder_adapter/models.py` (or wherever the diagnostic-code constants live) | Reserve `CB604`/`CB606`/`CB607` | PR 1 |
+| `python/src/cli_builder_adapter/models.py` (or wherever the diagnostic-code constants live) | Reserve `CB608`/`CB606`/`CB607` | PR 1 |
 | `python/pyproject.toml` | `typing_extensions >= 4.6` in `[project.dependencies]` | PR 1 |
 | `python/tests/test_extractor_unpack.py` | New, 6 tests | PR 1 |
 | `python/tests/test_sdk/unpack_sdk/` | New synthetic fixture | PR 1 |
@@ -404,7 +404,7 @@ STRIPE_API_KEY=sk_test_... scripts/manual-test-python-sdk.sh    # live Stripe pa
 |---|---|
 | AST-walk fragile on SDKs with non-standard `TYPE_CHECKING` shapes (re-exports, conditional nesting, star imports) | Scope strictly to top-level `ast.ImportFrom`. Anything else → `CB607` + zero-param fallback (existing behavior preserved). Test covers star-import fallback emission. |
 | TypedDict module import is slow on big SDKs | `functools.lru_cache` on `_collect_type_checking_imports` keyed by module source path. Stripe's 313 resources × ~5 ops resolve through ~41 unique TypeChecking blocks per resource — cached, sub-second total. |
-| `inspect.get_annotations(td, eval_str=True)` blows up on recursive TypedDicts | Per-field try/except in PR 2 walker. Single bad field → `CB604` + `TypeKind.Other`, rest of fields still resolved. |
+| `inspect.get_annotations(td, eval_str=True)` blows up on recursive TypedDicts | Per-field try/except in PR 2 walker. Single bad field → `CB608` + `TypeKind.Other`, rest of fields still resolved. |
 | Python 3.10 vs 3.11+ `Unpack` origin diverges | Hard dep on `typing_extensions >= 4.6`. Standardize on `typing_extensions.get_origin`. Parametrized cross-version test in CI matrix. |
 | Plain unannotated `**kwargs` regresses to zero params (silent breakage) | `test_plain_kwargs_without_unpack_still_skipped` covers it. `_try_resolve_unpack_kwargs` returns `None` for non-Unpack annotations → existing skip behavior preserved. |
 | Diagnostic-code collision with future C# adapter codes | All new codes in `CB6xx` (Python adapter namespace). C# adapter is `CB1xx` per design-notes.md. No cross-talk. |

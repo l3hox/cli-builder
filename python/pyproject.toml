@@ -9,6 +9,9 @@ description = "Python SDK adapter for cli-builder — extracts SdkMetadata from 
 requires-python = ">=3.10"
 license = {text = "EUPL-1.2"}
 authors = [{name = "Jakub Lehotsky"}]
+dependencies = [
+    "typing_extensions >= 4.6",
+]
 
 [project.scripts]
 cli-builder-adapter-python = "cli_builder_adapter.cli:main"
