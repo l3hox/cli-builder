@@ -2,6 +2,45 @@
 
 All notable changes to cli-builder.
 
+## v0.2.2 — 2026-05-14
+
+### Features
+
+- **Single-client SDK shape discovery** in the Python adapter ([ADR-023](docs/ADR.md#adr-023-single-client-sdk-shape-discovery-via-verb-noun-method-grouping)). When the multi-service path finds zero `*Service`/`*Client`/`*Api`-suffixed classes, the adapter now falls back to picking one entry class (heuristic + method-count threshold) and walks its verb-noun methods into CLI operations. Activated automatically for SDKs like PyGithub, Notion, Linear, Slack, Anthropic. Explicit override via the new `--entry-class <ClassName>` flag on `cli-builder inspect` / `cli-builder generate`. Pre-v0.2.2, PyGithub generated a CLI with zero resources; v0.2.2 generates **33 resources** with operations wired to real SDK calls.
+- **Naming policy isolated in `python/src/cli_builder_adapter/_naming.py`** — owns `VERB_WHITELIST` (8 verbs), `DESCRIPTIVE_NOUN_PREFIXES`, `MIN_ENTRY_CLASS_METHODS` (10), `parse_verb_noun()`, `skip_reason()`. Future sub-resource walkers import from this module without coupling to extractor.
+- **`SdkMetadata.discovery_mode` field** — string Literal[`"multi_service"`, `"single_client"`], default `"multi_service"`. Provides stable provenance to downstream consumers without requiring re-derivation from diagnostic codes. Round-trip compat for v0.2.0/v0.2.1 emissions via Serde `default`.
+- **`SdkMetadata.pypi_name` field** — resolves the PyPI distribution name when it differs from the Python import name. PyGithub installs as `PyGithub` but imports as `github`; pre-fix, the generated pyproject's dependency was `github` (a different unrelated package). Resolved via `importlib.metadata.packages_distributions()`. Applies generally to SDKs with name divergence (Pillow/PIL, beautifulsoup4/bs4, psycopg2-binary/psycopg2).
+- **Generator-side sub-resource note** — when `discovery_mode == "single_client"` and any operation has a non-primitive return type, the generated `cli.py` header includes a documentation note explaining that returned objects' own methods aren't surfaced as nested commands (sub-resource discovery deferred to a future step).
+- **New diagnostic codes (CB6xx Python adapter range)**:
+  - `CB609` WARNING — single-client entry-class resolution failed (zero/multiple candidates or invalid `--entry-class`).
+  - `CB610` WARNING — method skipped from single-client extraction. Reason string names which filter rule fired.
+  - `CB611` INFO — single-client discovery mode auto-engaged.
+
+### Bug fixes
+
+- **Auth detector** missed parameter names ending in common auth suffixes. Previously only exact matches against `{api_key, apikey, secret_key, secret, api_secret, token}` were recognized. Now also matches `*_token`, `*_key`, `*_secret` suffixes — catches PyGithub's `login_or_token`, OAuth-style `access_token`/`bearer_token`, plus future variants. Test in `test_auth_detector.py::test_pygithub_auth_detector_finds_login_or_token`.
+- **`_extract_single_client_resources` attached constructor params to only the first sorted resource**. All resources in single-client mode share the same entry-class ctor; the generator's `can_construct` gate fired `false` on all but the first resource, generating `"client construction not available"` stubs instead of real SDK calls. Now attached uniformly. Caught by PR 2 PyGithub validation; new regression gate in the manual-test script greps the generated `user.py` to detect the stub string.
+- **Rust `SdkMetadata` struct** was missing `discovery_mode` (PR 1 added it on the Python adapter + JSON schema but not on the Rust consumer side, where Serde silently dropped the field). Now mirrored on both sides with `#[serde(default)]` for round-trip compat.
+
+### Tooling
+
+- **`scripts/manual-test-python-sdk.sh`** gained `PYTHON_MODULE` and `ENTRY_CLASS` env vars to handle SDKs where PyPI install name ≠ Python import name (PyGithub case) and where auto-detection is ambiguous. Plus a new Phase 7c "GitHub regression gate" that proves PyGithub operations are wired to real SDK calls (not stubs) by grepping the generated `user.py`.
+
+### Dependencies
+
+- No new runtime dependencies. `typing_extensions >= 4.6` from v0.2.1 is unchanged.
+
+### Stats
+
+- Python adapter: 119 → 133 tests (+14: 13 new single-client extraction tests in PR 1 + 1 auth detector test in PR 2)
+- Total: 707 tests across all three languages (397 .NET + 177 Rust + 133 Python)
+- Stripe regression check: 9/9 phases pass (Step 17 functionality preserved unchanged)
+- PyGithub end-to-end (with `GITHUB_TOKEN`): 10/10 phases pass including a live `api.github.com/users/octocat` call
+
+### Known limitation (deferred to a future step)
+
+- **`Opt[T]` sentinel-Union type aliases** (e.g., PyGithub's `Union[T, _NotSetType]`) aren't recognized as Optional by the adapter's type mapper. Result: PyGithub operations work end-to-end (auth + SDK call + result) but per-parameter flags (like `--login`) aren't emitted — parameters route through `--json-input`. See README "Known Limitations" for the documented workaround.
+
 ## v0.2.1 — 2026-05-13
 
 ### Features

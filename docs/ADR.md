@@ -1109,3 +1109,137 @@ Real-world impact: against `stripe-python 15.x`, 313 of 922 operations (34%) ext
 Synthetic fixture: `python/tests/test_sdk/unpack_sdk/` — service classes with `**kwargs: Unpack[X]` where X lives under `params/` and is imported only under `TYPE_CHECKING`. 10 tests in `python/tests/test_extractor_unpack.py` cover total=False, mixed Required/NotRequired, inheritance, unresolvable ForwardRef diagnostic emission, plain-kwargs backward-compat, field-level ForwardRef resolution, union-with-None nullability, nested-TypedDict fallback, and cross-version `typing.Unpack` vs `typing_extensions.Unpack` origin normalization.
 
 End-to-end: `scripts/manual-test-python-sdk.sh` against `stripe-python 15.x` exercises the full pipeline (build → inspect → generate → pip install → `--help` exit-zero). Live API call (Phase 8) requires `STRIPE_API_KEY=sk_test_...` and is a developer pre-merge gate, never a CI requirement.
+
+---
+
+## ADR-023: Single-client SDK shape discovery via verb-noun method grouping
+
+**Date:** 2026-05-14
+**Status:** Accepted and implemented (Step 18)
+
+### Context
+
+Step 17 (ADR-022) made the Python adapter usable against PEP 692 SDKs like Stripe. Probing PyGithub to validate Step 17 surfaced that cli-builder extracted **zero resources** from PyGithub — a much bigger gap than the original Step 17 bug. Root cause: the adapter's `_discover_services` function only recognizes classes whose names match `*Service`, `*Client`, or `*Api` suffixes (a .NET / legacy-Stripe convention). PyGithub's public surface is a single `Github` class with 40 verb-noun methods (`get_repo`, `search_repositories`, `get_user`, …) plus exception types and value objects — no suffix-matched candidates.
+
+This isn't a PyGithub-specific quirk. The **single-client model** — one main entry class with verb-noun methods, often with sub-resource methods on returned objects — is the dominant shape for modern Python SDKs:
+
+| SDK | Shape | Pre-Step-18 discovery |
+|---|---|---|
+| `PyGithub` | `Github()` with 40 verb-noun methods | 0 resources |
+| `notion-client` | `Client()` with sub-attributes (`.pages`, `.databases`) | 0 resources |
+| `slack_sdk.WebClient` | `WebClient()` with verb-noun methods | 0 resources |
+| `anthropic` | `Anthropic()` → `.messages.create(...)` (sub-attribute) | 0 resources |
+| `openai` (modern) | `OpenAI()` → `.chat.completions.create(...)` | 0 resources |
+
+The .NET-shaped multi-service convention (`stripe` legacy, OpenAI .NET, etc.) is increasingly the *exception* in modern Python SDK design, not the rule. Cli-builder's adapter needs to support both shapes to be a generally-useful tool.
+
+### Decision
+
+The Python adapter learns a **second discovery mode**, activated as a fallback when the existing multi-service path finds zero candidates, or explicitly via a new `--entry-class <Name>` flag.
+
+**Auto-detection (multi-service first, then single-client):**
+1. Try multi-service discovery (existing behavior). If it finds ≥ 1 service class, use that path. No change to existing Stripe / `*Service`-suffix SDKs.
+2. If multi-service finds zero candidates, fall back to single-client mode.
+3. Single-client mode picks an entry class via heuristic — a candidate class whose name matches `<Package>` (case-equivalent), ends in `Client` / `Api`, or starts with the package-capitalized name without a service suffix — AND has at least 10 public methods.
+4. If exactly one candidate matches, use it. If zero match, return empty (SDK unsupported). If multiple match, emit `CB609` warning + return empty (user must disambiguate via `--entry-class`).
+
+**Explicit override (`--entry-class <ClassName>`):**
+- Forces single-client mode. Multi-service path is skipped entirely.
+- Same threshold check applies (the named class must have ≥ 10 public methods). Failure → `CB609`.
+
+**Method-walking in single-client mode:**
+
+For the selected entry class, walk public methods. Each method must pass four filters or it's skipped with a `CB610` warning naming which rule fired:
+
+1. Method name contains `_` (so `verb_noun` is parseable). Skips `close`, `dump`, `withLazy`.
+2. Leading segment before `_` is in the verb whitelist: `get`, `list`, `create`, `update`, `delete`, `search`, `find`, `retrieve`. Skips `render_markdown`.
+3. Noun (everything after first `_`) does not start with a descriptive prefix: `from_`, `to_`, `with_`, `for_`. Skips `create_from_raw_data`.
+4. No parameter has a `type[T]` annotation (factory method, not user operation). Skips `register_class(klass: type, ...)`.
+
+Methods that pass all four filters are grouped by noun → resource name (lowercase, kebab-case for multi-word: `pull_request` → `pull-request`). Each method becomes an `Operation` with `verb` as the operation name. Singular/plural are **NOT** normalized (`get_repo` and `list_repos` produce two distinct resources, `repo` and `repos`). Verbs are **NOT** canonicalized (`retrieve_user` stays `retrieve` on the `user` resource, separate from `get_user`).
+
+**Naming policy lives in `python/src/cli_builder_adapter/_naming.py`:**
+
+A new dedicated module owns `VERB_WHITELIST` (frozenset), `DESCRIPTIVE_NOUN_PREFIXES` (tuple), `MIN_ENTRY_CLASS_METHODS` (int = 10), `parse_verb_noun()` (rule 1-3 encoder), and `skip_reason()` (human-readable CB610 messages). This separates policy from mechanics — `_utils.py` (existing) houses string-conversion utilities (`SERVICE_SUFFIXES`, `class_to_noun`, `pascal_to_kebab`); `_naming.py` houses semantic classification. Step 19+ sub-resource walkers will import from `_naming` cleanly.
+
+**Provenance via `SdkMetadata.discovery_mode`:**
+
+A new field on `SdkMetadata` records which discovery path produced the metadata: `"multi_service"` (default) or `"single_client"`. Downstream consumers (orchestrator, generator, test harness, future language server) can branch on this without re-deriving from diagnostic codes. The JSON schema is regenerated to include `discoveryMode`; the field defaults to `"multi_service"` for round-trip compat with pre-Step-18 emissions.
+
+**PyPI distribution name via `SdkMetadata.pypi_name`:**
+
+PyGithub installs as `PyGithub` (PyPI) but imports as `github` (Python). Pre-Step-18, the generator used the import name as both. The generated pyproject.toml then listed `"github"` as a dependency — a different abandoned PyPI package — and `pip install` chained into building `aiohttp` from source and failing. The adapter now resolves the distribution name via `importlib.metadata.packages_distributions()` and emits it as the new `SdkMetadata.pypi_name` field. The generator uses it for the pyproject dependency. None when distribution name equals import name (Stripe) — no override needed.
+
+**Diagnostic codes (CB6xx Python adapter range):**
+
+- `CB609` (WARNING) — single-client entry-class resolution failed (auto-detect found zero or multiple candidates, or explicit `--entry-class` named a missing / under-threshold class).
+- `CB610` (WARNING) — method skipped from single-client extraction. Severity matches CB607/CB608 (Step 17) precedent: silent surface reduction is the bug class to guard against. Reason string identifies which rule fired.
+- `CB611` (INFO) — single-client discovery mode auto-engaged. Observation, not discard signal.
+
+**Sub-resource discovery deferred:**
+
+PyGithub's `Github.get_repo("owner/name")` returns a `Repository` with its own methods (`get_issues`, `create_pull_request`, etc.). Recursively walking returned types into nested CLI commands is an architectural change — implications for CLI nesting model, parent-context flag inheritance, identity-vs-reference semantics. Out of scope for Step 18. The generated CLI emits a comment in `cli.py`'s header noting "sub-resources detected but not expanded" when applicable; `README.md` "Known Limitations" cross-references `--entry-class` and `--json-input` as the available escape hatches.
+
+### Rationale
+
+**Multi-service first / single-client fallback (vs explicit-only mode flag).** Auto-fallback is backwards-compatible by construction — existing Stripe / `*Service`-suffix SDKs see no change in discovery behavior. Explicit `--entry-class` provides the override for ambiguous cases (PyGithub has `Github`, `GithubIntegration`, `GithubRetry` all matching the heuristic; `CB609` fires until the user disambiguates).
+
+**`_naming.py` as a dedicated module (vs `_utils.py`).** The verb whitelist and descriptive-noun filter are *policy* decisions — what makes a method CLI-worthy. `_utils.py` holds *mechanics* — how to convert a string from one format to another. Mixing them blurs both modules' identities. Step 19+ sub-resource walkers will need the same verb whitelist; importing from a focused module is cleaner than from a grab-bag.
+
+**Verb whitelist (vs denylist of known utility names).** Silent surface reduction is the failure class to guard against — every method that gets dropped should be visible. A whitelist makes the surface explicit: any verb not in `{get, list, create, update, delete, search, find, retrieve}` is skipped with a `CB610` warning naming the verb. Adding `fetch`, `read`, etc. to the whitelist is a one-line follow-up driven by real-SDK feedback, not speculative breadth.
+
+**Singular/plural NOT normalized; verbs NOT canonicalized.** For a pre-1.0 tool, faithful reflection of the SDK author's naming is correct. Aggressive normalization risks collapsing distinct operations (`get_repo` for a single repo vs `list_repos` for a collection) into one resource. The user reading `github-cli --help` sees what the SDK actually exposes; the cost is two resources `repo` and `repos` instead of one canonical `repo`.
+
+**`discovery_mode` field on `SdkMetadata` (vs deriving from diagnostics).** Diagnostics are transient stderr output; the metadata JSON is the durable contract. Downstream consumers — the orchestrator, the generator, future tooling — can branch on `discovery_mode` without re-parsing diagnostic codes. The field costs one line of dataclass + one schema property + zero behavior change for existing consumers (default `"multi_service"` round-trips unchanged).
+
+**`pypi_name` field (vs config-driven override).** Resolution via `importlib.metadata.packages_distributions()` is stdlib, accurate, and automatic — no user-supplied config needed. Falls back to `None` when not pip-installed (synthetic fixtures), in which case the generator uses the import name as before. This is one of multiple cases where Python module names diverge from PyPI distribution names (Pillow/PIL, beautifulsoup4/bs4, psycopg2-binary/psycopg2); the fix is general, not PyGithub-specific.
+
+**CB610 severity WARNING (vs INFO).** Symmetric with CB607/CB608 from Step 17 — those are both Warnings on parameter loss. CB610 is the method-loss equivalent. Information-level would let skipped methods slip past warning-level diagnostic scans, recreating the silent-fallback class of bug that motivated Step 17.
+
+### Alternatives considered
+
+| Alternative | Why rejected |
+|---|---|
+| Mandatory `--entry-class` (no auto-detection) | Adds friction for the common case where heuristic picks correctly. Users who want explicit control can still pass the flag. |
+| Verb denylist (skip known utility names like `close`, `dump`) | Closed for extension — every new SDK with a custom utility verb requires updating the denylist; whitelist puts the friction in the right place (whitelist expansion is a deliberate signal). |
+| Reuse `_extract_operations` for single-client | The existing function calls `_method_to_verb` which flattens verb+noun into one op name (`get_repo` → `get-repo`). Single-client mode needs the opposite — split into verb=op, noun=resource. Sharing would couple two paths that genuinely differ. |
+| Recursive sub-resource walking now | Architectural change with implications for CLI nesting model, parent-context flag propagation, navigation semantics on returned objects. Deferred to a future step where the design space can be explored on its own merits. |
+| Singularize aggressively (`gists` → `gist`) | Conflates distinct SDK methods (`get_gist` for one, `get_gists` for many) into a single resource. Faithful reflection > opinionated normalization. |
+| Verb canonicalization (`retrieve` → `get`) | Same as above. The SDK author chose `retrieve`; the CLI should reflect it. User feedback drives canonicalization, not speculation. |
+| `pypi_name` via user-supplied config | `importlib.metadata` is more accurate than a guess and works for any pip-installed package automatically. Config falls back from this naturally if the user needs to override (`--sdk-pypi-name` could be added later). |
+| `discovery_mode` deferred to a follow-up | Field is one line of dataclass + one schema property; adding it later means a JSON schema version bump and a window where consumers can't reliably branch on the discovery mode. Cheapest to land alongside the feature. |
+
+### Consequences
+
+**Positive:**
+- PyGithub now extracts **33 resources** with operations wired to real SDK calls (was: 0 resources, pre-Step-18). End-to-end validated: `github-cli --api-key $TOKEN --json user get --json-input '{"login": "octocat"}'` hits api.github.com and returns octocat's profile.
+- Generalizes to most modern Python SDKs following the single-client model (Notion, Linear, Slack, Anthropic, OpenAI's nested style). Each may require an explicit `--entry-class` for disambiguation, but all should produce usable CLIs.
+- Auto-fallback is backwards-compatible — existing Stripe / multi-service SDK paths see no behavior change. Validated: Stripe's full 9-phase manual test still green; 119 pre-Step-18 Python tests still pass.
+- `discovery_mode` provenance gives downstream tooling a stable signal — the generator could (in a future step) emit different CLI structures for the two modes; today it surfaces in a generated `cli.py` header comment.
+
+**Negative:**
+- Generated CLI surface for PyGithub-style SDKs is wider than for `*Service`-suffix SDKs. PyGithub's `Github` class extracts to ~10 resources × ~3 ops each = ~30 commands, plus many resources where the only flag is `--json-input` (see known limitation below).
+- Heuristic has edge cases: PyGithub matches `Github` (`<pkg>`-capitalized), `GithubIntegration` (starts with `Github`), `GithubRetry` (starts with `Github`) — three candidates. CB609 fires and the user must pass `--entry-class Github`. Acceptable cost; the warning message names the candidates explicitly.
+- The auto-fallback model means consumers reading `SdkMetadata` can't always tell which discovery path was used by looking at resource names alone. The `discovery_mode` field closes this gap.
+
+**Known limitation (deferred to a future step):**
+- Sentinel-Union type aliases like PyGithub's `Opt[T]` = `Union[T, _NotSetType]` are not recognized as Optional by the adapter's type mapper. Result: PyGithub operations work end-to-end, but per-parameter flags (`--login`, `--full-name-or-id`) aren't emitted — all params route through `--json-input`. Users must pass nested JSON instead of flat flags. Candidate for Step 19+ alongside or before sub-resource discovery.
+
+**Mitigated by:**
+- `CB611` diagnostic on every auto-engaged single-client extraction makes the discovery decision auditable in CI logs.
+- `CB610` diagnostic on every skipped method with named reason — the verb-whitelist gap (e.g., a future SDK that uses `fetch_X`) surfaces visibly, not silently.
+- README "Known Limitations" section names the `Opt[X]` gap with PyGithub as the concrete example and `--json-input` as the documented workaround.
+- **3rd-flag-triggers-config watch-line**: `--entry-class` is the second adapter-config flag (the first was implicit via existing `--package`/`--module`). If a third adapter-config flag is added in a future step, that should trigger implementation of `cli-builder.toml` per ADR-014. Recorded here so the trigger survives this plan's archival.
+
+### Verification
+
+**PR 1 (`2c3f2a6`)** — Detection skeleton + `_naming.py` module + `SdkMetadata.discovery_mode` field + 13 synthetic-fixture tests in `python/tests/test_extractor_single_client.py`. Tests cover: all 8 whitelisted verbs, multi-word noun (`get_pull_request`), classmethod (`find_user`), async def (`list_organizations`), each CB610 skip reason (no underscore, verb not in whitelist, descriptive noun, `type[T]` param), each CB609 path (auto-detect ambiguous, explicit missing, explicit under-threshold), explicit override forcing single-client even with multi-service candidates present, and the multi-service path unchanged.
+
+**PR 2 (`b690703`)** — PyGithub live validation + script `PYTHON_MODULE`/`ENTRY_CLASS` env vars + auth detector synthetic-ctor test + `pypi_name` field + ctor-params propagation fix. The script's Phase 7c regression gate proves PyGithub operations are wired to real SDK calls (NOT the `"client construction not available"` stub) by grepping the generated `user.py` file directly — load-bearing if the `can_construct` gate ever misfires. Live API call (Phase 8) requires `GITHUB_TOKEN`, hits `api.github.com/users/octocat`, returns real profile data.
+
+**Tests:**
+- Python: 132 → 133 (+1 auth detector PyGithub synthetic ctor test in PR 2)
+- Rust: 177 → 177 (test sites updated for new SdkMetadata fields, count unchanged)
+- PyGithub manual run: 10/10 phases pass including live API
+- Stripe manual run: 9/9 phases pass (Step 17 functionality preserved)
+- 15-job CI matrix green on PR 1 (`25824994199`) and PR 2 (`25863661625`).

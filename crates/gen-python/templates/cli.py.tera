@@ -1,4 +1,18 @@
+{%- if has_unexpanded_sub_resources -%}
+"""CLI entry point for {{ cli_name }}.
+
+NOTE: This CLI was generated from a single-client SDK. Some operations
+return complex objects (e.g. Repository, Issue, User) whose own methods
+are not surfaced as nested CLI commands — that's a documented limitation
+of cli-builder v0.2.x (sub-resource discovery deferred; see ADR-023).
+Workaround: use the `--json` flag to inspect returned objects, then
+operate on them via the SDK directly. For methods that take complex
+input shapes, pass `--json-input '{"field": "value"}'` instead of flat
+flags.
+"""
+{%- else -%}
 """CLI entry point for {{ cli_name }}."""
+{%- endif %}
 import click
 {% for resource in resources %}
 from .commands.{{ resource.name | replace(from="-", to="_") }} import {{ resource.name | replace(from="-", to="_") }}

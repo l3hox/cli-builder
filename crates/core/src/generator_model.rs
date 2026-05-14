@@ -48,6 +48,17 @@ pub struct GeneratorModel {
     pub resources: Vec<ResourceModel>,
     pub auth: Option<AuthModel>,
     pub static_auth_setup: Option<String>,
+    /// Which adapter discovery path produced the source metadata
+    /// ("multi_service" or "single_client"). See ADR-023. Template-visible so
+    /// generators can branch on it (e.g. emit a "sub-resources detected" note
+    /// in the cli.py header for single_client mode).
+    pub discovery_mode: String,
+    /// True when discovery_mode == "single_client" AND at least one operation
+    /// has a non-primitive return type (the "sub-resources detected but not
+    /// expanded" condition — see ADR-023 consequences). Computed in
+    /// ModelMapper::build. Templates use this to surface a documentation
+    /// comment so end users know about the deferred capability.
+    pub has_unexpanded_sub_resources: bool,
 }
 
 #[derive(Debug, Clone, Serialize)]

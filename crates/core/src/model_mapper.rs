@@ -86,6 +86,19 @@ pub fn build(
         .as_ref()
         .and_then(|p| sanitize_string(Some(p)))
         .unwrap_or_else(|| sdk_name.clone());
+    // "Sub-resources detected but not expanded" condition (ADR-023): single-
+    // client mode + any non-primitive return type means returned objects have
+    // their own methods that the generator does NOT walk recursively. Surface
+    // in the cli.py header as a documentation note so users know about the
+    // deferred capability and can use --json-input as the escape hatch.
+    let has_unexpanded_sub_resources = metadata.discovery_mode == "single_client"
+        && metadata.resources.iter().any(|r| {
+            r.operations.iter().any(|op| {
+                let kind = format!("{:?}", op.return_type.kind);
+                // Treat any non-primitive return type as a "sub-resource" hint.
+                !matches!(kind.as_str(), "Primitive" | "Array" | "Dictionary" | "Generic" | "Enum")
+            })
+        });
     let model = GeneratorModel {
         // Use ASCII hyphen instead of em dash — keeps the generated CLI's
         // --help output readable on Windows consoles that default to cp1252,
@@ -100,6 +113,8 @@ pub fn build(
         resources,
         auth,
         static_auth_setup: static_auth_expr.and_then(|e| sanitize_string(Some(&e))),
+        discovery_mode: metadata.discovery_mode.clone(),
+        has_unexpanded_sub_resources,
     };
 
     (model, diagnostics)

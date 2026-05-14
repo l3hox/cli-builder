@@ -2,7 +2,7 @@
 
 Production roadmap for cli-builder — generate agent-ready CLIs from SDK packages in any language.
 
-**Current version: v0.2.1** — Single Rust binary, Python + C# generators, .NET + Python adapters. Python adapter resolves PEP 692 `Unpack[TypedDict]` kwargs (ADR-022).
+**Current version: v0.2.2** — Single Rust binary, Python + C# generators, .NET + Python adapters. Python adapter resolves PEP 692 `Unpack[TypedDict]` kwargs (ADR-022) and single-client SDK shapes like PyGithub (ADR-023).
 
 ---
 
@@ -10,10 +10,12 @@ Production roadmap for cli-builder — generate agent-ready CLIs from SDK packag
 
 ### Broaden + deepen SDK coverage
 Focus on the tool itself before public release. Multiple sub-tracks:
+- **Sub-resource discovery** for single-client SDKs — `Github.get_repo()` returns `Repository` with its own methods (`get_issues`, …); nest those into `github-cli repo --full-name owner/name issue list`. Architectural; needs CLI nesting model decisions.
+- **Sentinel-Union type aliases** — recognize `Opt[T]` = `Union[T, _NotSetType]` (PyGithub) as Optional so per-parameter flags emit instead of routing through `--json-input`.
 - **Stripe Python service pattern** — `StripeClient.v1.customers.list(params: Optional[X])` surface (modern Stripe API). Different from the legacy `**kwargs: Unpack[X]` surface that Step 17 covered.
-- **OpenAI Python E2E** — `NotGiven`/`Omit` sentinel defaults need handling; bring OpenAI to the same end-to-end validation level as Stripe.
+- **OpenAI Python E2E** — `NotGiven`/`Omit` sentinel defaults need handling; bring OpenAI to the same end-to-end validation level as Stripe + PyGithub.
+- **Notion live validation** — deferred during Step 18 PR 2 (2026-05-13). Worth picking up to prove the single-client heuristic against a second real SDK with different naming conventions.
 - **Stripe .NET DI/factory support** — 34 services without parameterless constructors currently fall back to echo. Needs `IStripeClient` injection.
-- **Add 1–2 new SDKs** for broader validation surface (Anthropic Python is the natural candidate for the agent-tooling theme).
 
 ### Rough edges
 - Generated flag names mixing hyphens and underscores (`--api_key-value` reads oddly — should be uniform `--api-key-value`)
@@ -58,6 +60,9 @@ Kotlin (clikt), Go (cobra), TypeScript (commander) — each ~500 lines of Tera t
 
 ## Completed
 
+### v0.2.2 — Single-client SDK discovery (Step 18)
+- **Step 18**: Python adapter learns to discover single-client SDKs (one entry class with verb_noun methods — PyGithub, Notion, Linear, Slack, Anthropic). Strategy: multi-service first → single-client fallback → explicit `--entry-class` override. Heuristic = name pattern (`<Package>`, `*Client`, `*Api`, or `<Package>*` without service suffix) + method-count threshold (10). Method filtering: verb whitelist (`get`/`list`/`create`/`update`/`delete`/`search`/`find`/`retrieve`), descriptive-noun skip, `type[T]` first-arg skip. New `_naming.py` module owns naming policy. New SdkMetadata fields: `discovery_mode` (provenance) and `pypi_name` (PyPI install name when ≠ Python import name). Council-reviewed plan in [docs/internal/step-18-single-client-discovery.md](internal/step-18-single-client-discovery.md), formalized as [ADR-023](ADR.md#adr-023-single-client-sdk-shape-discovery-via-verb-noun-method-grouping). Three PRs (detection skeleton + 13 synthetic tests; PyGithub live validation + 4 bug fixes the validation surfaced; docs + ADR + CHANGELOG).
+
 ### v0.2.1 — PEP 692 Unpack[TypedDict] resolution (Step 17)
 - **Step 17**: Python adapter learns to resolve `**kwargs: Unpack[TypedDict]` (PEP 692). Strategy: AST-walk `if TYPE_CHECKING:` blocks, `importlib.import_module` the target, walk `__required_keys__` / `__optional_keys__` / `__annotations__`. Per-field ForwardRef evaluation against the TypedDict's defining-module namespace. Nested TypedDicts route through `--json-input` (no recursive flattening). Stripe `customer list --help` exposes 11 typed flags + `--json-input`; `customer create --help` exposes 17. Pre-v0.2.1: zero flags on every Stripe CRUD method. Council-reviewed plan in [docs/internal/step-17-pep692-unpack.md](internal/step-17-pep692-unpack.md), formalized as [ADR-022](ADR.md#adr-022-pep-692-unpacktypeddict-resolution-via-ast-walk-of-type_checking-imports). Three PRs (detection skeleton + synthetic fixture; field-level resolution + helper refactor; docs + ADR + validation).
 
@@ -83,6 +88,7 @@ Kotlin (clikt), Go (cobra), TypeScript (commander) — each ~500 lines of Tera t
 - Stripe.net 51.0.0: 196 resources, compile validated
 - TestSdk (Python): 3 resources
 - stripe-python 15.x: 105 resources, PEP 692 `Unpack[TypedDict]` resolved (v0.2.1, ADR-022); `customer list` / `customer create` validated end-to-end
+- PyGithub 2.x: 33 resources, single-client discovery (v0.2.2, ADR-023); live `api.github.com/users/octocat` call validated end-to-end
 
 ### Test totals
-397 .NET + 177 Rust + 119 Python = **693 tests**, 0 failures. 15-job CI matrix green on every push.
+397 .NET + 177 Rust + 133 Python = **707 tests**, 0 failures. 15-job CI matrix green on every push.

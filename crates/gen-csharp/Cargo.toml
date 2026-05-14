@@ -1,6 +1,6 @@
 [package]
 name = "cli-builder-gen-csharp"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 description = "C# CLI generator for cli-builder — System.CommandLine output from SdkMetadata JSON"
 license = "EUPL-1.2"

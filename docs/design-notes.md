@@ -211,7 +211,7 @@ Expanding the ranges from ADR-015 with specific codes:
 - `CB502` — Enrichment cache miss (re-enriching)
 - `CB503` — Enriched text failed sanitization
 
-**CB6xx — Python adapter (extraction + PEP 692 resolution):**
+**CB6xx — Python adapter (extraction + PEP 692 resolution + single-client discovery):**
 - `CB600` — Error: cannot import package
 - `CB601` — Info: package imported at runtime — side effects may occur
 - `CB602` — Warning: cannot inspect signature, skipping method
@@ -221,6 +221,9 @@ Expanding the ranges from ADR-015 with specific codes:
 - `CB606` — Info: `Unpack[TypedDict]` successfully resolved via `TYPE_CHECKING` AST walk (ADR-022)
 - `CB607` — Warning: `Unpack[ForwardRef(X)]` could not be resolved; param dropped (ADR-022)
 - `CB608` — Warning: TypedDict field's ForwardRef could not be resolved; emitted as `TypeKind.Other` (route via `--json-input`)
+- `CB609` — Warning: single-client entry-class resolution failed (auto-detect found zero or multiple candidates; explicit `--entry-class` named a missing or under-threshold class) (ADR-023)
+- `CB610` — Warning: method skipped from single-client extraction. Reason string names which filter rule fired (no underscore / verb not in whitelist / descriptive noun prefix / `type[T]` first param) (ADR-023)
+- `CB611` — Info: single-client discovery mode auto-engaged; observation, not discard signal (ADR-023)
 
 ---
 
@@ -420,6 +423,34 @@ The Python adapter resolves `**kwargs: Unpack[TypedDict]` annotations (PEP 692) 
 **Nested TypedDicts route through `--json-input`, not recursion.** When a field's resolved annotation is itself a TypedDict (`hasattr(__required_keys__)`), the field is emitted as `TypeKind.Other` + `CB608` regardless of resolution success. This is intentional — recursive flattening would produce combinatorial CLI flag explosions on multi-level nested params (Stripe's `customer create` has `address`, `payment_method_data`, `shipping`, each with their own nested shapes). Mirrors C# ADR-007 flattening policy.
 
 **`typing_extensions` is a hard runtime dependency.** Python 3.10 ships only `typing_extensions.Unpack`; 3.11+ adds `typing.Unpack`. The adapter standardizes on `typing_extensions.Unpack` / `get_origin` / `get_args` for cross-version normalization. Declared in `python/pyproject.toml` under `[project.dependencies]`, not `[project.optional-dependencies]` — leaving it optional would let 3.10 CI pass locally and fail on clean install.
+
+### Python adapter — single-client SDK shape discovery (ADR-023)
+
+When the multi-service path finds zero `*Service`/`*Client`/`*Api`-suffixed classes, the adapter falls back to single-client discovery: pick one entry class whose verb-noun methods become CLI operations grouped by noun → resource. Activated automatically for SDKs like PyGithub, Notion, Linear, Slack, Anthropic; can be forced explicitly via `--entry-class <ClassName>`. Six conventions are load-bearing:
+
+**Naming policy in `_naming.py`, not `extractor.py`.** Verb whitelist (`get`/`list`/`create`/`update`/`delete`/`search`/`find`/`retrieve`), descriptive-noun prefix filter (`from_`/`to_`/`with_`/`for_`), `MIN_ENTRY_CLASS_METHODS` threshold, `parse_verb_noun()` helper, and `skip_reason()` for CB610 messages live in a dedicated `python/src/cli_builder_adapter/_naming.py` module. The `_utils.py` module holds string-conversion mechanics (`class_to_noun`, `pascal_to_kebab`); `_naming.py` holds semantic classification. Step 19+ sub-resource walkers import from `_naming` cleanly. If you find yourself adding policy constants to `_utils.py`, that's the wrong module.
+
+**Entry-class heuristic = name pattern AND method count.** Either path alone is too loose. The heuristic accepts: `name == <package>.capitalize()` (PyGithub's `Github`), name in `{"Client", "Api"}`, name ends in `Client`/`Api`, or name starts with `<package>.capitalize()` without a service suffix (catches `GithubMain`, `NotionAdmin`). All matches must also have `>= MIN_ENTRY_CLASS_METHODS` (10) public methods. `@classmethod` and `async def` methods count toward the threshold — Slack-style SDKs use both heavily, and silently undercounting would misfire the auto-detection.
+
+**Method-skip rules emit `CB610` with reason — silent skips are forbidden.** Four filters, each names which rule fired in the diagnostic message:
+1. No underscore (`close`, `withLazy`)
+2. Verb not in whitelist (`render_markdown` → "verb 'render' not in whitelist")
+3. Noun starts with descriptive prefix (`create_from_raw_data` → "descriptive noun prefix")
+4. First non-`self` parameter has `type[T]` or `Type[T]` annotation (`register_class` → "type[T] (factory method)")
+
+Severity is WARNING (not INFO) — symmetric with CB607/CB608 on parameter loss. Silent surface reduction was the original Stripe / PyGithub bug class; CB610 makes every drop visible.
+
+**Singular/plural NOT normalized; verb NOT canonicalized.** `get_repo` and `list_repos` produce two resources: `repo` and `repos`. `retrieve_user` is a separate operation from `get_user` (both on resource `user`). The SDK author chose those names; the CLI reflects them faithfully. Aggressive normalization would conflate distinct operations and surprise users reading `--help` who expect the API surface they wrote.
+
+**`discovery_mode` field on `SdkMetadata` (provenance).** Records which discovery path produced the metadata (`"multi_service"` default, `"single_client"` when fallback or explicit). JSON schema property `discoveryMode`. Downstream consumers (generator, future tooling) branch on this without re-parsing diagnostic codes. The Python generator currently uses it to emit a header comment in `cli.py` noting "sub-resources detected but not expanded" when `discovery_mode == "single_client"` AND any operation's return type is non-primitive — a documentation surface for the user that the full API isn't yet flattened into the CLI.
+
+**`pypi_name` field on `SdkMetadata` (distribution-vs-import name).** PyGithub installs as `PyGithub` (PyPI) but imports as `github` (Python). Pre-Step-18 the generated `pyproject.toml` listed the import name as the dependency, hitting an unrelated typo-squatted PyPI package. The adapter now resolves the PyPI distribution name via `importlib.metadata.packages_distributions()`. `None` when distribution name equals import name (Stripe) — no override needed. `ModelMapper::build` in Rust core uses `pypi_name` for `sdk_package_name` when present.
+
+**Constructor params attached to ALL resources in single-client mode.** All resources in single-client mode share the same entry-class constructor. The generator's `can_construct` gate (model_mapper.rs:281) checks per-resource ctor params; without ctor info on every resource, ops other than the first sorted resource generate `"client construction not available"` stubs. This was a real bug PR 2's PyGithub validation surfaced — the fix attaches `ctor_params` uniformly across resources from a single client class.
+
+**Sub-resource discovery deferred to Step 19+.** PyGithub's `Github.get_repo()` returns a `Repository` with its own methods (`get_issues`, etc.). Recursively walking returned types into nested CLI commands is an architectural change with implications for CLI nesting model + parent-context flag propagation. The generated CLI surfaces a header comment when sub-resources are detected but not expanded — `--json-input` is the documented escape hatch in the meantime.
+
+**Known limitation — `Opt[T]` sentinel-Union type aliases.** PyGithub defines `Opt[T] = Union[T, _NotSetType]` as its optional-parameter convention (analogous to `Optional[T]` but with a sentinel class instead of `None`). The adapter's type mapper doesn't recognize this pattern as Optional, so parameters annotated `Opt[X]` emit as `TypeKind.OTHER` and route through `--json-input`. PyGithub operations work end-to-end (auth + SDK call + result), but per-parameter flags aren't emitted on operations with `Opt[X]` params. Workaround: pass nested JSON via `--json-input`. Future fix: recognize 2-arg Union with one arg being a sentinel-named class (`_NotSet`, `NotSetType`, `Sentinel`, etc.) as Optional.
 
 ---
 

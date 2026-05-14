@@ -2,7 +2,7 @@
 
 Generate agent-ready CLIs from SDK packages — any language in, any language out.
 
-**v0.2.1** — Single Rust binary. Python + C# generators. .NET + Python adapters. PEP 692 `Unpack[TypedDict]` resolution. 693 tests.
+**v0.2.2** — Single Rust binary. Python + C# generators. .NET + Python adapters. PEP 692 `Unpack[TypedDict]` resolution. Single-client SDK shape discovery (PyGithub, Notion, Slack, Anthropic, …). 707 tests.
 
 ## Problem
 
@@ -73,6 +73,23 @@ OPENAI_APIKEY=sk-... ./scripts/demo-openai.sh        # OpenAI CLI
 | Stripe.net 51.0.0 | .NET | 196 | ~93% | Yes |
 | TestSdk (Python) | Python | 3 | 100% | Yes |
 | stripe-python 15.x | Python | 105 | PEP 692 `Unpack[TypedDict]` resolved (ADR-022) | `customer list --help` / `customer create --help` validated; nested params via `--json-input` |
+| PyGithub 2.x | Python | 33 | Single-client discovery (ADR-023) — `github-cli` with `--entry-class Github` | Live `api.github.com/users/octocat` call validated via `github-cli user get --json-input '{"login": "octocat"}'`; per-param flags route through `--json-input` (see Known Limitations) |
+
+## Known limitations
+
+cli-builder is pre-1.0 — the tool works for several real-world SDKs but has rough edges worth knowing about.
+
+**Sub-resource discovery deferred.** For SDKs using the single-client model (PyGithub, Notion, Linear, Slack, Anthropic), cli-builder walks the entry class's methods into top-level commands but does NOT recurse into returned objects. PyGithub's `Github.get_repo("owner/name")` returns a `Repository` with its own methods (`get_issues`, `create_pull_request`, …) — those are not yet surfaced as nested CLI commands like `github-cli repo --full-name owner/name issue list`. Workaround: use `--json` on the parent command to inspect the returned object, then call the SDK directly for sub-operations. Tracked in [ADR-023](docs/ADR.md#adr-023-single-client-sdk-shape-discovery-via-verb-noun-method-grouping) consequences.
+
+**Sentinel-Union type aliases unrecognized.** Some SDKs define `Opt[T] = Union[T, _NotSetType]` (PyGithub's pattern) as their optional-parameter convention — equivalent to `Optional[T]` but with a sentinel class instead of `None`. The Python adapter's type mapper doesn't yet recognize this shape as Optional, so parameters annotated `Opt[X]` emit as `TypeKind.Other` and route through `--json-input`. Result: generated CLIs work end-to-end (auth, SDK call, result), but per-parameter flags aren't emitted on operations that use this idiom. **Workaround:** pass nested JSON via `--json-input '{"login": "octocat"}'` instead of `--login octocat`.
+
+**Ambiguous entry-class auto-detection requires `--entry-class`.** When multiple classes match the single-client heuristic (e.g., PyGithub has `Github`, `GithubIntegration`, `GithubRetry` all matching), the adapter emits `CB609` warning and exits with zero resources. The user must disambiguate explicitly: `cli-builder generate --adapter python --package github --entry-class Github --output ...`.
+
+**Service-pattern (nested sub-clients) not supported.** Stripe's modern surface `StripeClient.v1.customers.list(params=...)` uses a nested service tree. Cli-builder currently discovers the legacy `stripe.Customer.list(**params)` surface (Step 17 / ADR-022) but not the modern one. OpenAI's `OpenAI().chat.completions.create(...)` is the same shape and is also not yet handled.
+
+**`NotGiven` / `Omit` sentinel defaults.** OpenAI Python uses sentinel objects as default values (`= NotGiven`). These don't cleanly serialize and aren't yet handled by the adapter's parameter extraction.
+
+**.NET ↔ Python type-name divergence.** The .NET adapter emits `string` / `int32` / `bool` for primitives while the Python adapter emits `str` / `int` / `bool`. The generators normalize internally but the raw `SdkMetadata` JSON is not language-neutral — see [ADR-011](docs/ADR.md#adr-011-cross-platform-support--windows-linux-macos) for context.
 
 ## Agent-readiness
 

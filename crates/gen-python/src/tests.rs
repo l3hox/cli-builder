@@ -322,6 +322,9 @@ fn adversarial_env_var_is_escaped_in_output() {
             parameter_name: "apiKey".into(),
         }),
         static_auth_setup: None,
+    
+        discovery_mode: "multi_service".to_string(),
+        has_unexpanded_sub_resources: false,
     };
 
     let dir = tempfile::tempdir().unwrap();
@@ -388,6 +391,9 @@ fn unwirable_operation_generates_echo_stub() {
         }],
         auth: None,
         static_auth_setup: None,
+    
+        discovery_mode: "multi_service".to_string(),
+        has_unexpanded_sub_resources: false,
     };
 
     let dir = tempfile::tempdir().unwrap();
@@ -970,6 +976,9 @@ mod template_rendering {
             }],
             auth: None,
             static_auth_setup: None,
+        
+            discovery_mode: "multi_service".to_string(),
+            has_unexpanded_sub_resources: false,
         };
 
         let dir = tempfile::tempdir().unwrap();
