@@ -356,6 +356,8 @@ fn build_converts_kebab_to_pascal_class_name() {
         resources: vec![make_resource("customer"), make_resource("payment-intent")],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert_eq!(model.resources[0].class_name, "Customer");
@@ -371,6 +373,8 @@ fn build_null_description_remains_none() {
         resources: vec![make_resource("test")],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(model.resources[0].description.is_none());
@@ -385,6 +389,8 @@ fn build_path_unsafe_resource_emits_diagnostic() {
         resources: vec![make_resource("../etc"), make_resource("foo/bar")],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, diags) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(diags.iter().any(|d| d.code == "CB204"));
@@ -401,6 +407,8 @@ fn build_keyword_resource_emits_diagnostic() {
         resources: vec![make_resource("class")],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (_, diags) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(diags.iter().any(|d| d.code == "CB004"));
@@ -425,6 +433,8 @@ fn build_maps_auth_patterns() {
             description: None,
         }],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     let auth = model.auth.unwrap();
@@ -440,6 +450,8 @@ fn build_no_auth_is_none() {
         resources: vec![],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(model.auth.is_none());
@@ -458,6 +470,8 @@ fn build_cli_name_from_options() {
         resources: vec![],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("openai-cli"), &profile);
     assert_eq!(model.cli_name, "openai-cli");
@@ -472,6 +486,8 @@ fn build_derived_cli_name() {
         resources: vec![],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(
         &metadata,
@@ -499,6 +515,8 @@ fn build_maps_operations() {
         }],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert_eq!(model.resources[0].operations.len(), 1);
@@ -531,6 +549,8 @@ fn constructor_string_auth() {
         }],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(model.resources[0].can_construct);
@@ -560,6 +580,8 @@ fn constructor_typed_auth() {
         }],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(model.resources[0].can_construct);
@@ -577,6 +599,8 @@ fn constructor_no_auth_cannot_construct() {
         resources: vec![make_resource("thing")],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(!model.resources[0].can_construct);
@@ -612,6 +636,8 @@ fn constructor_multi_arg_with_config_params() {
         }],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(model.resources[0].can_construct);
@@ -643,6 +669,8 @@ fn constructor_invalid_auth_type_emits_diagnostic() {
         }],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, diags) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     let auth = model.resources[0].constructor_auth.as_ref().unwrap();
@@ -669,6 +697,9 @@ fn static_auth_parameterless_ctor_can_construct() {
             type_module: "Stripe".into(),
             property_name: "ApiKey".into(),
         }),
+    
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(model.resources[0].can_construct);
@@ -688,6 +719,9 @@ fn static_auth_setup_expression() {
             type_module: "Sdk".into(),
             property_name: "ApiKey".into(),
         }),
+    
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert_eq!(model.static_auth_setup.as_deref(), Some("Sdk.Config.ApiKey"));
@@ -706,6 +740,9 @@ fn static_auth_empty_module_no_leading_dot() {
             type_module: "".into(),
             property_name: "ApiKey".into(),
         }),
+    
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert_eq!(model.static_auth_setup.as_deref(), Some("GlobalConfig.ApiKey"));
@@ -758,6 +795,8 @@ fn build_operation_model_streaming(
             description: None,
         }],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     model.resources[0].operations[0].clone()
@@ -875,6 +914,8 @@ fn abstract_generic_arg_emits_cb307() {
         }],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (_, diags) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(diags.iter().any(|d| d.code == "CB307"));
@@ -1043,6 +1084,9 @@ fn auth_type_produces_stable_strings() {
                 description: None,
             }],
             static_auth: None,
+        
+            discovery_mode: "multi_service".to_string(),
+            pypi_name: None,
         };
         let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
         assert_eq!(model.auth.as_ref().unwrap().auth_type, expected);
@@ -1066,6 +1110,9 @@ fn static_auth_invalid_type_name_emits_diagnostic() {
             type_module: "Sdk".into(),
             property_name: "ApiKey".into(),
         }),
+    
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, diags) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(model.static_auth_setup.is_none());
@@ -1085,6 +1132,9 @@ fn static_auth_invalid_property_name_emits_diagnostic() {
             type_module: "".into(),
             property_name: "key; drop()".into(),
         }),
+    
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, diags) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(model.static_auth_setup.is_none());
@@ -1104,6 +1154,9 @@ fn static_auth_invalid_module_emits_diagnostic() {
             type_module: "Sdk..Bad".into(),
             property_name: "ApiKey".into(),
         }),
+    
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, diags) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(model.static_auth_setup.is_none());
@@ -1176,6 +1229,9 @@ fn static_auth_no_parameterless_ctor_cannot_construct() {
             type_module: "Stripe".into(),
             property_name: "ApiKey".into(),
         }),
+    
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(!model.resources[0].can_construct);
@@ -1194,6 +1250,8 @@ fn no_static_auth_parameterless_ctor_still_cannot_construct() {
         }],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, _) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(!model.resources[0].can_construct);
@@ -1243,6 +1301,8 @@ fn can_wire_generic_with_concrete_arg_no_cb307() {
         }],
         auth_patterns: vec![],
         static_auth: None,
+        discovery_mode: "multi_service".to_string(),
+        pypi_name: None,
     };
     let (model, diags) = model_mapper::build(&metadata, &opts("test-cli"), &profile);
     assert!(model.resources[0].operations[0].can_wire_sdk_call);

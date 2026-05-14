@@ -76,6 +76,16 @@ pub fn build(
     let auth = metadata.auth_patterns.first().map(map_auth);
 
     let sdk_name = sanitize_string(Some(&metadata.name)).unwrap_or_default();
+    // For the pip-install dependency, prefer the explicit PyPI distribution
+    // name when the adapter resolved one (e.g., PyGithub → "PyGithub" while
+    // sdk_name is "github"). Falls back to sdk_name when names match (Stripe)
+    // or when the adapter couldn't resolve a distribution (synthetic fixtures).
+    // See ADR-023.
+    let sdk_package_name = metadata
+        .pypi_name
+        .as_ref()
+        .and_then(|p| sanitize_string(Some(p)))
+        .unwrap_or_else(|| sdk_name.clone());
     let model = GeneratorModel {
         // Use ASCII hyphen instead of em dash — keeps the generated CLI's
         // --help output readable on Windows consoles that default to cp1252,
@@ -85,7 +95,7 @@ pub fn build(
         cli_name: cli_name.clone(),
         sdk_name: sdk_name.clone(),
         sdk_version: sanitize_string(Some(&metadata.version)).unwrap_or_default(),
-        sdk_package_name: sdk_name,
+        sdk_package_name,
         root_namespace: derive_namespace(&cli_name),
         resources,
         auth,

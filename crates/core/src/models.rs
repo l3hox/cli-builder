@@ -10,6 +10,20 @@ pub struct SdkMetadata {
     pub resources: Vec<Resource>,
     pub auth_patterns: Vec<AuthPattern>,
     pub static_auth: Option<StaticAuthConfig>,
+    /// Discovery-mode provenance — which adapter path produced this metadata
+    /// (ADR-023). Defaults to "multi_service" for round-trip compat with v0.2.x
+    /// adapter emissions that pre-date the field.
+    #[serde(default = "default_discovery_mode")]
+    pub discovery_mode: String,
+    /// PyPI distribution name when it differs from `name` (the import name).
+    /// PyGithub installs as "PyGithub", imports as "github" — generator uses
+    /// this for pyproject dependencies. None when distribution == import name.
+    #[serde(default)]
+    pub pypi_name: Option<String>,
+}
+
+fn default_discovery_mode() -> String {
+    "multi_service".to_string()
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

@@ -7,10 +7,21 @@
 # Usage:
 #   scripts/manual-test-python-sdk.sh                   # stripe, skip live calls
 #   SDK_NAME=stripe scripts/manual-test-python-sdk.sh   # same
-#   STRIPE_API_KEY=sk_test_... scripts/manual-test-python-sdk.sh   # includes live calls
+#   STRIPE_API_KEY=sk_test_... scripts/manual-test-python-sdk.sh   # stripe, live
+#   SDK_NAME=PyGithub PYTHON_MODULE=github CLI_NAME=github-cli ENTRY_CLASS=Github \
+#       scripts/manual-test-python-sdk.sh               # PyGithub (PyPI name ≠ import name)
+#   GITHUB_TOKEN=ghp_... SDK_NAME=PyGithub PYTHON_MODULE=github CLI_NAME=github-cli ENTRY_CLASS=Github \
+#       scripts/manual-test-python-sdk.sh               # PyGithub, live
 #
 # Environment:
-#   SDK_NAME         Package to test against (default: stripe)
+#   SDK_NAME         PyPI package name (default: stripe). Used for `pip install`.
+#   PYTHON_MODULE    Python import name (default: SDK_NAME). Used for the
+#                    cli-builder --package argument. PyGithub installs as
+#                    `PyGithub` but imports as `github` — decouple via this var.
+#   ENTRY_CLASS      Force single-client discovery on this class (ADR-023).
+#                    Required for SDKs where auto-detection is ambiguous (e.g.,
+#                    PyGithub has Github + GithubIntegration + GithubRetry all
+#                    matching the heuristic).
 #   SDK_VERSION      Optional version constraint (default: unpinned)
 #   CLI_NAME         Generated CLI name (default: {SDK_NAME}-cli)
 #   API_KEY_VAR      Env var holding the API key (default: inferred from SDK_NAME)
@@ -27,6 +38,12 @@ set -uo pipefail  # note: no -e — we want to continue past failures and report
 
 REPO_ROOT="$(cd "$(dirname "$0")/.."; pwd)"
 SDK_NAME="${SDK_NAME:-stripe}"
+# Python module name (the `--package` argument to cli-builder). Defaults to
+# SDK_NAME for backward compat with SDKs where install-name == import-name
+# (Stripe). Override when they differ — e.g., SDK_NAME=PyGithub PYTHON_MODULE=github.
+PYTHON_MODULE="${PYTHON_MODULE:-$SDK_NAME}"
+# Forced single-client entry class (ADR-023). Empty = auto-detect via heuristic.
+ENTRY_CLASS="${ENTRY_CLASS:-}"
 SDK_VERSION="${SDK_VERSION:-}"
 CLI_NAME="${CLI_NAME:-${SDK_NAME}-cli}"
 WORK_DIR="${WORK_DIR:-/tmp/cli-builder-manual-test}"
@@ -35,9 +52,10 @@ SKIP_LIVE="${SKIP_LIVE:-0}"
 # Infer the API key env var from SDK name if not set explicitly.
 if [[ -z "${API_KEY_VAR:-}" ]]; then
     case "$SDK_NAME" in
-        stripe)  API_KEY_VAR="STRIPE_API_KEY" ;;
-        openai)  API_KEY_VAR="OPENAI_API_KEY" ;;
-        *)       API_KEY_VAR="$(echo "$SDK_NAME" | tr '[:lower:]' '[:upper:]')_API_KEY" ;;
+        stripe)    API_KEY_VAR="STRIPE_API_KEY" ;;
+        openai)    API_KEY_VAR="OPENAI_API_KEY" ;;
+        PyGithub)  API_KEY_VAR="GITHUB_TOKEN" ;;
+        *)         API_KEY_VAR="$(echo "$SDK_NAME" | tr '[:lower:]' '[:upper:]')_API_KEY" ;;
     esac
 fi
 
@@ -123,7 +141,7 @@ fi
 
 # ---- Phase 3 — inspect (metadata extraction via adapter) -------------------
 
-heading "Phase 3 — inspect: extract metadata from $SDK_NAME"
+heading "Phase 3 — inspect: extract metadata from $SDK_NAME (module: $PYTHON_MODULE)"
 
 # The Python adapter runs as `python -m cli_builder_adapter ...`. Our orchestrator
 # invokes it as a subprocess — we just need Python in PATH with the adapter
@@ -139,9 +157,13 @@ fi
 # Run inspect via the Rust orchestrator, pointing it at the setup venv's python
 # (The orchestrator appends `-m cli_builder_adapter --package X --json` itself;
 #  CLI_BUILDER_PYTHON_ADAPTER is just the python binary.)
-info "running: cli-builder inspect --adapter python --package $SDK_NAME --json"
+INSPECT_ARGS=(inspect --adapter python --package "$PYTHON_MODULE" --json)
+if [[ -n "$ENTRY_CLASS" ]]; then
+    INSPECT_ARGS+=(--entry-class "$ENTRY_CLASS")
+fi
+info "running: cli-builder ${INSPECT_ARGS[*]}"
 export CLI_BUILDER_PYTHON_ADAPTER="$SETUP_PY"
-if "$CLI_BIN" inspect --adapter python --package "$SDK_NAME" --json > "$METADATA_JSON" 2> "$WORK_DIR/inspect.stderr"; then
+if "$CLI_BIN" "${INSPECT_ARGS[@]}" > "$METADATA_JSON" 2> "$WORK_DIR/inspect.stderr"; then
     RESOURCES=$("$SETUP_PY" -c "import json; d=json.load(open('$METADATA_JSON')); print(len(d.get('metadata',d).get('resources',[])))" 2>/dev/null || echo "?")
     ok "metadata written ($(wc -c < "$METADATA_JSON") bytes, $RESOURCES resources)"
     record "inspect" "PASS" "$RESOURCES resources"
@@ -155,8 +177,12 @@ fi
 
 heading "Phase 4 — generate: Python CLI from metadata"
 
-info "running: cli-builder generate --adapter python --package $SDK_NAME --generator python --output $OUT_DIR"
-if "$CLI_BIN" generate --adapter python --package "$SDK_NAME" --generator python --output "$OUT_DIR" --cli-name "$CLI_NAME" 2> "$WORK_DIR/generate.stderr"; then
+GENERATE_ARGS=(generate --adapter python --package "$PYTHON_MODULE" --generator python --output "$OUT_DIR" --cli-name "$CLI_NAME")
+if [[ -n "$ENTRY_CLASS" ]]; then
+    GENERATE_ARGS+=(--entry-class "$ENTRY_CLASS")
+fi
+info "running: cli-builder ${GENERATE_ARGS[*]}"
+if "$CLI_BIN" "${GENERATE_ARGS[@]}" 2> "$WORK_DIR/generate.stderr"; then
     FILE_COUNT=$(find "$OUT_DIR" -name "*.py" -type f | wc -l)
     ok "generated project at $OUT_DIR ($FILE_COUNT .py files)"
     record "generate" "PASS" "$FILE_COUNT .py files"
@@ -312,6 +338,63 @@ if [[ "$SDK_NAME" == "stripe" ]]; then
     fi
 fi
 
+# ---- Phase 7c — GitHub flag-presence regression gate (Step 18 / ADR-023) ----
+#
+# Single-client SDK validation. Pre-Step-18, cli-builder extracted zero
+# resources from PyGithub (no *Service/*Client/*Api-suffix classes). After
+# Step 18, the Github entry class is discovered via single-client mode and
+# its verb_noun methods become CLI ops. Asserts a few canonical operations
+# end up with --help that exposes their expected parameter flag.
+
+if [[ "$SDK_NAME" == "PyGithub" ]]; then
+    heading "Phase 7c — GitHub regression gate (ADR-023)"
+    GH_FLAG_FAILURES=0
+
+    # Step 18 / v0.2.2 surface for PyGithub:
+    #   1. Resources are discovered (Github → repo/user/repositories/…)
+    #   2. Operations are emitted with --json-input fallback (per-param flag
+    #      emission for sentinel-Union types like `Opt[X]` is a known gap —
+    #      deferred to a future step; see README "Known Limitations").
+    #   3. Operations are WIRED to real SDK calls — NOT the
+    #      "client construction not available" stub. This is the load-bearing
+    #      regression check: if the can_construct gate breaks, every PyGithub
+    #      op silently becomes a no-op stub. Catch it here.
+    GITHUB_OPS=("repo get" "user get" "repositories search")
+
+    for op in "${GITHUB_OPS[@]}"; do
+        out_file="$WORK_DIR/flagcheck-github-$(echo "$op" | tr ' ' '-').out"
+        if ! "$CLI_EXEC" $op --help > "$out_file" 2>&1; then
+            fail "$CLI_NAME $op --help did not exit cleanly"
+            GH_FLAG_FAILURES=$((GH_FLAG_FAILURES + 1))
+            continue
+        fi
+        # 1: --json-input must appear (proves operation extraction → click code-gen)
+        if ! grep -q -- "--json-input" "$out_file" 2>/dev/null; then
+            fail "$op --help missing --json-input (operation extraction regression)"
+            GH_FLAG_FAILURES=$((GH_FLAG_FAILURES + 1))
+        fi
+    done
+
+    # Regression check #2: the GENERATED user.py file must NOT contain the
+    # "client construction not available" stub string for the get operation.
+    # If the can_construct gate misfires (e.g., ctor params not attached to
+    # all single-client resources), every PyGithub op becomes a stub — silent
+    # but catastrophic.
+    USER_PY_FILE="$OUT_DIR/src/${CLI_NAME//-/_}/commands/user.py"
+    if grep -q "client construction not available" "$USER_PY_FILE" 2>/dev/null; then
+        fail "user.py contains 'client construction not available' stub — \
+can_construct gate regression"
+        GH_FLAG_FAILURES=$((GH_FLAG_FAILURES + 1))
+    fi
+
+    if [[ $GH_FLAG_FAILURES -eq 0 ]]; then
+        ok "PyGithub ops wired to real SDK calls (no stubs); --json-input present"
+        record "flags-github" "PASS" "${#GITHUB_OPS[@]} ops probed + stub check"
+    else
+        record "flags-github" "FAIL" "$GH_FLAG_FAILURES check(s) failed"
+    fi
+fi
+
 # ---- Phase 8 — live API call (optional) ------------------------------------
 
 heading "Phase 8 — live API call"
@@ -325,10 +408,7 @@ elif [[ -z "$API_KEY_VALUE" ]]; then
     info "\$$API_KEY_VAR not set — skipping live API call"
     info "(to run live calls, set: export $API_KEY_VAR=...)"
     record "live-api" "SKIP" "$API_KEY_VAR not set"
-elif [[ "$SDK_NAME" != "stripe" ]]; then
-    info "live API test is only wired for stripe — SDK=$SDK_NAME, skipping"
-    record "live-api" "SKIP" "unsupported SDK for live test"
-else
+elif [[ "$SDK_NAME" == "stripe" ]]; then
     # Stripe: customer list --limit 1 is a safe read-only probe in test mode.
     info "running: $CLI_NAME customer list --limit 1 --json"
     export "$API_KEY_VAR=$API_KEY_VALUE"
@@ -341,6 +421,29 @@ else
         cat "$WORK_DIR/live.err" | sed 's/^/    /'
         record "live-api" "FAIL" "see $WORK_DIR/live.err"
     fi
+elif [[ "$SDK_NAME" == "PyGithub" ]]; then
+    # PyGithub: `user get` with `login=octocat` is a public-profile read that
+    # works with any token. Confirms:
+    #   - Auth handler plumbs `--api-key` into `Github(login_or_token=...)`
+    #   - Operation routes to a real SDK call (NOT a stub)
+    #   - Result serializes through the json formatter
+    # The `login` param flows through --json-input because PyGithub's
+    # `Opt[str]` sentinel-Union type isn't yet resolved to a flat flag
+    # (known limitation, see ADR-023 / Step 19+ candidate).
+    info "running: $CLI_NAME --api-key=<redacted> --json user get --json-input '{\"login\": \"octocat\"}'"
+    if "$CLI_EXEC" --api-key "$API_KEY_VALUE" --json user get --json-input '{"login": "octocat"}' \
+            > "$WORK_DIR/live.out" 2> "$WORK_DIR/live.err"; then
+        ok "live call succeeded"
+        head -10 "$WORK_DIR/live.out" | sed 's/^/    /'
+        record "live-api" "PASS"
+    else
+        fail "live call failed (exit $?) — stderr:"
+        cat "$WORK_DIR/live.err" | sed 's/^/    /'
+        record "live-api" "FAIL" "see $WORK_DIR/live.err"
+    fi
+else
+    info "live API test is only wired for stripe and PyGithub — SDK=$SDK_NAME, skipping"
+    record "live-api" "SKIP" "unsupported SDK for live test"
 fi
 
 # ---- Summary ---------------------------------------------------------------

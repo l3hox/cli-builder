@@ -184,6 +184,11 @@ def extract(
     # Derive SDK version
     version = getattr(module, "__version__", "0.0.0")
 
+    # Resolve PyPI distribution name when it differs from the Python import name.
+    # PyGithub installs as `PyGithub` but imports as `github`; the generator
+    # needs the PyPI name so the generated pyproject's dependency is correct.
+    pypi_name = _resolve_pypi_distribution_name(package_name)
+
     metadata = SdkMetadata(
         name=package_name,
         version=str(version),
@@ -191,9 +196,43 @@ def extract(
         auth_patterns=auth_patterns,
         static_auth=static_auth,
         discovery_mode=discovery_mode,
+        pypi_name=pypi_name,
     )
 
     return AdapterResult(metadata=metadata, diagnostics=diagnostics)
+
+
+def _resolve_pypi_distribution_name(import_name: str) -> str | None:
+    """Resolve a Python import name to its PyPI distribution name.
+
+    Uses `importlib.metadata.packages_distributions()` (Python 3.10+ stdlib).
+    Returns the distribution name when it differs from the import name, or
+    None when they match (no override needed) or resolution failed (synthetic
+    fixture, package not pip-installed).
+    """
+    try:
+        import importlib.metadata
+        mapping = importlib.metadata.packages_distributions()
+    except Exception:
+        return None
+    dists = mapping.get(import_name)
+    if not dists:
+        return None
+    # Most packages provide exactly one distribution per import name. When
+    # multiple match (rare, namespace packages), prefer the one whose name
+    # matches case-insensitively if any do, else first.
+    if len(dists) == 1:
+        dist = dists[0]
+    else:
+        dist = next(
+            (d for d in dists if d.lower() == import_name.lower()),
+            dists[0],
+        )
+    # Only return when distribution name differs from import name — otherwise
+    # the generator would emit a redundant override.
+    if dist == import_name:
+        return None
+    return dist
 
 
 def _collect_candidate_classes(module: Any) -> list[tuple[str, type]]:
@@ -490,7 +529,11 @@ def _extract_single_client_resources(
         ))
         resource_entry["source_methods"].append(name)
 
-    # Build Resource list deterministically (sorted by resource name)
+    # Build Resource list deterministically (sorted by resource name).
+    # All resources in single-client mode share the same entry-class ctor —
+    # the generator's `can_construct` gate (model_mapper.rs:281) needs the
+    # ctor params on EVERY resource to route ops to real SDK calls instead
+    # of `client construction not available` stubs.
     resources = []
     for resource_name in sorted(resources_by_noun):
         entry = resources_by_noun[resource_name]
@@ -500,10 +543,7 @@ def _extract_single_client_resources(
             operations=entry["operations"],
             source_class_name=entry_cls.__name__,
             source_module=cls_source_module,
-            # Constructor params are attached to the first resource only — all
-            # resources share the same single-client entry. Generator wires
-            # auth once.
-            constructor_params=ctor_params if (ctor_params and resource_name == sorted(resources_by_noun)[0]) else None,
+            constructor_params=ctor_params if ctor_params else None,
             has_parameterless_ctor=_has_parameterless_init(entry_cls),
         ))
     return resources

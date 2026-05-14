@@ -145,3 +145,39 @@ def test_module_level_no_auth_attrs():
     mod = _make_module("plain_sdk", version="1.0")
     result = detect_module_auth(mod, [], [])
     assert result is None
+
+
+# ---- Step 18 / ADR-023: single-client SDK constructor patterns ----
+
+def test_pygithub_auth_detector_finds_login_or_token():
+    """PyGithub's `Github(login_or_token: str | None = None, password: ..., jwt: ...)`
+    constructor exposes several candidate auth params. The detector must pick
+    `login_or_token` (the modern API-token path), not `password` or `jwt`.
+
+    Pure unit test — no PyGithub install required in CI. Constructs a synthetic
+    class mirroring PyGithub's signature exactly. If this test ever fails after
+    a PyGithub release, the heuristic in auth_detector.py needs broadening to
+    match — do that here, in the heuristic, not via PyGithub-specific shimming.
+    """
+    class FakeGithub:
+        def __init__(
+            self,
+            login_or_token: str | None = None,
+            password: str | None = None,
+            jwt: str | None = None,
+            base_url: str = "https://api.github.com",
+            timeout: int = 15,
+            user_agent: str = "PyGithub/Python",
+        ):
+            pass
+
+    auth = detect_constructor_auth(FakeGithub, [])
+    assert auth is not None, \
+        "detector should find an auth param in PyGithub-shape ctor"
+    assert auth.type == AuthType.API_KEY
+    assert auth.parameter_name == "login_or_token", (
+        f"expected `login_or_token` to be picked (token-bearing param), "
+        f"got `{auth.parameter_name}`. If detector fell back to `password` "
+        f"or `jwt`, the auth-param heuristic needs the `*_token` / "
+        f"`login_or_*` pattern added — see auth_detector.py."
+    )

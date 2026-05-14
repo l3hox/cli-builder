@@ -122,6 +122,12 @@ class SdkMetadata:
     # metadata. See ADR-023. Default keeps existing Stripe-derived JSON
     # consumers round-tripping unchanged.
     discovery_mode: str = "multi_service"
+    # PyPI distribution name when it differs from `name` (the Python import
+    # name). PyGithub installs as "PyGithub" but imports as "github" — this
+    # field lets the generator emit the correct pip dependency. None when
+    # the package wasn't installed via pip (e.g., synthetic test fixtures)
+    # or when distribution name equals import name (Stripe). See ADR-023.
+    pypi_name: str | None = None
 
 
 @dataclass

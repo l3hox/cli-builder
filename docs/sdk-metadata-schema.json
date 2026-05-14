@@ -43,6 +43,13 @@
           "type": "string",
           "enum": ["multi_service", "single_client"],
           "description": "Which adapter discovery path produced this metadata. See ADR-023. Default 'multi_service' preserves round-trip compat for existing emissions."
+        },
+        "pypiName": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "null" }
+          ],
+          "description": "PyPI distribution name when it differs from `name` (the Python import name). PyGithub installs as 'PyGithub' but imports as 'github'. Generator uses this for pyproject dependencies. null when distribution name equals import name. See ADR-023."
         }
       },
       "additionalProperties": false
