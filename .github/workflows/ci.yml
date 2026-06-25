@@ -74,7 +74,7 @@ jobs:
           # global-json-file path is repo-root-relative, even though the job's
           # working-directory is `dotnet`. Don't "correct" this to `global.json`.
           global-json-file: dotnet/global.json
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         with:
           path: ~/.nuget/packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
