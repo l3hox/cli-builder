@@ -69,7 +69,7 @@ jobs:
         working-directory: dotnet
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/setup-dotnet@v6
         with:
           # global-json-file path is repo-root-relative, even though the job's
           # working-directory is `dotnet`. Don't "correct" this to `global.json`.
